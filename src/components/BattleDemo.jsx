@@ -10,6 +10,7 @@ import { useBattleStore } from '../store/battleStore'
 import PostBattleDebrief from './PostBattleDebrief'
 import ShareArmySheet from './ShareArmySheet'
 import MatchupSheet from './MatchupSheet'
+import ImportListSheet from './ImportListSheet'
 
 function getStratagems(faction, detachmentId) {
   const coreStrats = demoStratagems.filter(s => s.source === 'core')
@@ -705,7 +706,7 @@ export default function BattleDemo({ theme, onNavigate }) {
     faction, detachmentId, selectedUnits, unitStates, opponentTags,
     cp, setCp, setWounds, attachLeader, detachLeader,
     toggleOpponentTag, vpScores, adjustVp, warlordUnitId, setWarlord,
-    opponentArmy, clearOpponentArmy,
+    opponentArmy, clearOpponentArmy, setOpponentArmy,
   } = store
 
   const [activePhaseIdx, setActivePhaseIdx] = useState(0)
@@ -715,6 +716,7 @@ export default function BattleDemo({ theme, onNavigate }) {
   const [showDebrief, setShowDebrief] = useState(false)
   const [showVp, setShowVp] = useState(false)
   const [showShare, setShowShare] = useState(false)
+  const [showImport, setShowImport] = useState(false)
   const [matchupUnit, setMatchupUnit] = useState(null)
   const [currentRound, setCurrentRound] = useState(1)
   const [turnFlash, setTurnFlash] = useState(null) // 'yours' | 'theirs' | null
@@ -1033,15 +1035,26 @@ export default function BattleDemo({ theme, onNavigate }) {
                 ))}
               </>
             ) : (
-              <motion.button whileTap={{ scale: 0.97 }}
-                onClick={() => setShowShare(true)}
-                className="w-full rounded-2xl border p-4 text-center mt-1"
-                style={{ background: theme.stratBg, borderColor: theme.stratBorder, borderStyle: 'dashed' }}>
-                <p className="text-sm font-bold" style={{ color: theme.textSecondary }}>🔗 Link Opponent's Army</p>
-                <p className="text-xs mt-1" style={{ color: theme.textSecondary, opacity: 0.7 }}>
-                  Share your army link — they send one back
-                </p>
-              </motion.button>
+              <div className="space-y-2 mt-1">
+                <motion.button whileTap={{ scale: 0.97 }}
+                  onClick={() => setShowShare(true)}
+                  className="w-full rounded-2xl border p-3.5 text-center"
+                  style={{ background: theme.stratBg, borderColor: theme.stratBorder, borderStyle: 'dashed' }}>
+                  <p className="text-sm font-bold" style={{ color: theme.textSecondary }}>🔗 Link Opponent's Army</p>
+                  <p className="text-xs mt-0.5" style={{ color: theme.textSecondary, opacity: 0.7 }}>
+                    Share your link — they send one back
+                  </p>
+                </motion.button>
+                <motion.button whileTap={{ scale: 0.97 }}
+                  onClick={() => setShowImport(true)}
+                  className="w-full rounded-2xl border p-3.5 text-center"
+                  style={{ background: theme.stratBg, borderColor: theme.stratBorder, borderStyle: 'dashed' }}>
+                  <p className="text-sm font-bold" style={{ color: theme.textSecondary }}>📋 Paste Opponent's List</p>
+                  <p className="text-xs mt-0.5" style={{ color: theme.textSecondary, opacity: 0.7 }}>
+                    Import from New Recruit, BattleScribe, etc.
+                  </p>
+                </motion.button>
+              </div>
             )}
           </div>
         </div>
@@ -1114,6 +1127,26 @@ export default function BattleDemo({ theme, onNavigate }) {
             activePhase={activePhase.id}
             onClose={() => setMatchupUnit(null)}
             theme={theme}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showImport && (
+          <ImportListSheet
+            theme={theme}
+            onLoadAsMyArmy={() => {}}
+            onLoadAsOpponent={(parsed) => {
+              const units = parsed.resolvedUnits.map(e => e.resolved)
+              setOpponentArmy({
+                faction: parsed.faction,
+                detachmentId: parsed.detachment?.id || null,
+                units,
+                detachment: parsed.detachment || null,
+              })
+              setShowImport(false)
+            }}
+            onClose={() => setShowImport(false)}
           />
         )}
       </AnimatePresence>

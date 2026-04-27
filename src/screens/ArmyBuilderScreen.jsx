@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
+import ImportListSheet from '../components/ImportListSheet'
 import { swUnitList, swUnitsByCategory } from '../data/spacewolves/units'
 import { smGenericUnitList, smGenericsByCategory } from '../data/spacewolves/generics'
 import { swDetachmentList } from '../data/spacewolves/detachments'
@@ -54,6 +56,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const [localDetachment, setLocalDetachment] = useState(store.detachmentId || null)
   const [localUnits, setLocalUnits] = useState(store.selectedUnits.map(u => u.id))
   const [localOpponentTags, setLocalOpponentTags] = useState(store.opponentTags)
+  const [showImport, setShowImport] = useState(false)
 
   const isSW = localFaction === 'spacewolves'
   const isCSM = localFaction === 'chaosspacemarines'
@@ -107,6 +110,31 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     selectedUnitData.forEach(u => store.addUnit(u))
     store.setOpponentTags(localOpponentTags)
     store.startBattle()
+    onNavigate('battle')
+  }
+
+  const handleImportAsMyArmy = (parsed) => {
+    const units = parsed.resolvedUnits.map(e => e.resolved)
+    const faction = parsed.faction || localFaction
+    const detId = parsed.detachment?.id || null
+    store.resetBattle()
+    store.setFaction(faction)
+    store.setDetachment(detId)
+    units.forEach(u => store.addUnit({ ...u, currentWounds: u.maxWounds }))
+    store.startBattle()
+    setShowImport(false)
+    onNavigate('battle')
+  }
+
+  const handleImportAsOpponent = (parsed) => {
+    const units = parsed.resolvedUnits.map(e => e.resolved)
+    store.setOpponentArmy({
+      faction: parsed.faction,
+      detachmentId: parsed.detachment?.id || null,
+      units,
+      detachment: parsed.detachment || null,
+    })
+    setShowImport(false)
     onNavigate('battle')
   }
 
@@ -181,6 +209,16 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               className="w-full py-3.5 rounded-2xl font-bold text-sm"
               style={{ background: theme.secondary, color: theme.bg }}>
               Continue →
+            </button>
+            <div className="flex items-center gap-3 py-1">
+              <div className="h-px flex-1" style={{ background: theme.border }} />
+              <p className="text-xs font-medium" style={{ color: theme.textSecondary }}>or</p>
+              <div className="h-px flex-1" style={{ background: theme.border }} />
+            </div>
+            <button onClick={() => setShowImport(true)}
+              className="w-full py-3 rounded-2xl font-bold text-sm border"
+              style={{ background: 'transparent', borderColor: theme.border, color: theme.textSecondary }}>
+              📋 Import from Another App
             </button>
           </div>
         )}
@@ -364,6 +402,17 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           </div>
         )}
       </div>
+
+      <AnimatePresence>
+        {showImport && (
+          <ImportListSheet
+            theme={theme}
+            onLoadAsMyArmy={handleImportAsMyArmy}
+            onLoadAsOpponent={handleImportAsOpponent}
+            onClose={() => setShowImport(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
