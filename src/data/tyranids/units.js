@@ -409,6 +409,95 @@ export const tyranidUnits = {
     factionKeywords: ['TYRANIDS'],
   },
 
+  exocrine: {
+    id: 'exocrine', name: 'Exocrine', category: 'monster',
+    powerRating: 9, points: 140,
+    M: '8"', T: 10, Sv: '3+', W: 14, Ld: '8+', OC: 4,
+    models: 1,
+    weapons: [
+      { name: 'Bio-plasmic cannon', type: 'ranged', range: '36"', A: 'D6+3', BS: '3+', S: 9, AP: -3, D: 'D3', keywords: ['HEAVY'] },
+      { name: 'Powerful limbs', type: 'melee', A: 3, WS: '3+', S: 7, AP: 0, D: 2 },
+    ],
+    abilities: [
+      { name: 'Symbiotic Targeting', phase: 'shooting', description: 'After this model shoots, select one enemy unit it hit. Until the end of the phase, each time a friendly TYRANIDS model makes an attack against that unit, re-roll a Hit roll of 1.' },
+      { name: 'Deadly Demise D3', phase: 'any', description: 'When this model is destroyed, roll D6: on a 4+, each unit within 6" suffers D3 mortal wounds.' },
+      { name: 'Damaged (1-5 wounds remaining)', phase: 'any', description: 'While this model has 1-5 wounds remaining, subtract 1 from the Hit rolls of this model\'s attacks.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['MONSTER', 'EXOCRINE', 'TYRANIDS'],
+    factionKeywords: ['TYRANIDS'],
+  },
+
+  normEmissary: {
+    id: 'normEmissary', name: 'Norn Emissary', category: 'monster',
+    powerRating: 14, points: 260,
+    M: '10"', T: 11, Sv: '2+', W: 16, Ld: '7+', OC: 5, InvSv: '4+',
+    models: 1,
+    weapons: [
+      { name: 'Psychic tendril — neuroparasite', type: 'ranged', range: '18"', A: 2, BS: '2+', S: 8, AP: -2, D: 'D3', keywords: ['PSYCHIC', 'PRECISION'] },
+      { name: 'Psychic tendril — neuroblast', type: 'ranged', range: '18"', A: '2D6', BS: '2+', S: 6, AP: -2, D: 1, keywords: ['PSYCHIC', 'BLAST'] },
+      { name: 'Psychic tendril — neurolance', type: 'ranged', range: '18"', A: 2, BS: '2+', S: 12, AP: -3, D: 'D6', keywords: ['PSYCHIC', 'MELTA 2'] },
+      { name: 'Monstrous scything talons', type: 'melee', A: 6, WS: '2+', S: 9, AP: -2, D: 3 },
+      { name: 'Monstrous rending claws', type: 'melee', A: 4, WS: '2+', S: 7, AP: -2, D: 2 },
+    ],
+    abilities: [
+      { name: 'Singular Purpose', phase: 'command', description: 'At the start of the battle, select one enemy unit OR one objective marker. Against the chosen unit, re-roll Hit and Wound rolls. If an objective is chosen, this model has OC 15 and Feel No Pain 5+ while within range of it.' },
+      { name: 'Unnatural Resilience', phase: 'any', description: 'This model has the Feel No Pain 4+ ability against mortal wounds.' },
+      { name: 'Shadow in the Warp', phase: 'command', description: 'Friendly TYRANIDS units within 12" can re-roll Battleshock tests.' },
+      { name: 'Deadly Demise D6', phase: 'any', description: 'When this model is destroyed, roll D6: on a 4+, each unit within 6" suffers D6 mortal wounds.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['MONSTER', 'PSYKER', 'SYNAPSE', 'NORN EMISSARY', 'TYRANIDS'],
+    factionKeywords: ['TYRANIDS'],
+  },
+
+  psychophage: {
+    id: 'psychophage', name: 'Psychophage', category: 'monster',
+    powerRating: 7, points: 110,
+    M: '12"', T: 9, Sv: '3+', W: 10, Ld: '8+', OC: 3,
+    models: 1,
+    weapons: [
+      { name: 'Psychoclastic torrent', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['TORRENT', 'IGNORES COVER'] },
+      { name: 'Talons and betentacled maw', type: 'melee', A: 6, WS: '3+', S: 6, AP: -2, D: 2, keywords: ['ANTI-PSYKER 4+', 'DEVASTATING WOUNDS'] },
+    ],
+    abilities: [
+      { name: 'Feel No Pain 5+', phase: 'any', description: 'Each time this model would lose a wound, roll one D6: on a 5+, that wound is not lost.' },
+      { name: 'Bio-stimulus', phase: 'shooting', description: 'After this model shoots, select one enemy unit that was hit. Until the end of the phase, improve the Armour Penetration characteristic of attacks made against that unit by 1.' },
+      { name: 'Synapse', phase: 'any', description: 'Friendly TYRANIDS units within 6" automatically pass Battleshock tests.' },
+      { name: 'Deadly Demise 1', phase: 'any', description: 'When this model is destroyed, roll D6: on a 6, each unit within 6" suffers 1 mortal wound.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['MONSTER', 'SYNAPSE', 'PSYCHOPHAGE', 'TYRANIDS'],
+    factionKeywords: ['TYRANIDS'],
+  },
+
+  tyrannofex: {
+    id: 'tyrannofex', name: 'Tyrannofex', category: 'monster',
+    powerRating: 11, points: 200,
+    M: '9"', T: 12, Sv: '2+', W: 16, Ld: '8+', OC: 5,
+    models: 1,
+    weapons: [
+      { name: 'Rupture cannon', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 18, AP: -4, D: 'D6+6', keywords: ['HEAVY'] },
+      { name: 'Fleshborer hive', type: 'ranged', range: '24"', A: 20, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['HEAVY', 'SUSTAINED HITS 1', 'TWIN-LINKED'] },
+      { name: 'Acid spray', type: 'ranged', range: '18"', A: 'D6+6', BS: 'N/A', S: 6, AP: -2, D: 2, keywords: ['TORRENT'] },
+      { name: 'Stinger salvoes', type: 'ranged', range: '24"', A: 8, BS: '3+', S: 5, AP: 0, D: 1 },
+      { name: 'Powerful limbs', type: 'melee', A: 4, WS: '3+', S: 8, AP: 0, D: 2 },
+    ],
+    abilities: [
+      { name: 'Resilient Organism', phase: 'any', description: 'Once per battle, when an attack is allocated to this model, you can change the Damage characteristic of that attack to 0.' },
+      { name: 'Synapse', phase: 'any', description: 'Friendly TYRANIDS units within 6" automatically pass Battleshock tests.' },
+      { name: 'Damaged (1-5 wounds remaining)', phase: 'any', description: 'While this model has 1-5 wounds remaining, subtract 1 from the Hit rolls of this model\'s attacks.' },
+      { name: 'Deadly Demise D6', phase: 'any', description: 'When this model is destroyed, roll D6: on a 4+, each unit within 6" suffers D6 mortal wounds.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['MONSTER', 'SYNAPSE', 'TYRANNOFEX', 'TYRANIDS'],
+    factionKeywords: ['TYRANIDS'],
+  },
+
   trygon: {
     id: 'trygon', name: 'Trygon', category: 'monster',
     powerRating: 9, points: 140,
