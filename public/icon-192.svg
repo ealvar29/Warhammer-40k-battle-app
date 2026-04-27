@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="28" fill="#1a1f2e"/>
+  <rect width="192" height="192" rx="28" fill="url(#grad)" opacity="0.4"/>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#1a1f2e" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Crossed swords -->
+  <g transform="translate(96,96)">
+    <!-- Sword 1 (top-left to bottom-right) -->
+    <line x1="-42" y1="-42" x2="42" y2="42" stroke="#c9a84c" stroke-width="8" stroke-linecap="round"/>
+    <!-- Sword 1 guard -->
+    <line x1="-30" y1="-20" x2="-10" y2="-40" stroke="#c9a84c" stroke-width="5" stroke-linecap="round"/>
+    <!-- Sword 2 (top-right to bottom-left) -->
+    <line x1="42" y1="-42" x2="-42" y2="42" stroke="#c9a84c" stroke-width="8" stroke-linecap="round"/>
+    <!-- Sword 2 guard -->
+    <line x1="30" y1="-20" x2="10" y2="-40" stroke="#c9a84c" stroke-width="5" stroke-linecap="round"/>
+    <!-- Center gem -->
+    <circle cx="0" cy="0" r="7" fill="#c9a84c"/>
+    <circle cx="0" cy="0" r="4" fill="#1a1f2e"/>
+  </g>
+  <!-- Bottom label -->
+  <rect x="24" y="150" width="144" height="20" rx="4" fill="#c9a84c" opacity="0.15"/>
+  <text x="96" y="164" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#c9a84c" text-anchor="middle" letter-spacing="2">W40K</text>
+</svg>
