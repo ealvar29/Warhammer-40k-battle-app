@@ -6,11 +6,14 @@ import { swDetachmentList } from '../data/spacewolves/detachments'
 import { smGenericDetachmentList } from '../data/spacewolves/genericDetachments'
 import { tyranidUnitList, tyranidUnitsByCategory } from '../data/tyranids/units'
 import { tyranidDetachmentList } from '../data/tyranids/detachments'
+import { csmUnitList, csmUnitsByCategory } from '../data/chaosspacemarines/units'
+import { csmDetachmentList } from '../data/chaosspacemarines/detachments'
 import { opponentProfiles } from '../data/suggestions'
 
 const factions = [
   { id: 'spacewolves', name: 'Space Wolves', icon: '🐺', color: '#c8d4e0' },
   { id: 'tyranids', name: 'Tyranids', icon: '🦂', color: '#a855f7' },
+  { id: 'chaosspacemarines', name: 'Chaos Space Marines', icon: '💀', color: '#b91c1c' },
 ]
 
 const categoryLabels = {
@@ -53,9 +56,18 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const [localOpponentTags, setLocalOpponentTags] = useState(store.opponentTags)
 
   const isSW = localFaction === 'spacewolves'
+  const isCSM = localFaction === 'chaosspacemarines'
   // For unit lookup during startBattle we need all available units for this faction
-  const unitList = isSW ? [...swUnitList, ...smGenericUnitList] : tyranidUnitList
-  const detachments = isSW ? [...swDetachmentList, ...smGenericDetachmentList] : tyranidDetachmentList
+  const unitList = isSW
+    ? [...swUnitList, ...smGenericUnitList]
+    : isCSM
+      ? csmUnitList
+      : tyranidUnitList
+  const detachments = isSW
+    ? [...swDetachmentList, ...smGenericDetachmentList]
+    : isCSM
+      ? csmDetachmentList
+      : tyranidDetachmentList
 
   // Build grouped unit sections for the units step
   const unitSections = isSW
@@ -63,9 +75,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         { label: 'Space Wolves', byCategory: swUnitsByCategory, accent: theme.secondary },
         { label: 'Space Marines', byCategory: smGenericsByCategory, accent: theme.primary },
       ]
-    : [
-        { label: 'Tyranids', byCategory: tyranidUnitsByCategory, accent: '#a855f7' },
-      ]
+    : isCSM
+      ? [{ label: 'Chaos Space Marines', byCategory: csmUnitsByCategory, accent: '#b91c1c' }]
+      : [{ label: 'Tyranids', byCategory: tyranidUnitsByCategory, accent: '#a855f7' }]
 
   const toggleUnit = (unitId) =>
     setLocalUnits(prev => prev.includes(unitId) ? prev.filter(id => id !== unitId) : [...prev, unitId])
@@ -152,7 +164,11 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                       {f.name}
                     </p>
                     <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
-                      10th Edition · {f.id === 'spacewolves' ? swUnitList.length + smGenericUnitList.length : tyranidUnitList.length} units
+                      10th Edition · {
+                        f.id === 'spacewolves' ? swUnitList.length + smGenericUnitList.length
+                        : f.id === 'chaosspacemarines' ? csmUnitList.length
+                        : tyranidUnitList.length
+                      } units
                     </p>
                   </div>
                   {localFaction === f.id && (
@@ -196,10 +212,13 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                 ))}
               </>
             )}
-            {!isSW && detachments.map(d => (
-              <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
-                accent={theme.secondary} theme={theme} onClick={() => setLocalDetachment(d.id)} />
-            ))}
+            {!isSW && (() => {
+              const accent = isCSM ? '#b91c1c' : '#a855f7'
+              return detachments.map(d => (
+                <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
+                  accent={accent} theme={theme} onClick={() => setLocalDetachment(d.id)} />
+              ))
+            })()}
             <button onClick={() => localDetachment && setStep('units')}
               className="w-full py-3.5 rounded-2xl font-bold text-sm"
               style={{ background: localDetachment ? theme.secondary : theme.border, color: localDetachment ? theme.bg : theme.textSecondary }}>

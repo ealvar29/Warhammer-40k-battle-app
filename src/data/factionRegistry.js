@@ -4,15 +4,19 @@ import { swDetachments } from './spacewolves/detachments'
 import { smGenericDetachmentList } from './spacewolves/genericDetachments'
 import { tyranidUnitList } from './tyranids/units'
 import { tyranidDetachments } from './tyranids/detachments'
+import { csmUnitList } from './chaosspacemarines/units'
+import { csmDetachments } from './chaosspacemarines/detachments'
 
 export const FACTION_UNITS = {
   spacewolves: [...swUnitList, ...smGenericUnitList],
   tyranids: tyranidUnitList,
+  chaosspacemarines: csmUnitList,
 }
 
 export const FACTION_META = {
   spacewolves: { name: 'Space Wolves', icon: '🐺', color: '#c8d4e0' },
   tyranids: { name: 'Tyranids', icon: '🦂', color: '#a855f7' },
+  chaosspacemarines: { name: 'Chaos Space Marines', icon: '💀', color: '#b91c1c' },
 }
 
 export function buildUnitsFromIds(faction, unitIds) {
@@ -36,6 +40,9 @@ export function findDetachment(faction, detachmentId) {
   }
   if (faction === 'tyranids') {
     return tyranidDetachments[detachmentId] || null
+  }
+  if (faction === 'chaosspacemarines') {
+    return csmDetachments[detachmentId] || null
   }
   return null
 }

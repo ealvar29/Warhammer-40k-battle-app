@@ -29,6 +29,43 @@ export const leaders = {
     keywords: ['VEHICLE', 'CHARACTER', 'WALKER', 'LEGENDARY'],
   },
 
+  // Leader characters — Chaos Space Marines
+  abaddon: {
+    id: 'abaddon',
+    name: 'Abaddon the Despoiler',
+    role: 'Warmaster',
+    faction: 'chaosspacemarines',
+    keywords: ['CHARACTER', 'INFANTRY', 'CHAOS LORD', 'HERETIC ASTARTES', 'ABADDON'],
+  },
+  daemonPrince: {
+    id: 'daemonPrince',
+    name: 'Daemon Prince',
+    role: 'Daemon Lord',
+    faction: 'chaosspacemarines',
+    keywords: ['CHARACTER', 'MONSTER', 'DAEMON', 'HERETIC ASTARTES'],
+  },
+  chaosLord: {
+    id: 'chaosLord',
+    name: 'Chaos Lord',
+    role: 'Warlord',
+    faction: 'chaosspacemarines',
+    keywords: ['CHARACTER', 'INFANTRY', 'CHAOS LORD', 'HERETIC ASTARTES'],
+  },
+  darkApostle: {
+    id: 'darkApostle',
+    name: 'Dark Apostle',
+    role: 'Chaos Chaplain',
+    faction: 'chaosspacemarines',
+    keywords: ['CHARACTER', 'INFANTRY', 'DARK APOSTLE', 'HERETIC ASTARTES'],
+  },
+  exaltedChampion: {
+    id: 'exaltedChampion',
+    name: 'Exalted Champion',
+    role: 'Elite Fighter',
+    faction: 'chaosspacemarines',
+    keywords: ['CHARACTER', 'INFANTRY', 'HERETIC ASTARTES'],
+  },
+
   // Leader characters — Tyranids
   hiveTyrant: {
     id: 'hiveTyrant',
@@ -302,6 +339,143 @@ export const leaderAbilities = {
       },
     ],
   },
+
+  // ── CSM LEADER PAIRINGS ─────────────────────────────────────────────────────
+
+  abaddon_chosen: {
+    leaderId: 'abaddon',
+    unitId: 'chosen',
+    abilities: [
+      {
+        name: 'Eternal Warmaster',
+        phase: 'fight',
+        description: 'While this model is leading this unit, each time a model in this unit makes a melee attack, re-roll hit rolls of 1 and wound rolls of 1.',
+        reminder: 'Re-roll hit and wound rolls of 1 for all melee attacks.',
+      },
+      {
+        name: 'Warmaster of Chaos',
+        phase: 'command',
+        description: 'Once per battle round, you can use one Stratagem for 0 CP.',
+        reminder: '⚡ One free Stratagem per battle round.',
+      },
+    ],
+  },
+
+  abaddon_chaosTerminators: {
+    leaderId: 'abaddon',
+    unitId: 'chaosTerminators',
+    abilities: [
+      {
+        name: 'Eternal Warmaster',
+        phase: 'fight',
+        description: 'While this model is leading this unit, each time a model in this unit makes a melee attack, re-roll hit rolls of 1 and wound rolls of 1.',
+        reminder: 'Re-roll hit and wound rolls of 1 for all melee attacks.',
+      },
+      {
+        name: 'Warmaster of Chaos',
+        phase: 'command',
+        description: 'Once per battle round, you can use one Stratagem for 0 CP.',
+        reminder: '⚡ One free Stratagem per battle round.',
+      },
+    ],
+  },
+
+  daemonPrince_chaosSpaceMarines: {
+    leaderId: 'daemonPrince',
+    unitId: 'chaosSpaceMarines',
+    abilities: [
+      {
+        name: 'Dark Empowerment',
+        phase: 'fight',
+        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [SUSTAINED HITS 1] ability.',
+        reminder: 'All melee weapons in this unit gain Sustained Hits 1.',
+      },
+    ],
+  },
+
+  daemonPrince_chosen: {
+    leaderId: 'daemonPrince',
+    unitId: 'chosen',
+    abilities: [
+      {
+        name: 'Dark Empowerment',
+        phase: 'fight',
+        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [SUSTAINED HITS 1] ability.',
+        reminder: 'All melee weapons in this unit gain Sustained Hits 1.',
+      },
+    ],
+  },
+
+  chaosLord_chaosSpaceMarines: {
+    leaderId: 'chaosLord',
+    unitId: 'chaosSpaceMarines',
+    abilities: [
+      {
+        name: 'Lord of the Long War',
+        phase: 'fight',
+        description: 'While this model is leading this unit, each time a model in this unit makes a melee attack, you can re-roll the Hit roll.',
+        reminder: 'Re-roll all hit rolls on melee attacks.',
+      },
+    ],
+  },
+
+  chaosLord_chosen: {
+    leaderId: 'chaosLord',
+    unitId: 'chosen',
+    abilities: [
+      {
+        name: 'Lord of the Long War',
+        phase: 'fight',
+        description: 'While this model is leading this unit, each time a model in this unit makes a melee attack, you can re-roll the Hit roll.',
+        reminder: 'Re-roll all hit rolls on melee attacks.',
+      },
+    ],
+  },
+
+  darkApostle_chaosSpaceMarines: {
+    leaderId: 'darkApostle',
+    unitId: 'chaosSpaceMarines',
+    abilities: [
+      {
+        name: 'Dark Zealotry',
+        phase: 'fight',
+        description: 'While this model is leading this unit, models in this unit have the Fights First ability.',
+        reminder: '⚡ This unit fights first in the Fight phase.',
+      },
+      {
+        name: 'Dark Prayers',
+        phase: 'command',
+        description: 'At the start of your Command phase, this model can attempt one prayer. On a 3+, one friendly HERETIC ASTARTES unit within 6" receives +1 to Strength on melee attacks until the start of your next Command phase.',
+        reminder: '+1 Strength to a HERETIC ASTARTES unit within 6" on a 3+.',
+      },
+    ],
+  },
+
+  exaltedChampion_chaosSpaceMarines: {
+    leaderId: 'exaltedChampion',
+    unitId: 'chaosSpaceMarines',
+    abilities: [
+      {
+        name: 'Slayer of Warriors',
+        phase: 'fight',
+        description: 'While this model is leading this unit, each time a model in this unit makes a melee attack, on an unmodified wound roll of 6, the Damage characteristic of that attack is increased by 1.',
+        reminder: '+1 Damage on unmodified wound rolls of 6.',
+      },
+    ],
+  },
+
+  exaltedChampion_chosen: {
+    leaderId: 'exaltedChampion',
+    unitId: 'chosen',
+    abilities: [
+      {
+        name: 'Slayer of Warriors',
+        phase: 'fight',
+        description: 'While this model is leading this unit, each time a model in this unit makes a melee attack, on an unmodified wound roll of 6, the Damage characteristic of that attack is increased by 1.',
+        reminder: '+1 Damage on unmodified wound rolls of 6.',
+      },
+    ],
+  },
 }
 
 // Maps each unit to eligible leader IDs (Space Wolves — Tyranids use eligibleLeaders on the unit)
@@ -310,4 +484,8 @@ export const unitLeaderMap = {
   greyHunters: ['wolfGuardPackLeader'],
   thunderwolfCavalry: ['ironPriest'],
   headtakers: ['ragnar'],
+  // CSM
+  chaosSpaceMarines: ['chaosLord', 'daemonPrince', 'darkApostle', 'exaltedChampion'],
+  chosen: ['abaddon', 'chaosLord', 'daemonPrince', 'exaltedChampion'],
+  chaosTerminators: ['abaddon'],
 }

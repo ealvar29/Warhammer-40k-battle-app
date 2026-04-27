@@ -5,6 +5,7 @@ import { leaders, leaderAbilities } from '../data/leaderData'
 import { getSuggestions, opponentProfiles } from '../data/suggestions'
 import { swDetachments } from '../data/spacewolves/detachments'
 import { tyranidDetachments } from '../data/tyranids/detachments'
+import { csmDetachments } from '../data/chaosspacemarines/detachments'
 import { useBattleStore } from '../store/battleStore'
 import PostBattleDebrief from './PostBattleDebrief'
 import ShareArmySheet from './ShareArmySheet'
@@ -12,9 +13,12 @@ import MatchupSheet from './MatchupSheet'
 
 function getStratagems(faction, detachmentId) {
   const coreStrats = demoStratagems.filter(s => s.source === 'core')
-  const detachment = faction === 'spacewolves'
-    ? swDetachments[detachmentId]
-    : tyranidDetachments[detachmentId]
+  const detachmentMap = {
+    spacewolves: swDetachments,
+    tyranids: tyranidDetachments,
+    chaosspacemarines: csmDetachments,
+  }
+  const detachment = detachmentMap[faction]?.[detachmentId]
   const detStrats = detachment?.stratagems || []
   return [...coreStrats, ...detStrats]
 }
