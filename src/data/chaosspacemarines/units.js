@@ -190,7 +190,7 @@ const characters = [
   {
     id: 'fabiusBile',
     name: 'Fabius Bile',
-    category: 'character',
+    category: 'epicHero',
     isLeader: true,
     eligibleUnits: ['chaosSpaceMarines', 'chosen'],
     unitKey: 'fabiusBile',

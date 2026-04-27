@@ -121,6 +121,46 @@ export const tyranidUnits = {
     factionKeywords: ['TYRANIDS'],
   },
 
+  oldOneEye: {
+    id: 'oldOneEye', name: 'Old One Eye', category: 'epicHero',
+    powerRating: 9, points: 145,
+    M: '8"', T: 10, Sv: '2+', W: 12, Ld: '8+', OC: 3,
+    models: 1,
+    weapons: [
+      { name: 'Crushing Claws', type: 'melee', A: 3, WS: '3+', S: 14, AP: -3, D: 'D6+1' },
+      { name: 'Monstrous Scything Talons', type: 'melee', A: 8, WS: '3+', S: 8, AP: -2, D: 2 },
+    ],
+    abilities: [
+      { name: 'Regeneration', phase: 'command', description: 'At the start of your Command phase, roll one D6: on a 2+, this model regains up to D3 lost wounds.' },
+      { name: 'Living Battering Ram', phase: 'charge', description: 'After this model finishes a Charge move, roll one D6 for each enemy unit within Engagement Range: on a 2+, that unit suffers D3 mortal wounds.' },
+      { name: 'Enraged', phase: 'fight', description: 'While this model has lost one or more wounds, add 2 to the Attacks characteristic of its Monstrous Scything Talons.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    keywords: ['MONSTER', 'CHARACTER', 'EPIC HERO', 'CARNIFEX', 'TYRANIDS'],
+    factionKeywords: ['TYRANIDS'],
+  },
+
+  deathleaper: {
+    id: 'deathleaper', name: 'Deathleaper', category: 'epicHero',
+    powerRating: 5, points: 65,
+    M: '8"', T: 5, Sv: '4+', W: 6, Ld: '7+', OC: 1, InvSv: '4+',
+    models: 1,
+    weapons: [
+      { name: 'Flesh Hooks', type: 'ranged', range: '6"', A: 4, BS: '4+', S: 4, AP: 0, D: 1 },
+      { name: 'Hooked Limbs', type: 'melee', A: 8, WS: '2+', S: 6, AP: -2, D: 2, keywords: ['PRECISION'] },
+    ],
+    abilities: [
+      { name: 'Chameleonic Skin', phase: 'any', description: 'This model has the Stealth and Lone Operative abilities.' },
+      { name: 'It\'s Behind You!', phase: 'command', description: 'At the start of each Command phase, select one enemy CHARACTER within 12". Until the start of your next Command phase, subtract 1 from that model\'s Leadership and Objective Control characteristics.' },
+      { name: 'Pheromone Trail', phase: 'movement', description: 'Once per battle, at the start of your Movement phase, you can select one friendly TYRANIDS unit in Strategic Reserves. That unit can immediately arrive as if it were the Reinforcements step.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'EPIC HERO', 'LICTOR', 'TYRANIDS'],
+    factionKeywords: ['TYRANIDS'],
+  },
+
   // ── GUARD / ELITE ──────────────────────────────────────────────────
   tyrantGuard: {
     id: 'tyrantGuard', name: 'Tyrant Guard', category: 'infantry',

@@ -1,7 +1,7 @@
 export const swUnits = {
   // ── CHARACTERS ───────────────────────────────────────────────────
   ragnar: {
-    id: 'ragnar', name: 'Ragnar Blackmane', category: 'character',
+    id: 'ragnar', name: 'Ragnar Blackmane', category: 'epicHero',
     powerRating: 5, points: 100,
     M: '7"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
     models: 1,
@@ -113,7 +113,7 @@ export const swUnits = {
   },
 
   loganGrimnar: {
-    id: 'loganGrimnar', name: 'Logan Grimnar', category: 'character',
+    id: 'loganGrimnar', name: 'Logan Grimnar', category: 'epicHero',
     powerRating: 9, points: 110,
     M: '6"', T: 4, Sv: '2+', W: 7, Ld: '5+', OC: 1, InvSv: '4+',
     models: 1,
@@ -170,7 +170,7 @@ export const swUnits = {
   },
 
   bjorn: {
-    id: 'bjorn', name: 'Bjorn the Fell-Handed', category: 'character',
+    id: 'bjorn', name: 'Bjorn the Fell-Handed', category: 'epicHero',
     powerRating: 10, points: 160,
     M: '6"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 3, InvSv: '4+',
     models: 1,
@@ -186,6 +186,83 @@ export const swUnits = {
     isLeader: true,
     leadsUnits: [],
     keywords: ['VEHICLE', 'CHARACTER', 'WALKER', 'LEGENDARY', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['SPACE WOLVES'],
+  },
+
+  njal: {
+    id: 'njal', name: 'Njal Stormcaller', category: 'epicHero',
+    powerRating: 7, points: 85,
+    M: '6"', T: 4, Sv: '2+', W: 6, Ld: '5+', OC: 1, InvSv: '4+',
+    models: 1,
+    weapons: [
+      { name: 'Runic Stave', type: 'melee', A: 4, WS: '3+', S: 6, AP: -1, D: 2, keywords: ['PSYCHIC'] },
+      { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1 },
+    ],
+    abilities: [
+      { name: 'Stormcaller', phase: 'command', description: 'At the start of your Command phase, roll one D6 for each enemy unit within 12": on a 4+ that unit suffers D3 mortal wounds.' },
+      { name: 'Lord of Tempests', phase: 'any', description: 'Each time a friendly SPACE WOLVES unit within 12" of this model would fail a Battleshock test, it automatically passes instead.' },
+      { name: 'Living Tempest', phase: 'shooting', description: 'Once per battle, select one enemy unit within 18". Until the start of your next Command phase, that unit suffers -1 to all Hit rolls and cannot fire Overwatch.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['wolfGuard', 'greyHunters', 'wolfGuardTerminators'],
+    keywords: ['INFANTRY', 'CHARACTER', 'PSYKER', 'EPIC HERO', 'RUNE PRIEST', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['SPACE WOLVES'],
+  },
+
+  murderfang: {
+    id: 'murderfang', name: 'Murderfang', category: 'epicHero',
+    powerRating: 8, points: 130,
+    M: '8"', T: 9, Sv: '3+', W: 10, Ld: '7+', OC: 3, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'The Murderclaw', type: 'melee', A: 6, WS: '2+', S: 14, AP: -3, D: 'D6+1', keywords: ['DEVASTATING WOUNDS'] },
+      { name: 'Blizzard Shield', type: 'melee', A: 3, WS: '2+', S: 8, AP: -1, D: 2 },
+    ],
+    abilities: [
+      { name: 'Unstoppable Slaughter', phase: 'fight', description: 'Each time this model fights, it makes 2 additional attacks with The Murderclaw if it charged this turn.' },
+      { name: 'Murder Frenzy', phase: 'fight', description: 'Each time an enemy model is destroyed by an attack made by this model, this model regains 1 lost wound (up to its starting wounds).' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    keywords: ['VEHICLE', 'CHARACTER', 'WALKER', 'EPIC HERO', 'DREADNOUGHT', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['SPACE WOLVES'],
+  },
+
+  arjacRockfist: {
+    id: 'arjacRockfist', name: 'Arjac Rockfist', category: 'epicHero',
+    powerRating: 7, points: 105,
+    M: '6"', T: 4, Sv: '2+', W: 6, Ld: '5+', OC: 1, InvSv: '4+',
+    models: 1,
+    weapons: [
+      { name: 'Foehammer', type: 'melee', A: 5, WS: '2+', S: 10, AP: -3, D: 3, keywords: ['DEVASTATING WOUNDS'] },
+      { name: 'Foehammer (thrown)', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 10, AP: -3, D: 3, keywords: ['DEVASTATING WOUNDS'] },
+    ],
+    abilities: [
+      { name: "The Grimnir's Champion", phase: 'fight', description: 'While this model is leading a unit, models in that unit have the Fights First ability.' },
+      { name: 'Shield of the Grimnir', phase: 'any', description: 'Each time a ranged attack targets this model\'s unit, add 1 to the Armour Save roll made for models in this unit.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['wolfGuardTerminators'],
+    keywords: ['INFANTRY', 'CHARACTER', 'TERMINATOR', 'EPIC HERO', 'WOLF GUARD', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['SPACE WOLVES'],
+  },
+
+  ulrik: {
+    id: 'ulrik', name: 'Ulrik the Slayer', category: 'epicHero',
+    powerRating: 5, points: 70,
+    M: '6"', T: 4, Sv: '3+', W: 5, Ld: '5+', OC: 1, InvSv: '4+',
+    models: 1,
+    weapons: [
+      { name: 'Crozius Arcanum', type: 'melee', A: 5, WS: '2+', S: 6, AP: -1, D: 2 },
+      { name: 'Plasma Pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 7, AP: -2, D: 1 },
+    ],
+    abilities: [
+      { name: "Wolf's Eye", phase: 'fight', description: 'While this model is leading a unit, each time a model in that unit makes a melee attack, on an unmodified hit roll of 6, that attack scores 1 additional hit.' },
+      { name: 'Sagas of the Slayer', phase: 'command', description: 'In your Command phase, this model and its unit can make a free Advance move without affecting their ability to shoot or charge.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['bloodClaws', 'wolfGuard', 'wulfen'],
+    keywords: ['INFANTRY', 'CHARACTER', 'EPIC HERO', 'WOLF PRIEST', 'ADEPTUS ASTARTES'],
     factionKeywords: ['SPACE WOLVES'],
   },
 
@@ -394,6 +471,7 @@ export const swUnits = {
 export const swUnitList = Object.values(swUnits)
 
 export const swUnitsByCategory = {
+  epicHero: swUnitList.filter(u => u.category === 'epicHero'),
   character: swUnitList.filter(u => u.category === 'character'),
   battleline: swUnitList.filter(u => u.category === 'battleline'),
   infantry: swUnitList.filter(u => u.category === 'infantry'),
