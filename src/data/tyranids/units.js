@@ -1,7 +1,7 @@
 export const tyranidUnits = {
   // ── CHARACTERS ─────────────────────────────────────────────────────
   swarmlord: {
-    id: 'swarmlord', name: 'The Swarmlord', category: 'character',
+    id: 'swarmlord', name: 'The Swarmlord', category: 'epicHero',
     powerRating: 12, points: 220,
     M: '8"', T: 10, Sv: '2+', W: 10, Ld: '7+', OC: 3, InvSv: '4+',
     models: 1,
@@ -118,23 +118,6 @@ export const tyranidUnits = {
     isLeader: true,
     leadsUnits: ['tyranidWarriors'],
     keywords: ['INFANTRY', 'CHARACTER', 'TYRANID PRIME', 'TYRANIDS'],
-    factionKeywords: ['TYRANIDS'],
-  },
-
-  vonRyansLeapersLeader: {
-    id: 'vonRyansLeapersLeader', name: "Von Ryan's Leapers (Leaper Prime)", category: 'character',
-    powerRating: 4, points: 65,
-    M: '12"', T: 3, Sv: '4+', W: 1, Ld: '8+', OC: 2,
-    models: 1,
-    weapons: [
-      { name: 'Leaper Talons', type: 'melee', A: 2, WS: '4+', S: 3, AP: 0, D: 1 },
-    ],
-    abilities: [
-      { name: 'Pounce', phase: 'charge', description: 'Can declare a charge even if Advanced. Add 2 to Charge rolls if it Advanced.' },
-    ],
-    isLeader: true,
-    leadsUnits: ['vonRyansLeapers'],
-    keywords: ['INFANTRY', 'CHARACTER', "VON RYAN'S LEAPERS", 'TYRANIDS'],
     factionKeywords: ['TYRANIDS'],
   },
 
@@ -284,7 +267,7 @@ export const tyranidUnits = {
       { name: 'Withdraw', phase: 'fight', description: 'After an enemy unit has fought, if this unit is within Engagement Range, it can make a Normal Move of up to 3" even though it is in Engagement Range.' },
     ],
     isLeader: false,
-    eligibleLeaders: ['vonRyansLeapersLeader'],
+    eligibleLeaders: [],
     keywords: ['INFANTRY', "VON RYAN'S LEAPERS", 'TYRANIDS'],
     factionKeywords: ['TYRANIDS'],
   },
@@ -408,6 +391,7 @@ export const tyranidUnits = {
 export const tyranidUnitList = Object.values(tyranidUnits)
 
 export const tyranidUnitsByCategory = {
+  epicHero: tyranidUnitList.filter(u => u.category === 'epicHero'),
   character: tyranidUnitList.filter(u => u.category === 'character'),
   battleline: tyranidUnitList.filter(u => u.category === 'battleline'),
   infantry: tyranidUnitList.filter(u => u.category === 'infantry'),

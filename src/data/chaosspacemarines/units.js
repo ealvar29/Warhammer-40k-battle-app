@@ -6,7 +6,7 @@ const characters = [
   {
     id: 'abaddon',
     name: 'Abaddon the Despoiler',
-    category: 'character',
+    category: 'epicHero',
     isLeader: true,
     eligibleUnits: ['chosen', 'chaosTerminators'],
     unitKey: 'abaddon',
@@ -392,8 +392,9 @@ const vehicles = [
 export const csmUnitList = [...characters, ...battleline, ...infantry, ...vehicles]
 
 export const csmUnitsByCategory = {
-  character: characters,
-  battleline: battleline,
-  infantry: infantry,
-  vehicle: vehicles,
+  epicHero: csmUnitList.filter(u => u.category === 'epicHero'),
+  character: csmUnitList.filter(u => u.category === 'character'),
+  battleline: csmUnitList.filter(u => u.category === 'battleline'),
+  infantry: csmUnitList.filter(u => u.category === 'infantry'),
+  vehicle: csmUnitList.filter(u => u.category === 'vehicle'),
 }

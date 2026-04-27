@@ -95,13 +95,6 @@ export const leaders = {
     faction: 'tyranids',
     keywords: ['INFANTRY', 'CHARACTER', 'GENESTEALER', 'SYNAPSE'],
   },
-  vonRyansLeapersLeader: {
-    id: 'vonRyansLeapersLeader',
-    name: "Von Ryan's Leapers (Leaper Prime)",
-    role: 'Vanguard Predator',
-    faction: 'tyranids',
-    keywords: ['INFANTRY', 'CHARACTER', 'VON RYAN\'S LEAPERS'],
-  },
   tyranidPrime: {
     id: 'tyranidPrime',
     name: 'Tyranid Prime',
@@ -308,20 +301,6 @@ export const leaderAbilities = {
         description:
           'While this model is leading this unit, subtract 1 from Hit rolls made for enemy units while they are within Engagement Range of this unit.',
         reminder: 'Enemies in Engagement Range suffer -1 to Hit rolls.',
-      },
-    ],
-  },
-
-  vonRyansLeapersLeader_vonRyansLeapers: {
-    leaderId: 'vonRyansLeapersLeader',
-    unitId: 'vonRyansLeapers',
-    abilities: [
-      {
-        name: 'Death Leap',
-        phase: 'charge',
-        description:
-          'While this model is leading this unit, each time this unit makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic of melee weapons used by models in this unit.',
-        reminder: '+1 Attack on all melee weapons after charging.',
       },
     ],
   },

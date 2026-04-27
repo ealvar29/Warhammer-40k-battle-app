@@ -17,7 +17,7 @@ const factions = [
 ]
 
 const categoryLabels = {
-  character: 'Characters', battleline: 'Battleline',
+  epicHero: 'Epic Heroes', character: 'Characters', battleline: 'Battleline',
   infantry: 'Infantry', cavalry: 'Cavalry', monster: 'Monsters', vehicle: 'Vehicles',
 }
 
