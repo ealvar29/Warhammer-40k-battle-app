@@ -6,6 +6,7 @@ import { swDetachments } from '../data/spacewolves/detachments'
 import { smGenericDetachmentList } from '../data/spacewolves/genericDetachments'
 import { tyranidDetachments } from '../data/tyranids/detachments'
 import { csmDetachments } from '../data/chaosspacemarines/detachments'
+import { daDetachments } from '../data/darkangels/detachments'
 
 // ── Name normalisation ────────────────────────────────────────────────────────
 
@@ -31,9 +32,10 @@ function wordOverlap(a, b) {
 // ── Faction detection ─────────────────────────────────────────────────────────
 
 const FACTION_SIGNALS = [
-  { keys: ['tyranid', 'xenos - tyranid'],             faction: 'tyranids' },
-  { keys: ['space wolf', 'space wolves'],              faction: 'spacewolves' },
-  { keys: ['heretic astartes', 'chaos space marine'],  faction: 'chaosspacemarines' },
+  { keys: ['tyranid', 'xenos - tyranid'],                                faction: 'tyranids' },
+  { keys: ['space wolf', 'space wolves'],                                 faction: 'spacewolves' },
+  { keys: ['heretic astartes', 'chaos space marine'],                     faction: 'chaosspacemarines' },
+  { keys: ['dark angels', 'adeptus astartes - dark angels', 'darkangel'], faction: 'darkangels' },
 ]
 
 export function detectFaction(headerText) {
@@ -53,6 +55,8 @@ function getAllDetachments(faction) {
     return Object.values(tyranidDetachments)
   if (faction === 'chaosspacemarines')
     return Object.values(csmDetachments)
+  if (faction === 'darkangels')
+    return Object.values(daDetachments)
   return []
 }
 

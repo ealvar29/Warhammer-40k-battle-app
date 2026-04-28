@@ -20,44 +20,6 @@ export const swUnits = {
     lore: 'The youngest Wolf Lord in the history of the Space Wolves.',
   },
 
-  wolfLord: {
-    id: 'wolfLord', name: 'Wolf Lord', category: 'character',
-    powerRating: 5, points: 80,
-    M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
-    weapons: [
-      { name: 'Power Sword', type: 'melee', A: 4, WS: '2+', S: 4, AP: -2, D: 1 },
-      { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1 },
-    ],
-    abilities: [
-      { name: 'Rites of Battle', phase: 'command', description: 'Friendly ADEPTUS ASTARTES units within 6" of this model can use this model\'s Leadership.' },
-      { name: 'Heroic Bearing', phase: 'fight', description: 'Add 1 to this model\'s Attacks for each enemy unit within Engagement Range.' },
-    ],
-    isLeader: true,
-    leadsUnits: ['wolfGuard', 'bloodClaws', 'greyHunters'],
-    keywords: ['INFANTRY', 'CHARACTER', 'WOLF LORD', 'ADEPTUS ASTARTES'],
-    factionKeywords: ['SPACE WOLVES'],
-  },
-
-  wolfLordOnThunderwolf: {
-    id: 'wolfLordOnThunderwolf', name: 'Wolf Lord on Thunderwolf', category: 'character',
-    powerRating: 7, points: 130,
-    M: '10"', T: 5, Sv: '3+', W: 7, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
-    weapons: [
-      { name: 'Power Fist', type: 'melee', A: 4, WS: '2+', S: 8, AP: -2, D: 2 },
-      { name: 'Storm Shield', type: 'melee', A: 3, WS: '2+', S: 4, AP: -1, D: 1, keywords: ['DEVASTATING WOUNDS'] },
-    ],
-    abilities: [
-      { name: 'Born of Fenris', phase: 'charge', description: 'Add 2" to Advance and Charge moves made by this model.' },
-      { name: 'Iron Will', phase: 'any', description: 'This model has a 4+ invulnerable save.' },
-    ],
-    isLeader: true,
-    leadsUnits: ['thunderwolfCavalry'],
-    keywords: ['MOUNTED', 'CHARACTER', 'WOLF LORD', 'ADEPTUS ASTARTES'],
-    factionKeywords: ['SPACE WOLVES'],
-  },
-
   runePriest: {
     id: 'runePriest', name: 'Rune Priest', category: 'character',
     powerRating: 4, points: 75,
@@ -118,8 +80,8 @@ export const swUnits = {
     M: '6"', T: 4, Sv: '2+', W: 7, Ld: '5+', OC: 1, InvSv: '4+',
     models: 1,
     weapons: [
-      { name: 'Morkai (melee)', type: 'melee', A: 6, WS: '2+', S: 6, AP: -2, D: 2, keywords: ['TWIN-LINKED'] },
-      { name: 'Morkai (ranged)', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 6, AP: -2, D: 2 },
+      { name: 'Morkai', type: 'melee', A: 6, WS: '2+', S: 6, AP: -2, D: 2, keywords: ['DEVASTATING WOUNDS'] },
+      { name: 'Morkai', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 6, AP: -1, D: 2, keywords: ['ASSAULT', 'TWIN-LINKED'] },
     ],
     abilities: [
       { name: 'High King of Fenris', phase: 'command', description: 'Friendly SPACE WOLVES CORE units within 6" of this model can re-roll Hit rolls.' },
@@ -231,7 +193,7 @@ export const swUnits = {
   arjacRockfist: {
     id: 'arjacRockfist', name: 'Arjac Rockfist', category: 'epicHero',
     powerRating: 7, points: 105,
-    M: '6"', T: 4, Sv: '2+', W: 6, Ld: '5+', OC: 1, InvSv: '4+',
+    M: '5"', T: 4, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
     models: 1,
     weapons: [
       { name: 'Foehammer', type: 'melee', A: 5, WS: '2+', S: 10, AP: -3, D: 3, keywords: ['DEVASTATING WOUNDS'] },
@@ -368,7 +330,7 @@ export const swUnits = {
   wolfGuardTerminators: {
     id: 'wolfGuardTerminators', name: 'Wolf Guard Terminators', category: 'infantry',
     powerRating: 9, points: 170,
-    M: '6"', T: 5, Sv: '2+', W: 3, Ld: '6+', OC: 1, InvSv: '4+',
+    M: '5"', T: 5, Sv: '2+', W: 3, Ld: '6+', OC: 1, InvSv: '4+',
     models: 5, minModels: 5, maxModels: 10,
     weapons: [
       { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },

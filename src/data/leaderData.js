@@ -29,6 +29,57 @@ export const leaders = {
     keywords: ['VEHICLE', 'CHARACTER', 'WALKER', 'LEGENDARY'],
   },
 
+  // Leader characters — Space Wolves (continued)
+  loganGrimnar: {
+    id: 'loganGrimnar',
+    name: 'Logan Grimnar',
+    role: 'Great Wolf',
+    faction: 'spacewolves',
+    keywords: ['INFANTRY', 'CHARACTER', 'LEGENDARY', 'GREAT WOLF', 'ADEPTUS ASTARTES'],
+  },
+  runePriest: {
+    id: 'runePriest',
+    name: 'Rune Priest',
+    role: 'Psyker',
+    faction: 'spacewolves',
+    keywords: ['INFANTRY', 'CHARACTER', 'PSYKER', 'RUNE PRIEST', 'ADEPTUS ASTARTES'],
+  },
+  wolfGuardBattleLeader: {
+    id: 'wolfGuardBattleLeader',
+    name: 'Wolf Guard Battle Leader',
+    role: 'Battle Captain',
+    faction: 'spacewolves',
+    keywords: ['INFANTRY', 'CHARACTER', 'WOLF GUARD', 'ADEPTUS ASTARTES'],
+  },
+  wolfPriest: {
+    id: 'wolfPriest',
+    name: 'Wolf Priest',
+    role: 'Chaplain',
+    faction: 'spacewolves',
+    keywords: ['INFANTRY', 'CHARACTER', 'WOLF PRIEST', 'ADEPTUS ASTARTES'],
+  },
+  njal: {
+    id: 'njal',
+    name: 'Njal Stormcaller',
+    role: 'Chief Rune Priest',
+    faction: 'spacewolves',
+    keywords: ['INFANTRY', 'CHARACTER', 'PSYKER', 'EPIC HERO', 'RUNE PRIEST', 'ADEPTUS ASTARTES'],
+  },
+  arjacRockfist: {
+    id: 'arjacRockfist',
+    name: 'Arjac Rockfist',
+    role: 'Champion of the Fang',
+    faction: 'spacewolves',
+    keywords: ['INFANTRY', 'CHARACTER', 'TERMINATOR', 'EPIC HERO', 'WOLF GUARD', 'ADEPTUS ASTARTES'],
+  },
+  ulrik: {
+    id: 'ulrik',
+    name: 'Ulrik the Slayer',
+    role: 'Master of Sanctity',
+    faction: 'spacewolves',
+    keywords: ['INFANTRY', 'CHARACTER', 'EPIC HERO', 'WOLF PRIEST', 'ADEPTUS ASTARTES'],
+  },
+
   // Leader characters — Chaos Space Marines
   abaddon: {
     id: 'abaddon',
@@ -66,20 +117,64 @@ export const leaders = {
     keywords: ['CHARACTER', 'INFANTRY', 'HERETIC ASTARTES'],
   },
 
+  // Leader characters — Dark Angels
+  azrael: {
+    id: 'azrael',
+    name: 'Azrael',
+    role: 'Supreme Grand Master',
+    faction: 'darkangels',
+    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'OFFICER', 'EPIC HERO'],
+  },
+  belial: {
+    id: 'belial',
+    name: 'Belial',
+    role: 'Grand Master of the Deathwing',
+    faction: 'darkangels',
+    keywords: ['CHARACTER', 'INFANTRY', 'TERMINATOR', 'DARK ANGELS', 'INNER CIRCLE', 'EPIC HERO'],
+  },
+  sammael: {
+    id: 'sammael',
+    name: 'Sammael',
+    role: 'Grand Master of the Ravenwing',
+    faction: 'darkangels',
+    keywords: ['CHARACTER', 'MOUNTED', 'FLY', 'DARK ANGELS', 'RAVENWING', 'EPIC HERO'],
+  },
+  asmodai: {
+    id: 'asmodai',
+    name: 'Asmodai',
+    role: 'Master Interrogator-Chaplain',
+    faction: 'darkangels',
+    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'CHAPLAIN', 'EPIC HERO'],
+  },
+  interrogatorChaplain: {
+    id: 'interrogatorChaplain',
+    name: 'Interrogator-Chaplain',
+    role: 'Chaplain',
+    faction: 'darkangels',
+    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'CHAPLAIN'],
+  },
+  companyMaster: {
+    id: 'companyMaster',
+    name: 'Company Master',
+    role: 'Chapter Officer',
+    faction: 'darkangels',
+    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'OFFICER'],
+  },
+  darkAngelsLibrarian: {
+    id: 'darkAngelsLibrarian',
+    name: 'Librarian',
+    role: 'Psyker',
+    faction: 'darkangels',
+    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'PSYKER', 'LIBRARIAN'],
+  },
+
   // Leader characters — Tyranids
   hiveTyrant: {
     id: 'hiveTyrant',
     name: 'Hive Tyrant',
     role: 'Warlord Monster',
     faction: 'tyranids',
-    keywords: ['MONSTER', 'CHARACTER', 'FLY', 'SYNAPSE', 'HIVE TYRANT'],
-  },
-  wingedHiveTyrant: {
-    id: 'wingedHiveTyrant',
-    name: 'Winged Hive Tyrant',
-    role: 'Warlord Monster',
-    faction: 'tyranids',
-    keywords: ['MONSTER', 'CHARACTER', 'FLY', 'SYNAPSE', 'HIVE TYRANT'],
+    keywords: ['MONSTER', 'CHARACTER', 'SYNAPSE', 'HIVE TYRANT'],
   },
   neurotyrant: {
     id: 'neurotyrant',
@@ -95,12 +190,26 @@ export const leaders = {
     faction: 'tyranids',
     keywords: ['INFANTRY', 'CHARACTER', 'GENESTEALER', 'SYNAPSE'],
   },
-  tyranidPrime: {
-    id: 'tyranidPrime',
-    name: 'Tyranid Prime',
+  wingedTyranidPrime: {
+    id: 'wingedTyranidPrime',
+    name: 'Winged Tyranid Prime',
     role: 'Warrior Alpha',
     faction: 'tyranids',
-    keywords: ['INFANTRY', 'CHARACTER', 'SYNAPSE', 'TYRANID PRIME'],
+    keywords: ['INFANTRY', 'CHARACTER', 'FLY', 'TYRANID PRIME'],
+  },
+  tervigon: {
+    id: 'tervigon',
+    name: 'Tervigon',
+    role: 'Brood Progenitor',
+    faction: 'tyranids',
+    keywords: ['MONSTER', 'CHARACTER', 'SYNAPSE', 'TERVIGON'],
+  },
+  swarmlord: {
+    id: 'swarmlord',
+    name: 'The Swarmlord',
+    role: 'Hive Mind Avatar',
+    faction: 'tyranids',
+    keywords: ['MONSTER', 'CHARACTER', 'SYNAPSE', 'PSYKER', 'SWARMLORD'],
   },
 }
 
@@ -207,8 +316,8 @@ export const leaderAbilities = {
     ],
   },
 
-  wingedHiveTyrant_tyrantGuard: {
-    leaderId: 'wingedHiveTyrant',
+  swarmlord_tyrantGuard: {
+    leaderId: 'swarmlord',
     unitId: 'tyrantGuard',
     abilities: [
       {
@@ -216,42 +325,20 @@ export const leaderAbilities = {
         phase: 'any',
         description:
           'While a CHARACTER model is leading this unit, that model has the Feel No Pain 5+ ability.',
-        reminder: '⚠ Your Winged Hive Tyrant has Feel No Pain 5+ while leading Tyrant Guard.',
+        reminder: '⚠ The Swarmlord has Feel No Pain 5+ while leading Tyrant Guard.',
       },
       {
         name: 'Bodyguard',
         phase: 'any',
         description:
           'While a CHARACTER model is leading this unit, each time an attack targets that CHARACTER, if a model in this unit is within 3" of it, roll one D6: on a 2+, redirect that attack to the Tyrant Guard unit instead.',
-        reminder: 'Tyrant Guard intercept attacks on your Winged Hive Tyrant (2+ on D6).',
+        reminder: 'Tyrant Guard intercept attacks on the Swarmlord (2+ on D6).',
       },
-    ],
-  },
-
-  hiveTyrant_tyranidWarriors: {
-    leaderId: 'hiveTyrant',
-    unitId: 'tyranidWarriors',
-    abilities: [
       {
-        name: 'Synaptic Nexus',
-        phase: 'command',
-        description:
-          'While this model is leading this unit, at the start of your Command phase, you can select one CORE or SYNAPSE unit within 12". Until the start of your next Command phase, add 1 to the Strength characteristic of melee weapons used by models in that unit.',
-        reminder: '+1 Strength on melee weapons for a CORE/SYNAPSE unit within 12".',
-      },
-    ],
-  },
-
-  wingedHiveTyrant_tyranidWarriors: {
-    leaderId: 'wingedHiveTyrant',
-    unitId: 'tyranidWarriors',
-    abilities: [
-      {
-        name: 'Synaptic Nexus',
-        phase: 'command',
-        description:
-          'While this model is leading this unit, at the start of your Command phase, you can select one CORE or SYNAPSE unit within 12". Until the start of your next Command phase, add 1 to the Strength characteristic of melee weapons used by models in that unit.',
-        reminder: '+1 Strength on melee weapons for a CORE/SYNAPSE unit within 12".',
+        name: 'Alien Cunning',
+        phase: 'movement',
+        description: 'Once per battle, at the start of your Movement phase, this unit can be removed from the battlefield and placed into Strategic Reserves. In the Reinforcements step of any subsequent Movement phase, you can set it up anywhere on the battlefield more than 9" from all enemy models.',
+        reminder: '⚡ Once per battle — remove and redeploy anywhere (9"+ from enemies).',
       },
     ],
   },
@@ -305,8 +392,8 @@ export const leaderAbilities = {
     ],
   },
 
-  tyranidPrime_tyranidWarriors: {
-    leaderId: 'tyranidPrime',
+  wingedTyranidPrime_tyranidWarriors: {
+    leaderId: 'wingedTyranidPrime',
     unitId: 'tyranidWarriors',
     abilities: [
       {
@@ -315,6 +402,385 @@ export const leaderAbilities = {
         description:
           'While this model is leading this unit, melee weapons equipped by models in this unit have the [SUSTAINED HITS 1] ability.',
         reminder: 'All melee weapons in this unit gain Sustained Hits 1.',
+      },
+    ],
+  },
+
+  wingedTyranidPrime_gargoyles: {
+    leaderId: 'wingedTyranidPrime',
+    unitId: 'gargoyles',
+    abilities: [
+      {
+        name: 'Alpha Warrior',
+        phase: 'fight',
+        description:
+          'While this model is leading this unit, melee weapons equipped by models in this unit have the [SUSTAINED HITS 1] ability.',
+        reminder: 'All melee weapons in this unit gain Sustained Hits 1.',
+      },
+      {
+        name: 'Swooping Predator',
+        phase: 'movement',
+        description:
+          'While this model is leading this unit, this unit can Advance and still shoot with ranged weapons this turn.',
+        reminder: 'This unit can Advance and still shoot.',
+      },
+    ],
+  },
+
+  tervigon_termagants: {
+    leaderId: 'tervigon',
+    unitId: 'termagants',
+    abilities: [
+      {
+        name: 'Brood Progenitor',
+        phase: 'command',
+        description:
+          'At the end of your Command phase, if this model is not within Engagement Range of any enemy units, add D6 TERMAGANT models to this unit (up to starting strength).',
+        reminder: 'Add D6 Termagants to this unit at end of Command phase.',
+      },
+    ],
+  },
+
+  // ── SPACE WOLVES ADDITIONAL PAIRINGS ────────────────────────────────────────
+
+  loganGrimnar_wolfGuard: {
+    leaderId: 'loganGrimnar',
+    unitId: 'wolfGuard',
+    abilities: [
+      {
+        name: 'High King of Fenris',
+        phase: 'command',
+        description: 'While this model is leading a unit, friendly SPACE WOLVES CORE units within 6" of this unit can re-roll Hit rolls.',
+        reminder: 'Re-roll all hit rolls for SW CORE units within 6".',
+      },
+      {
+        name: 'Saga of the Bear',
+        phase: 'any',
+        description: 'Each time this model would lose a wound, roll one D6: on a 4+, that wound is ignored.',
+        reminder: '4+ to ignore each wound on Logan.',
+      },
+    ],
+  },
+
+  loganGrimnar_wolfGuardTerminators: {
+    leaderId: 'loganGrimnar',
+    unitId: 'wolfGuardTerminators',
+    abilities: [
+      {
+        name: 'High King of Fenris',
+        phase: 'command',
+        description: 'While this model is leading a unit, friendly SPACE WOLVES CORE units within 6" of this unit can re-roll Hit rolls.',
+        reminder: 'Re-roll all hit rolls for SW CORE units within 6".',
+      },
+      {
+        name: 'Saga of the Bear',
+        phase: 'any',
+        description: 'Each time this model would lose a wound, roll one D6: on a 4+, that wound is ignored.',
+        reminder: '4+ to ignore each wound on Logan.',
+      },
+    ],
+  },
+
+  runePriest_wolfGuard: {
+    leaderId: 'runePriest',
+    unitId: 'wolfGuard',
+    abilities: [
+      {
+        name: 'Storm Caller',
+        phase: 'command',
+        description: 'Once per battle, in your Command phase, select one friendly ADEPTUS ASTARTES unit within 18". Until the start of your next Command phase, that unit has the Benefit of Cover.',
+        reminder: '⚡ Once per battle — grant Benefit of Cover to a unit within 18".',
+      },
+      {
+        name: "Tempest's Wrath",
+        phase: 'shooting',
+        description: 'Once per battle. Select one enemy unit within 18". Roll one D6: on a 2+, that unit suffers D3 mortal wounds.',
+        reminder: '⚡ Once per battle — D3 mortal wounds to an enemy within 18" on a 2+.',
+      },
+    ],
+  },
+
+  runePriest_greyHunters: {
+    leaderId: 'runePriest',
+    unitId: 'greyHunters',
+    abilities: [
+      {
+        name: 'Storm Caller',
+        phase: 'command',
+        description: 'Once per battle, in your Command phase, select one friendly ADEPTUS ASTARTES unit within 18". Until the start of your next Command phase, that unit has the Benefit of Cover.',
+        reminder: '⚡ Once per battle — grant Benefit of Cover to a unit within 18".',
+      },
+      {
+        name: "Tempest's Wrath",
+        phase: 'shooting',
+        description: 'Once per battle. Select one enemy unit within 18". Roll one D6: on a 2+, that unit suffers D3 mortal wounds.',
+        reminder: '⚡ Once per battle — D3 mortal wounds to an enemy within 18" on a 2+.',
+      },
+    ],
+  },
+
+  wolfGuardBattleLeader_wolfGuard: {
+    leaderId: 'wolfGuardBattleLeader',
+    unitId: 'wolfGuard',
+    abilities: [
+      {
+        name: 'Inspiring Presence',
+        phase: 'command',
+        description: 'While this model is leading a unit, friendly ADEPTUS ASTARTES units within 6" of its unit do not lose the Objective Secured ability while below Half-strength.',
+        reminder: 'Units within 6" keep Objective Secured even below half strength.',
+      },
+      {
+        name: 'Target Priority',
+        phase: 'shooting',
+        description: 'In your Shooting phase, this model can re-roll one Hit roll and one Wound roll for attacks made by its unit.',
+        reminder: 'Re-roll one hit AND one wound roll this Shooting phase.',
+      },
+    ],
+  },
+
+  wolfGuardBattleLeader_bloodClaws: {
+    leaderId: 'wolfGuardBattleLeader',
+    unitId: 'bloodClaws',
+    abilities: [
+      {
+        name: 'Inspiring Presence',
+        phase: 'command',
+        description: 'While this model is leading a unit, friendly ADEPTUS ASTARTES units within 6" of its unit do not lose the Objective Secured ability while below Half-strength.',
+        reminder: 'Units within 6" keep Objective Secured even below half strength.',
+      },
+      {
+        name: 'Target Priority',
+        phase: 'shooting',
+        description: 'In your Shooting phase, this model can re-roll one Hit roll and one Wound roll for attacks made by its unit.',
+        reminder: 'Re-roll one hit AND one wound roll this Shooting phase.',
+      },
+    ],
+  },
+
+  wolfGuardBattleLeader_greyHunters: {
+    leaderId: 'wolfGuardBattleLeader',
+    unitId: 'greyHunters',
+    abilities: [
+      {
+        name: 'Inspiring Presence',
+        phase: 'command',
+        description: 'While this model is leading a unit, friendly ADEPTUS ASTARTES units within 6" of its unit do not lose the Objective Secured ability while below Half-strength.',
+        reminder: 'Units within 6" keep Objective Secured even below half strength.',
+      },
+      {
+        name: 'Target Priority',
+        phase: 'shooting',
+        description: 'In your Shooting phase, this model can re-roll one Hit roll and one Wound roll for attacks made by its unit.',
+        reminder: 'Re-roll one hit AND one wound roll this Shooting phase.',
+      },
+    ],
+  },
+
+  wolfGuardBattleLeader_wolfGuardHeadtakers: {
+    leaderId: 'wolfGuardBattleLeader',
+    unitId: 'wolfGuardHeadtakers',
+    abilities: [
+      {
+        name: 'Inspiring Presence',
+        phase: 'command',
+        description: 'While this model is leading a unit, friendly ADEPTUS ASTARTES units within 6" of its unit do not lose the Objective Secured ability while below Half-strength.',
+        reminder: 'Units within 6" keep Objective Secured even below half strength.',
+      },
+      {
+        name: 'Target Priority',
+        phase: 'shooting',
+        description: 'In your Shooting phase, this model can re-roll one Hit roll and one Wound roll for attacks made by its unit.',
+        reminder: 'Re-roll one hit AND one wound roll this Shooting phase.',
+      },
+    ],
+  },
+
+  wolfPriest_bloodClaws: {
+    leaderId: 'wolfPriest',
+    unitId: 'bloodClaws',
+    abilities: [
+      {
+        name: 'Litany of Hate',
+        phase: 'fight',
+        description: 'While this model is leading a unit, each time a model in that unit makes a melee attack, re-roll a Hit roll of 1.',
+        reminder: 'Re-roll hit rolls of 1 on all melee attacks.',
+      },
+      {
+        name: "Warrior's Blessing",
+        phase: 'command',
+        description: 'In your Command phase, select one friendly SPACE WOLVES unit within 9". Until the start of your next Command phase, models in that unit have the Feel No Pain 6+ ability.',
+        reminder: 'Grant Feel No Pain 6+ to a SW unit within 9".',
+      },
+    ],
+  },
+
+  wolfPriest_wolfGuard: {
+    leaderId: 'wolfPriest',
+    unitId: 'wolfGuard',
+    abilities: [
+      {
+        name: 'Litany of Hate',
+        phase: 'fight',
+        description: 'While this model is leading a unit, each time a model in that unit makes a melee attack, re-roll a Hit roll of 1.',
+        reminder: 'Re-roll hit rolls of 1 on all melee attacks.',
+      },
+      {
+        name: "Warrior's Blessing",
+        phase: 'command',
+        description: 'In your Command phase, select one friendly SPACE WOLVES unit within 9". Until the start of your next Command phase, models in that unit have the Feel No Pain 6+ ability.',
+        reminder: 'Grant Feel No Pain 6+ to a SW unit within 9".',
+      },
+    ],
+  },
+
+  wolfPriest_wulfen: {
+    leaderId: 'wolfPriest',
+    unitId: 'wulfen',
+    abilities: [
+      {
+        name: 'Litany of Hate',
+        phase: 'fight',
+        description: 'While this model is leading a unit, each time a model in that unit makes a melee attack, re-roll a Hit roll of 1.',
+        reminder: 'Re-roll hit rolls of 1 on all melee attacks.',
+      },
+      {
+        name: "Warrior's Blessing",
+        phase: 'command',
+        description: 'In your Command phase, select one friendly SPACE WOLVES unit within 9". Until the start of your next Command phase, models in that unit have the Feel No Pain 6+ ability.',
+        reminder: 'Grant Feel No Pain 6+ to a SW unit within 9".',
+      },
+    ],
+  },
+
+  njal_wolfGuard: {
+    leaderId: 'njal',
+    unitId: 'wolfGuard',
+    abilities: [
+      {
+        name: 'Stormcaller',
+        phase: 'command',
+        description: 'At the start of your Command phase, roll one D6 for each enemy unit within 12" of this unit: on a 4+ that unit suffers D3 mortal wounds.',
+        reminder: 'Roll D6 per enemy within 12" — 4+ = D3 mortal wounds.',
+      },
+      {
+        name: 'Lord of Tempests',
+        phase: 'any',
+        description: 'Each time a friendly SPACE WOLVES unit within 12" of this model would fail a Battleshock test, it automatically passes instead.',
+        reminder: 'SW units within 12" auto-pass Battleshock.',
+      },
+    ],
+  },
+
+  njal_greyHunters: {
+    leaderId: 'njal',
+    unitId: 'greyHunters',
+    abilities: [
+      {
+        name: 'Stormcaller',
+        phase: 'command',
+        description: 'At the start of your Command phase, roll one D6 for each enemy unit within 12" of this unit: on a 4+ that unit suffers D3 mortal wounds.',
+        reminder: 'Roll D6 per enemy within 12" — 4+ = D3 mortal wounds.',
+      },
+      {
+        name: 'Lord of Tempests',
+        phase: 'any',
+        description: 'Each time a friendly SPACE WOLVES unit within 12" of this model would fail a Battleshock test, it automatically passes instead.',
+        reminder: 'SW units within 12" auto-pass Battleshock.',
+      },
+    ],
+  },
+
+  njal_wolfGuardTerminators: {
+    leaderId: 'njal',
+    unitId: 'wolfGuardTerminators',
+    abilities: [
+      {
+        name: 'Stormcaller',
+        phase: 'command',
+        description: 'At the start of your Command phase, roll one D6 for each enemy unit within 12" of this unit: on a 4+ that unit suffers D3 mortal wounds.',
+        reminder: 'Roll D6 per enemy within 12" — 4+ = D3 mortal wounds.',
+      },
+      {
+        name: 'Lord of Tempests',
+        phase: 'any',
+        description: 'Each time a friendly SPACE WOLVES unit within 12" of this model would fail a Battleshock test, it automatically passes instead.',
+        reminder: 'SW units within 12" auto-pass Battleshock.',
+      },
+    ],
+  },
+
+  arjacRockfist_wolfGuardTerminators: {
+    leaderId: 'arjacRockfist',
+    unitId: 'wolfGuardTerminators',
+    abilities: [
+      {
+        name: "Grimnir's Champion",
+        phase: 'fight',
+        description: 'While this model is leading a unit, models in that unit have the Fights First ability.',
+        reminder: '⚡ This unit fights first in the Fight phase.',
+      },
+      {
+        name: 'Shield of the Grimnir',
+        phase: 'any',
+        description: 'Each time a ranged attack targets this model\'s unit, add 1 to the Armour Save roll made for models in this unit.',
+        reminder: '+1 to all Armour Saves vs ranged attacks.',
+      },
+    ],
+  },
+
+  ulrik_bloodClaws: {
+    leaderId: 'ulrik',
+    unitId: 'bloodClaws',
+    abilities: [
+      {
+        name: "Wolf's Eye",
+        phase: 'fight',
+        description: 'While this model is leading a unit, each time a model in that unit makes a melee attack, on an unmodified hit roll of 6, that attack scores 1 additional hit.',
+        reminder: 'Unmodified hit roll of 6 = 1 extra hit on all melee attacks.',
+      },
+      {
+        name: 'Sagas of the Slayer',
+        phase: 'command',
+        description: 'In your Command phase, this model and its unit can make a free Advance move without affecting their ability to shoot or charge.',
+        reminder: 'Free Advance in Command phase — still counts as not having Advanced.',
+      },
+    ],
+  },
+
+  ulrik_wolfGuard: {
+    leaderId: 'ulrik',
+    unitId: 'wolfGuard',
+    abilities: [
+      {
+        name: "Wolf's Eye",
+        phase: 'fight',
+        description: 'While this model is leading a unit, each time a model in that unit makes a melee attack, on an unmodified hit roll of 6, that attack scores 1 additional hit.',
+        reminder: 'Unmodified hit roll of 6 = 1 extra hit on all melee attacks.',
+      },
+      {
+        name: 'Sagas of the Slayer',
+        phase: 'command',
+        description: 'In your Command phase, this model and its unit can make a free Advance move without affecting their ability to shoot or charge.',
+        reminder: 'Free Advance in Command phase — still counts as not having Advanced.',
+      },
+    ],
+  },
+
+  ulrik_wulfen: {
+    leaderId: 'ulrik',
+    unitId: 'wulfen',
+    abilities: [
+      {
+        name: "Wolf's Eye",
+        phase: 'fight',
+        description: 'While this model is leading a unit, each time a model in that unit makes a melee attack, on an unmodified hit roll of 6, that attack scores 1 additional hit.',
+        reminder: 'Unmodified hit roll of 6 = 1 extra hit on all melee attacks.',
+      },
+      {
+        name: 'Sagas of the Slayer',
+        phase: 'command',
+        description: 'In your Command phase, this model and its unit can make a free Advance move without affecting their ability to shoot or charge.',
+        reminder: 'Free Advance in Command phase — still counts as not having Advanced.',
       },
     ],
   },
@@ -455,16 +921,252 @@ export const leaderAbilities = {
       },
     ],
   },
+
+  // ── DARK ANGELS LEADER PAIRINGS ─────────────────────────────────────────────
+
+  azrael_intercessors: {
+    leaderId: 'azrael',
+    unitId: 'intercessors',
+    abilities: [
+      {
+        name: 'The Lion Helm',
+        phase: 'any',
+        description: 'While this model is leading this unit, models in this unit have a 4+ invulnerable save.',
+        reminder: '⚡ All models in this unit now have a 4+ invuln save.',
+      },
+      {
+        name: 'Rites of Battle',
+        phase: 'shooting',
+        description: 'While this model is leading this unit, you can re-roll hit rolls of 1 for attacks made by models in this unit.',
+        reminder: 'Re-roll hit rolls of 1 for all attacks.',
+      },
+    ],
+  },
+
+  azrael_innerCircleCompanions: {
+    leaderId: 'azrael',
+    unitId: 'innerCircleCompanions',
+    abilities: [
+      {
+        name: 'The Lion Helm',
+        phase: 'any',
+        description: 'While this model is leading this unit, models in this unit have a 4+ invulnerable save.',
+        reminder: '⚡ All models in this unit now have a 4+ invuln save.',
+      },
+      {
+        name: 'Rites of Battle',
+        phase: 'shooting',
+        description: 'While this model is leading this unit, you can re-roll hit rolls of 1 for attacks made by models in this unit.',
+        reminder: 'Re-roll hit rolls of 1 for all attacks.',
+      },
+    ],
+  },
+
+  belial_deathwingKnights: {
+    leaderId: 'belial',
+    unitId: 'deathwingKnights',
+    abilities: [
+      {
+        name: 'The Unforgiven',
+        phase: 'fight',
+        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [LETHAL HITS] ability.',
+        reminder: 'All melee weapons in this unit gain LETHAL HITS.',
+      },
+      {
+        name: 'Deathwing Teleportation',
+        phase: 'movement',
+        description: 'Once per battle, this unit can be removed and placed anywhere on the battlefield more than 9" from all enemy models.',
+        reminder: '⚡ Once per battle — teleport this unit anywhere (9"+ from enemies).',
+      },
+    ],
+  },
+
+  belial_deathwingTerminators: {
+    leaderId: 'belial',
+    unitId: 'deathwingTerminators',
+    abilities: [
+      {
+        name: 'The Unforgiven',
+        phase: 'fight',
+        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [LETHAL HITS] ability.',
+        reminder: 'All melee weapons in this unit gain LETHAL HITS.',
+      },
+      {
+        name: 'Deathwing Teleportation',
+        phase: 'movement',
+        description: 'Once per battle, this unit can be removed and placed anywhere on the battlefield more than 9" from all enemy models.',
+        reminder: '⚡ Once per battle — teleport this unit anywhere (9"+ from enemies).',
+      },
+    ],
+  },
+
+  sammael_ravenwingBlackKnights: {
+    leaderId: 'sammael',
+    unitId: 'ravenwingBlackKnights',
+    abilities: [
+      {
+        name: 'Wings of Night',
+        phase: 'movement',
+        description: 'After this unit makes an Advance move, select one friendly RAVENWING unit within 6". That unit can make a Normal Move of up to 6".',
+        reminder: 'After advancing, give one RAVENWING unit within 6" a free 6" Normal Move.',
+      },
+      {
+        name: 'Master of the Ravenwing',
+        phase: 'shooting',
+        description: 'Friendly RAVENWING units within 6" of this model can target enemy units not visible to them, as long as this model has line of sight.',
+        reminder: 'RAVENWING units within 6" can ignore line of sight for shooting.',
+      },
+    ],
+  },
+
+  asmodai_deathwingKnights: {
+    leaderId: 'asmodai',
+    unitId: 'deathwingKnights',
+    abilities: [
+      {
+        name: 'Litanies of Hate',
+        phase: 'fight',
+        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [LETHAL HITS] ability.',
+        reminder: 'All melee weapons in this unit gain LETHAL HITS.',
+      },
+      {
+        name: 'Interrogation',
+        phase: 'fight',
+        description: 'At the end of the Fight phase, select one enemy unit within 3" of this model. Roll D6 for each model: on a 5+, that unit suffers 1 mortal wound (max 6).',
+        reminder: 'End of Fight: roll D6 per enemy model within 3" — 5+ = 1 mortal wound.',
+      },
+    ],
+  },
+
+  asmodai_intercessors: {
+    leaderId: 'asmodai',
+    unitId: 'intercessors',
+    abilities: [
+      {
+        name: 'Litanies of Hate',
+        phase: 'fight',
+        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [LETHAL HITS] ability.',
+        reminder: 'All melee weapons in this unit gain LETHAL HITS.',
+      },
+      {
+        name: 'Spiritual Leader',
+        phase: 'any',
+        description: 'Friendly DARK ANGELS units within 6" of this model are never Battle-shocked.',
+        reminder: 'Units within 6" auto-pass Battle-shock tests.',
+      },
+    ],
+  },
+
+  interrogatorChaplain_intercessors: {
+    leaderId: 'interrogatorChaplain',
+    unitId: 'intercessors',
+    abilities: [
+      {
+        name: 'Litanies of Hate',
+        phase: 'fight',
+        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [LETHAL HITS] ability.',
+        reminder: 'All melee weapons in this unit gain LETHAL HITS.',
+      },
+      {
+        name: 'Spiritual Leader',
+        phase: 'any',
+        description: 'Friendly DARK ANGELS units within 6" of this model are never Battle-shocked.',
+        reminder: 'Units within 6" auto-pass Battle-shock tests.',
+      },
+    ],
+  },
+
+  interrogatorChaplain_innerCircleCompanions: {
+    leaderId: 'interrogatorChaplain',
+    unitId: 'innerCircleCompanions',
+    abilities: [
+      {
+        name: 'Litanies of Hate',
+        phase: 'fight',
+        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [LETHAL HITS] ability.',
+        reminder: 'All melee weapons in this unit gain LETHAL HITS.',
+      },
+    ],
+  },
+
+  companyMaster_intercessors: {
+    leaderId: 'companyMaster',
+    unitId: 'intercessors',
+    abilities: [
+      {
+        name: 'Rites of Battle',
+        phase: 'shooting',
+        description: 'While this model is leading this unit, you can re-roll hit rolls of 1 for attacks made by models in this unit.',
+        reminder: 'Re-roll hit rolls of 1 for all attacks.',
+      },
+    ],
+  },
+
+  companyMaster_innerCircleCompanions: {
+    leaderId: 'companyMaster',
+    unitId: 'innerCircleCompanions',
+    abilities: [
+      {
+        name: 'Rites of Battle',
+        phase: 'shooting',
+        description: 'While this model is leading this unit, you can re-roll hit rolls of 1 for attacks made by models in this unit.',
+        reminder: 'Re-roll hit rolls of 1 for all attacks.',
+      },
+      {
+        name: 'Inner Circle Secrets',
+        phase: 'any',
+        description: 'While this model is on the battlefield, friendly DARK ANGELS INNER CIRCLE units are never Battle-shocked.',
+        reminder: 'All INNER CIRCLE units auto-pass Battle-shock while this model is alive.',
+      },
+    ],
+  },
+
+  darkAngelsLibrarian_intercessors: {
+    leaderId: 'darkAngelsLibrarian',
+    unitId: 'intercessors',
+    abilities: [
+      {
+        name: 'Interromancy',
+        phase: 'shooting',
+        description: 'Psychic ability: roll 2D6 — if 7+, one enemy unit within 18" suffers D3 mortal wounds and loses 2 Leadership until your next Command phase.',
+        reminder: 'Psychic: 2D6 ≥7 → enemy within 18" takes D3 mortal wounds, -2 Leadership.',
+      },
+      {
+        name: 'Force Barrier',
+        phase: 'any',
+        description: 'While this model is leading this unit, models in this unit have a 5+ invulnerable save.',
+        reminder: 'All models in this unit gain 5+ invuln save.',
+      },
+    ],
+  },
 }
 
 // Maps each unit to eligible leader IDs (Space Wolves — Tyranids use eligibleLeaders on the unit)
 export const unitLeaderMap = {
-  bloodClaws: ['ragnar', 'wolfGuardPackLeader'],
-  greyHunters: ['wolfGuardPackLeader'],
+  // Space Wolves
+  bloodClaws: ['ragnar', 'wolfGuardPackLeader', 'wolfGuardBattleLeader', 'wolfPriest', 'ulrik'],
+  greyHunters: ['wolfGuardPackLeader', 'runePriest', 'wolfGuardBattleLeader', 'njal'],
+  wolfGuard: ['wolfGuardPackLeader', 'loganGrimnar', 'runePriest', 'wolfGuardBattleLeader', 'wolfPriest', 'njal', 'ulrik'],
+  wolfGuardHeadtakers: ['ragnar', 'wolfGuardBattleLeader'],
+  wolfGuardTerminators: ['loganGrimnar', 'njal', 'arjacRockfist'],
   thunderwolfCavalry: ['ironPriest'],
-  headtakers: ['ragnar'],
+  wulfen: ['wolfPriest', 'ulrik'],
+  // Tyranids
+  tyrantGuard: ['swarmlord', 'hiveTyrant'],
+  tyranidWarriors: ['neurotyrant', 'wingedTyranidPrime'],
+  gargoyles: ['wingedTyranidPrime'],
+  termagants: ['tervigon'],
+  neurogaunts: ['neurotyrant'],
+  genestealers: ['broodlord'],
   // CSM
   chaosSpaceMarines: ['chaosLord', 'daemonPrince', 'darkApostle', 'exaltedChampion'],
   chosen: ['abaddon', 'chaosLord', 'daemonPrince', 'exaltedChampion'],
   chaosTerminators: ['abaddon'],
+  // Dark Angels
+  intercessors: ['azrael', 'asmodai', 'interrogatorChaplain', 'companyMaster', 'darkAngelsLibrarian'],
+  tacticalSquad: ['azrael', 'asmodai', 'interrogatorChaplain', 'companyMaster'],
+  deathwingKnights: ['belial', 'asmodai'],
+  deathwingTerminators: ['belial', 'asmodai'],
+  innerCircleCompanions: ['azrael', 'interrogatorChaplain', 'companyMaster', 'darkAngelsLibrarian'],
+  ravenwingBlackKnights: ['sammael'],
 }

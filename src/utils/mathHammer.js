@@ -76,33 +76,26 @@ export function calcMath({ A, hitOn, S, AP, D, T, Sv, invuln, fnp,
   }
 }
 
-// Convert a weapon profile + target unit into calcMath params
-export function weaponToParams(weapon, targetUnit) {
-  const parsePlus = v => typeof v === 'number' ? v : parseInt(String(v).replace('+', '')) || 4
-  const parseAp = v => typeof v === 'number' ? v : parseInt(String(v)) || 0
-  const hasKw = kw => weapon.abilities?.some(a => String(a).toUpperCase().includes(kw)) ?? false
-  const getSustained = () => {
-    const a = weapon.abilities?.find(a => String(a).toUpperCase().includes('SUSTAINED HITS'))
-    if (!a) return 0
-    const m = String(a).match(/(\d+)$/)
-    return m ? parseInt(m[1]) : 1
-  }
+export function weaponToParams(weapon) {
+  if (!weapon) return {}
+  const kws = (weapon.keywords || []).map(k => String(k).toUpperCase())
+  const sustainedMatch = kws.find(k => k.startsWith('SUSTAINED HITS'))
+  const sustainedVal = sustainedMatch
+    ? (parseInt(sustainedMatch.replace('SUSTAINED HITS', '').trim()) || 1)
+    : 0
+  const hitOnRaw = weapon.WS || weapon.BS || '3+'
+  const hitOn = parseInt(String(hitOnRaw)) || 3
+  const ap = typeof weapon.AP === 'number' ? weapon.AP : (parseInt(weapon.AP) || 0)
   return {
-    A: weapon.A || 1,
-    hitOn: parsePlus(weapon.WS || weapon.BS),
-    S: weapon.S || 4,
-    AP: parseAp(weapon.AP),
-    D: weapon.D || 1,
-    T: targetUnit.T || 4,
-    Sv: parsePlus(targetUnit.Sv),
-    invuln: targetUnit.InvSv ? parsePlus(targetUnit.InvSv) : null,
-    fnp: null,
-    torrent: hasKw('TORRENT'),
-    lethalHits: hasKw('LETHAL HITS'),
-    devastatingWounds: hasKw('DEVASTATING WOUNDS'),
-    twinLinked: hasKw('TWIN-LINKED'),
-    sustainedHits: getSustained(),
-    rerollHitsAll: false, rerollHits1: false,
-    rerollWoundsAll: false, rerollWounds1: false,
+    A: weapon.A ?? 4,
+    hitOn,
+    S: weapon.S ?? 4,
+    AP: ap,
+    D: weapon.D ?? 1,
+    torrent: kws.includes('TORRENT'),
+    lethalHits: kws.includes('LETHAL HITS'),
+    devastatingWounds: kws.includes('DEVASTATING WOUNDS'),
+    twinLinked: kws.includes('TWIN-LINKED'),
+    sustainedHits: sustainedVal,
   }
 }

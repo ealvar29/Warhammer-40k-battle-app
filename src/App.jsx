@@ -5,7 +5,6 @@ import HomeScreen from './screens/HomeScreen'
 import ArmyBuilderScreen from './screens/ArmyBuilderScreen'
 import BattleDemo from './components/BattleDemo'
 import CrusadeScreen from './screens/CrusadeScreen'
-import MathHammerScreen from './screens/MathHammerScreen'
 import { useBattleStore } from './store/battleStore'
 import { parseShareUrl } from './utils/armyShare'
 import { buildUnitsFromIds, findDetachment, FACTION_META } from './data/factionRegistry'
@@ -15,11 +14,10 @@ const theme = themes.spacewolves
 const NAV_TABS = [
   { id: 'home',    label: 'Home',    icon: '🏠' },
   { id: 'battle',  label: 'Battle',  icon: '⚔️' },
-  { id: 'calc',    label: 'MathHammer', icon: '🎲' },
   { id: 'crusade', label: 'Crusade', icon: '📜' },
 ]
 
-const TAB_ORDER = ['home', 'battle', 'calc', 'crusade', 'armyBuilder']
+const TAB_ORDER = ['home', 'battle', 'crusade', 'armyBuilder']
 function slideDir(from, to) {
   const fi = TAB_ORDER.indexOf(from)
   const ti = TAB_ORDER.indexOf(to)
@@ -61,14 +59,13 @@ export default function App() {
       case 'home':         return <HomeScreen theme={theme} onNavigate={navigate} />
       case 'armyBuilder':  return <ArmyBuilderScreen theme={theme} onNavigate={navigate} />
       case 'battle':       return <BattleDemo theme={theme} onNavigate={navigate} />
-      case 'calc':         return <MathHammerScreen theme={theme} />
       case 'crusade':      return <CrusadeScreen theme={theme} />
       default:             return <HomeScreen theme={theme} onNavigate={navigate} />
     }
   }
 
   const showBottomNav = screen !== 'armyBuilder'
-  const activeTabId = screen === 'armyBuilder' ? 'battle' : screen
+  const activeTabId = screen === 'armyBuilder' || screen === 'calc' ? 'battle' : screen
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: theme.bg }}>

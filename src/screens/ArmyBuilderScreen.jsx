@@ -10,12 +10,15 @@ import { tyranidUnitList, tyranidUnitsByCategory } from '../data/tyranids/units'
 import { tyranidDetachmentList } from '../data/tyranids/detachments'
 import { csmUnitList, csmUnitsByCategory } from '../data/chaosspacemarines/units'
 import { csmDetachmentList } from '../data/chaosspacemarines/detachments'
+import { daUnitList, daUnitsByCategory } from '../data/darkangels/units'
+import { daDetachmentList } from '../data/darkangels/detachments'
 import { opponentProfiles } from '../data/suggestions'
 
 const factions = [
   { id: 'spacewolves', name: 'Space Wolves', icon: '🐺', color: '#c8d4e0' },
   { id: 'tyranids', name: 'Tyranids', icon: '🦂', color: '#a855f7' },
   { id: 'chaosspacemarines', name: 'Chaos Space Marines', icon: '💀', color: '#b91c1c' },
+  { id: 'darkangels', name: 'Dark Angels', icon: '⚔️', color: '#22c55e' },
 ]
 
 const categoryLabels = {
@@ -60,17 +63,22 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
 
   const isSW = localFaction === 'spacewolves'
   const isCSM = localFaction === 'chaosspacemarines'
+  const isDA = localFaction === 'darkangels'
   // For unit lookup during startBattle we need all available units for this faction
   const unitList = isSW
     ? [...swUnitList, ...smGenericUnitList]
     : isCSM
       ? csmUnitList
-      : tyranidUnitList
+      : isDA
+        ? daUnitList
+        : tyranidUnitList
   const detachments = isSW
     ? [...swDetachmentList, ...smGenericDetachmentList]
     : isCSM
       ? csmDetachmentList
-      : tyranidDetachmentList
+      : isDA
+        ? daDetachmentList
+        : tyranidDetachmentList
 
   // Build grouped unit sections for the units step
   const unitSections = isSW
@@ -80,7 +88,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
       ]
     : isCSM
       ? [{ label: 'Chaos Space Marines', byCategory: csmUnitsByCategory, accent: '#b91c1c' }]
-      : [{ label: 'Tyranids', byCategory: tyranidUnitsByCategory, accent: '#a855f7' }]
+      : isDA
+        ? [{ label: 'Dark Angels', byCategory: daUnitsByCategory, accent: '#22c55e' }]
+        : [{ label: 'Tyranids', byCategory: tyranidUnitsByCategory, accent: '#a855f7' }]
 
   const toggleUnit = (unitId) =>
     setLocalUnits(prev => prev.includes(unitId) ? prev.filter(id => id !== unitId) : [...prev, unitId])
@@ -173,7 +183,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-3">
 
         {/* ── Step: Faction ── */}
         {step === 'faction' && (
@@ -195,6 +205,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                       10th Edition · {
                         f.id === 'spacewolves' ? swUnitList.length + smGenericUnitList.length
                         : f.id === 'chaosspacemarines' ? csmUnitList.length
+                        : f.id === 'darkangels' ? daUnitList.length
                         : tyranidUnitList.length
                       } units
                     </p>
@@ -251,17 +262,12 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               </>
             )}
             {!isSW && (() => {
-              const accent = isCSM ? '#b91c1c' : '#a855f7'
+              const accent = isCSM ? '#b91c1c' : isDA ? '#22c55e' : '#a855f7'
               return detachments.map(d => (
                 <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
                   accent={accent} theme={theme} onClick={() => setLocalDetachment(d.id)} />
               ))
             })()}
-            <button onClick={() => localDetachment && setStep('units')}
-              className="w-full py-3.5 rounded-2xl font-bold text-sm"
-              style={{ background: localDetachment ? theme.secondary : theme.border, color: localDetachment ? theme.bg : theme.textSecondary }}>
-              Continue →
-            </button>
           </div>
         )}
 
@@ -310,18 +316,27 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                     <div className="space-y-2">
                       {units.map(u => {
                         const selected = localUnits.includes(u.id)
+                        const isLegends = !!u.legends
                         return (
                           <button key={u.id} onClick={() => toggleUnit(u.id)}
                             className="w-full rounded-2xl border p-3 text-left transition-all"
                             style={{
                               background: selected ? `${section.accent}12` : theme.surface,
-                              borderColor: selected ? section.accent : theme.border,
+                              borderColor: selected ? section.accent : isLegends ? `${theme.border}80` : theme.border,
+                              opacity: isLegends ? 0.65 : 1,
                             }}>
                             <div className="flex items-center justify-between">
                               <div className="flex-1">
-                                <p className="font-bold text-sm" style={{ color: selected ? section.accent : theme.textPrimary }}>
-                                  {u.name}
-                                </p>
+                                <div className="flex items-center gap-2">
+                                  <p className="font-bold text-sm" style={{ color: selected ? section.accent : theme.textPrimary }}>
+                                    {u.name}
+                                  </p>
+                                  {isLegends && (
+                                    <span className="text-xs font-black px-1.5 py-0.5 rounded" style={{ background: `${theme.textSecondary}20`, color: theme.textSecondary, fontSize: 8, letterSpacing: '0.06em' }}>
+                                      LEGENDS
+                                    </span>
+                                  )}
+                                </div>
                                 <div className="flex gap-3 mt-1 text-xs" style={{ color: theme.textSecondary }}>
                                   <span>M {u.M}</span>
                                   <span>T {u.T}</span>
@@ -349,19 +364,6 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                 ))}
               </div>
             ))}
-            {(() => {
-              const totalPts = localUnits.reduce((sum, id) => {
-                const u = unitList.find(u => u.id === id)
-                return sum + (u?.points || 0)
-              }, 0)
-              return (
-                <button onClick={() => localUnits.length > 0 && setStep('opponent')}
-                  className="w-full py-3.5 rounded-2xl font-bold text-sm"
-                  style={{ background: localUnits.length > 0 ? theme.secondary : theme.border, color: localUnits.length > 0 ? theme.bg : theme.textSecondary }}>
-                  Continue — {localUnits.length} units · {totalPts} pts →
-                </button>
-              )
-            })()}
           </div>
         )}
 
@@ -402,6 +404,26 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           </div>
         )}
       </div>
+
+      {/* Sticky Continue footer — only for detachment and units steps */}
+      {(step === 'detachment' || step === 'units') && (() => {
+        const totalPts = localUnits.reduce((sum, id) => {
+          const u = unitList.find(u => u.id === id)
+          return sum + (u?.points || 0)
+        }, 0)
+        const isDetach = step === 'detachment'
+        const enabled = isDetach ? !!localDetachment : localUnits.length > 0
+        return (
+          <div className="px-4 pb-4 pt-2 shrink-0 border-t" style={{ background: theme.surface, borderColor: theme.border }}>
+            <button
+              onClick={isDetach ? () => localDetachment && setStep('units') : () => localUnits.length > 0 && setStep('opponent')}
+              className="w-full py-3.5 rounded-2xl font-bold text-sm transition-all"
+              style={{ background: enabled ? theme.secondary : theme.border, color: enabled ? theme.bg : theme.textSecondary }}>
+              {isDetach ? 'Continue →' : `Continue — ${localUnits.length} units · ${totalPts} pts →`}
+            </button>
+          </div>
+        )
+      })()}
 
       <AnimatePresence>
         {showImport && (

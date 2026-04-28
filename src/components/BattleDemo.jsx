@@ -6,22 +6,32 @@ import { getSuggestions, opponentProfiles } from '../data/suggestions'
 import { swDetachments } from '../data/spacewolves/detachments'
 import { tyranidDetachments } from '../data/tyranids/detachments'
 import { csmDetachments } from '../data/chaosspacemarines/detachments'
+import { daDetachments } from '../data/darkangels/detachments'
 import { useBattleStore } from '../store/battleStore'
 import PostBattleDebrief from './PostBattleDebrief'
 import ShareArmySheet from './ShareArmySheet'
 import MatchupSheet from './MatchupSheet'
 import ImportListSheet from './ImportListSheet'
+import PhaseAbilityPanel from './PhaseAbilityPanel'
+import MathHammerSheet from './MathHammerSheet'
+import KeywordChip from './KeywordChip'
+
+const DETACHMENT_MAP = {
+  spacewolves: swDetachments,
+  tyranids: tyranidDetachments,
+  chaosspacemarines: csmDetachments,
+  darkangels: daDetachments,
+}
 
 function getStratagems(faction, detachmentId) {
   const coreStrats = demoStratagems.filter(s => s.source === 'core')
-  const detachmentMap = {
-    spacewolves: swDetachments,
-    tyranids: tyranidDetachments,
-    chaosspacemarines: csmDetachments,
-  }
-  const detachment = detachmentMap[faction]?.[detachmentId]
+  const detachment = DETACHMENT_MAP[faction]?.[detachmentId]
   const detStrats = detachment?.stratagems || []
   return [...coreStrats, ...detStrats]
+}
+
+function getDetachment(faction, detachmentId) {
+  return DETACHMENT_MAP[faction]?.[detachmentId] || null
 }
 
 // ── Shared spring config ───────────────────────────────────────────────────────
@@ -97,17 +107,20 @@ function OpponentUnitCard({ unit, theme, onMatchup, motionProps }) {
         </div>
       )}
       {unit.abilities?.length > 0 && (
-        <div className="flex flex-wrap gap-1">
-          {unit.abilities.slice(0, 5).map((a, i) => (
-            <span key={i} className="text-xs px-2 py-0.5 rounded-full"
-              style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-              {typeof a === 'string' ? a : a.name}
-            </span>
-          ))}
-        </div>
+        <AbilityChipRow abilities={unit.abilities.slice(0, 5)} theme={theme} />
       )}
     </motion.div>
   )
+}
+
+// ── Phase colours ─────────────────────────────────────────────────────────────
+const PHASE_ACCENT = {
+  command:  '#c9a84c',
+  movement: '#22c55e',
+  shooting: '#60a5fa',
+  charge:   '#f97316',
+  fight:    '#ef4444',
+  any:      null,
 }
 
 // ── Ability Chip Panel ────────────────────────────────────────────────────────
@@ -120,6 +133,8 @@ function AbilityChipRow({ abilities, theme }) {
         {abilities.map((a, i) => {
           const label = typeof a === 'string' ? a : a.name
           const desc = typeof a === 'object' ? (a.description || null) : null
+          const phase = typeof a === 'object' ? a.phase : null
+          const accent = (phase && PHASE_ACCENT[phase]) || theme.secondary
           const isOpen = openIdx === i
           return (
             <button
@@ -127,9 +142,9 @@ function AbilityChipRow({ abilities, theme }) {
               onClick={() => setOpenIdx(isOpen ? null : i)}
               className="text-xs px-2 py-1 rounded-full font-bold transition-all"
               style={{
-                background: isOpen ? `${theme.secondary}22` : theme.surfaceHigh,
-                color: isOpen ? theme.secondary : theme.textSecondary,
-                border: `1px solid ${isOpen ? theme.secondary : theme.border}`,
+                background: isOpen ? `${accent}28` : `${accent}12`,
+                color: isOpen ? accent : theme.textSecondary,
+                border: `1px solid ${isOpen ? accent : `${accent}50`}`,
               }}
             >
               {label}{desc ? (isOpen ? ' ▴' : ' ▾') : ''}
@@ -140,24 +155,36 @@ function AbilityChipRow({ abilities, theme }) {
       <AnimatePresence>
         {openIdx !== null && (() => {
           const a = abilities[openIdx]
-          const desc = typeof a === 'object' ? a.description : null
-          const phase = typeof a === 'object' ? a.phase : null
-          if (!desc) return null
+          if (typeof a !== 'object' || !a.description) return null
+          const accent = (a.phase && PHASE_ACCENT[a.phase]) || theme.secondary
+          const phaseLabel = a.phase ? a.phase.toUpperCase() : null
           return (
             <motion.div
+              key={openIdx}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="mt-2 rounded-xl p-3" style={{ background: `${theme.secondary}10`, border: `1px solid ${theme.secondary}30` }}>
-                {phase && (
-                  <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{ color: theme.secondary }}>
-                    {phase} phase
-                  </p>
-                )}
-                <p className="text-xs leading-relaxed" style={{ color: theme.textPrimary, opacity: 0.9 }}>{desc}</p>
+              <div className="mt-2 rounded-xl overflow-hidden" style={{ border: `1px solid ${accent}35` }}>
+                <div className="px-3 py-2 flex items-center gap-2" style={{ background: `${accent}20` }}>
+                  {phaseLabel && (
+                    <span className="font-black px-2 py-0.5 rounded-full" style={{ background: accent, color: '#fff', fontSize: 9, letterSpacing: '0.06em' }}>
+                      {phaseLabel}
+                    </span>
+                  )}
+                  <p className="text-xs font-bold" style={{ color: accent }}>{a.name}</p>
+                </div>
+                <div className="px-3 py-2.5" style={{ background: `${accent}08` }}>
+                  <p className="text-xs leading-relaxed" style={{ color: theme.textPrimary, opacity: 0.9 }}>{a.description}</p>
+                  {a.reminder && (
+                    <div className="mt-2 flex items-start gap-1.5 rounded-lg px-2 py-1.5" style={{ background: `${accent}18`, border: `1px solid ${accent}30` }}>
+                      <span style={{ color: accent, fontSize: 10, lineHeight: '1.4', flexShrink: 0 }}>↳</span>
+                      <p className="text-xs font-bold leading-snug" style={{ color: accent }}>{a.reminder}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </motion.div>
           )
@@ -367,7 +394,7 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
 }
 
 // ── Unit Card ─────────────────────────────────────────────────────────────────
-function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, theme, motionProps, onMatchup }) {
+function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, theme, motionProps, onMatchup, onCalcWeapon }) {
   const wounds = unitState?.currentWounds ?? unit.currentWounds ?? unit.maxWounds
   const pct = wounds / unit.maxWounds
   const statusColor = pct > 0.6 ? theme.hpFull : pct > 0.3 ? theme.hpMid : theme.hpLow
@@ -518,19 +545,29 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
                 ))}
               </div>
               {unit.weapons.map((w, i) => (
-                <div key={i} className="grid items-center px-2 py-2 border-b last:border-b-0 text-center"
-                  style={{
-                    gridTemplateColumns: '1fr auto auto auto auto auto auto',
-                    borderColor: theme.border,
-                    background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88`,
-                  }}>
-                  <span className="text-xs font-bold text-left truncate" style={{ color: theme.textPrimary }}>{w.name}</span>
-                  <span className="text-xs" style={{ color: theme.textSecondary }}>{w.range || '—'}</span>
-                  <span className="text-xs font-bold" style={{ color: theme.secondary }}>{w.A}</span>
-                  <span className="text-xs" style={{ color: theme.textPrimary }}>{w.S}</span>
-                  <span className="text-xs" style={{ color: theme.textPrimary }}>{w.AP}</span>
-                  <span className="text-xs font-bold" style={{ color: theme.secondary }}>{w.D}</span>
-                  <span className="text-xs" style={{ color: theme.textSecondary }}>{w.WS || w.BS || '—'}</span>
+                <div key={i} className="border-b last:border-b-0"
+                  style={{ borderColor: theme.border, background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88` }}>
+                  {/* Stats row — tap to open MathHammer */}
+                  <div className="grid items-center px-2 py-2 text-center"
+                    style={{ gridTemplateColumns: '1fr auto auto auto auto auto auto', cursor: onCalcWeapon ? 'pointer' : 'default' }}
+                    onClick={() => onCalcWeapon?.(w)}>
+                    <span className="text-xs font-bold text-left flex items-center gap-1" style={{ color: theme.textPrimary }}>
+                      <span className="truncate">{w.name}</span>
+                      {onCalcWeapon && <span style={{ fontSize: 8, opacity: 0.4, flexShrink: 0 }}>🎲</span>}
+                    </span>
+                    <span className="text-xs" style={{ color: theme.textSecondary }}>{w.range || '—'}</span>
+                    <span className="text-xs font-bold" style={{ color: theme.secondary }}>{w.A}</span>
+                    <span className="text-xs" style={{ color: theme.textPrimary }}>{w.S}</span>
+                    <span className="text-xs" style={{ color: theme.textPrimary }}>{w.AP}</span>
+                    <span className="text-xs font-bold" style={{ color: theme.secondary }}>{w.D}</span>
+                    <span className="text-xs" style={{ color: theme.textSecondary }}>{w.WS || w.BS || '—'}</span>
+                  </div>
+                  {/* Keyword chips */}
+                  {w.keywords?.length > 0 && (
+                    <div className="px-2 pb-1.5 flex flex-wrap gap-1">
+                      {w.keywords.map(kw => <KeywordChip key={kw} keyword={kw} theme={theme} />)}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -720,12 +757,14 @@ export default function BattleDemo({ theme, onNavigate }) {
   const [matchupUnit, setMatchupUnit] = useState(null)
   const [currentRound, setCurrentRound] = useState(1)
   const [turnFlash, setTurnFlash] = useState(null) // 'yours' | 'theirs' | null
+  const [mathHammerWeapon, setMathHammerWeapon] = useState(null)
 
   const totalYouVp = vpScores?.you.reduce((a, b) => a + b, 0) ?? 0
   const totalThemVp = vpScores?.them.reduce((a, b) => a + b, 0) ?? 0
 
   const units = selectedUnits.length > 0 ? selectedUnits : demoUnits
   const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
+  const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const activePhase = PHASES[activePhaseIdx]
 
   const visibleStratagems = allStratagems.filter(s => {
@@ -981,6 +1020,14 @@ export default function BattleDemo({ theme, onNavigate }) {
             </div>
           </motion.button>
 
+          {/* Phase ability panel */}
+          <PhaseAbilityPanel
+            units={units}
+            activePhase={activePhase}
+            detachment={detachment}
+            theme={theme}
+          />
+
           {/* Units */}
           <div className="md:flex-1 md:overflow-y-auto px-3 pb-2 mt-2 space-y-2">
             {/* Your units — always shown so you can track wounds */}
@@ -1000,6 +1047,7 @@ export default function BattleDemo({ theme, onNavigate }) {
                 activePhase={activePhase.id}
                 theme={theme}
                 onMatchup={opponentArmy?.units?.length > 0 ? () => setMatchupUnit(u) : undefined}
+                onCalcWeapon={setMathHammerWeapon}
                 motionProps={{
                   initial: { opacity: 0, y: 12 },
                   animate: { opacity: 1, y: 0 },
@@ -1147,6 +1195,17 @@ export default function BattleDemo({ theme, onNavigate }) {
               setShowImport(false)
             }}
             onClose={() => setShowImport(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {mathHammerWeapon && (
+          <MathHammerSheet
+            key={mathHammerWeapon.name}
+            weapon={mathHammerWeapon}
+            onClose={() => setMathHammerWeapon(null)}
+            theme={theme}
           />
         )}
       </AnimatePresence>
