@@ -177,7 +177,7 @@ export const smGenericUnits = {
 
   // ── VEHICLES / MONSTERS ──────────────────────────────────────────
   redemptorDreadnought: {
-    id: 'redemptorDreadnought', name: 'Redemptor Dreadnought', category: 'monster',
+    id: 'redemptorDreadnought', name: 'Redemptor Dreadnought', category: 'vehicle',
     powerRating: 9, points: 190,
     M: '8"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 3,
     models: 1,
@@ -198,7 +198,7 @@ export const smGenericUnits = {
   },
 
   brutalisDreadnought: {
-    id: 'brutalisDreadnought', name: 'Brutalis Dreadnought', category: 'monster',
+    id: 'brutalisDreadnought', name: 'Brutalis Dreadnought', category: 'vehicle',
     powerRating: 9, points: 160,
     M: '8"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 4,
     models: 1,
@@ -214,6 +214,28 @@ export const smGenericUnits = {
     isLeader: false,
     eligibleLeaders: [],
     keywords: ['VEHICLE', 'WALKER', 'DREADNOUGHT', 'BRUTALIS DREADNOUGHT', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
+  ballistusDreadnought: {
+    id: 'ballistusDreadnought', name: 'Ballistus Dreadnought', category: 'vehicle',
+    powerRating: 8, points: 150,
+    M: '8"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 3,
+    models: 1,
+    weapons: [
+      { name: 'Ballistus Lascannon', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['HEAVY'] },
+      { name: 'Ballistus Missile Launcher (Frag)', type: 'ranged', range: '48"', A: 'D6', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'HEAVY'] },
+      { name: 'Ballistus Missile Launcher (Krak)', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 10, AP: -2, D: 'D6+2', keywords: ['HEAVY'] },
+      { name: 'Twin Storm Bolter', type: 'ranged', range: '24"', A: 4, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 4', 'TWIN-LINKED'] },
+      { name: 'Armoured Feet', type: 'melee', A: 3, WS: '4+', S: 6, AP: 0, D: 1 },
+    ],
+    abilities: [
+      { name: 'Duty Eternal', phase: 'any', description: 'Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack (to a minimum of 1).' },
+      { name: 'Explodes', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 6, each unit within 6" suffers D3 mortal wounds.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'WALKER', 'DREADNOUGHT', 'BALLISTUS DREADNOUGHT', 'ADEPTUS ASTARTES'],
     factionKeywords: ['ADEPTUS ASTARTES'],
   },
 

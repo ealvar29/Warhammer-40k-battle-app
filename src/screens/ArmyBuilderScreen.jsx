@@ -57,8 +57,27 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const [step, setStep] = useState('faction') // faction → detachment → units → opponent → ready
   const [localFaction, setLocalFaction] = useState(store.faction || 'spacewolves')
   const [localDetachment, setLocalDetachment] = useState(store.detachmentId || null)
-  const [localUnits, setLocalUnits] = useState(store.selectedUnits.map(u => u.id))
+  const [unitCounts, setUnitCounts] = useState(() => {
+    const counts = {}
+    store.selectedUnits.forEach(u => {
+      const baseId = u.id.replace(/_\d+$/, '')
+      counts[baseId] = (counts[baseId] || 0) + 1
+    })
+    return counts
+  })
   const [localOpponentTags, setLocalOpponentTags] = useState(store.opponentTags)
+
+  const addUnit = (unitId) =>
+    setUnitCounts(prev => ({ ...prev, [unitId]: (prev[unitId] || 0) + 1 }))
+  const removeUnit = (unitId) =>
+    setUnitCounts(prev => {
+      const next = { ...prev }
+      if ((next[unitId] || 0) > 1) next[unitId]--
+      else delete next[unitId]
+      return next
+    })
+  const unitCount = (unitId) => unitCounts[unitId] || 0
+  const totalUnits = Object.values(unitCounts).reduce((a, b) => a + b, 0)
   const [showImport, setShowImport] = useState(false)
 
   const isSW = localFaction === 'spacewolves'
@@ -92,28 +111,27 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         ? [{ label: 'Dark Angels', byCategory: daUnitsByCategory, accent: '#22c55e' }]
         : [{ label: 'Tyranids', byCategory: tyranidUnitsByCategory, accent: '#a855f7' }]
 
-  const toggleUnit = (unitId) =>
-    setLocalUnits(prev => prev.includes(unitId) ? prev.filter(id => id !== unitId) : [...prev, unitId])
-
   const toggleTag = (tag) =>
     setLocalOpponentTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
 
   const startBattle = () => {
-    store.setFaction(localFaction)
-    store.setDetachment(localDetachment)
-    // Clear previous units and add selected ones
-    const selectedUnitData = unitList.filter(u => localUnits.includes(u.id)).map(u => {
-      // Real units use W (per model) + models count; compute total wounds for the unit
+    const selectedUnitData = []
+    for (const [unitId, count] of Object.entries(unitCounts)) {
+      if (!count) continue
+      const u = unitList.find(u => u.id === unitId)
+      if (!u) continue
       const totalWounds = u.maxWounds ?? (u.models > 1 ? u.W * u.models : u.W)
-      return {
-        ...u,
-        type: u.type || u.category,       // normalise: real units use 'category'
-        maxWounds: totalWounds,
-        currentWounds: totalWounds,
-        unitKey: u.unitKey || u.id,       // normalise unitKey for leader lookups
+      for (let i = 0; i < count; i++) {
+        selectedUnitData.push({
+          ...u,
+          id: count > 1 ? `${u.id}_${i + 1}` : u.id,
+          type: u.type || u.category,
+          maxWounds: totalWounds,
+          currentWounds: totalWounds,
+          unitKey: u.unitKey || u.id,
+        })
       }
-    })
-    // Reset and re-add
+    }
     store.resetBattle()
     store.setFaction(localFaction)
     store.setDetachment(localDetachment)
@@ -189,7 +207,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         {step === 'faction' && (
           <div className="space-y-3">
             {factions.map(f => (
-              <button key={f.id} onClick={() => { setLocalFaction(f.id); setLocalDetachment(null); setLocalUnits([]) }}
+              <button key={f.id} onClick={() => { setLocalFaction(f.id); setLocalDetachment(null); setUnitCounts({}) }}
                 className="w-full rounded-2xl border-2 p-5 text-left transition-all"
                 style={{
                   background: localFaction === f.id ? `${f.color}12` : theme.surface,
@@ -275,19 +293,19 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         {step === 'units' && (
           <div className="space-y-4">
             {(() => {
-              const totalPts = localUnits.reduce((sum, id) => {
+              const totalPts = Object.entries(unitCounts).reduce((sum, [id, n]) => {
                 const u = unitList.find(u => u.id === id)
-                return sum + (u?.points || 0)
+                return sum + (u?.points || 0) * n
               }, 0)
               return (
                 <div className="flex items-center justify-between">
                   <p className="text-xs" style={{ color: theme.textSecondary }}>
-                    Tap to add units to your roster.
+                    Tap to add · use +/− for multiple squads.
                   </p>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold px-2.5 py-1 rounded-full"
                       style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
-                      {localUnits.length} units
+                      {totalUnits} unit{totalUnits !== 1 ? 's' : ''}
                     </span>
                     <span className="text-xs font-black px-2.5 py-1 rounded-full"
                       style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
@@ -299,11 +317,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
             })()}
             {unitSections.map(section => (
               <div key={section.label} className="space-y-3">
-                {/* Section header */}
                 <div className="flex items-center gap-2 pt-1">
                   <div className="h-px flex-1" style={{ background: section.accent + '40' }} />
-                  <p className="text-xs font-black tracking-widest uppercase px-2"
-                    style={{ color: section.accent }}>
+                  <p className="text-xs font-black tracking-widest uppercase px-2" style={{ color: section.accent }}>
                     {section.label}
                   </p>
                   <div className="h-px flex-1" style={{ background: section.accent + '40' }} />
@@ -315,10 +331,11 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                     </p>
                     <div className="space-y-2">
                       {units.map(u => {
-                        const selected = localUnits.includes(u.id)
+                        const count = unitCount(u.id)
+                        const selected = count > 0
                         const isLegends = !!u.legends
                         return (
-                          <button key={u.id} onClick={() => toggleUnit(u.id)}
+                          <button key={u.id} onClick={() => addUnit(u.id)}
                             className="w-full rounded-2xl border p-3 text-left transition-all"
                             style={{
                               background: selected ? `${section.accent}12` : theme.surface,
@@ -350,10 +367,28 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                   style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
                                   {u.points} pts
                                 </span>
-                                <div className="w-5 h-5 rounded-full flex items-center justify-center"
-                                  style={{ background: selected ? section.accent : theme.border }}>
-                                  {selected && <span className="text-xs font-bold" style={{ color: theme.bg }}>✓</span>}
-                                </div>
+                                {selected ? (
+                                  <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+                                    <button
+                                      onClick={() => removeUnit(u.id)}
+                                      className="w-6 h-6 rounded-lg flex items-center justify-center font-black text-sm"
+                                      style={{ background: `${section.accent}22`, color: section.accent, border: `1px solid ${section.accent}50` }}>
+                                      −
+                                    </button>
+                                    <span className="text-xs font-black w-5 text-center" style={{ color: section.accent }}>
+                                      ×{count}
+                                    </span>
+                                    <button
+                                      onClick={e => { e.stopPropagation(); addUnit(u.id) }}
+                                      className="w-6 h-6 rounded-lg flex items-center justify-center font-black text-sm"
+                                      style={{ background: section.accent, color: theme.bg }}>
+                                      +
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="w-5 h-5 rounded-full"
+                                    style={{ background: theme.border }} />
+                                )}
                               </div>
                             </div>
                           </button>
@@ -407,19 +442,19 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
 
       {/* Sticky Continue footer — only for detachment and units steps */}
       {(step === 'detachment' || step === 'units') && (() => {
-        const totalPts = localUnits.reduce((sum, id) => {
+        const totalPts = Object.entries(unitCounts).reduce((sum, [id, n]) => {
           const u = unitList.find(u => u.id === id)
-          return sum + (u?.points || 0)
+          return sum + (u?.points || 0) * n
         }, 0)
         const isDetach = step === 'detachment'
-        const enabled = isDetach ? !!localDetachment : localUnits.length > 0
+        const enabled = isDetach ? !!localDetachment : totalUnits > 0
         return (
           <div className="px-4 pb-4 pt-2 shrink-0 border-t" style={{ background: theme.surface, borderColor: theme.border }}>
             <button
-              onClick={isDetach ? () => localDetachment && setStep('units') : () => localUnits.length > 0 && setStep('opponent')}
+              onClick={isDetach ? () => localDetachment && setStep('units') : () => totalUnits > 0 && setStep('opponent')}
               className="w-full py-3.5 rounded-2xl font-bold text-sm transition-all"
               style={{ background: enabled ? theme.secondary : theme.border, color: enabled ? theme.bg : theme.textSecondary }}>
-              {isDetach ? 'Continue →' : `Continue — ${localUnits.length} units · ${totalPts} pts →`}
+              {isDetach ? 'Continue →' : `Continue — ${totalUnits} units · ${totalPts} pts →`}
             </button>
           </div>
         )

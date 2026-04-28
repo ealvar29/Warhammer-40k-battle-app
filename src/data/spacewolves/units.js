@@ -240,7 +240,6 @@ export const swUnits = {
     ],
     abilities: [
       { name: 'Berserk Charge', phase: 'charge', description: 'Each time a model in this unit makes a melee attack on a turn it declared a Charge, re-roll a Hit roll of 1. If this unit charged a unit that contains 6+ models, re-roll all failed Hit rolls instead.' },
-      { name: 'Tacticus', phase: 'any', description: 'At the start of your Shooting phase, if this unit is not in Engagement Range of any enemy units, you can remove it from the battlefield and set it up anywhere on the battlefield that is more than 9" from all enemy models.' },
     ],
     isLeader: false,
     eligibleLeaders: ['ragnar', 'wolfGuardPackLeader', 'wolfLord', 'wolfGuardBattleLeader', 'wolfPriest'],
@@ -260,7 +259,6 @@ export const swUnits = {
     ],
     abilities: [
       { name: 'Cunning Hunters', phase: 'shooting', description: 'Each time a model in this unit makes a ranged attack, if the target is an INFANTRY unit, that attack has the [LETHAL HITS] ability.' },
-      { name: 'Tacticus', phase: 'any', description: 'At the start of your Shooting phase, if this unit is not in Engagement Range of any enemy units, you can remove it from the battlefield and set it up anywhere on the battlefield that is more than 9" from all enemy models.' },
     ],
     isLeader: false,
     eligibleLeaders: ['wolfGuardPackLeader', 'runePriest', 'wolfLord', 'wolfGuardBattleLeader'],
