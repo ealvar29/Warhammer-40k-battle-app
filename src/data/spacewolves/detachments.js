@@ -14,6 +14,13 @@ export const swDetachments = {
       name: "Pack's Quarry",
       description: "Each time a model in a SPACE WOLVES unit makes a melee attack that targets an enemy unit, if that enemy unit is within Engagement Range of one or more other ADEPTUS ASTARTES units from your army, OR if the attacking unit contains more models than that enemy unit: add 1 to the Hit roll. If your Saga is completed, add 1 to the Wound roll as well.",
     },
+    commandPhaseAction: {
+      type: 'designate_target',
+      label: "Pack's Quarry",
+      prompt: "Name your Pack's Quarry for this battle round:",
+      placeholder: 'e.g. Chaos Terminators',
+      effect: "Melee attacks vs the Quarry: +1 to Hit rolls if your attacking unit outnumbers the Quarry OR if another ADEPTUS ASTARTES unit is within Engagement Range of it.",
+    },
     enhancements: [
       { name: 'Swift Hunter', cost: 20, description: "SPACE WOLVES model only. Models in the bearer's unit have the Scouts 7\" ability." },
       { name: 'Fenrisian Grit', cost: 15, description: 'ADEPTUS ASTARTES model only. The bearer has the Feel No Pain 4+ ability.' },
@@ -261,6 +268,39 @@ export const swDetachments = {
     detachmentRule: {
       name: 'Master of Wolves',
       description: "At the start of your Command phase, select one Hunting Pack (each can only be selected once per battle). Until your next Command phase, it is active for all ADEPTUS ASTARTES units:\n• Encircling Jaws: Re-roll Advance rolls and Charge rolls.\n• Hunter's Eye: Each time a model makes a ranged attack, add 1 to the Hit roll.\n• Ferocious Strike: When selected to fight, choose [LETHAL HITS] or [SUSTAINED HITS 1] — weapons have the selected ability until end of phase.\n\nHowling Onslaught: Once per battle, if LOGAN GRIMNAR is on the battlefield when you select a Hunting Pack, you may select one already chosen this battle.\n\nRestriction: Your army cannot include ADEPTUS ASTARTES units from any Chapter other than Space Wolves.",
+    },
+    commandPhaseAction: {
+      type: 'pick_one',
+      label: 'Hunting Pack',
+      prompt: 'Select one Hunting Pack for this battle round:',
+      options: [
+        {
+          id: 'encirclingJaws',
+          label: 'Encircling Jaws',
+          icon: '🐾',
+          shortEffect: 'Re-roll Advance & Charge',
+          fullEffect: 'Re-roll Advance rolls and Charge rolls for all ADEPTUS ASTARTES units this battle round.',
+        },
+        {
+          id: 'huntersEye',
+          label: "Hunter's Eye",
+          icon: '🎯',
+          shortEffect: '+1 Hit (ranged)',
+          fullEffect: 'Each time a model in an ADEPTUS ASTARTES unit makes a ranged attack, add 1 to the Hit roll.',
+        },
+        {
+          id: 'ferocityStrike',
+          label: 'Ferocious Strike',
+          icon: '⚔️',
+          shortEffect: 'Lethal/Sustained (melee)',
+          fullEffect: 'When selected to fight, choose LETHAL HITS or SUSTAINED HITS 1 — melee weapons have that ability until end of phase.',
+        },
+      ],
+      onceBuff: {
+        id: 'howlingOnslaught',
+        label: 'Howling Onslaught',
+        description: 'Once per battle (requires LOGAN GRIMNAR on field): re-select a Hunting Pack that was already used this battle.',
+      },
     },
     enhancements: [
       { name: "Grimnar's Mark", cost: 20, description: "ADEPTUS ASTARTES TERMINATOR CAPTAIN model only. Once per battle round, from round 2 onwards, you can target the bearer's unit with Rapid Ingress or Heroic Intervention for 0CP, even if you already used that Stratagem on a different unit this turn. In Declare Battle Formations, the bearer can be attached to a WOLF GUARD TERMINATORS unit." },

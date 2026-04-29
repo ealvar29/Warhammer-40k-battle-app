@@ -20,6 +20,7 @@ export const useBattleStore = create(
       battleActive: false,
       vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
       warlordUnitId: null,
+      detachmentState: { activeSelection: null, targetNote: '', onceBuffUsed: false },
 
       // ── Setup actions ──────────────────────────────────────────────
       setFaction: (faction) => set({ faction }),
@@ -60,6 +61,7 @@ export const useBattleStore = create(
         cp: 6, unitStates: {}, selectedUnits: [], faction: null, detachmentId: null,
         vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
         warlordUnitId: null,
+        detachmentState: { activeSelection: null, targetNote: '', onceBuffUsed: false },
       }),
 
       setWarlord: (unitId) => set((s) => ({
@@ -84,6 +86,19 @@ export const useBattleStore = create(
       }),
 
       toggleTurn: () => set((s) => ({ isYourTurn: !s.isYourTurn, activePhaseIdx: 0 })),
+      setDetachmentSelection: (id) => set((s) => ({
+        detachmentState: { ...s.detachmentState, activeSelection: id },
+      })),
+      clearDetachmentSelection: () => set((s) => ({
+        detachmentState: { ...s.detachmentState, activeSelection: null },
+      })),
+      setTargetNote: (note) => set((s) => ({
+        detachmentState: { ...s.detachmentState, targetNote: note },
+      })),
+      setOnceBuffUsed: () => set((s) => ({
+        detachmentState: { ...s.detachmentState, onceBuffUsed: true },
+      })),
+
       setCp: (cp) => set({ cp: Math.max(0, Math.min(12, cp)) }),
       spendCp: (amount) => set((s) => ({ cp: Math.max(0, s.cp - amount) })),
 
@@ -125,6 +140,7 @@ export const useBattleStore = create(
         battleActive: state.battleActive,
         vpScores: state.vpScores,
         warlordUnitId: state.warlordUnitId,
+        detachmentState: state.detachmentState,
       }),
     }
   )

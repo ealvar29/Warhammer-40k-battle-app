@@ -26,9 +26,8 @@ function parseTextWithKeywords(text, theme) {
   })
 }
 
-export default function PhaseAbilityPanel({ units, activePhase, detachment, theme }) {
+export default function PhaseAbilityPanel({ units, activePhase, theme }) {
   const [expandedKey, setExpandedKey] = useState(null)
-  const [detachmentOpen, setDetachmentOpen] = useState(false)
 
   const phaseId = activePhase?.id
   const accent = PHASE_ACCENT[phaseId] || theme.secondary
@@ -42,8 +41,7 @@ export default function PhaseAbilityPanel({ units, activePhase, detachment, them
     }
   }
 
-  const rule = detachment?.detachmentRule
-  if (phaseItems.length === 0 && !rule) return null
+  if (phaseItems.length === 0) return null
 
   return (
     <AnimatePresence mode="wait">
@@ -65,43 +63,6 @@ export default function PhaseAbilityPanel({ units, activePhase, detachment, them
           </p>
           <p className="text-xs" style={{ color: `${accent}99` }}>— {activePhase?.label}</p>
         </div>
-
-        {/* Detachment rule reminder */}
-        {rule && (
-          <div style={{ borderBottom: phaseItems.length > 0 ? `1px solid ${theme.border}` : undefined }}>
-            <button
-              onClick={() => setDetachmentOpen(o => !o)}
-              className="w-full px-3 py-2 flex items-center justify-between text-left transition-colors"
-              style={{ background: detachmentOpen ? `${theme.primary}08` : 'transparent' }}
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="font-black px-1.5 py-0.5 rounded shrink-0"
-                  style={{ background: `${theme.primary}20`, color: theme.primary, fontSize: 8, letterSpacing: '0.06em' }}>
-                  DET RULE
-                </span>
-                <p className="text-xs font-bold truncate" style={{ color: theme.textPrimary }}>{rule.name}</p>
-              </div>
-              <span className="text-xs shrink-0 ml-2" style={{ color: theme.textSecondary }}>
-                {detachmentOpen ? '▴' : '▾'}
-              </span>
-            </button>
-            <AnimatePresence>
-              {detachmentOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.18 }}
-                  className="overflow-hidden"
-                >
-                  <p className="px-3 pb-2.5 text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
-                    {parseTextWithKeywords(rule.description, theme)}
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
 
         {/* Unit abilities */}
         {phaseItems.map(({ unit, ability }, i) => {

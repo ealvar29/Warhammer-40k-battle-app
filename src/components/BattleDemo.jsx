@@ -13,6 +13,7 @@ import ShareArmySheet from './ShareArmySheet'
 import MatchupSheet from './MatchupSheet'
 import ImportListSheet from './ImportListSheet'
 import PhaseAbilityPanel from './PhaseAbilityPanel'
+import DetachmentRulePanel from './DetachmentRulePanel'
 import MathHammerSheet from './MathHammerSheet'
 import KeywordChip from './KeywordChip'
 
@@ -1020,11 +1021,17 @@ export default function BattleDemo({ theme, onNavigate }) {
             </div>
           </motion.button>
 
-          {/* Phase ability panel */}
+          {/* Detachment rule panel — interactive (pick_one / designate_target) or passive reminder */}
+          <DetachmentRulePanel
+            detachment={detachment}
+            activePhase={activePhase}
+            theme={theme}
+          />
+
+          {/* Phase ability panel — unit abilities active this phase */}
           <PhaseAbilityPanel
             units={units}
             activePhase={activePhase}
-            detachment={detachment}
             theme={theme}
           />
 
