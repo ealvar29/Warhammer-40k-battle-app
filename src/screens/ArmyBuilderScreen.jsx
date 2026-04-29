@@ -2,33 +2,24 @@ import React, { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import ImportListSheet from '../components/ImportListSheet'
-import { swUnitList, swUnitsByCategory } from '../data/spacewolves/units'
-import { smGenericUnitList, smGenericsByCategory } from '../data/spacewolves/generics'
+import { swUnitsByCategory } from '../data/spacewolves/units'
+import { smGenericsByCategory } from '../data/spacewolves/generics'
 import { swDetachmentList } from '../data/spacewolves/detachments'
 import { smGenericDetachmentList } from '../data/spacewolves/genericDetachments'
-import { tyranidUnitList, tyranidUnitsByCategory } from '../data/tyranids/units'
-import { tyranidDetachmentList } from '../data/tyranids/detachments'
-import { csmUnitList, csmUnitsByCategory } from '../data/chaosspacemarines/units'
-import { csmDetachmentList } from '../data/chaosspacemarines/detachments'
-import { daUnitList, daUnitsByCategory } from '../data/darkangels/units'
-import { daDetachmentList } from '../data/darkangels/detachments'
-import { tauUnitList, tauUnitsByCategory } from '../data/tau/units'
-import { tauDetachmentList } from '../data/tau/detachments'
-import { thousandSonsUnitList, thousandSonsUnitsByCategory } from '../data/thousandsons/units'
-import { thousandSonsDetachmentList } from '../data/thousandsons/detachments'
-import { worldEatersUnitList, weUnitsByCategory } from '../data/worldeaters/units'
-import { worldEatersDetachmentList } from '../data/worldeaters/detachments'
+import { FACTION_UNITS, FACTION_DETACHMENTS, FACTION_META } from '../data/factionRegistry'
 import { opponentProfiles } from '../data/suggestions'
 
-const factions = [
-  { id: 'spacewolves', name: 'Space Wolves', icon: '🐺', color: '#c8d4e0' },
-  { id: 'tyranids', name: 'Tyranids', icon: '🦂', color: '#a855f7' },
-  { id: 'chaosspacemarines', name: 'Chaos Space Marines', icon: '💀', color: '#b91c1c' },
-  { id: 'darkangels', name: 'Dark Angels', icon: '⚔️', color: '#22c55e' },
-  { id: 'tau', name: "T'au Empire", icon: '🔵', color: '#00b4d8' },
-  { id: 'thousandsons', name: 'Thousand Sons', icon: '🔮', color: '#3b82f6' },
-  { id: 'worldeaters', name: 'World Eaters', icon: '🩸', color: '#dc2626' },
-]
+const factions = Object.entries(FACTION_META).map(([id, meta]) => ({ id, ...meta }))
+
+function getUnitsByCategory(unitList) {
+  const result = {}
+  for (const u of unitList) {
+    const cat = u.category || 'infantry'
+    if (!result[cat]) result[cat] = []
+    result[cat].push(u)
+  }
+  return result
+}
 
 const categoryLabels = {
   epicHero: 'Epic Heroes', character: 'Characters', battleline: 'Battleline',
@@ -98,41 +89,20 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const [showImport, setShowImport] = useState(false)
 
   const isSW = localFaction === 'spacewolves'
-  const isCSM = localFaction === 'chaosspacemarines'
-  const isDA = localFaction === 'darkangels'
-  const isTau = localFaction === 'tau'
-  const isTS = localFaction === 'thousandsons'
-  const isWE = localFaction === 'worldeaters'
+  const factionMeta = FACTION_META[localFaction] || { name: '', color: '#888' }
 
-  const unitList = isSW
-    ? [...swUnitList, ...smGenericUnitList]
-    : isCSM ? csmUnitList
-    : isDA ? daUnitList
-    : isTau ? tauUnitList
-    : isTS ? thousandSonsUnitList
-    : isWE ? worldEatersUnitList
-    : tyranidUnitList
+  const unitList = FACTION_UNITS[localFaction] || []
 
   const detachments = isSW
     ? [...swDetachmentList, ...smGenericDetachmentList]
-    : isCSM ? csmDetachmentList
-    : isDA ? daDetachmentList
-    : isTau ? tauDetachmentList
-    : isTS ? thousandSonsDetachmentList
-    : isWE ? worldEatersDetachmentList
-    : tyranidDetachmentList
+    : Object.values(FACTION_DETACHMENTS[localFaction] || {})
 
   const unitSections = isSW
     ? [
         { label: 'Space Wolves', byCategory: swUnitsByCategory, accent: theme.secondary },
         { label: 'Space Marines', byCategory: smGenericsByCategory, accent: theme.primary },
       ]
-    : isCSM ? [{ label: 'Chaos Space Marines', byCategory: csmUnitsByCategory, accent: '#b91c1c' }]
-    : isDA  ? [{ label: 'Dark Angels', byCategory: daUnitsByCategory, accent: '#22c55e' }]
-    : isTau ? [{ label: "T'au Empire", byCategory: tauUnitsByCategory, accent: '#00b4d8' }]
-    : isTS  ? [{ label: 'Thousand Sons', byCategory: thousandSonsUnitsByCategory, accent: '#3b82f6' }]
-    : isWE  ? [{ label: 'World Eaters', byCategory: weUnitsByCategory, accent: '#dc2626' }]
-    : [{ label: 'Tyranids', byCategory: tyranidUnitsByCategory, accent: '#a855f7' }]
+    : [{ label: factionMeta.name, byCategory: getUnitsByCategory(unitList), accent: factionMeta.color }]
 
   const toggleTag = (tag) =>
     setLocalOpponentTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
@@ -243,15 +213,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                       {f.name}
                     </p>
                     <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
-                      10th Edition · {
-                        f.id === 'spacewolves' ? swUnitList.length + smGenericUnitList.length
-                        : f.id === 'chaosspacemarines' ? csmUnitList.length
-                        : f.id === 'darkangels' ? daUnitList.length
-                        : f.id === 'tau' ? tauUnitList.length
-                        : f.id === 'thousandsons' ? thousandSonsUnitList.length
-                        : f.id === 'worldeaters' ? worldEatersUnitList.length
-                        : tyranidUnitList.length
-                      } units
+                      10th Edition · {(FACTION_UNITS[f.id] || []).length} units
                     </p>
                   </div>
                   {localFaction === f.id && (
@@ -305,18 +267,10 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                 ))}
               </>
             )}
-            {!isSW && (() => {
-              const accent = isCSM ? '#b91c1c'
-                : isDA ? '#22c55e'
-                : isTau ? '#00b4d8'
-                : isTS ? '#3b82f6'
-                : isWE ? '#dc2626'
-                : '#a855f7'
-              return detachments.map(d => (
-                <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
-                  accent={accent} theme={theme} onClick={() => setLocalDetachment(d.id)} />
-              ))
-            })()}
+            {!isSW && detachments.map(d => (
+              <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
+                accent={factionMeta.color} theme={theme} onClick={() => setLocalDetachment(d.id)} />
+            ))}
           </div>
         )}
 

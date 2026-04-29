@@ -22,6 +22,38 @@ import { thousandSonsUnitList } from './thousandsons/units'
 import { thousandSonsDetachments } from './thousandsons/detachments'
 import { worldEatersUnitList } from './worldeaters/units'
 import { worldEatersDetachments } from './worldeaters/detachments'
+import { aeldariUnitList } from './aeldari/units'
+import { aeldariDetachments } from './aeldari/detachments'
+import { necronsUnitList } from './necrons/units'
+import { necronsDetachments } from './necrons/detachments'
+import { orksUnitList } from './orks/units'
+import { orksDetachments } from './orks/detachments'
+import { astraMilitarumUnitList } from './astramilitarum/units'
+import { astraMilitarumDetachments } from './astramilitarum/detachments'
+import { bloodAngelsUnitList } from './bloodangels/units'
+import { bloodAngelsDetachments } from './bloodangels/detachments'
+import { blackTemplarsUnitList } from './blacktemplars/units'
+import { blackTemplarsDetachments } from './blacktemplars/detachments'
+import { adeptaSororitasUnitList } from './adeptasororitas/units'
+import { adeptaSororitasDetachments } from './adeptasororitas/detachments'
+import { greyKnightsUnitList } from './greyknights/units'
+import { greyKnightsDetachments } from './greyknights/detachments'
+import { adeptusCustodesUnitList } from './adeptuscustodes/units'
+import { adeptusCustodesDetachments } from './adeptuscustodes/detachments'
+import { drukhariUnitList } from './drukhari/units'
+import { drukhariDetachments } from './drukhari/detachments'
+import { genestealerCultsUnitList } from './genestealercults/units'
+import { genestealerCultsDetachments } from './genestealercults/detachments'
+import { leaguesOfVotannUnitList } from './leaguesofvotann/units'
+import { leaguesOfVotannDetachments } from './leaguesofvotann/detachments'
+import { chaosDaemonsUnitList } from './chaosdaemons/units'
+import { chaosDaemonsDetachments } from './chaosdaemons/detachments'
+import { deathwatchUnitList } from './deathwatch/units'
+import { deathwatchDetachments } from './deathwatch/detachments'
+import { imperialKnightsUnitList } from './imperialknights/units'
+import { imperialKnightsDetachments } from './imperialknights/detachments'
+import { chaosKnightsUnitList } from './chaosknights/units'
+import { chaosKnightsDetachments } from './chaosknights/detachments'
 
 export const FACTION_UNITS = {
   spacewolves: [...swUnitList, ...smGenericUnitList],
@@ -35,6 +67,53 @@ export const FACTION_UNITS = {
   tau: tauUnitList,
   thousandsons: thousandSonsUnitList,
   worldeaters: worldEatersUnitList,
+  aeldari: aeldariUnitList,
+  necrons: necronsUnitList,
+  orks: orksUnitList,
+  astramilitarum: astraMilitarumUnitList,
+  bloodangels: bloodAngelsUnitList,
+  blacktemplars: blackTemplarsUnitList,
+  adeptasororitas: adeptaSororitasUnitList,
+  greyknights: greyKnightsUnitList,
+  adeptuscustodes: adeptusCustodesUnitList,
+  drukhari: drukhariUnitList,
+  genestealercults: genestealerCultsUnitList,
+  leaguesofvotann: leaguesOfVotannUnitList,
+  chaosdaemons: chaosDaemonsUnitList,
+  deathwatch: deathwatchUnitList,
+  imperialknights: imperialKnightsUnitList,
+  chaosknights: chaosKnightsUnitList,
+}
+
+// Detachment maps keyed by detachment id — used by findDetachment and army builder
+export const FACTION_DETACHMENTS = {
+  spacewolves: swDetachments,
+  tyranids: tyranidDetachments,
+  chaosspacemarines: csmDetachments,
+  darkangels: daDetachments,
+  admech: admechDetachments,
+  spacemarines: smDetachments,
+  deathguard: dgDetachments,
+  emperorschildren: ecDetachments,
+  tau: tauDetachments,
+  thousandsons: thousandSonsDetachments,
+  worldeaters: worldEatersDetachments,
+  aeldari: aeldariDetachments,
+  necrons: necronsDetachments,
+  orks: orksDetachments,
+  astramilitarum: astraMilitarumDetachments,
+  bloodangels: bloodAngelsDetachments,
+  blacktemplars: blackTemplarsDetachments,
+  adeptasororitas: adeptaSororitasDetachments,
+  greyknights: greyKnightsDetachments,
+  adeptuscustodes: adeptusCustodesDetachments,
+  drukhari: drukhariDetachments,
+  genestealercults: genestealerCultsDetachments,
+  leaguesofvotann: leaguesOfVotannDetachments,
+  chaosdaemons: chaosDaemonsDetachments,
+  deathwatch: deathwatchDetachments,
+  imperialknights: imperialKnightsDetachments,
+  chaosknights: chaosKnightsDetachments,
 }
 
 export const FACTION_META = {
@@ -49,6 +128,22 @@ export const FACTION_META = {
   tau: { name: "T'au Empire", icon: '🔵', color: '#00b4d8' },
   thousandsons: { name: 'Thousand Sons', icon: '🔮', color: '#3b82f6' },
   worldeaters: { name: 'World Eaters', icon: '🩸', color: '#dc2626' },
+  aeldari: { name: 'Aeldari', icon: '🌙', color: '#8b5cf6' },
+  necrons: { name: 'Necrons', icon: '💚', color: '#10b981' },
+  orks: { name: 'Orks', icon: '💪', color: '#65a30d' },
+  astramilitarum: { name: 'Astra Militarum', icon: '🎖️', color: '#78716c' },
+  bloodangels: { name: 'Blood Angels', icon: '🩸', color: '#dc2626' },
+  blacktemplars: { name: 'Black Templars', icon: '✝️', color: '#1c1917' },
+  adeptasororitas: { name: 'Adepta Sororitas', icon: '⚜️', color: '#e11d48' },
+  greyknights: { name: 'Grey Knights', icon: '🔱', color: '#94a3b8' },
+  adeptuscustodes: { name: 'Adeptus Custodes', icon: '👑', color: '#ca8a04' },
+  drukhari: { name: 'Drukhari', icon: '🗡️', color: '#7c3aed' },
+  genestealercults: { name: 'Genestealer Cults', icon: '🧬', color: '#be185d' },
+  leaguesofvotann: { name: 'Leagues of Votann', icon: '⚒️', color: '#92400e' },
+  chaosdaemons: { name: 'Chaos Daemons', icon: '😈', color: '#9f1239' },
+  deathwatch: { name: 'Deathwatch', icon: '🎯', color: '#1e293b' },
+  imperialknights: { name: 'Imperial Knights', icon: '🏰', color: '#b45309' },
+  chaosknights: { name: 'Chaos Knights', icon: '🔥', color: '#7f1d1d' },
 }
 
 export function buildUnitsFromIds(faction, unitIds) {
@@ -70,35 +165,6 @@ export function findDetachment(faction, detachmentId) {
       || smGenericDetachmentList.find(d => d.id === detachmentId)
       || null
   }
-  if (faction === 'tyranids') {
-    return tyranidDetachments[detachmentId] || null
-  }
-  if (faction === 'chaosspacemarines') {
-    return csmDetachments[detachmentId] || null
-  }
-  if (faction === 'darkangels') {
-    return daDetachments[detachmentId] || null
-  }
-  if (faction === 'admech') {
-    return admechDetachments[detachmentId] || null
-  }
-  if (faction === 'spacemarines') {
-    return smDetachments[detachmentId] || null
-  }
-  if (faction === 'deathguard') {
-    return dgDetachments[detachmentId] || null
-  }
-  if (faction === 'emperorschildren') {
-    return ecDetachments[detachmentId] || null
-  }
-  if (faction === 'tau') {
-    return tauDetachments[detachmentId] || null
-  }
-  if (faction === 'thousandsons') {
-    return thousandSonsDetachments[detachmentId] || null
-  }
-  if (faction === 'worldeaters') {
-    return worldEatersDetachments[detachmentId] || null
-  }
-  return null
+  const map = FACTION_DETACHMENTS[faction]
+  return map ? (map[detachmentId] || null) : null
 }

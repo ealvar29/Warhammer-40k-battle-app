@@ -26,6 +26,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB — bundle grew with 27 factions
         // Cache all app shell assets
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
         // Network-first for navigation (always get latest if online)

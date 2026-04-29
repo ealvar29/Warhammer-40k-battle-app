@@ -1,0 +1,591 @@
+// Genestealer Cults units — 10th Edition (Wahapedia, April 2026)
+// Sources: https://wahapedia.ru/wh40k10ed/factions/genestealer-cults/
+
+export const genestealerCultsUnits = {
+
+  // ── CHARACTERS ─────────────────────────────────────────────────────
+
+  patriarch: {
+    id: 'patriarch', name: 'Patriarch', category: 'character',
+    powerRating: 5, points: 75,
+    M: '8"', T: 5, Sv: '4+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
+    models: 1,
+    weapons: [
+      { name: "Patriarch's claws", type: 'melee', A: 5, WS: '2+', S: 6, AP: -2, D: 2, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Infiltrators', phase: 'movement', description: 'During the Declare Battle Formations step, if every model in this unit has this ability, you can set up this unit anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Might From Beyond', phase: 'fight', description: 'While this model is leading a unit, melee weapons equipped by models in that unit have the [DEVASTATING WOUNDS] ability.' },
+      { name: 'Cosmic Horror (Psychic)', phase: 'fight', description: 'At the start of the Fight phase, each enemy unit within 6" of this model must take a Battle-shock test.' },
+      { name: 'Psychic Familiar', phase: 'fight', description: 'Once per battle, at the start of the Fight phase, this model can extend the range of its Cosmic Horror ability by 6" until the end of that phase.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['purestrainGenestealers'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'PSYKER', 'GREAT DEVOURER', 'PATRIARCH'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  magus: {
+    id: 'magus', name: 'Magus', category: 'character',
+    powerRating: 3, points: 50,
+    M: '6"', T: 3, Sv: '5+', W: 4, Ld: '6+', OC: 1, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Magus stave', type: 'melee', A: 3, WS: '3+', S: 5, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
+    ],
+    abilities: [
+      { name: 'Spiritual Leader', phase: 'command', description: 'Once per battle, at the start of any phase, select one friendly GENESTEALER CULTS unit within 12" of this model that is Battle-shocked and remove that condition.' },
+      { name: 'Mind Control (Psychic)', phase: 'shooting', description: "At the start of the opponent's Shooting phase, one PSYKER model with this ability can target one enemy unit within 18\". Roll one D6: on a 1, this model suffers D3 mortal wounds; on a 2-5, subtract 1 from Hit rolls for attacks made by that unit until the end of the phase; on a 6, subtract 1 from Hit rolls and subtract 1 from Wound rolls for attacks made by that unit until the end of the phase." },
+      { name: 'Psychic Familiar', phase: 'shooting', description: "Once per battle, at the start of the opponent's Shooting phase, this model can extend the range of its Mind Control ability by 6\" until the end of that phase." },
+    ],
+    isLeader: true,
+    leadsUnits: ['acolyteHybridsAutopistols', 'acolyteHybridsHandFlamers', 'hybridMetamorphs', 'neophyteHybrids'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'PSYKER', 'GREAT DEVOURER', 'MAGUS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  primus: {
+    id: 'primus', name: 'Primus', category: 'character',
+    powerRating: 4, points: 70,
+    M: '6"', T: 3, Sv: '5+', W: 4, Ld: '6+', OC: 1, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Scoped needle pistol', type: 'ranged', range: '18"', A: 1, BS: '2+', S: 1, AP: 0, D: 'D3', keywords: ['ANTI-INFANTRY 4+', 'IGNORES COVER', 'PISTOL'] },
+      { name: 'Cult bonesword', type: 'melee', A: 5, WS: '2+', S: 5, AP: -2, D: 1, keywords: [] },
+      { name: 'Toxin injector claw', type: 'melee', A: 2, WS: '2+', S: 2, AP: 0, D: 'D3', keywords: ['ANTI-INFANTRY 4+', 'EXTRA ATTACKS'] },
+    ],
+    abilities: [
+      { name: 'Cult Demagogue', phase: 'any', description: 'While this model is leading a unit, add 1 to Hit rolls for attacks made by models in that unit.' },
+      { name: 'Decoys and Misdirection', phase: 'deployment', description: 'After both players have deployed their armies, you can select up to three GENESTEALER CULTS units from your army and redeploy them. When doing so, you can place those units into Strategic Reserves regardless of any limits on the number of units you can have in Strategic Reserves.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['acolyteHybridsAutopistols', 'acolyteHybridsHandFlamers', 'hybridMetamorphs', 'neophyteHybrids'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GREAT DEVOURER', 'PRIMUS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  abominant: {
+    id: 'abominant', name: 'Abominant', category: 'character',
+    powerRating: 4, points: 85,
+    M: '6"', T: 6, Sv: '5+', W: 5, Ld: '7+', OC: 1, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Power sledgehammer', type: 'melee', A: 4, WS: '3+', S: 12, AP: -2, D: 'D6+1', keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Feel No Pain 5+', phase: 'any', description: 'Each time a wound would be allocated to this model, roll one D6: on a 5+, that wound is not lost.' },
+      { name: 'The Chosen One', phase: 'fight', description: 'While this model is leading a unit, each time a Bodyguard model in that unit is destroyed by a melee attack but has not yet fought this phase, roll one D6: on a 4+, that model can fight after the attacking unit has finished making its attacks, and is then removed from play.' },
+      { name: 'Regenerating Gene-mass', phase: 'any', description: 'The first time this model is destroyed, at the end of the phase roll one D6: on a 2+, set this model back up on the battlefield as close as possible to where it was destroyed, with its full wounds remaining, and not within Engagement Range of any enemy models.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['aberrants'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GREAT DEVOURER', 'ABOMINANT'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  kelermorph: {
+    id: 'kelermorph', name: 'Kelermorph', category: 'character',
+    powerRating: 3, points: 60,
+    M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Liberator autostubs', type: 'ranged', range: '12"', A: 6, BS: '2+', S: 6, AP: -2, D: 1, keywords: ['DEVASTATING WOUNDS'] },
+      { name: 'Close combat weapon', type: 'melee', A: 3, WS: '3+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Lone Operative', phase: 'any', description: 'Unless this model is leading a unit, it can only be selected as the target of a ranged attack if the attacking model is within 12" of this model.' },
+      { name: 'Heroic Fusillade', phase: 'shooting', description: 'Once per turn, after this model has shot, you can select one INFANTRY unit hit by one or more of those attacks. That unit must take a Battle-shock test.' },
+      { name: 'Hypersensory Abilities', phase: 'movement', description: "During your opponent's Movement phase, when an enemy unit ends a move within 9\" of this model and this model is not in Engagement Range of any enemy units, this model can shoot that unit as if it were your Shooting phase. After resolving those attacks, this model can make a Normal move of up to D6\" (it cannot embark in a transport vehicle this phase)." },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GREAT DEVOURER', 'KELERMORPH'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  locus: {
+    id: 'locus', name: 'Locus', category: 'character',
+    powerRating: 3, points: 45,
+    M: '6"', T: 4, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '4+',
+    models: 1,
+    weapons: [
+      { name: 'Locus blades', type: 'melee', A: 5, WS: '2+', S: 5, AP: -2, D: 2, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Sudden Assault', phase: 'any', description: 'While this model is leading a unit, models in that unit have the Fights First ability.' },
+      { name: 'Bodyguard', phase: 'any', description: 'While this model is leading a unit, other CHARACTER models attached to that unit have the Feel No Pain 4+ ability.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['acolyteHybridsAutopistols', 'acolyteHybridsHandFlamers', 'hybridMetamorphs', 'neophyteHybrids'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GREAT DEVOURER', 'LOCUS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  jackAlphus: {
+    id: 'jackAlphus', name: 'Jackal Alphus', category: 'character',
+    powerRating: 3, points: 55,
+    M: '12"', T: 4, Sv: '5+', W: 4, Ld: '7+', OC: 1, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Cult sniper rifle', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 5, AP: -2, D: 3, keywords: ['HEAVY', 'PRECISION'] },
+      { name: 'Close combat weapon', type: 'melee', A: 3, WS: '3+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Scouts 9"', phase: 'movement', description: 'Before the first turn begins, this unit can make a Normal move of up to 9" (cannot move within Engagement Range of any enemy models).' },
+      { name: 'Stealth', phase: 'any', description: 'Subtract 1 from the Hit rolls of ranged attacks that target this model.' },
+      { name: 'Priority Target', phase: 'shooting', description: 'After this model shoots with its cult sniper rifle, select one enemy unit hit by one or more of those attacks. Until the end of the phase, friendly GENESTEALER CULTS models can re-roll Hit rolls of 1 against that target.' },
+      { name: 'Master Outrider', phase: 'shooting', description: 'After this model has shot, if it is not within Engagement Range of any enemy models, it can make a Normal move of up to 6". If it does, it cannot declare a charge this turn.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['atalanJackals'],
+    eligibleLeaders: [],
+    keywords: ['MOUNTED', 'CHARACTER', 'GRENADES', 'GREAT DEVOURER', 'JACKAL ALPHUS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  nexos: {
+    id: 'nexos', name: 'Nexos', category: 'character',
+    powerRating: 3, points: 60,
+    M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Close combat weapon', type: 'melee', A: 2, WS: '3+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Battlefield Analysis', phase: 'any', description: 'Once per battle round, when a unit containing this model is targeted with a Stratagem, you can reduce that Stratagem\'s CP cost by 1 (to a minimum of 0).' },
+      { name: 'Cult Infiltration', phase: 'command', description: "During each player's Command phase, if this model is on the battlefield, you can select one Cult Ambush marker that has not been moved this turn and reposition it up to 6\"." },
+    ],
+    isLeader: true,
+    leadsUnits: ['acolyteHybridsAutopistols', 'acolyteHybridsHandFlamers', 'hybridMetamorphs', 'neophyteHybrids'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GREAT DEVOURER', 'NEXOS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  biophagus: {
+    id: 'biophagus', name: 'Biophagus', category: 'character',
+    powerRating: 2, points: 50,
+    M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Chemical vials', type: 'ranged', range: '6"', A: 1, BS: '3+', S: 1, AP: -1, D: 2, keywords: ['ANTI-INFANTRY 2+'] },
+      { name: 'Injector goad', type: 'melee', A: 1, WS: '3+', S: 2, AP: 0, D: 3, keywords: ['ANTI-INFANTRY 2+'] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Twisted Science', phase: 'any', description: 'While this model is leading a unit, melee weapons equipped by models in that unit have the [LETHAL HITS] ability.' },
+      { name: 'Biological Warfare', phase: 'fight', description: 'Once per battle, when this model is selected to fight, until the end of the phase, add 3 to the Attacks and Damage characteristics of this model\'s injector goad.' },
+      { name: 'Alchemicus Familiar', phase: 'fight', description: 'Once per battle, when this model is selected to fight, add 1 to Wound rolls for attacks made by this model\'s injector goad against INFANTRY targets until the end of the phase.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['aberrants', 'acolyteHybridsAutopistols', 'acolyteHybridsHandFlamers', 'hybridMetamorphs', 'neophyteHybrids'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GREAT DEVOURER', 'BIOPHAGUS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  clamavus: {
+    id: 'clamavus', name: 'Clamavus', category: 'character',
+    powerRating: 2, points: 50,
+    M: '6"', T: 3, Sv: '5+', W: 3, Ld: '6+', OC: 1, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Close combat weapon', type: 'melee', A: 2, WS: '3+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Voice of New Truths', phase: 'command', description: 'During your Command phase, this model can force one enemy unit within 18" to take a Battle-shock test.' },
+      { name: 'Scrambler Array', phase: 'movement', description: "Enemy units cannot be set up as Reinforcements within 12\" of this model." },
+    ],
+    isLeader: true,
+    leadsUnits: ['acolyteHybridsAutopistols', 'acolyteHybridsHandFlamers', 'hybridMetamorphs', 'neophyteHybrids'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GREAT DEVOURER', 'CLAMAVUS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  acolyteIconward: {
+    id: 'acolyteIconward', name: 'Acolyte Iconward', category: 'character',
+    powerRating: 2, points: 50,
+    M: '6"', T: 4, Sv: '5+', W: 3, Ld: '6+', OC: 1, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Cult claws', type: 'melee', A: 4, WS: '3+', S: 4, AP: -1, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Scouts 6"', phase: 'movement', description: 'Before the first turn begins, this unit can make a Normal move of up to 6" (cannot move within Engagement Range of any enemy models).' },
+      { name: 'Nexus of Devotion', phase: 'any', description: "While this model is leading a unit, models in that unit have the Feel No Pain 5+ ability. If the unit has the HYBRID METAMORPHS keyword, models in that unit have the Feel No Pain 4+ ability instead." },
+      { name: 'Summon the Cult', phase: 'any', description: "Once per battle, when a Cult Ambush marker must be removed due to enemy proximity, if any models with this ability are on the battlefield, you can relocate that marker to a legal position within 12\" of your models and more than 9\" from all enemy models instead of removing it." },
+    ],
+    isLeader: true,
+    leadsUnits: ['acolyteHybridsAutopistols', 'acolyteHybridsHandFlamers', 'hybridMetamorphs', 'neophyteHybrids'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GRENADES', 'GREAT DEVOURER', 'ACOLYTE ICONWARD'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  benefictus: {
+    id: 'benefictus', name: 'Benefictus', category: 'character',
+    powerRating: 3, points: 70,
+    M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Psionic Cascade — witchfire', type: 'ranged', range: '18"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['IGNORES COVER', 'PSYCHIC'] },
+      { name: 'Psionic Cascade — focused witchfire', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['HAZARDOUS', 'IGNORES COVER', 'PSYCHIC'] },
+      { name: 'Close combat weapon', type: 'melee', A: 2, WS: '3+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Bio-horror Disruption (Psychic)', phase: 'any', description: 'While this model is leading a unit, ranged weapons equipped by models in that unit have the [LETHAL HITS] ability.' },
+      { name: 'Psionic Shield (Psychic)', phase: 'any', description: 'Once per battle, at the start of any phase, this model can activate a psionic shield; until the end of that phase, this model has a 4+ invulnerable save.' },
+    ],
+    isLeader: true,
+    leadsUnits: ['acolyteHybridsAutopistols', 'acolyteHybridsHandFlamers', 'hybridMetamorphs', 'neophyteHybrids'],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'PSYKER', 'GREAT DEVOURER', 'BENEFICTUS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  reductusSaboteur: {
+    id: 'reductusSaboteur', name: 'Reductus Saboteur', category: 'character',
+    powerRating: 3, points: 65,
+    M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Demolition charges', type: 'ranged', range: '8"', A: 'D6', BS: '3+', S: 9, AP: -2, D: 2, keywords: ['ASSAULT', 'BLAST', 'HAZARDOUS', 'ONE SHOT'] },
+      { name: 'Remote explosives', type: 'ranged', range: '24"', A: 'D6+3', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'INDIRECT FIRE'] },
+      { name: 'Close combat weapon', type: 'melee', A: 2, WS: '3+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Infiltrators', phase: 'movement', description: 'During the Declare Battle Formations step, if every model in this unit has this ability, you can set up this unit anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Lone Operative', phase: 'any', description: 'Unless this model is leading a unit, it can only be selected as the target of a ranged attack if the attacking model is within 12" of this model.' },
+      { name: 'Stealth', phase: 'any', description: 'Subtract 1 from the Hit rolls of ranged attacks that target this model.' },
+      { name: 'Primed and Ready', phase: 'shooting', description: 'During your Shooting phase, you can select this model as the target for the Grenade Stratagem at 0CP, provided it has not already been targeted this phase.' },
+      { name: 'Planted Explosives', phase: 'movement', description: 'Once per battle, when an enemy unit ends a move within 9" of this model, this model can activate its Reductus mine. Roll one D6: on a 2+, that enemy unit suffers D3+3 mortal wounds. Only one model with this ability per army can use it each battle round.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GRENADES', 'GREAT DEVOURER', 'REDUCTUS SABOTEUR'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  sanctus: {
+    id: 'sanctus', name: 'Sanctus', category: 'character',
+    powerRating: 3, points: 50,
+    M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Cult sniper rifle', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 7, AP: -2, D: 3, keywords: ['ANTI-PSYKER 2+', 'HEAVY', 'PRECISION'] },
+      { name: 'Sanctus bio-dagger', type: 'melee', A: 6, WS: '2+', S: 3, AP: -2, D: 2, keywords: ['ANTI-INFANTRY 3+', 'PRECISION'] },
+      { name: 'Close combat weapon', type: 'melee', A: 2, WS: '3+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this model in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this model up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Infiltrators', phase: 'movement', description: 'During the Declare Battle Formations step, if every model in this unit has this ability, you can set up this unit anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Lone Operative', phase: 'any', description: 'Unless this model is leading a unit, it can only be selected as the target of a ranged attack if the attacking model is within 12" of this model.' },
+      { name: 'Stealth', phase: 'any', description: 'Subtract 1 from the Hit rolls of ranged attacks that target this model.' },
+      { name: 'Creeping Shadow', phase: 'movement', description: "When equipped with a cult sniper rifle and an enemy unit ends a move within 9\" of this model, if this model is not in Engagement Range of any enemy units, it can make a Normal move of up to 6\"." },
+      { name: 'Cloaked Assassin', phase: 'fight', description: 'When equipped with the Sanctus bio-dagger, enemy models cannot use Fire Overwatch against this model.' },
+      { name: 'Psychic Spoor', phase: 'any', description: 'At the start of the battle, you can designate one enemy unit as prey. This model can re-roll Hit rolls and Wound rolls for attacks that target that unit.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'GREAT DEVOURER', 'SANCTUS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  // ── BATTLELINE ─────────────────────────────────────────────────────
+
+  acolyteHybridsAutopistols: {
+    id: 'acolyteHybridsAutopistols', name: 'Acolyte Hybrids (Autopistols)', category: 'battleline',
+    powerRating: 4, points: 65,
+    M: '6"', T: 4, Sv: '5+', W: 1, Ld: '7+', OC: 2, InvSv: null,
+    models: 5,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '4+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Cult claws and knife', type: 'melee', A: 3, WS: '3+', S: 4, AP: -1, D: 1, keywords: [] },
+      { name: 'Heavy mining tool', type: 'melee', A: 2, WS: '3+', S: 5, AP: -2, D: 3, keywords: ['ANTI-VEHICLE 4+'] },
+      { name: "Leader's bio-weapons", type: 'melee', A: 5, WS: '3+', S: 5, AP: -2, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this unit in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this unit up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Cult Ambush', phase: 'movement', description: 'This unit is assigned Resurgence points equal to its Starting Strength at the start of the battle. Each time a model in this unit is destroyed, subtract 1 from this unit\'s Resurgence points. At the start of your Movement phase, if all models in this unit have been destroyed and this unit has 1 or more Resurgence points remaining, you can set this unit back up on the battlefield from a Cult Ambush marker.' },
+      { name: 'Claimed for the Cult', phase: 'command', description: 'At the start of your Command phase, if this unit is within range of an objective marker you control, gain 1 Command Point.' },
+      { name: 'Cult Icon (Wargear)', phase: 'command', description: 'In your Command phase, if a model in this unit is equipped with a Cult Icon, return up to D3 destroyed models to this unit. If this unit is controlling an objective marker, return up to 3 destroyed models instead.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: ['acolyteIconward', 'benefictus', 'biophagus', 'clamavus', 'locus', 'magus', 'nexos', 'primus'],
+    keywords: ['INFANTRY', 'BATTLELINE', 'GRENADES', 'GREAT DEVOURER', 'ACOLYTE HYBRIDS', 'ACOLYTE HYBRIDS WITH AUTOPISTOLS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  acolyteHybridsHandFlamers: {
+    id: 'acolyteHybridsHandFlamers', name: 'Acolyte Hybrids (Hand Flamers)', category: 'battleline',
+    powerRating: 4, points: 70,
+    M: '6"', T: 4, Sv: '5+', W: 1, Ld: '7+', OC: 2, InvSv: null,
+    models: 5,
+    weapons: [
+      { name: 'Hand flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 3, AP: 0, D: 1, keywords: ['IGNORES COVER', 'PISTOL', 'TORRENT'] },
+      { name: 'Demolition charges', type: 'ranged', range: '8"', A: 'D6', BS: '5+', S: 9, AP: -2, D: 2, keywords: ['ASSAULT', 'BLAST', 'HAZARDOUS', 'ONE SHOT'] },
+      { name: 'Cult claws and knife', type: 'melee', A: 3, WS: '3+', S: 4, AP: -1, D: 1, keywords: [] },
+      { name: "Leader's bio-weapons", type: 'melee', A: 5, WS: '3+', S: 5, AP: -2, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this unit in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this unit up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Cult Ambush', phase: 'movement', description: 'This unit is assigned Resurgence points equal to its Starting Strength at the start of the battle. Each time a model in this unit is destroyed, subtract 1 from this unit\'s Resurgence points. At the start of your Movement phase, if all models in this unit have been destroyed and this unit has 1 or more Resurgence points remaining, you can set this unit back up on the battlefield from a Cult Ambush marker.' },
+      { name: 'Industrialised Destruction', phase: 'fight', description: 'Each time a model in this unit makes a melee attack, re-roll a Wound roll of 1. If the target is within range of an objective marker, you can re-roll the Wound roll instead.' },
+      { name: 'Cult Icon (Wargear)', phase: 'command', description: 'In your Command phase, if a model in this unit is equipped with a Cult Icon, return up to D3 destroyed models to this unit. If this unit is controlling an objective marker, return up to 3 destroyed models instead.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: ['acolyteIconward', 'benefictus', 'biophagus', 'clamavus', 'locus', 'magus', 'nexos', 'primus'],
+    keywords: ['INFANTRY', 'BATTLELINE', 'GRENADES', 'GREAT DEVOURER', 'ACOLYTE HYBRIDS', 'ACOLYTE HYBRIDS WITH HAND FLAMERS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  neophyteHybrids: {
+    id: 'neophyteHybrids', name: 'Neophyte Hybrids', category: 'battleline',
+    powerRating: 3, points: 65,
+    M: '6"', T: 3, Sv: '5+', W: 1, Ld: '7+', OC: 2, InvSv: null,
+    models: 10,
+    weapons: [
+      { name: 'Hybrid firearm', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 3, AP: 0, D: 1, keywords: ['RAPID FIRE 1'] },
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '4+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 4, AP: 0, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
+      { name: 'Grenade launcher — frag', type: 'ranged', range: '24"', A: 'D3', BS: '4+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
+      { name: 'Grenade launcher — krak', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 9, AP: -2, D: 'D3', keywords: [] },
+      { name: 'Heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
+      { name: 'Mining laser', type: 'ranged', range: '24"', A: 1, BS: '5+', S: 10, AP: -3, D: 'D6+1', keywords: ['HEAVY'] },
+      { name: 'Seismic cannon', type: 'ranged', range: '24"', A: 2, BS: '5+', S: 6, AP: -1, D: 'D3', keywords: ['HEAVY', 'RAPID FIRE 2'] },
+      { name: 'Webber', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 2, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TORRENT'] },
+      { name: 'Chainsword', type: 'melee', A: 2, WS: '4+', S: 3, AP: 0, D: 1, keywords: [] },
+      { name: 'Power weapon', type: 'melee', A: 1, WS: '4+', S: 4, AP: -2, D: 1, keywords: [] },
+      { name: 'Close combat weapon', type: 'melee', A: 1, WS: '4+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this unit in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this unit up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Cult Ambush', phase: 'movement', description: 'This unit is assigned Resurgence points equal to its Starting Strength at the start of the battle. Each time a model in this unit is destroyed, subtract 1 from this unit\'s Resurgence points. At the start of your Movement phase, if all models in this unit have been destroyed and this unit has 1 or more Resurgence points remaining, you can set this unit back up on the battlefield from a Cult Ambush marker.' },
+      { name: 'A Plan Generations in the Making', phase: 'any', description: 'This unit is always considered to be within range of an objective marker it is controlling, even if all models in this unit move out of range of that objective marker during the same phase.' },
+      { name: 'Cult Icon (Wargear)', phase: 'command', description: 'In your Command phase, if a model in this unit is equipped with a Cult Icon, return up to D3+3 destroyed models to this unit. If this unit is controlling an objective marker, return up to 3+D3 destroyed models instead.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: ['acolyteIconward', 'benefictus', 'biophagus', 'clamavus', 'locus', 'magus', 'nexos', 'primus'],
+    keywords: ['INFANTRY', 'BATTLELINE', 'GRENADES', 'GREAT DEVOURER', 'NEOPHYTE HYBRIDS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  // ── INFANTRY ───────────────────────────────────────────────────────
+
+  aberrants: {
+    id: 'aberrants', name: 'Aberrants', category: 'infantry',
+    powerRating: 8, points: 135,
+    M: '6"', T: 6, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: null,
+    models: 5,
+    weapons: [
+      { name: 'Aberrant weapons', type: 'melee', A: 3, WS: '3+', S: 7, AP: -2, D: 2, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this unit in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this unit up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Feel No Pain 5+', phase: 'any', description: 'Each time a wound would be allocated to a model in this unit, roll one D6: on a 5+, that wound is not lost.' },
+      { name: 'Cult Ambush', phase: 'movement', description: 'This unit is assigned Resurgence points equal to its Starting Strength at the start of the battle. Each time a model in this unit is destroyed, subtract 1 from this unit\'s Resurgence points. At the start of your Movement phase, if all models in this unit have been destroyed and this unit has 1 or more Resurgence points remaining, you can set this unit back up on the battlefield from a Cult Ambush marker.' },
+      { name: 'Hulking Bodyguards', phase: 'any', description: 'When this unit is led by a CHARACTER, subtract 1 from Wound rolls for attacks that target this unit if the Strength characteristic of those attacks exceeds the Toughness characteristic of this unit.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: ['abominant', 'biophagus'],
+    keywords: ['INFANTRY', 'GREAT DEVOURER', 'ABERRANTS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  hybridMetamorphs: {
+    id: 'hybridMetamorphs', name: 'Hybrid Metamorphs', category: 'infantry',
+    powerRating: 4, points: 70,
+    M: '6"', T: 4, Sv: '5+', W: 1, Ld: '7+', OC: 1, InvSv: null,
+    models: 5,
+    weapons: [
+      { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '4+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Hand flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 3, AP: 0, D: 1, keywords: ['IGNORES COVER', 'PISTOL', 'TORRENT'] },
+      { name: 'Metamorph mutations — strike', type: 'melee', A: 3, WS: '3+', S: 5, AP: -1, D: 2, keywords: [] },
+      { name: 'Metamorph mutations — sweep', type: 'melee', A: 5, WS: '3+', S: 4, AP: -1, D: 1, keywords: [] },
+      { name: "Leader's bio-weapons", type: 'melee', A: 5, WS: '3+', S: 5, AP: -1, D: 2, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this unit in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this unit up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Feel No Pain 5+', phase: 'any', description: 'Each time a wound would be allocated to a model in this unit, roll one D6: on a 5+, that wound is not lost.' },
+      { name: 'Scouts 6"', phase: 'movement', description: 'Before the first turn begins, this unit can make a Normal move of up to 6" (cannot move within Engagement Range of any enemy models).' },
+      { name: 'Cult Ambush', phase: 'movement', description: 'This unit is assigned Resurgence points equal to its Starting Strength at the start of the battle. Each time a model in this unit is destroyed, subtract 1 from this unit\'s Resurgence points. At the start of your Movement phase, if all models in this unit have been destroyed and this unit has 1 or more Resurgence points remaining, you can set this unit back up on the battlefield from a Cult Ambush marker.' },
+      { name: 'Brood Surge', phase: 'shooting', description: 'Each time an enemy unit is selected to shoot, after that unit has shot, if any models from this unit were destroyed as a result of those attacks, this unit can make a Normal move of up to 6".' },
+      { name: 'Cult Icon (Wargear)', phase: 'command', description: 'In your Command phase, if a model in this unit is equipped with a Cult Icon, return up to D3 destroyed models to this unit. If this unit is controlling an objective marker, return up to 3 destroyed models instead.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: ['acolyteIconward', 'benefictus', 'biophagus', 'clamavus', 'locus', 'magus', 'nexos', 'primus'],
+    keywords: ['INFANTRY', 'GRENADES', 'GREAT DEVOURER', 'HYBRID METAMORPHS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  purestrainGenestealers: {
+    id: 'purestrainGenestealers', name: 'Purestrain Genestealers', category: 'infantry',
+    powerRating: 5, points: 75,
+    M: '8"', T: 4, Sv: '5+', W: 2, Ld: '7+', OC: 1, InvSv: '5+',
+    models: 5,
+    weapons: [
+      { name: 'Cult claws and talons', type: 'melee', A: 4, WS: '2+', S: 4, AP: -2, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this unit in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this unit up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Infiltrators', phase: 'movement', description: 'During the Declare Battle Formations step, if every model in this unit has this ability, you can set up this unit anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
+      { name: 'Cult Ambush', phase: 'movement', description: 'This unit is assigned Resurgence points equal to its Starting Strength at the start of the battle. Each time a model in this unit is destroyed, subtract 1 from this unit\'s Resurgence points. At the start of your Movement phase, if all models in this unit have been destroyed and this unit has 1 or more Resurgence points remaining, you can set this unit back up on the battlefield from a Cult Ambush marker.' },
+      { name: 'Swift and Deadly', phase: 'charge', description: 'This unit is eligible to declare a charge in a turn in which it Advanced.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: ['patriarch'],
+    keywords: ['INFANTRY', 'GREAT DEVOURER', 'PURESTRAIN GENESTEALERS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  // ── CAVALRY / MOUNTED ──────────────────────────────────────────────
+
+  atalanJackals: {
+    id: 'atalanJackals', name: 'Atalan Jackals', category: 'cavalry',
+    powerRating: 5, points: 85,
+    M: '12"', T: 4, Sv: '5+', W: 2, Ld: '7+', OC: 1, InvSv: null,
+    models: 5,
+    weapons: [
+      { name: 'Atalan small arms pistol', type: 'ranged', range: '12"', A: 2, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Atalan incinerator', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
+      { name: 'Grenade launcher — frag', type: 'ranged', range: '24"', A: 'D3', BS: '4+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
+      { name: 'Grenade launcher — krak', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 9, AP: -2, D: 'D3', keywords: [] },
+      { name: 'Heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
+      { name: 'Mining laser', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
+      { name: 'Atalan power weapon', type: 'melee', A: 2, WS: '4+', S: 4, AP: -2, D: 1, keywords: [] },
+      { name: 'Close combat weapon', type: 'melee', A: 2, WS: '4+', S: 3, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Scouts 9"', phase: 'movement', description: 'Before the first turn begins, this unit can make a Normal move of up to 9" (cannot move within Engagement Range of any enemy models).' },
+      { name: 'Stealth', phase: 'any', description: 'Subtract 1 from the Hit rolls of ranged attacks that target this unit.' },
+      { name: 'Cult Ambush', phase: 'movement', description: 'This unit is assigned Resurgence points equal to its Starting Strength at the start of the battle. Each time a model in this unit is destroyed, subtract 1 from this unit\'s Resurgence points. At the start of your Movement phase, if all models in this unit have been destroyed and this unit has 1 or more Resurgence points remaining, you can set this unit back up on the battlefield from a Cult Ambush marker.' },
+      { name: 'Outrider Gangs', phase: 'movement', description: 'This unit\'s Cult Ambush markers must be placed more than 9" from any battlefield edge as well as more than 9" from all enemy models.' },
+      { name: 'Demolition Run', phase: 'movement', description: 'Once per turn, after this unit has made a Normal move, you can select one enemy unit it moved over or within 1" of; that enemy unit suffers a number of mortal wounds equal to the number of Atalan Jackals in this unit that moved over or within 1" of it (to a maximum of 6).' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: ['jackAlphus'],
+    keywords: ['MOUNTED', 'GRENADES', 'GREAT DEVOURER', 'ATALAN JACKALS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  // ── VEHICLES ───────────────────────────────────────────────────────
+
+  achillesRidgerunners: {
+    id: 'achillesRidgerunners', name: 'Achilles Ridgerunners', category: 'vehicle',
+    powerRating: 6, points: 95,
+    M: '12"', T: 7, Sv: '3+', W: 8, Ld: '7+', OC: 3, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Heavy mining laser', type: 'ranged', range: '36"', A: 'D3', BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
+      { name: 'Achilles missile launcher', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 9, AP: -2, D: 3, keywords: [] },
+      { name: 'Heavy mortar', type: 'ranged', range: '48"', A: 'D6+3', BS: '4+', S: 6, AP: 0, D: 1, keywords: ['INDIRECT FIRE'] },
+      { name: 'Twin heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 3', 'TWIN-LINKED'] },
+      { name: 'Armoured hull', type: 'melee', A: 3, WS: '4+', S: 5, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deadly Demise 1', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 6, each unit within 6" suffers 1 mortal wound.' },
+      { name: 'Scouts 9"', phase: 'movement', description: 'Before the first turn begins, this unit can make a Normal move of up to 9" (cannot move within Engagement Range of any enemy models).' },
+      { name: 'Crossfire', phase: 'shooting', description: 'After this unit has shot, select one enemy unit hit by one or more of those attacks. Until the end of the turn, ranged weapons equipped by friendly GENESTEALER CULTS models gain +1 to their AP characteristic when targeting that enemy unit.' },
+      { name: 'Spotter (Wargear)', phase: 'shooting', description: 'If equipped with a Spotter, ranged weapons equipped by models in this unit have a Ballistic Skill of 3+ this phase.' },
+      { name: 'Survey Augur (Wargear)', phase: 'shooting', description: 'If equipped with a Survey Augur, enemy units hit by this unit\'s attacks cannot have the Benefit of Cover until the end of the phase.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'GREAT DEVOURER', 'ACHILLES RIDGERUNNERS'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  goliathTruck: {
+    id: 'goliathTruck', name: 'Goliath Truck', category: 'vehicle',
+    powerRating: 4, points: 85,
+    M: '12"', T: 9, Sv: '3+', W: 10, Ld: '7+', OC: 2, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Twin autocannon', type: 'ranged', range: '48"', A: 2, BS: '4+', S: 9, AP: -1, D: 3, keywords: ['TWIN-LINKED'] },
+      { name: 'Demolition charge cache', type: 'ranged', range: '8"', A: 'D6', BS: '5+', S: 9, AP: -2, D: 2, keywords: ['ASSAULT', 'BLAST', 'HAZARDOUS'] },
+      { name: 'Heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
+      { name: 'Armoured hull', type: 'melee', A: 3, WS: '4+', S: 6, AP: 0, D: 1, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deadly Demise D3', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 2+, each unit within 6" suffers D3 mortal wounds.' },
+      { name: 'Firing Deck 6', phase: 'shooting', description: 'Up to 6 models embarked on this transport can shoot from it in your Shooting phase as if they were not embarked. Measure range and visibility from any point on this model.' },
+      { name: 'Fire Support', phase: 'shooting', description: 'After this model has shot, models that disembarked from this transport this turn can re-roll Wound rolls for attacks targeting enemy units this model hit.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'TRANSPORT', 'DEDICATED TRANSPORT', 'GREAT DEVOURER', 'GOLIATH TRUCK'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+  goliathRockgrinder: {
+    id: 'goliathRockgrinder', name: 'Goliath Rockgrinder', category: 'vehicle',
+    powerRating: 6, points: 120,
+    M: '12"', T: 10, Sv: '3+', W: 10, Ld: '7+', OC: 3, InvSv: null,
+    models: 1,
+    weapons: [
+      { name: 'Clearance incinerator', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
+      { name: 'Demolition charge cache', type: 'ranged', range: '8"', A: 'D6', BS: '5+', S: 9, AP: -2, D: 2, keywords: ['ASSAULT', 'BLAST', 'HAZARDOUS'] },
+      { name: 'Heavy mining laser', type: 'ranged', range: '36"', A: 'D3', BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
+      { name: 'Heavy seismic cannon', type: 'ranged', range: '24"', A: 4, BS: '4+', S: 8, AP: -2, D: 'D3', keywords: ['RAPID FIRE 2'] },
+      { name: 'Heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
+      { name: 'Drilldozer blade', type: 'melee', A: 8, WS: '3+', S: 10, AP: -2, D: 2, keywords: [] },
+    ],
+    abilities: [
+      { name: 'Deadly Demise D3', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 2+, each unit within 6" suffers D3 mortal wounds.' },
+      { name: 'Firing Deck 6', phase: 'shooting', description: 'Up to 6 models embarked on this transport can shoot from it in your Shooting phase as if they were not embarked. Measure range and visibility from any point on this model.' },
+      { name: 'Grinding Clearance', phase: 'fight', description: 'Enemy units (excluding MONSTERS and VEHICLES) within Engagement Range of this model that Fall Back must take Desperate Escape tests. If that unit is Battle-shocked, subtract an additional 1 from those tests.' },
+      { name: 'Damaged (1-3 wounds remaining)', phase: 'any', description: 'While this model has 1-3 wounds remaining, each time this model makes an attack, subtract 1 from the Hit roll.' },
+    ],
+    isLeader: false,
+    leadsUnits: [],
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'TRANSPORT', 'GREAT DEVOURER', 'GOLIATH ROCKGRINDER'],
+    factionKeywords: ['GENESTEALER CULTS'],
+  },
+
+}
+
+export const genestealerCultsUnitList = Object.values(genestealerCultsUnits)
+
+export const genestealerCultsUnitsByCategory = {
+  epicHero:  genestealerCultsUnitList.filter(u => u.category === 'epicHero'),
+  character: genestealerCultsUnitList.filter(u => u.category === 'character'),
+  battleline: genestealerCultsUnitList.filter(u => u.category === 'battleline'),
+  infantry:  genestealerCultsUnitList.filter(u => u.category === 'infantry'),
+  cavalry:   genestealerCultsUnitList.filter(u => u.category === 'cavalry'),
+  monster:   genestealerCultsUnitList.filter(u => u.category === 'monster'),
+  vehicle:   genestealerCultsUnitList.filter(u => u.category === 'vehicle'),
+}
