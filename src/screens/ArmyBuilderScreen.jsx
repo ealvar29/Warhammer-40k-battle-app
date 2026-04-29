@@ -9,7 +9,40 @@ import { smGenericDetachmentList } from '../data/spacewolves/genericDetachments'
 import { FACTION_UNITS, FACTION_DETACHMENTS, FACTION_META } from '../data/factionRegistry'
 import { opponentProfiles } from '../data/suggestions'
 
-const factions = Object.entries(FACTION_META).map(([id, meta]) => ({ id, ...meta }))
+const ALLEGIANCE_GROUPS = [
+  {
+    id: 'imperium',
+    label: 'Imperium',
+    icon: '⚜️',
+    factionIds: [
+      'spacewolves', 'spacemarines', 'darkangels', 'bloodangels', 'blacktemplars',
+      'greyknights', 'deathwatch', 'adeptuscustodes', 'adeptasororitas',
+      'admech', 'astramilitarum', 'imperialknights',
+    ],
+  },
+  {
+    id: 'chaos',
+    label: 'Chaos',
+    icon: '💀',
+    factionIds: [
+      'chaosspacemarines', 'deathguard', 'emperorschildren', 'thousandsons',
+      'worldeaters', 'chaosdaemons', 'chaosknights',
+    ],
+  },
+  {
+    id: 'xenos',
+    label: 'Xenos',
+    icon: '👽',
+    factionIds: [
+      'tyranids', 'genestealercults', 'necrons', 'orks',
+      'aeldari', 'drukhari', 'tau', 'leaguesofvotann',
+    ],
+  },
+]
+
+function getAllegianceFor(factionId) {
+  return ALLEGIANCE_GROUPS.find(g => g.factionIds.includes(factionId))?.id || 'imperium'
+}
 
 function getUnitsByCategory(unitList) {
   const result = {}
@@ -87,6 +120,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const unitCount = (unitId) => unitCounts[unitId] || 0
   const totalUnits = Object.values(unitCounts).reduce((a, b) => a + b, 0)
   const [showImport, setShowImport] = useState(false)
+  const [allegianceTab, setAllegianceTab] = useState(() => getAllegianceFor(store.faction || 'spacewolves'))
 
   const isSW = localFaction === 'spacewolves'
   const factionMeta = FACTION_META[localFaction] || { name: '', color: '#888' }
@@ -199,35 +233,81 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         {/* ── Step: Faction ── */}
         {step === 'faction' && (
           <div className="space-y-3">
-            {factions.map(f => (
-              <button key={f.id} onClick={() => { setLocalFaction(f.id); setLocalDetachment(null); setUnitCounts({}) }}
-                className="w-full rounded-2xl border-2 p-5 text-left transition-all"
-                style={{
-                  background: localFaction === f.id ? `${f.color}12` : theme.surface,
-                  borderColor: localFaction === f.id ? f.color : theme.border,
-                }}>
-                <div className="flex items-center gap-4">
-                  <span className="text-4xl">{f.icon}</span>
-                  <div>
-                    <p className="font-black text-lg" style={{ color: localFaction === f.id ? f.color : theme.textPrimary }}>
+
+            {/* Allegiance tabs */}
+            <div className="flex rounded-2xl overflow-hidden border" style={{ borderColor: theme.border }}>
+              {ALLEGIANCE_GROUPS.map((g, i) => (
+                <button key={g.id} onClick={() => setAllegianceTab(g.id)}
+                  className="flex-1 py-2.5 flex flex-col items-center gap-0.5 transition-all"
+                  style={{
+                    background: allegianceTab === g.id ? `${theme.secondary}15` : theme.surface,
+                    borderRight: i < ALLEGIANCE_GROUPS.length - 1 ? `1px solid ${theme.border}` : 'none',
+                  }}>
+                  <span className="text-xl">{g.icon}</span>
+                  <p className="text-xs font-black tracking-wide"
+                    style={{ color: allegianceTab === g.id ? theme.secondary : theme.textSecondary }}>
+                    {g.label}
+                  </p>
+                  <p style={{ fontSize: 9, color: theme.textSecondary, opacity: 0.7 }}>
+                    {g.factionIds.length} armies
+                  </p>
+                </button>
+              ))}
+            </div>
+
+            {/* Faction grid */}
+            <div className="grid grid-cols-3 gap-2">
+              {ALLEGIANCE_GROUPS.find(g => g.id === allegianceTab)?.factionIds.map(id => {
+                const f = FACTION_META[id]
+                if (!f) return null
+                const selected = localFaction === id
+                return (
+                  <button key={id}
+                    onClick={() => { setLocalFaction(id); setLocalDetachment(null); setUnitCounts({}) }}
+                    className="rounded-2xl border-2 p-3 flex flex-col items-center text-center transition-all relative"
+                    style={{
+                      background: selected ? `${f.color}18` : theme.surface,
+                      borderColor: selected ? f.color : theme.border,
+                    }}>
+                    {selected && (
+                      <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
+                        style={{ background: f.color }}>
+                        <span style={{ color: '#fff', fontSize: 8, fontWeight: 900, lineHeight: 1 }}>✓</span>
+                      </div>
+                    )}
+                    <span className="text-3xl mb-1.5">{f.icon}</span>
+                    <p className="text-xs font-bold leading-tight"
+                      style={{ color: selected ? f.color : theme.textPrimary }}>
                       {f.name}
                     </p>
-                    <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
-                      10th Edition · {(FACTION_UNITS[f.id] || []).length} units
+                    <p className="mt-0.5" style={{ color: theme.textSecondary, fontSize: 9 }}>
+                      {(FACTION_UNITS[id] || []).length} units
                     </p>
-                  </div>
-                  {localFaction === f.id && (
-                    <span className="ml-auto text-lg" style={{ color: f.color }}>✓</span>
-                  )}
-                </div>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Selected faction banner + continue */}
+            <div className="rounded-2xl p-3 flex items-center gap-3"
+              style={{ background: `${factionMeta.color}12`, border: `1px solid ${factionMeta.color}40` }}>
+              <span className="text-2xl shrink-0">{factionMeta.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-black truncate" style={{ color: factionMeta.color }}>
+                  {factionMeta.name}
+                </p>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>
+                  {(FACTION_UNITS[localFaction] || []).length} units available
+                </p>
+              </div>
+              <button onClick={() => setStep('detachment')}
+                className="px-3.5 py-2 rounded-xl font-bold text-xs shrink-0"
+                style={{ background: factionMeta.color, color: '#fff' }}>
+                Continue →
               </button>
-            ))}
-            <button onClick={() => setStep('detachment')}
-              className="w-full py-3.5 rounded-2xl font-bold text-sm"
-              style={{ background: theme.secondary, color: theme.bg }}>
-              Continue →
-            </button>
-            <div className="flex items-center gap-3 py-1">
+            </div>
+
+            <div className="flex items-center gap-3 py-0.5">
               <div className="h-px flex-1" style={{ background: theme.border }} />
               <p className="text-xs font-medium" style={{ color: theme.textSecondary }}>or</p>
               <div className="h-px flex-1" style={{ background: theme.border }} />
