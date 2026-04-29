@@ -217,6 +217,26 @@ export const smGenericUnits = {
     factionKeywords: ['ADEPTUS ASTARTES'],
   },
 
+  venerableDreadnought: {
+    id: 'venerableDreadnought', name: 'Venerable Dreadnought', category: 'vehicle',
+    powerRating: 8, points: 160,
+    M: '6"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 3,
+    models: 1,
+    weapons: [
+      { name: 'Twin Lascannon', type: 'ranged', range: '48"', A: 2, BS: '2+', S: 12, AP: -3, D: 'D6+1', keywords: ['HEAVY', 'TWIN-LINKED'] },
+      { name: 'Twin Autocannons', type: 'ranged', range: '48"', A: 4, BS: '2+', S: 9, AP: -1, D: 3, keywords: ['HEAVY', 'TWIN-LINKED'] },
+      { name: 'Dreadnought Combat Weapon', type: 'melee', A: 4, WS: '2+', S: 12, AP: -3, D: 3 },
+    ],
+    abilities: [
+      { name: 'Venerable', phase: 'any', description: 'Each time an attack is allocated to this model, subtract 1 from the Damage characteristic of that attack (to a minimum of 1).' },
+      { name: 'Explodes', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 6, each unit within 6" suffers D3 mortal wounds.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'WALKER', 'DREADNOUGHT', 'VENERABLE DREADNOUGHT', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
   ballistusDreadnought: {
     id: 'ballistusDreadnought', name: 'Ballistus Dreadnought', category: 'vehicle',
     powerRating: 8, points: 150,

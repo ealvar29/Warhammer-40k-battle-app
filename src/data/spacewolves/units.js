@@ -62,6 +62,7 @@ export const swUnits = {
     M: '6"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1,
     models: 1,
     weapons: [
+      { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1 },
       { name: 'Servo-arm', type: 'melee', A: 2, WS: '4+', S: 8, AP: -2, D: 3 },
       { name: 'Tempest Hammer', type: 'melee', A: 3, WS: '3+', S: 8, AP: -2, D: 2 },
     ],
@@ -341,7 +342,7 @@ export const swUnits = {
       { name: 'Rugged Resilience', phase: 'any', description: 'Each time an attack is allocated to a model in this unit, subtract 1 from that attack\'s Damage characteristic (to a minimum of 1).' },
     ],
     isLeader: false,
-    eligibleLeaders: ['loganGrimnar'],
+    eligibleLeaders: ['loganGrimnar', 'arjacRockfist', 'njal'],
     keywords: ['INFANTRY', 'TERMINATOR', 'WOLF GUARD', 'ADEPTUS ASTARTES'],
     factionKeywords: ['SPACE WOLVES'],
   },
@@ -387,6 +388,27 @@ export const swUnits = {
     isLeader: false,
     eligibleLeaders: ['wolfGuardPackLeader'],
     keywords: ['INFANTRY', 'JUMP PACK', 'FLY', 'SKYCLAWS', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['SPACE WOLVES'],
+  },
+
+  // ── VEHICLES ──────────────────────────────────────────────────────
+  wulfenDreadnought: {
+    id: 'wulfenDreadnought', name: 'Wulfen Dreadnought', category: 'vehicle',
+    powerRating: 8, points: 145,
+    M: '6"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 3,
+    models: 1,
+    weapons: [
+      { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: '2+', S: 5, AP: -1, D: 1, keywords: ['TORRENT', 'IGNORES COVER'] },
+      { name: 'Wulfen Dreadnought Claws', type: 'melee', A: 5, WS: '2+', S: 12, AP: -3, D: 3, keywords: ['DEVASTATING WOUNDS'] },
+      { name: 'Wulfen Blade', type: 'melee', A: 5, WS: '2+', S: 10, AP: -3, D: 3 },
+    ],
+    abilities: [
+      { name: 'Fury of the Wulfen', phase: 'fight', description: 'Each time this model makes a melee attack, on an unmodified hit roll of 6, that attack scores 1 additional hit.' },
+      { name: 'Explodes', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 6, each unit within 6" suffers D3 mortal wounds.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'WALKER', 'DREADNOUGHT', 'WULFEN DREADNOUGHT', 'ADEPTUS ASTARTES'],
     factionKeywords: ['SPACE WOLVES'],
   },
 
@@ -436,4 +458,5 @@ export const swUnitsByCategory = {
   battleline: swUnitList.filter(u => u.category === 'battleline'),
   infantry: swUnitList.filter(u => u.category === 'infantry'),
   cavalry: swUnitList.filter(u => u.category === 'cavalry'),
+  vehicle: swUnitList.filter(u => u.category === 'vehicle'),
 }
