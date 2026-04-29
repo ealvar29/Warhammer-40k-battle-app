@@ -1,26 +1,31 @@
 import React, { useState, useRef } from 'react'
+import ReactDOM from 'react-dom'
 import { getKeywordTip, ALL_KNOWN_KEYWORDS } from '../data/keywords'
 
 export default function KeywordChip({ keyword, theme }) {
-  const [visible, setVisible] = useState(false)
+  const [pos, setPos] = useState(null)
+  const chipRef = useRef(null)
   const timerRef = useRef(null)
   const tip = getKeywordTip(keyword)
   const upper = String(keyword).toUpperCase()
 
-  const show = () => setVisible(true)
-  const hide = () => setVisible(false)
-
-  const onTouchStart = () => {
-    timerRef.current = setTimeout(show, 380)
+  const show = () => {
+    if (!chipRef.current) return
+    const r = chipRef.current.getBoundingClientRect()
+    setPos({ x: r.left, y: r.top })
   }
+  const hide = () => setPos(null)
+
+  const onTouchStart = () => { timerRef.current = setTimeout(show, 380) }
   const onTouchEnd = () => {
     clearTimeout(timerRef.current)
-    if (visible) setTimeout(hide, 1800)
+    if (pos) setTimeout(hide, 1800)
   }
 
   return (
     <span className="relative inline-block">
       <span
+        ref={chipRef}
         onMouseEnter={show}
         onMouseLeave={hide}
         onTouchStart={onTouchStart}
@@ -36,10 +41,15 @@ export default function KeywordChip({ keyword, theme }) {
       >
         {upper}
       </span>
-      {visible && tip && (
+      {pos && tip && ReactDOM.createPortal(
         <span
-          className="absolute bottom-full left-0 mb-1.5 z-50 block rounded-xl p-2.5 shadow-2xl"
+          className="rounded-xl p-2.5 shadow-2xl block"
           style={{
+            position: 'fixed',
+            left: pos.x,
+            top: pos.y - 8,
+            transform: 'translateY(-100%)',
+            zIndex: 9999,
             background: theme.surface,
             border: `1px solid ${theme.secondary}44`,
             minWidth: 180,
@@ -49,7 +59,8 @@ export default function KeywordChip({ keyword, theme }) {
         >
           <span className="block text-xs font-black mb-1" style={{ color: theme.secondary }}>{upper}</span>
           <span className="block text-xs leading-relaxed" style={{ color: theme.textPrimary }}>{tip}</span>
-        </span>
+        </span>,
+        document.body
       )}
     </span>
   )

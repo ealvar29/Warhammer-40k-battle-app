@@ -15,7 +15,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
 
   if (!detachment) return null
 
-  const { activeSelection, targetNote, onceBuffUsed } = detachmentState || {}
+  const { activeSelection, usedSelections = [], targetNote, onceBuffUsed } = detachmentState || {}
   const action = detachment.commandPhaseAction
   const rule = detachment.detachmentRule
   const isCommandPhase = activePhase?.id === 'command'
@@ -24,6 +24,12 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
   const activeOption = action?.type === 'pick_one'
     ? action.options?.find(o => o.id === activeSelection)
     : null
+
+  // How many options are still available (not used up this battle)
+  const remainingCount = action?.type === 'pick_one'
+    ? action.options.filter(o => !usedSelections.includes(o.id)).length
+    : 0
+  const allUsed = action?.type === 'pick_one' && remainingCount === 0
 
   const borderColor = needsPick
     ? theme.secondary
@@ -63,6 +69,18 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
             </span>
           )}
 
+          {/* Remaining packs indicator */}
+          {action?.type === 'pick_one' && usedSelections.length > 0 && (
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+              style={{
+                background: allUsed ? `${theme.border}` : `${theme.secondary}15`,
+                color: allUsed ? theme.textSecondary : theme.secondary,
+                border: `1px solid ${allUsed ? theme.border : theme.secondary + '44'}`,
+              }}>
+              {allUsed ? 'All used' : `${remainingCount} left`}
+            </span>
+          )}
+
           {/* Quarry target */}
           {action?.type === 'designate_target' && targetNote && (
             <span className="text-xs font-medium truncate" style={{ color: theme.secondary }}>
@@ -70,8 +88,8 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
             </span>
           )}
 
-          {/* "Pick now" pulse when command phase and no selection yet */}
-          {needsPick && (
+          {/* "Pick now" pulse when command phase and no selection yet and packs remain */}
+          {needsPick && !allUsed && (
             <motion.span
               animate={{ opacity: [1, 0.35, 1] }}
               transition={{ repeat: Infinity, duration: 1.1 }}
@@ -100,33 +118,75 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
             <div className="px-3 pb-3 pt-1 border-t space-y-2.5"
               style={{ borderColor: theme.border }}>
 
-              {/* ── PICK ONE (e.g. Hunting Packs) ── */}
+              {/* ── PICK ONE (e.g. Hunting Packs / Hyper-Adaptations) ── */}
               {action?.type === 'pick_one' && (
                 <>
-                  <p className="text-xs pt-0.5" style={{ color: theme.textSecondary }}>
-                    {action.prompt}
-                  </p>
+                  <div className="flex items-center justify-between pt-0.5">
+                    <p className="text-xs" style={{ color: theme.textSecondary }}>
+                      {action.prompt}
+                    </p>
+                    {/* Once-per-battle remaining count */}
+                    {action.options.length > 1 && (
+                      <span className="text-xs font-bold shrink-0 ml-2"
+                        style={{ color: allUsed ? theme.textSecondary : theme.secondary }}>
+                        {usedSelections.length}/{action.options.length} used
+                      </span>
+                    )}
+                  </div>
 
                   <div className="grid grid-cols-3 gap-1.5">
                     {action.options.map(opt => {
                       const isSelected = activeSelection === opt.id
+                      const isUsed = usedSelections.includes(opt.id)
+                      // Can reuse via onceBuff (e.g. Logan Grimnar's Howling Onslaught)
+                      const canReuseViaOnceBuff = isUsed && !isSelected && !onceBuffUsed && action.onceBuff
+                      const isDisabled = isUsed && !isSelected && !canReuseViaOnceBuff
+
                       return (
                         <button key={opt.id}
-                          onClick={() => setDetachmentSelection(opt.id)}
-                          className="rounded-xl border p-2 text-center transition-all"
+                          onClick={() => {
+                            if (isDisabled) return
+                            if (canReuseViaOnceBuff) setOnceBuffUsed()
+                            setDetachmentSelection(opt.id)
+                          }}
+                          disabled={isDisabled}
+                          className="rounded-xl border p-2 text-center transition-all relative"
                           style={{
-                            background: isSelected ? `${theme.secondary}22` : theme.surfaceHigh,
-                            borderColor: isSelected ? theme.secondary : theme.border,
+                            background: isSelected
+                              ? `${theme.secondary}22`
+                              : isUsed
+                                ? `${theme.border}30`
+                                : theme.surfaceHigh,
+                            borderColor: isSelected
+                              ? theme.secondary
+                              : isUsed
+                                ? theme.border
+                                : theme.border,
+                            opacity: isDisabled ? 0.45 : 1,
                           }}>
                           <div className="text-base mb-1">{opt.icon}</div>
                           <p className="text-xs font-bold leading-tight"
-                            style={{ color: isSelected ? theme.secondary : theme.textPrimary }}>
+                            style={{ color: isSelected ? theme.secondary : isUsed ? theme.textSecondary : theme.textPrimary }}>
                             {opt.label}
                           </p>
                           <p className="mt-0.5 leading-tight"
                             style={{ color: theme.textSecondary, fontSize: 9 }}>
                             {opt.shortEffect}
                           </p>
+                          {/* "Used" badge */}
+                          {isUsed && !isSelected && (
+                            <span className="absolute top-1 right-1 text-xs font-bold px-1 py-0.5 rounded"
+                              style={{ background: theme.border, color: theme.textSecondary, fontSize: 8 }}>
+                              ✓
+                            </span>
+                          )}
+                          {/* "Reuse" hint via onceBuff */}
+                          {canReuseViaOnceBuff && (
+                            <span className="absolute top-1 right-1 text-xs font-bold px-1 py-0.5 rounded"
+                              style={{ background: `${theme.primary}22`, color: theme.primary, fontSize: 8 }}>
+                              ↺
+                            </span>
+                          )}
                         </button>
                       )
                     })}
@@ -140,7 +200,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
                         <p className="text-xs font-bold" style={{ color: theme.secondary }}>
                           {activeOption.icon} {activeOption.label} — Active
                         </p>
-                        {isCommandPhase && (
+                        {isCommandPhase && remainingCount > 0 && (
                           <button onClick={clearDetachmentSelection}
                             className="text-xs font-bold px-2 py-0.5 rounded-lg"
                             style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
@@ -154,6 +214,21 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
                       {!isCommandPhase && (
                         <p className="text-xs mt-1 italic" style={{ color: theme.textSecondary, opacity: 0.7 }}>
                           Re-pick at start of your next Command phase.
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* All packs used banner */}
+                  {allUsed && !activeOption && (
+                    <div className="rounded-xl p-2.5 text-center"
+                      style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
+                      <p className="text-xs font-bold" style={{ color: theme.textSecondary }}>
+                        All options used this battle
+                      </p>
+                      {action.onceBuff && onceBuffUsed && (
+                        <p className="text-xs mt-0.5" style={{ color: theme.textSecondary, opacity: 0.7 }}>
+                          Howling Onslaught already used
                         </p>
                       )}
                     </div>

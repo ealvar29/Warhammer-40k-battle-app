@@ -3,10 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { PHASES, demoStratagems, demoUnits } from '../data/demoData'
 import { leaders, leaderAbilities } from '../data/leaderData'
 import { getSuggestions, opponentProfiles } from '../data/suggestions'
-import { swDetachments } from '../data/spacewolves/detachments'
-import { tyranidDetachments } from '../data/tyranids/detachments'
-import { csmDetachments } from '../data/chaosspacemarines/detachments'
-import { daDetachments } from '../data/darkangels/detachments'
+import { findDetachment } from '../data/factionRegistry'
 import { useBattleStore } from '../store/battleStore'
 import PostBattleDebrief from './PostBattleDebrief'
 import ShareArmySheet from './ShareArmySheet'
@@ -17,22 +14,15 @@ import DetachmentRulePanel from './DetachmentRulePanel'
 import MathHammerSheet from './MathHammerSheet'
 import KeywordChip from './KeywordChip'
 
-const DETACHMENT_MAP = {
-  spacewolves: swDetachments,
-  tyranids: tyranidDetachments,
-  chaosspacemarines: csmDetachments,
-  darkangels: daDetachments,
-}
-
 function getStratagems(faction, detachmentId) {
   const coreStrats = demoStratagems.filter(s => s.source === 'core')
-  const detachment = DETACHMENT_MAP[faction]?.[detachmentId]
+  const detachment = findDetachment(faction, detachmentId)
   const detStrats = detachment?.stratagems || []
   return [...coreStrats, ...detStrats]
 }
 
 function getDetachment(faction, detachmentId) {
-  return DETACHMENT_MAP[faction]?.[detachmentId] || null
+  return findDetachment(faction, detachmentId) || null
 }
 
 // ── Shared spring config ───────────────────────────────────────────────────────
@@ -737,6 +727,79 @@ function BattleProfileModal({ opponentTags, onToggleTag, onClose, theme }) {
   )
 }
 
+// ── Phase Hints ───────────────────────────────────────────────────────────────
+const PHASE_HINTS = {
+  command:  'Gain 1 CP · Issue orders · Use command abilities',
+  movement: 'Move · Advance · Fall back · Reinforcements arrive',
+  shooting: 'Shoot ranged weapons · Use shooting stratagems',
+  charge:   'Declare charges · Heroic interventions',
+  fight:    'Pile in · Fight with melee weapons · No Retreat',
+}
+
+// ── Phase Action Bar (your turn + opponent's turn) ────────────────────────────
+function PhaseActionBar({ isYourTurn, stratCount, reactionCount, theme }) {
+  const count = isYourTurn ? stratCount : reactionCount
+  if (count === 0) return null
+  const color = isYourTurn ? theme.secondary : theme.hpLow
+  const icon = isYourTurn ? '⚔' : '⚡'
+  const label = isYourTurn
+    ? `${count} ${count === 1 ? 'Stratagem' : 'Stratagems'} Available`
+    : `${count} Reaction ${count === 1 ? 'Stratagem' : 'Stratagems'} Available`
+  return (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.2 }}
+      className="mx-3 mt-2 overflow-hidden shrink-0"
+    >
+      <motion.div
+        animate={isYourTurn ? {} : { opacity: [1, 0.55, 1] }}
+        transition={isYourTurn ? {} : { repeat: Infinity, duration: 1.4 }}
+        className="rounded-xl px-3 py-2 flex items-center gap-2"
+        style={{ background: `${color}15`, border: `1px solid ${color}44` }}
+      >
+        <span style={{ fontSize: 14 }}>{icon}</span>
+        <p className="text-xs font-bold flex-1" style={{ color }}>{label}</p>
+        <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+          style={{ background: `${color}22`, color, border: `1px solid ${color}44` }}>
+          {count}
+        </span>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+// ── Phase Context Row (weapon + ability counts for the units area) ─────────────
+function PhaseContextRow({ units, phaseId, abilityCount, theme }) {
+  const WEAPON_PHASE_COLORS = { shooting: '#60a5fa', fight: '#ef4444' }
+  const chips = []
+
+  if (phaseId === 'shooting') {
+    const n = units.filter(u => u.weapons?.some(w => w.type === 'ranged')).length
+    if (n > 0) chips.push({ icon: '🎯', label: `${n} can shoot`, color: WEAPON_PHASE_COLORS.shooting })
+  }
+  if (phaseId === 'fight') {
+    const n = units.filter(u => u.weapons?.some(w => w.type === 'melee')).length
+    if (n > 0) chips.push({ icon: '⚔', label: `${n} can fight`, color: WEAPON_PHASE_COLORS.fight })
+  }
+  if (abilityCount > 0) {
+    chips.push({ icon: '✦', label: `${abilityCount} active ${abilityCount === 1 ? 'ability' : 'abilities'}`, color: theme.secondary })
+  }
+
+  if (chips.length === 0) return null
+  return (
+    <div className="flex gap-1.5 px-3 pt-2 pb-0.5 flex-wrap shrink-0">
+      {chips.map(c => (
+        <span key={c.label} className="text-xs font-bold px-2 py-0.5 rounded-full"
+          style={{ background: `${c.color}15`, color: c.color, border: `1px solid ${c.color}40` }}>
+          {c.icon} {c.label}
+        </span>
+      ))}
+    </div>
+  )
+}
+
 // ── Main Battle Screen ────────────────────────────────────────────────────────
 export default function BattleDemo({ theme, onNavigate }) {
   const store = useBattleStore()
@@ -745,6 +808,7 @@ export default function BattleDemo({ theme, onNavigate }) {
     cp, setCp, setWounds, attachLeader, detachLeader,
     toggleOpponentTag, vpScores, adjustVp, warlordUnitId, setWarlord,
     opponentArmy, clearOpponentArmy, setOpponentArmy,
+    detachmentState,
   } = store
 
   const [activePhaseIdx, setActivePhaseIdx] = useState(0)
@@ -767,6 +831,20 @@ export default function BattleDemo({ theme, onNavigate }) {
   const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const activePhase = PHASES[activePhaseIdx]
+
+  const activeAdaptationBonus = (() => {
+    const action = detachment?.commandPhaseAction
+    if (!action || action.type !== 'pick_one') return null
+    const opt = action.options?.find(o => o.id === detachmentState?.activeSelection)
+    if (!opt?.mathBonus) return null
+    return { ...opt.mathBonus, label: opt.mathBonusLabel, icon: opt.icon }
+  })()
+
+  const reactionCount = allStratagems.filter(s => s.phase === activePhase.id && s.trigger === 'reaction').length
+
+  const phaseAbilityCount = units.reduce((sum, u) =>
+    sum + (u.abilities?.filter(a => typeof a === 'object' && a.name && (a.phase === activePhase.id || a.phase === 'any'))?.length || 0)
+  , 0)
 
   const visibleStratagems = allStratagems.filter(s => {
     if (s.phase !== activePhase.id) return false
@@ -944,6 +1022,9 @@ export default function BattleDemo({ theme, onNavigate }) {
                   <h1 className="text-lg font-black tracking-tight" style={{ color: theme.phaseText, lineHeight: 1.1 }}>
                     {activePhase.label} Phase
                   </h1>
+                  <p className="text-xs mt-0.5 leading-snug" style={{ color: theme.textSecondary, opacity: 0.7 }}>
+                    {PHASE_HINTS[activePhase.id]}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-black" style={{ color: theme.textPrimary }}>{visibleStratagems.length}</p>
@@ -951,6 +1032,17 @@ export default function BattleDemo({ theme, onNavigate }) {
                 </div>
               </div>
             </motion.div>
+          </AnimatePresence>
+
+          {/* Phase action bar — stratagems on your turn, reactions on theirs */}
+          <AnimatePresence mode="wait">
+            <PhaseActionBar
+              key={`${isYourTurn}-${activePhase.id}`}
+              isYourTurn={isYourTurn}
+              stratCount={visibleStratagems.length}
+              reactionCount={reactionCount}
+              theme={theme}
+            />
           </AnimatePresence>
 
           {/* Source filter tabs */}
@@ -1037,6 +1129,14 @@ export default function BattleDemo({ theme, onNavigate }) {
 
           {/* Units */}
           <div className="md:flex-1 md:overflow-y-auto px-3 pb-2 mt-2 space-y-2">
+            {/* Phase context chips — weapon + ability counts */}
+            <PhaseContextRow
+              units={units}
+              phaseId={activePhase.id}
+              abilityCount={phaseAbilityCount}
+              theme={theme}
+            />
+
             {/* Your units — always shown so you can track wounds */}
             <p className="text-xs font-bold tracking-widest uppercase px-1 pt-1" style={{ color: theme.textSecondary }}>
               Your Units
@@ -1213,6 +1313,7 @@ export default function BattleDemo({ theme, onNavigate }) {
             weapon={mathHammerWeapon}
             onClose={() => setMathHammerWeapon(null)}
             theme={theme}
+            detachmentBonus={activeAdaptationBonus}
           />
         )}
       </AnimatePresence>

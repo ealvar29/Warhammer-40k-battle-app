@@ -146,26 +146,19 @@ export const leaders = {
     faction: 'darkangels',
     keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'CHAPLAIN', 'EPIC HERO'],
   },
-  interrogatorChaplain: {
-    id: 'interrogatorChaplain',
-    name: 'Interrogator-Chaplain',
-    role: 'Chaplain',
+  ezekiel: {
+    id: 'ezekiel',
+    name: 'Ezekiel',
+    role: 'Grand Master Librarian',
     faction: 'darkangels',
-    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'CHAPLAIN'],
+    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'PSYKER', 'LIBRARIAN', 'EPIC HERO'],
   },
-  companyMaster: {
-    id: 'companyMaster',
-    name: 'Company Master',
-    role: 'Chapter Officer',
+  lazarus: {
+    id: 'lazarus',
+    name: 'Lazarus',
+    role: 'Chapter Master',
     faction: 'darkangels',
-    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'OFFICER'],
-  },
-  darkAngelsLibrarian: {
-    id: 'darkAngelsLibrarian',
-    name: 'Librarian',
-    role: 'Psyker',
-    faction: 'darkangels',
-    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'PSYKER', 'LIBRARIAN'],
+    keywords: ['CHARACTER', 'INFANTRY', 'DARK ANGELS', 'CAPTAIN', 'EPIC HERO'],
   },
 
   // Leader characters — Tyranids
@@ -279,19 +272,6 @@ export const leaderAbilities = {
     ],
   },
 
-  ironPriest_thunderwolfCavalry: {
-    leaderId: 'ironPriest',
-    unitId: 'thunderwolfCavalry',
-    abilities: [
-      {
-        name: 'Blessing of the Machine',
-        phase: 'command',
-        description:
-          'In your Command phase, this model can attempt to repair one friendly VEHICLE model within 3". If it does, restore up to D3 lost wounds to that model.',
-        reminder: 'Repair D3 wounds on a friendly vehicle in range.',
-      },
-    ],
-  },
 
   // ── TYRANIDS LEADER PAIRINGS ────────────────────────────────────────
 
@@ -343,9 +323,23 @@ export const leaderAbilities = {
     ],
   },
 
-  neurotyrant_tyranidWarriors: {
+  neurotyrant_tyranidWarriorsRanged: {
     leaderId: 'neurotyrant',
-    unitId: 'tyranidWarriors',
+    unitId: 'tyranidWarriorsRanged',
+    abilities: [
+      {
+        name: 'Resonance Barb',
+        phase: 'command',
+        description:
+          'While this model is leading this unit, at the start of your Command phase, roll one D6 for each enemy unit within 12" of this unit. On a 4+, that unit suffers 1 mortal wound. On a 6, it suffers D3 mortal wounds instead.',
+        reminder: 'Roll D6 per enemy within 12" — 4+ = 1 mortal wound, 6 = D3 mortal wounds.',
+      },
+    ],
+  },
+
+  neurotyrant_tyranidWarriorsMelee: {
+    leaderId: 'neurotyrant',
+    unitId: 'tyranidWarriorsMelee',
     abilities: [
       {
         name: 'Resonance Barb',
@@ -392,9 +386,23 @@ export const leaderAbilities = {
     ],
   },
 
-  wingedTyranidPrime_tyranidWarriors: {
+  wingedTyranidPrime_tyranidWarriorsRanged: {
     leaderId: 'wingedTyranidPrime',
-    unitId: 'tyranidWarriors',
+    unitId: 'tyranidWarriorsRanged',
+    abilities: [
+      {
+        name: 'Alpha Warrior',
+        phase: 'fight',
+        description:
+          'While this model is leading this unit, melee weapons equipped by models in this unit have the [SUSTAINED HITS 1] ability.',
+        reminder: 'All melee weapons in this unit gain Sustained Hits 1.',
+      },
+    ],
+  },
+
+  wingedTyranidPrime_tyranidWarriorsMelee: {
+    leaderId: 'wingedTyranidPrime',
+    unitId: 'tyranidWarriorsMelee',
     abilities: [
       {
         name: 'Alpha Warrior',
@@ -1057,88 +1065,6 @@ export const leaderAbilities = {
     ],
   },
 
-  interrogatorChaplain_intercessors: {
-    leaderId: 'interrogatorChaplain',
-    unitId: 'intercessors',
-    abilities: [
-      {
-        name: 'Litanies of Hate',
-        phase: 'fight',
-        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [LETHAL HITS] ability.',
-        reminder: 'All melee weapons in this unit gain LETHAL HITS.',
-      },
-      {
-        name: 'Spiritual Leader',
-        phase: 'any',
-        description: 'Friendly DARK ANGELS units within 6" of this model are never Battle-shocked.',
-        reminder: 'Units within 6" auto-pass Battle-shock tests.',
-      },
-    ],
-  },
-
-  interrogatorChaplain_innerCircleCompanions: {
-    leaderId: 'interrogatorChaplain',
-    unitId: 'innerCircleCompanions',
-    abilities: [
-      {
-        name: 'Litanies of Hate',
-        phase: 'fight',
-        description: 'While this model is leading this unit, melee weapons equipped by models in this unit have the [LETHAL HITS] ability.',
-        reminder: 'All melee weapons in this unit gain LETHAL HITS.',
-      },
-    ],
-  },
-
-  companyMaster_intercessors: {
-    leaderId: 'companyMaster',
-    unitId: 'intercessors',
-    abilities: [
-      {
-        name: 'Rites of Battle',
-        phase: 'shooting',
-        description: 'While this model is leading this unit, you can re-roll hit rolls of 1 for attacks made by models in this unit.',
-        reminder: 'Re-roll hit rolls of 1 for all attacks.',
-      },
-    ],
-  },
-
-  companyMaster_innerCircleCompanions: {
-    leaderId: 'companyMaster',
-    unitId: 'innerCircleCompanions',
-    abilities: [
-      {
-        name: 'Rites of Battle',
-        phase: 'shooting',
-        description: 'While this model is leading this unit, you can re-roll hit rolls of 1 for attacks made by models in this unit.',
-        reminder: 'Re-roll hit rolls of 1 for all attacks.',
-      },
-      {
-        name: 'Inner Circle Secrets',
-        phase: 'any',
-        description: 'While this model is on the battlefield, friendly DARK ANGELS INNER CIRCLE units are never Battle-shocked.',
-        reminder: 'All INNER CIRCLE units auto-pass Battle-shock while this model is alive.',
-      },
-    ],
-  },
-
-  darkAngelsLibrarian_intercessors: {
-    leaderId: 'darkAngelsLibrarian',
-    unitId: 'intercessors',
-    abilities: [
-      {
-        name: 'Interromancy',
-        phase: 'shooting',
-        description: 'Psychic ability: roll 2D6 — if 7+, one enemy unit within 18" suffers D3 mortal wounds and loses 2 Leadership until your next Command phase.',
-        reminder: 'Psychic: 2D6 ≥7 → enemy within 18" takes D3 mortal wounds, -2 Leadership.',
-      },
-      {
-        name: 'Force Barrier',
-        phase: 'any',
-        description: 'While this model is leading this unit, models in this unit have a 5+ invulnerable save.',
-        reminder: 'All models in this unit gain 5+ invuln save.',
-      },
-    ],
-  },
 }
 
 // Maps each unit to eligible leader IDs (Space Wolves — Tyranids use eligibleLeaders on the unit)
@@ -1149,11 +1075,12 @@ export const unitLeaderMap = {
   wolfGuard: ['wolfGuardPackLeader', 'loganGrimnar', 'runePriest', 'wolfGuardBattleLeader', 'wolfPriest', 'njal', 'ulrik'],
   wolfGuardHeadtakers: ['ragnar', 'wolfGuardBattleLeader'],
   wolfGuardTerminators: ['loganGrimnar', 'njal', 'arjacRockfist'],
-  thunderwolfCavalry: ['ironPriest'],
+  thunderwolfCavalry: [],
   wulfen: ['wolfPriest', 'ulrik'],
   // Tyranids
   tyrantGuard: ['swarmlord', 'hiveTyrant'],
-  tyranidWarriors: ['neurotyrant', 'wingedTyranidPrime'],
+  tyranidWarriorsRanged: ['neurotyrant', 'wingedTyranidPrime'],
+  tyranidWarriorsMelee: ['neurotyrant', 'wingedTyranidPrime'],
   gargoyles: ['wingedTyranidPrime'],
   termagants: ['tervigon'],
   neurogaunts: ['neurotyrant'],
@@ -1163,10 +1090,15 @@ export const unitLeaderMap = {
   chosen: ['abaddon', 'chaosLord', 'daemonPrince', 'exaltedChampion'],
   chaosTerminators: ['abaddon'],
   // Dark Angels
-  intercessors: ['azrael', 'asmodai', 'interrogatorChaplain', 'companyMaster', 'darkAngelsLibrarian'],
-  tacticalSquad: ['azrael', 'asmodai', 'interrogatorChaplain', 'companyMaster'],
+  intercessors: ['azrael', 'asmodai', 'ezekiel', 'lazarus'],
+  tacticalSquad: ['azrael', 'asmodai', 'lazarus'],
+  assaultIntercessors: ['azrael', 'asmodai', 'ezekiel', 'lazarus'],
+  bladeguardVeterans: ['azrael', 'asmodai', 'ezekiel', 'lazarus'],
   deathwingKnights: ['belial', 'asmodai'],
-  deathwingTerminators: ['belial', 'asmodai'],
-  innerCircleCompanions: ['azrael', 'interrogatorChaplain', 'companyMaster', 'darkAngelsLibrarian'],
+  deathwingTerminators: ['belial'],
+  innerCircleCompanions: ['azrael', 'asmodai', 'ezekiel', 'lazarus'],
+  hellblasters: ['azrael', 'asmodai', 'ezekiel'],
+  sternguardVeterans: ['azrael', 'asmodai', 'ezekiel', 'lazarus'],
   ravenwingBlackKnights: ['sammael'],
+  outriders: ['sammael'],
 }

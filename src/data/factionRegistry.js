@@ -12,6 +12,10 @@ import { admechUnitList } from './admech/units'
 import { admechDetachments } from './admech/detachments'
 import { smUnitList } from './spacemarines/units'
 import { smDetachments } from './spacemarines/detachments'
+import { dgUnitList } from './deathguard/units'
+import { dgDetachments } from './deathguard/detachments'
+import { ecUnitList } from './emperorschildren/units'
+import { ecDetachments } from './emperorschildren/detachments'
 
 export const FACTION_UNITS = {
   spacewolves: [...swUnitList, ...smGenericUnitList],
@@ -20,6 +24,8 @@ export const FACTION_UNITS = {
   darkangels: daUnitList,
   admech: admechUnitList,
   spacemarines: smUnitList,
+  deathguard: dgUnitList,
+  emperorschildren: ecUnitList,
 }
 
 export const FACTION_META = {
@@ -29,6 +35,8 @@ export const FACTION_META = {
   darkangels: { name: 'Dark Angels', icon: '⚔️', color: '#22c55e' },
   admech: { name: 'Adeptus Mechanicus', icon: '⚙️', color: '#d97706' },
   spacemarines: { name: 'Space Marines', icon: '🛡️', color: '#3b82f6' },
+  deathguard: { name: 'Death Guard', icon: '☣️', color: '#4a7c3f' },
+  emperorschildren: { name: "Emperor's Children", icon: '💜', color: '#9333ea' },
 }
 
 export function buildUnitsFromIds(faction, unitIds) {
@@ -64,6 +72,12 @@ export function findDetachment(faction, detachmentId) {
   }
   if (faction === 'spacemarines') {
     return smDetachments[detachmentId] || null
+  }
+  if (faction === 'deathguard') {
+    return dgDetachments[detachmentId] || null
+  }
+  if (faction === 'emperorschildren') {
+    return ecDetachments[detachmentId] || null
   }
   return null
 }

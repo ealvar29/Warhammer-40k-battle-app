@@ -20,7 +20,7 @@ export const useBattleStore = create(
       battleActive: false,
       vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
       warlordUnitId: null,
-      detachmentState: { activeSelection: null, targetNote: '', onceBuffUsed: false },
+      detachmentState: { activeSelection: null, usedSelections: [], targetNote: '', onceBuffUsed: false },
 
       // ── Setup actions ──────────────────────────────────────────────
       setFaction: (faction) => set({ faction }),
@@ -61,7 +61,7 @@ export const useBattleStore = create(
         cp: 6, unitStates: {}, selectedUnits: [], faction: null, detachmentId: null,
         vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
         warlordUnitId: null,
-        detachmentState: { activeSelection: null, targetNote: '', onceBuffUsed: false },
+        detachmentState: { activeSelection: null, usedSelections: [], targetNote: '', onceBuffUsed: false },
       }),
 
       setWarlord: (unitId) => set((s) => ({
@@ -87,7 +87,13 @@ export const useBattleStore = create(
 
       toggleTurn: () => set((s) => ({ isYourTurn: !s.isYourTurn, activePhaseIdx: 0 })),
       setDetachmentSelection: (id) => set((s) => ({
-        detachmentState: { ...s.detachmentState, activeSelection: id },
+        detachmentState: {
+          ...s.detachmentState,
+          activeSelection: id,
+          usedSelections: s.detachmentState.usedSelections.includes(id)
+            ? s.detachmentState.usedSelections
+            : [...s.detachmentState.usedSelections, id],
+        },
       })),
       clearDetachmentSelection: () => set((s) => ({
         detachmentState: { ...s.detachmentState, activeSelection: null },

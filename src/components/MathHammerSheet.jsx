@@ -68,7 +68,7 @@ function PickRow({ label, value, options, onChange, theme, formatLabel }) {
   )
 }
 
-export default function MathHammerSheet({ weapon, onClose, theme }) {
+export default function MathHammerSheet({ weapon, onClose, theme, detachmentBonus }) {
   const init = weaponToParams(weapon)
 
   const [A, setA] = useState(init.A ?? 4)
@@ -90,14 +90,22 @@ export default function MathHammerSheet({ weapon, onClose, theme }) {
   const [rerollWoundsAll, setRerollWoundsAll] = useState(false)
   const [rerollWounds1, setRerollWounds1] = useState(false)
   const [tab, setTab] = useState('weapon')
+  const [bonusEnabled, setBonusEnabled] = useState(true)
+
+  const effectiveSustainedHits = bonusEnabled && detachmentBonus?.sustainedHits
+    ? Math.max(sustainedHits, detachmentBonus.sustainedHits)
+    : sustainedHits
+  const effectiveLethalHits = (lethalHits || (bonusEnabled && detachmentBonus?.lethalHits)) ?? false
 
   const result = useMemo(() => calcMath({
     A, hitOn, S, AP, D, T, Sv, invuln, fnp,
     rerollHitsAll, rerollHits1, rerollWoundsAll, rerollWounds1,
-    sustainedHits, lethalHits, devastatingWounds, torrent, twinLinked,
+    sustainedHits: effectiveSustainedHits,
+    lethalHits: effectiveLethalHits,
+    devastatingWounds, torrent, twinLinked,
   }), [A, hitOn, S, AP, D, T, Sv, invuln, fnp,
        rerollHitsAll, rerollHits1, rerollWoundsAll, rerollWounds1,
-       sustainedHits, lethalHits, devastatingWounds, torrent, twinLinked])
+       effectiveSustainedHits, effectiveLethalHits, devastatingWounds, torrent, twinLinked])
 
   const avgA = avgDice(A)
 
@@ -243,6 +251,30 @@ export default function MathHammerSheet({ weapon, onClose, theme }) {
               {tab === 'keywords' && (
                 <div className="rounded-2xl border p-4 space-y-3" style={{ background: theme.surface, borderColor: theme.border }}>
                   <p className="text-xs font-black uppercase tracking-widest" style={{ color: theme.secondary }}>Keywords & Modifiers</p>
+
+                  {/* Detachment adaptation bonus */}
+                  {detachmentBonus && (
+                    <button
+                      onClick={() => setBonusEnabled(e => !e)}
+                      className="w-full rounded-xl p-2.5 text-left transition-all"
+                      style={{
+                        background: bonusEnabled ? `${theme.secondary}18` : theme.surfaceHigh,
+                        border: `1px solid ${bonusEnabled ? theme.secondary + '55' : theme.border}`,
+                      }}>
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-xs font-bold" style={{ color: bonusEnabled ? theme.secondary : theme.textSecondary }}>
+                          {detachmentBonus.icon} Detachment — {bonusEnabled ? 'Applied' : 'Off'}
+                        </p>
+                        <span className="text-xs font-bold px-2 py-0.5 rounded-lg shrink-0"
+                          style={{ background: bonusEnabled ? theme.secondary : theme.border, color: bonusEnabled ? theme.bg : theme.textSecondary }}>
+                          {bonusEnabled ? '✓ ON' : '○ OFF'}
+                        </span>
+                      </div>
+                      <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary, fontSize: 10 }}>
+                        {detachmentBonus.label}
+                      </p>
+                    </button>
+                  )}
                   <div className="grid grid-cols-2 gap-2">
                     <Toggle label="Torrent" active={torrent} onChange={setTorrent} theme={theme} />
                     <Toggle label="Lethal Hits" active={lethalHits} onChange={setLethalHits} theme={theme} />
