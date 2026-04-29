@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { saveCrusade, loadCrusade } from '../lib/firebase'
 
 const RANKS = [
   { id: 'battleReady', label: 'Battle Ready', xpMin: 0 },
@@ -18,6 +19,12 @@ export function getNextRank(xp) {
 }
 
 export { RANKS }
+
+// Generates a 6-char uppercase code, displayed to users as XXX-XXX
+function generateSyncCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
+}
 
 const initialOrder = {
   id: 'order_sw_1',
@@ -75,6 +82,12 @@ export const useCrusadeStore = create(
     (set, get) => ({
       orders: [initialOrder],
       activeOrderId: 'order_sw_1',
+
+      // ── Cloud sync state ──
+      syncCode: generateSyncCode(),
+      lastSynced: null,
+      syncStatus: 'idle', // 'idle' | 'syncing' | 'success' | 'error'
+      syncError: null,
 
       getActiveOrder: () => {
         const s = get()
@@ -171,6 +184,49 @@ export const useCrusadeStore = create(
           }
         ),
       })),
+
+      // ── Sync actions ──
+
+      syncToCloud: async () => {
+        const { syncCode, orders, activeOrderId } = get()
+        set({ syncStatus: 'syncing', syncError: null })
+        try {
+          await saveCrusade(syncCode, { orders, activeOrderId })
+          set({ syncStatus: 'success', lastSynced: new Date().toISOString() })
+          setTimeout(() => set({ syncStatus: 'idle' }), 3000)
+        } catch (err) {
+          set({ syncStatus: 'error', syncError: err.message || 'Sync failed.' })
+        }
+      },
+
+      // Pull from cloud using any code — updates local data AND adopts that code
+      syncFromCloud: async (code) => {
+        const cleanCode = code.replace(/-/g, '').toUpperCase().trim()
+        if (cleanCode.length !== 6) {
+          set({ syncStatus: 'error', syncError: 'Enter a valid 6-character code.' })
+          return false
+        }
+        set({ syncStatus: 'syncing', syncError: null })
+        try {
+          const data = await loadCrusade(cleanCode)
+          if (!data) {
+            set({ syncStatus: 'error', syncError: 'No crusade found for that code.' })
+            return false
+          }
+          set({
+            orders: data.orders,
+            activeOrderId: data.activeOrderId,
+            syncCode: cleanCode,
+            syncStatus: 'success',
+            lastSynced: new Date().toISOString(),
+          })
+          setTimeout(() => set({ syncStatus: 'idle' }), 3000)
+          return true
+        } catch (err) {
+          set({ syncStatus: 'error', syncError: err.message || 'Load failed.' })
+          return false
+        }
+      },
     }),
     { name: 'w40k-crusade' }
   )

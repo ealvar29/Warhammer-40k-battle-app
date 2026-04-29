@@ -1,6 +1,21 @@
 import React, { useState } from 'react'
 import { useCrusadeStore, getRank, getNextRank, RANKS } from '../store/crusadeStore'
 
+function formatCode(code) {
+  if (!code || code.length < 6) return code || '------'
+  return `${code.slice(0, 3)}-${code.slice(3)}`
+}
+
+function timeAgo(iso) {
+  if (!iso) return 'Never synced'
+  const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
+  if (mins < 1) return 'Just now'
+  if (mins < 60) return `${mins}m ago`
+  const h = Math.floor(mins / 60)
+  if (h < 24) return `${h}h ago`
+  return `${Math.floor(h / 24)}d ago`
+}
+
 function XpBar({ xp, theme }) {
   const rank = getRank(xp)
   const nextRank = getNextRank(xp)
@@ -171,6 +186,22 @@ export default function CrusadeScreen({ theme }) {
   const [recordingBattle, setRecordingBattle] = useState(false)
   const [addingUnit, setAddingUnit] = useState(false)
   const [newUnitForm, setNewUnitForm] = useState({ name: '', unitType: 'Infantry', powerRating: '1' })
+  const [showLoadInput, setShowLoadInput] = useState(false)
+  const [loadCodeInput, setLoadCodeInput] = useState('')
+  const [codeCopied, setCodeCopied] = useState(false)
+
+  const { syncCode, lastSynced, syncStatus, syncError } = store
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(formatCode(syncCode)).catch(() => {})
+    setCodeCopied(true)
+    setTimeout(() => setCodeCopied(false), 2000)
+  }
+
+  const handleLoadFromCode = async () => {
+    const ok = await store.syncFromCloud(loadCodeInput)
+    if (ok) { setShowLoadInput(false); setLoadCodeInput('') }
+  }
 
   if (!activeOrder) return (
     <div className="flex items-center justify-center h-full" style={{ background: theme.bg }}>
@@ -216,6 +247,80 @@ export default function CrusadeScreen({ theme }) {
               + Battle
             </button>
           </div>
+        </div>
+
+        {/* ── Cloud Sync Panel ── */}
+        <div className="mt-3 rounded-2xl border px-3 py-2.5 space-y-2"
+          style={{ background: theme.surfaceHigh, borderColor: theme.border }}>
+
+          {/* Top row: code + last synced + sync button */}
+          <div className="flex items-center gap-2">
+            <button onClick={handleCopyCode}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl font-black text-xs shrink-0 transition-all"
+              style={{
+                background: codeCopied ? `${theme.secondary}22` : `${theme.primary}18`,
+                color: codeCopied ? theme.secondary : theme.primary,
+                border: `1px solid ${codeCopied ? theme.secondary + '55' : theme.primary + '44'}`,
+                letterSpacing: '0.08em',
+              }}>
+              ☁ {formatCode(syncCode)}
+              <span style={{ fontSize: 9, opacity: 0.8 }}>{codeCopied ? '✓ Copied' : 'tap to copy'}</span>
+            </button>
+
+            <p className="text-xs flex-1 truncate" style={{ color: theme.textSecondary }}>
+              {syncStatus === 'syncing' ? 'Syncing…'
+                : syncStatus === 'success' ? '✓ Synced'
+                : syncStatus === 'error' ? `⚠ ${syncError}`
+                : timeAgo(lastSynced)}
+            </p>
+
+            <button
+              onClick={store.syncToCloud}
+              disabled={syncStatus === 'syncing'}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all"
+              style={{
+                background: syncStatus === 'syncing' ? theme.border : theme.secondary,
+                color: syncStatus === 'syncing' ? theme.textSecondary : theme.bg,
+                opacity: syncStatus === 'syncing' ? 0.6 : 1,
+              }}>
+              {syncStatus === 'syncing' ? '…' : '↑ Sync'}
+            </button>
+          </div>
+
+          {/* Load from code row */}
+          {!showLoadInput ? (
+            <button onClick={() => setShowLoadInput(true)}
+              className="text-xs w-full text-left"
+              style={{ color: theme.textSecondary, opacity: 0.7 }}>
+              ↓ Load roster from another device…
+            </button>
+          ) : (
+            <div className="flex gap-2 items-center">
+              <input
+                value={loadCodeInput}
+                onChange={e => setLoadCodeInput(e.target.value.toUpperCase())}
+                placeholder="ABC-DEF"
+                maxLength={7}
+                className="flex-1 rounded-xl px-3 py-1.5 text-xs font-black tracking-widest outline-none"
+                style={{
+                  background: theme.surface,
+                  border: `1px solid ${syncStatus === 'error' ? theme.hpLow : theme.border}`,
+                  color: theme.textPrimary,
+                }}
+              />
+              <button onClick={handleLoadFromCode}
+                disabled={syncStatus === 'syncing'}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0"
+                style={{ background: theme.primary, color: theme.bg }}>
+                Load ↓
+              </button>
+              <button onClick={() => { setShowLoadInput(false); setLoadCodeInput('') }}
+                className="px-2 py-1.5 rounded-xl text-xs font-bold shrink-0"
+                style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                ✕
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
