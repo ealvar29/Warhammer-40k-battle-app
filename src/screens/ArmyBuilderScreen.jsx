@@ -12,6 +12,12 @@ import { csmUnitList, csmUnitsByCategory } from '../data/chaosspacemarines/units
 import { csmDetachmentList } from '../data/chaosspacemarines/detachments'
 import { daUnitList, daUnitsByCategory } from '../data/darkangels/units'
 import { daDetachmentList } from '../data/darkangels/detachments'
+import { tauUnitList, tauUnitsByCategory } from '../data/tau/units'
+import { tauDetachmentList } from '../data/tau/detachments'
+import { thousandSonsUnitList, thousandSonsUnitsByCategory } from '../data/thousandsons/units'
+import { thousandSonsDetachmentList } from '../data/thousandsons/detachments'
+import { worldEatersUnitList, weUnitsByCategory } from '../data/worldeaters/units'
+import { worldEatersDetachmentList } from '../data/worldeaters/detachments'
 import { opponentProfiles } from '../data/suggestions'
 
 const factions = [
@@ -19,6 +25,9 @@ const factions = [
   { id: 'tyranids', name: 'Tyranids', icon: '🦂', color: '#a855f7' },
   { id: 'chaosspacemarines', name: 'Chaos Space Marines', icon: '💀', color: '#b91c1c' },
   { id: 'darkangels', name: 'Dark Angels', icon: '⚔️', color: '#22c55e' },
+  { id: 'tau', name: "T'au Empire", icon: '🔵', color: '#00b4d8' },
+  { id: 'thousandsons', name: 'Thousand Sons', icon: '🔮', color: '#3b82f6' },
+  { id: 'worldeaters', name: 'World Eaters', icon: '🩸', color: '#dc2626' },
 ]
 
 const categoryLabels = {
@@ -67,8 +76,16 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   })
   const [localOpponentTags, setLocalOpponentTags] = useState(store.opponentTags)
 
+  const getMaxCount = (unitId) => {
+    const u = unitList.find(x => x.id === unitId)
+    return u?.category === 'epicHero' ? 1 : 3
+  }
   const addUnit = (unitId) =>
-    setUnitCounts(prev => ({ ...prev, [unitId]: (prev[unitId] || 0) + 1 }))
+    setUnitCounts(prev => {
+      const max = getMaxCount(unitId)
+      if ((prev[unitId] || 0) >= max) return prev
+      return { ...prev, [unitId]: (prev[unitId] || 0) + 1 }
+    })
   const removeUnit = (unitId) =>
     setUnitCounts(prev => {
       const next = { ...prev }
@@ -83,33 +100,39 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const isSW = localFaction === 'spacewolves'
   const isCSM = localFaction === 'chaosspacemarines'
   const isDA = localFaction === 'darkangels'
-  // For unit lookup during startBattle we need all available units for this faction
+  const isTau = localFaction === 'tau'
+  const isTS = localFaction === 'thousandsons'
+  const isWE = localFaction === 'worldeaters'
+
   const unitList = isSW
     ? [...swUnitList, ...smGenericUnitList]
-    : isCSM
-      ? csmUnitList
-      : isDA
-        ? daUnitList
-        : tyranidUnitList
+    : isCSM ? csmUnitList
+    : isDA ? daUnitList
+    : isTau ? tauUnitList
+    : isTS ? thousandSonsUnitList
+    : isWE ? worldEatersUnitList
+    : tyranidUnitList
+
   const detachments = isSW
     ? [...swDetachmentList, ...smGenericDetachmentList]
-    : isCSM
-      ? csmDetachmentList
-      : isDA
-        ? daDetachmentList
-        : tyranidDetachmentList
+    : isCSM ? csmDetachmentList
+    : isDA ? daDetachmentList
+    : isTau ? tauDetachmentList
+    : isTS ? thousandSonsDetachmentList
+    : isWE ? worldEatersDetachmentList
+    : tyranidDetachmentList
 
-  // Build grouped unit sections for the units step
   const unitSections = isSW
     ? [
         { label: 'Space Wolves', byCategory: swUnitsByCategory, accent: theme.secondary },
         { label: 'Space Marines', byCategory: smGenericsByCategory, accent: theme.primary },
       ]
-    : isCSM
-      ? [{ label: 'Chaos Space Marines', byCategory: csmUnitsByCategory, accent: '#b91c1c' }]
-      : isDA
-        ? [{ label: 'Dark Angels', byCategory: daUnitsByCategory, accent: '#22c55e' }]
-        : [{ label: 'Tyranids', byCategory: tyranidUnitsByCategory, accent: '#a855f7' }]
+    : isCSM ? [{ label: 'Chaos Space Marines', byCategory: csmUnitsByCategory, accent: '#b91c1c' }]
+    : isDA  ? [{ label: 'Dark Angels', byCategory: daUnitsByCategory, accent: '#22c55e' }]
+    : isTau ? [{ label: "T'au Empire", byCategory: tauUnitsByCategory, accent: '#00b4d8' }]
+    : isTS  ? [{ label: 'Thousand Sons', byCategory: thousandSonsUnitsByCategory, accent: '#3b82f6' }]
+    : isWE  ? [{ label: 'World Eaters', byCategory: weUnitsByCategory, accent: '#dc2626' }]
+    : [{ label: 'Tyranids', byCategory: tyranidUnitsByCategory, accent: '#a855f7' }]
 
   const toggleTag = (tag) =>
     setLocalOpponentTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
@@ -224,6 +247,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                         f.id === 'spacewolves' ? swUnitList.length + smGenericUnitList.length
                         : f.id === 'chaosspacemarines' ? csmUnitList.length
                         : f.id === 'darkangels' ? daUnitList.length
+                        : f.id === 'tau' ? tauUnitList.length
+                        : f.id === 'thousandsons' ? thousandSonsUnitList.length
+                        : f.id === 'worldeaters' ? worldEatersUnitList.length
                         : tyranidUnitList.length
                       } units
                     </p>
@@ -280,7 +306,12 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               </>
             )}
             {!isSW && (() => {
-              const accent = isCSM ? '#b91c1c' : isDA ? '#22c55e' : '#a855f7'
+              const accent = isCSM ? '#b91c1c'
+                : isDA ? '#22c55e'
+                : isTau ? '#00b4d8'
+                : isTS ? '#3b82f6'
+                : isWE ? '#dc2626'
+                : '#a855f7'
               return detachments.map(d => (
                 <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
                   accent={accent} theme={theme} onClick={() => setLocalDetachment(d.id)} />
@@ -334,8 +365,15 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                         const count = unitCount(u.id)
                         const selected = count > 0
                         const isLegends = !!u.legends
+                        const isEpicHero = cat === 'epicHero'
+                        const maxCount = isEpicHero ? 1 : 3
+                        const atMax = count >= maxCount
+                        const handleCardClick = () => {
+                          if (isEpicHero && selected) removeUnit(u.id)
+                          else if (!atMax) addUnit(u.id)
+                        }
                         return (
-                          <button key={u.id} onClick={() => addUnit(u.id)}
+                          <button key={u.id} onClick={handleCardClick}
                             className="w-full rounded-2xl border p-3 text-left transition-all"
                             style={{
                               background: selected ? `${section.accent}12` : theme.surface,
@@ -344,10 +382,15 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                             }}>
                             <div className="flex items-center justify-between">
                               <div className="flex-1">
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 flex-wrap">
                                   <p className="font-bold text-sm" style={{ color: selected ? section.accent : theme.textPrimary }}>
                                     {u.name}
                                   </p>
+                                  {isEpicHero && (
+                                    <span className="text-xs font-black px-1.5 py-0.5 rounded" style={{ background: `${section.accent}20`, color: section.accent, fontSize: 8, letterSpacing: '0.06em' }}>
+                                      UNIQUE
+                                    </span>
+                                  )}
                                   {isLegends && (
                                     <span className="text-xs font-black px-1.5 py-0.5 rounded" style={{ background: `${theme.textSecondary}20`, color: theme.textSecondary, fontSize: 8, letterSpacing: '0.06em' }}>
                                       LEGENDS
@@ -367,7 +410,14 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                   style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
                                   {u.points} pts
                                 </span>
-                                {selected ? (
+                                {selected && isEpicHero ? (
+                                  /* Epic heroes: just a checkmark, no stepper */
+                                  <div className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm"
+                                    style={{ background: section.accent, color: theme.bg }}>
+                                    ✓
+                                  </div>
+                                ) : selected ? (
+                                  /* Regular units: +/− stepper capped at 3 */
                                   <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
                                     <button
                                       onClick={() => removeUnit(u.id)}
@@ -380,8 +430,13 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                     </span>
                                     <button
                                       onClick={e => { e.stopPropagation(); addUnit(u.id) }}
+                                      disabled={atMax}
                                       className="w-6 h-6 rounded-lg flex items-center justify-center font-black text-sm"
-                                      style={{ background: section.accent, color: theme.bg }}>
+                                      style={{
+                                        background: atMax ? theme.border : section.accent,
+                                        color: atMax ? theme.textSecondary : theme.bg,
+                                        opacity: atMax ? 0.5 : 1,
+                                      }}>
                                       +
                                     </button>
                                   </div>

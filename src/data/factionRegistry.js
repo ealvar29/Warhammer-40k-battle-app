@@ -16,6 +16,12 @@ import { dgUnitList } from './deathguard/units'
 import { dgDetachments } from './deathguard/detachments'
 import { ecUnitList } from './emperorschildren/units'
 import { ecDetachments } from './emperorschildren/detachments'
+import { tauUnitList } from './tau/units'
+import { tauDetachments } from './tau/detachments'
+import { thousandSonsUnitList } from './thousandsons/units'
+import { thousandSonsDetachments } from './thousandsons/detachments'
+import { worldEatersUnitList } from './worldeaters/units'
+import { worldEatersDetachments } from './worldeaters/detachments'
 
 export const FACTION_UNITS = {
   spacewolves: [...swUnitList, ...smGenericUnitList],
@@ -26,6 +32,9 @@ export const FACTION_UNITS = {
   spacemarines: smUnitList,
   deathguard: dgUnitList,
   emperorschildren: ecUnitList,
+  tau: tauUnitList,
+  thousandsons: thousandSonsUnitList,
+  worldeaters: worldEatersUnitList,
 }
 
 export const FACTION_META = {
@@ -37,6 +46,9 @@ export const FACTION_META = {
   spacemarines: { name: 'Space Marines', icon: '🛡️', color: '#3b82f6' },
   deathguard: { name: 'Death Guard', icon: '☣️', color: '#4a7c3f' },
   emperorschildren: { name: "Emperor's Children", icon: '💜', color: '#9333ea' },
+  tau: { name: "T'au Empire", icon: '🔵', color: '#00b4d8' },
+  thousandsons: { name: 'Thousand Sons', icon: '🔮', color: '#3b82f6' },
+  worldeaters: { name: 'World Eaters', icon: '🩸', color: '#dc2626' },
 }
 
 export function buildUnitsFromIds(faction, unitIds) {
@@ -78,6 +90,15 @@ export function findDetachment(faction, detachmentId) {
   }
   if (faction === 'emperorschildren') {
     return ecDetachments[detachmentId] || null
+  }
+  if (faction === 'tau') {
+    return tauDetachments[detachmentId] || null
+  }
+  if (faction === 'thousandsons') {
+    return thousandSonsDetachments[detachmentId] || null
+  }
+  if (faction === 'worldeaters') {
+    return worldEatersDetachments[detachmentId] || null
   }
   return null
 }
