@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBaUSG4gj8F8j9CeVsccJC0msGwtWIINFg',
-  authDomain: 'mathhammer-d810e.firebaseapp.com',
-  projectId: 'mathhammer-d810e',
-  storageBucket: 'mathhammer-d810e.firebasestorage.app',
-  messagingSenderId: '522154493610',
-  appId: '1:522154493610:web:9414fdd29b986704d2b2d3',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
 const app = initializeApp(firebaseConfig)
