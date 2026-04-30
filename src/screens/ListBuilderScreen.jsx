@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FACTION_UNITS, FACTION_META } from '../data/factionRegistry'
 import { useListStore } from '../store/listStore'
+import { unitLeaderMap, leaderAbilities } from '../data/leaderData'
 
 const CATEGORY_LABELS = {
   epicHero: 'Epic Heroes',
@@ -14,6 +15,104 @@ const CATEGORY_LABELS = {
 }
 
 const TARGET_PRESETS = [500, 750, 1000, 1250, 1500, 2000]
+
+const PHASE_ICON = { command: '📋', movement: '🏃', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '✦' }
+
+const baseId = (id) => id?.replace(/_\d+$/, '') ?? id
+
+// ── Pairing section shown inside a unit row ────────────────────────────────
+function PairingSection({ unit, allUnits, inListIds, onAdd, theme }) {
+  const unitKey = unit.unitKey || baseId(unit.id)
+
+  // Build pairing rows
+  const rows = useMemo(() => {
+    if (unit.isLeader) {
+      // Leader → show which units it can lead
+      return (unit.leadsUnits || []).map(targetId => {
+        const targetUnit = allUnits.find(u => (u.unitKey || baseId(u.id)) === targetId || u.id === targetId)
+        const abilities = leaderAbilities[`${unitKey}_${targetId}`]?.abilities || []
+        return { id: targetId, name: targetUnit?.name || targetId, inList: inListIds.has(targetId), unit: targetUnit, abilities, isUnitRow: true }
+      })
+    } else {
+      // Squad unit → show eligible leaders
+      const eligibleIds = unitLeaderMap[unitKey] || []
+      return eligibleIds.map(leaderId => {
+        const leaderUnit = allUnits.find(u => u.id === leaderId || (u.unitKey || baseId(u.id)) === leaderId)
+        const abilities = leaderAbilities[`${leaderId}_${unitKey}`]?.abilities || []
+        return { id: leaderId, name: leaderUnit?.name || leaderId, inList: inListIds.has(leaderId), unit: leaderUnit, abilities, isUnitRow: false }
+      })
+    }
+  }, [unit, unitKey, allUnits, inListIds])
+
+  if (rows.length === 0) return null
+
+  const inListCount = rows.filter(r => r.inList).length
+
+  return (
+    <div className="border-t px-3 pb-2.5 pt-2" style={{ borderColor: theme.border }}>
+      <p className="text-xs font-bold mb-2" style={{ color: theme.secondary }}>
+        {unit.isLeader ? '⭐ Can Lead' : '🔗 Leader Pairings'}
+        {inListCount > 0 && (
+          <span className="ml-2 font-normal" style={{ color: '#22c55e' }}>
+            {inListCount} in your list
+          </span>
+        )}
+      </p>
+      <div className="space-y-2">
+        {rows.map(row => (
+          <div key={row.id} className="rounded-xl border overflow-hidden"
+            style={{ borderColor: row.inList ? `${theme.secondary}44` : theme.border }}>
+            {/* Partner header */}
+            <div className="px-2.5 py-2 flex items-center gap-2"
+              style={{ background: row.inList ? `${theme.secondary}0d` : theme.surfaceHigh }}>
+              <p className="text-xs font-bold flex-1 truncate"
+                style={{ color: row.inList ? theme.secondary : theme.textSecondary }}>
+                {row.isUnitRow ? '' : '⭐ '}{row.name}
+              </p>
+              {row.inList ? (
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+                  style={{ background: '#22c55e22', color: '#22c55e', border: '1px solid #22c55e44', fontSize: 9 }}>
+                  ✓ In list
+                </span>
+              ) : (
+                <button
+                  onClick={() => row.unit && onAdd(row.unit)}
+                  disabled={!row.unit}
+                  className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+                  style={{ background: `${theme.secondary}15`, color: theme.secondary, border: `1px solid ${theme.secondary}33`, opacity: row.unit ? 1 : 0.4 }}>
+                  {row.unit ? `+ Add (${row.unit.points}pts)` : 'Not available'}
+                </button>
+              )}
+            </div>
+            {/* Abilities */}
+            {row.abilities.length > 0 && (
+              <div className="px-2.5 pb-2 pt-1.5 space-y-1.5">
+                {row.abilities.map((ability, i) => (
+                  <div key={i} className="rounded-lg px-2 py-1.5"
+                    style={{ background: `${theme.secondary}08`, border: `1px solid ${theme.secondary}18` }}>
+                    <div className="flex items-center gap-1.5">
+                      <span style={{ fontSize: 11 }}>{PHASE_ICON[ability.phase] || '✦'}</span>
+                      <p className="text-xs font-bold flex-1" style={{ color: theme.secondary }}>{ability.name}</p>
+                      <span className="text-xs font-bold uppercase shrink-0"
+                        style={{ color: theme.secondary, opacity: 0.7, fontSize: 8 }}>
+                        {ability.phase}
+                      </span>
+                    </div>
+                    {ability.reminder && (
+                      <p className="text-xs mt-0.5 leading-snug" style={{ color: theme.textPrimary }}>
+                        {ability.reminder}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 const FACTIONS = Object.entries(FACTION_META)
   .map(([id, meta]) => ({ id, ...meta }))
@@ -37,6 +136,7 @@ export default function ListBuilderScreen({ theme }) {
   const [showSaved, setShowSaved]   = useState(false)
   const [showSaveSheet, setShowSaveSheet] = useState(false)
   const [showCustomTarget, setShowCustomTarget] = useState(false)
+  const [expandedPairings, setExpandedPairings] = useState(new Set())
 
   // ── Derived ────────────────────────────────────────────────────────
   const allUnits  = useMemo(() => (FACTION_UNITS[faction] || []).filter(u => u.points > 0), [faction])
@@ -70,6 +170,34 @@ export default function ListBuilderScreen({ theme }) {
     catFilter === 'all' ? allUnits : allUnits.filter(u => (u.category || u.type) === catFilter),
     [allUnits, catFilter]
   )
+
+  // Base IDs of all units currently in the list (for pairing in-list detection)
+  const inListIds = useMemo(() =>
+    new Set(Object.keys(counts).filter(id => counts[id] > 0).map(id => baseId(id))),
+    [counts]
+  )
+
+  const togglePairing = (unitId) => setExpandedPairings(prev => {
+    const next = new Set(prev)
+    next.has(unitId) ? next.delete(unitId) : next.add(unitId)
+    return next
+  })
+
+  // Whether a unit has any pairing data defined
+  const hasPairingData = (unit) => {
+    const key = unit.unitKey || baseId(unit.id)
+    if (unit.isLeader) return (unit.leadsUnits || []).length > 0
+    return (unitLeaderMap[key] || []).length > 0
+  }
+
+  // Count how many pairing partners are already in the list
+  const pairingInListCount = (unit) => {
+    const key = unit.unitKey || baseId(unit.id)
+    if (unit.isLeader) {
+      return (unit.leadsUnits || []).filter(id => inListIds.has(id)).length
+    }
+    return (unitLeaderMap[key] || []).filter(id => inListIds.has(id)).length
+  }
 
   const factionMeta = FACTION_META[faction] || { name: faction, icon: '⚔️', color: theme.secondary }
 
@@ -307,39 +435,80 @@ export default function ListBuilderScreen({ theme }) {
                       style={{ color: theme.textSecondary }}>
                       {CATEGORY_LABELS[cat] || cat}
                     </p>
-                    {entries.map(({ unit, count, subtotal }) => (
-                      <div key={unit.id} className="rounded-2xl border flex items-center px-3 py-2.5 gap-3"
-                        style={{ background: theme.surface, borderColor: theme.border }}>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold truncate" style={{ color: theme.textPrimary }}>{unit.name}</p>
-                          <p className="text-xs" style={{ color: theme.textSecondary }}>
-                            {unit.points} pts each
-                            {count > 1 && <span style={{ color: theme.secondary }}> · {subtotal} total</span>}
-                          </p>
+                    {entries.map(({ unit, count, subtotal }) => {
+                      const hasPairings = hasPairingData(unit)
+                      const inListCount = pairingInListCount(unit)
+                      const isExpanded = expandedPairings.has(unit.id)
+                      return (
+                        <div key={unit.id} className="rounded-2xl border overflow-hidden"
+                          style={{ background: theme.surface, borderColor: hasPairings && inListCount > 0 ? `${theme.secondary}44` : theme.border }}>
+                          <div className="flex items-center px-3 py-2.5 gap-3">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-bold truncate" style={{ color: theme.textPrimary }}>{unit.name}</p>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <p className="text-xs" style={{ color: theme.textSecondary }}>
+                                  {unit.points} pts each
+                                  {count > 1 && <span style={{ color: theme.secondary }}> · {subtotal} total</span>}
+                                </p>
+                                {hasPairings && (
+                                  <button onClick={() => togglePairing(unit.id)}
+                                    className="text-xs font-bold px-1.5 py-0.5 rounded-lg"
+                                    style={{
+                                      background: isExpanded ? `${theme.secondary}22` : theme.surfaceHigh,
+                                      color: inListCount > 0 ? theme.secondary : theme.textSecondary,
+                                      border: `1px solid ${inListCount > 0 ? theme.secondary + '44' : theme.border}`,
+                                    }}>
+                                    {unit.isLeader ? '⭐' : '🔗'}
+                                    {inListCount > 0 ? ` ${inListCount} linked` : ' Pairings'}
+                                    {' '}{isExpanded ? '▴' : '▾'}
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                            {/* Count stepper */}
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button onClick={() => adjust(unit.id, -1)}
+                                className="w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center"
+                                style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                                −
+                              </button>
+                              <span className="w-5 text-center text-sm font-black" style={{ color: theme.textPrimary }}>
+                                {count}
+                              </span>
+                              <button onClick={() => adjust(unit.id, 1)}
+                                className="w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center"
+                                style={{ background: theme.surfaceHigh, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
+                                +
+                              </button>
+                            </div>
+                            {/* Pts badge */}
+                            <span className="text-xs font-black shrink-0 w-14 text-right"
+                              style={{ color: theme.secondary }}>
+                              {subtotal} pts
+                            </span>
+                          </div>
+                          {/* Pairing section */}
+                          <AnimatePresence>
+                            {isExpanded && hasPairings && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.18 }}
+                                className="overflow-hidden">
+                                <PairingSection
+                                  unit={unit}
+                                  allUnits={allUnits}
+                                  inListIds={inListIds}
+                                  onAdd={(u) => adjust(u.id, 1)}
+                                  theme={theme}
+                                />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
-                        {/* Count stepper */}
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          <button onClick={() => adjust(unit.id, -1)}
-                            className="w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center"
-                            style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                            −
-                          </button>
-                          <span className="w-5 text-center text-sm font-black" style={{ color: theme.textPrimary }}>
-                            {count}
-                          </span>
-                          <button onClick={() => adjust(unit.id, 1)}
-                            className="w-7 h-7 rounded-lg font-bold text-sm flex items-center justify-center"
-                            style={{ background: theme.surfaceHigh, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
-                            +
-                          </button>
-                        </div>
-                        {/* Pts badge */}
-                        <span className="text-xs font-black shrink-0 w-14 text-right"
-                          style={{ color: theme.secondary }}>
-                          {subtotal} pts
-                        </span>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 ))}
 
@@ -401,10 +570,18 @@ export default function ListBuilderScreen({ theme }) {
                     style={{ background: theme.surface, borderColor: count > 0 ? `${theme.secondary}44` : theme.border }}>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold truncate" style={{ color: theme.textPrimary }}>{unit.name}</p>
-                      <p className="text-xs" style={{ color: theme.textSecondary }}>
-                        {CATEGORY_LABELS[unit.category || unit.type] || unit.category || ''}
-                        {unit.models > 1 && ` · ${unit.models} models`}
-                      </p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-xs" style={{ color: theme.textSecondary }}>
+                          {CATEGORY_LABELS[unit.category || unit.type] || unit.category || ''}
+                          {unit.models > 1 && ` · ${unit.models} models`}
+                        </p>
+                        {pairingInListCount(unit) > 0 && (
+                          <span className="text-xs font-bold px-1.5 py-0.5 rounded-lg"
+                            style={{ background: `${theme.secondary}15`, color: theme.secondary, border: `1px solid ${theme.secondary}33`, fontSize: 9 }}>
+                            {unit.isLeader ? `⭐ leads ${pairingInListCount(unit)} in list` : `🔗 ${pairingInListCount(unit)} leader${pairingInListCount(unit) > 1 ? 's' : ''} in list`}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <span className="text-xs font-black shrink-0"
                       style={{ color: wouldExceed && count === 0 ? theme.textSecondary : theme.secondary }}>
