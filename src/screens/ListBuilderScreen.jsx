@@ -114,9 +114,40 @@ function PairingSection({ unit, allUnits, inListIds, onAdd, theme }) {
   )
 }
 
-const FACTIONS = Object.entries(FACTION_META)
-  .map(([id, meta]) => ({ id, ...meta }))
-  .sort((a, b) => a.name.localeCompare(b.name))
+const ALLEGIANCE_GROUPS = [
+  {
+    id: 'imperium',
+    label: 'Imperium',
+    icon: '⚜️',
+    factionIds: [
+      'spacewolves', 'spacemarines', 'darkangels', 'bloodangels', 'blacktemplars',
+      'greyknights', 'deathwatch', 'adeptuscustodes', 'adeptasororitas',
+      'admech', 'astramilitarum', 'imperialknights',
+    ],
+  },
+  {
+    id: 'chaos',
+    label: 'Chaos',
+    icon: '💀',
+    factionIds: [
+      'chaosspacemarines', 'deathguard', 'emperorschildren', 'thousandsons',
+      'worldeaters', 'chaosdaemons', 'chaosknights',
+    ],
+  },
+  {
+    id: 'xenos',
+    label: 'Xenos',
+    icon: '👽',
+    factionIds: [
+      'tyranids', 'genestealercults', 'necrons', 'orks',
+      'aeldari', 'drukhari', 'tau', 'leaguesofvotann',
+    ],
+  },
+]
+
+function getAllegianceFor(factionId) {
+  return ALLEGIANCE_GROUPS.find(g => g.factionIds.includes(factionId))?.id || 'imperium'
+}
 
 export default function ListBuilderScreen({ theme }) {
   const { savedLists, saveList, deleteList } = useListStore()
@@ -133,6 +164,7 @@ export default function ListBuilderScreen({ theme }) {
   const [tab, setTab]               = useState('list')  // 'list' | 'add'
   const [catFilter, setCatFilter]   = useState('all')
   const [showFactions, setShowFactions] = useState(false)
+  const [allegianceTab, setAllegianceTab] = useState(() => getAllegianceFor('spacewolves'))
   const [showSaved, setShowSaved]   = useState(false)
   const [showSaveSheet, setShowSaveSheet] = useState(false)
   const [showCustomTarget, setShowCustomTarget] = useState(false)
@@ -637,17 +669,52 @@ export default function ListBuilderScreen({ theme }) {
                   style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>✕</button>
               </div>
               <div className="overflow-y-auto" style={{ maxHeight: 'calc(75vh - 56px)' }}>
-                {FACTIONS.map(f => (
-                  <button key={f.id} onClick={() => handleChangeFaction(f.id)}
-                    className="w-full px-4 py-3 flex items-center gap-3 text-left border-b"
-                    style={{ borderColor: theme.border, background: faction === f.id ? `${theme.secondary}12` : 'transparent' }}>
-                    <span className="text-xl w-8 text-center">{f.icon}</span>
-                    <span className="text-sm font-bold flex-1" style={{ color: faction === f.id ? theme.secondary : theme.textPrimary }}>
-                      {f.name}
-                    </span>
-                    {faction === f.id && <span style={{ color: theme.secondary }}>✓</span>}
-                  </button>
-                ))}
+                {/* Allegiance tabs */}
+                <div className="flex border-b" style={{ borderColor: theme.border }}>
+                  {ALLEGIANCE_GROUPS.map((g, i) => (
+                    <button key={g.id} onClick={() => setAllegianceTab(g.id)}
+                      className="flex-1 py-2.5 flex flex-col items-center gap-0.5"
+                      style={{
+                        background: allegianceTab === g.id ? `${theme.secondary}15` : 'transparent',
+                        borderRight: i < ALLEGIANCE_GROUPS.length - 1 ? `1px solid ${theme.border}` : 'none',
+                        borderBottom: allegianceTab === g.id ? `2px solid ${theme.secondary}` : '2px solid transparent',
+                      }}>
+                      <span className="text-lg">{g.icon}</span>
+                      <p className="text-xs font-black tracking-wide"
+                        style={{ color: allegianceTab === g.id ? theme.secondary : theme.textSecondary }}>
+                        {g.label}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+                {/* Faction grid */}
+                <div className="grid grid-cols-3 gap-2 p-3">
+                  {ALLEGIANCE_GROUPS.find(g => g.id === allegianceTab)?.factionIds.map(id => {
+                    const f = FACTION_META[id]
+                    if (!f) return null
+                    const selected = faction === id
+                    return (
+                      <button key={id} onClick={() => handleChangeFaction(id)}
+                        className="rounded-2xl border-2 p-3 flex flex-col items-center text-center relative"
+                        style={{
+                          background: selected ? `${f.color}18` : theme.surface,
+                          borderColor: selected ? f.color : theme.border,
+                        }}>
+                        {selected && (
+                          <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
+                            style={{ background: f.color }}>
+                            <span style={{ color: '#fff', fontSize: 8, fontWeight: 900, lineHeight: 1 }}>✓</span>
+                          </div>
+                        )}
+                        <span className="text-3xl mb-1">{f.icon}</span>
+                        <p className="text-xs font-bold leading-tight"
+                          style={{ color: selected ? f.color : theme.textPrimary }}>
+                          {f.name}
+                        </p>
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
             </motion.div>
           </motion.div>
