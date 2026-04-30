@@ -3,9 +3,9 @@ import { useCrusadeStore } from '../store/crusadeStore'
 
 const XP_OPTIONS = [1, 2, 3, 4]
 
-export default function PostBattleDebrief({ units, faction, onComplete, onCancel, theme }) {
+export default function PostBattleDebrief({ units, faction, isCrusadeMatch = false, onComplete, onCancel, theme }) {
   const crusadeStore = useCrusadeStore()
-  const activeOrder = crusadeStore.getActiveOrder()
+  const activeOrder = isCrusadeMatch ? crusadeStore.getActiveOrder() : null
 
   const [step, setStep] = useState('result') // 'result' | 'xp'
   const [result, setResult] = useState(null)  // 'victory' | 'defeat'
@@ -70,7 +70,9 @@ export default function PostBattleDebrief({ units, faction, onComplete, onCancel
             How did it go?
           </h2>
           <p className="text-xs mb-5" style={{ color: theme.textSecondary }}>
-            Record the result to update your Crusade roster.
+            {isCrusadeMatch
+              ? 'Record the result to update your Crusade roster.'
+              : 'Record the result for your records.'}
           </p>
 
           {/* Result buttons */}
@@ -118,14 +120,14 @@ export default function PostBattleDebrief({ units, faction, onComplete, onCancel
           </div>
 
           <button
-            onClick={() => result && setStep('xp')}
+            onClick={() => result && (isCrusadeMatch ? setStep('xp') : onComplete('home'))}
             className="w-full py-3.5 rounded-2xl font-bold text-sm"
             style={{
               background: result ? theme.secondary : theme.border,
               color: result ? theme.bg : theme.textSecondary,
             }}
           >
-            Next: Award XP →
+            {isCrusadeMatch ? 'Next: Award XP →' : 'End Battle'}
           </button>
           <button
             onClick={onCancel}

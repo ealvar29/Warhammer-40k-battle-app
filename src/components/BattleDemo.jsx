@@ -6,6 +6,7 @@ import { getSuggestions, opponentProfiles } from '../data/suggestions'
 import { findDetachment } from '../data/factionRegistry'
 import { useBattleStore } from '../store/battleStore'
 import PostBattleDebrief from './PostBattleDebrief'
+import { useCrusadeStore } from '../store/crusadeStore'
 import ShareArmySheet from './ShareArmySheet'
 import MatchupSheet from './MatchupSheet'
 import ImportListSheet from './ImportListSheet'
@@ -811,6 +812,9 @@ export default function BattleDemo({ theme, onNavigate }) {
     detachmentState,
   } = store
 
+  const crusadeStore = useCrusadeStore()
+  const isCrusadeMatch = crusadeStore.getActiveOrder()?.faction === faction
+
   const [activePhaseIdx, setActivePhaseIdx] = useState(0)
   const [isYourTurn, setIsYourTurn] = useState(true)
   const [sourceFilter, setSourceFilter] = useState('all')
@@ -1257,6 +1261,7 @@ export default function BattleDemo({ theme, onNavigate }) {
       <AnimatePresence>
         {showDebrief && (
           <PostBattleDebrief units={units} faction={faction} theme={theme}
+            isCrusadeMatch={isCrusadeMatch}
             onComplete={handleDebriefComplete} onCancel={() => setShowDebrief(false)} />
         )}
       </AnimatePresence>
