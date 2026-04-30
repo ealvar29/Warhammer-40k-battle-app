@@ -874,6 +874,12 @@ export default function BattleDemo({ theme, onNavigate }) {
   const suggestions = getSuggestions(detachmentId || 'sagaOfTheGreatWolf', opponentTags)
   const suggestedIds = new Set(suggestions.map(s => s.stratId))
   const suggestionMap = Object.fromEntries(suggestions.map(s => [s.stratId, s.reason]))
+  const phaseSuggestedCount = allStratagems.filter(s =>
+    s.phase === activePhase.id &&
+    suggestedIds.has(s.id) &&
+    !(isYourTurn && s.trigger === 'reaction') &&
+    !(!isYourTurn && s.trigger === 'active')
+  ).length
 
   const visibleStratagems = allStratagems.filter(s => {
     if (s.phase !== activePhase.id) return false
@@ -1157,7 +1163,7 @@ export default function BattleDemo({ theme, onNavigate }) {
                 {opt.label}
               </button>
             ))}
-            {opponentTags.length > 0 && suggestions.length > 0 && (
+            {opponentTags.length > 0 && phaseSuggestedCount > 0 && (
               <button
                 onClick={() => setSourceFilter(f => f === 'suggested' ? 'all' : 'suggested')}
                 className="ml-auto px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
@@ -1166,7 +1172,7 @@ export default function BattleDemo({ theme, onNavigate }) {
                   color: theme.secondary,
                   border: `1px solid ${sourceFilter === 'suggested' ? theme.secondary : theme.secondary + '44'}`,
                 }}>
-                💡 {suggestions.length} suggested
+                💡 {phaseSuggestedCount} suggested
               </button>
             )}
           </div>
