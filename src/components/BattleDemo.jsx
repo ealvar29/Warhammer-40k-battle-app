@@ -816,7 +816,7 @@ export default function BattleDemo({ theme, onNavigate }) {
   const store = useBattleStore()
   const {
     faction, detachmentId, selectedUnits, unitStates, opponentTags,
-    cp, setCp, setWounds, attachLeader, detachLeader,
+    cp, setCp, gainCp, setWounds, attachLeader, detachLeader,
     toggleOpponentTag, vpScores, adjustVp, warlordUnitId, setWarlord,
     opponentArmy, clearOpponentArmy, setOpponentArmy,
     detachmentState,
@@ -864,17 +864,18 @@ export default function BattleDemo({ theme, onNavigate }) {
     sum + (u.abilities?.filter(a => typeof a === 'object' && a.name && (a.phase === activePhase.id || a.phase === 'any'))?.length || 0)
   , 0)
 
+  const suggestions = getSuggestions(detachmentId || 'sagaOfTheGreatWolf', opponentTags)
+  const suggestedIds = new Set(suggestions.map(s => s.stratId))
+  const suggestionMap = Object.fromEntries(suggestions.map(s => [s.stratId, s.reason]))
+
   const visibleStratagems = allStratagems.filter(s => {
     if (s.phase !== activePhase.id) return false
     if (isYourTurn && s.trigger === 'reaction') return false
     if (!isYourTurn && s.trigger === 'active') return false
+    if (sourceFilter === 'suggested') return suggestedIds.has(s.id)
     if (sourceFilter !== 'all' && s.source !== sourceFilter) return false
     return true
   })
-
-  const suggestions = getSuggestions(detachmentId || 'sagaOfTheGreatWolf', opponentTags)
-  const suggestedIds = new Set(suggestions.map(s => s.stratId))
-  const suggestionMap = Object.fromEntries(suggestions.map(s => [s.stratId, s.reason]))
 
   const handleTurnToggle = (yourTurn) => {
     if (yourTurn === isYourTurn) return
@@ -950,7 +951,7 @@ export default function BattleDemo({ theme, onNavigate }) {
                 />
               ))}
             </div>
-            <motion.button whileTap={{ scale: 0.85 }} onClick={() => setCp(Math.min(12, cp + 1))}
+            <motion.button whileTap={{ scale: 0.85 }} onClick={() => gainCp(1)}
               className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center"
               style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>+</motion.button>
             <motion.button whileTap={{ scale: 0.85 }} onClick={() => setCp(Math.max(0, cp - 1))}
@@ -1071,7 +1072,7 @@ export default function BattleDemo({ theme, onNavigate }) {
                       {/* Standard gain */}
                       <div className="flex items-center justify-between">
                         <p className="text-xs" style={{ color: theme.textSecondary }}>+1 Standard (Command Phase)</p>
-                        <button onClick={() => setCp(Math.min(12, cp + 1))}
+                        <button onClick={() => gainCp(1)}
                           className="text-xs px-2 py-0.5 rounded-lg font-bold"
                           style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
                           +1
@@ -1084,7 +1085,7 @@ export default function BattleDemo({ theme, onNavigate }) {
                           <p className="text-xs" style={{ color: theme.textSecondary }}>
                             +1 {e.unitName} — {e.abilityName}
                           </p>
-                          <button onClick={() => setCp(Math.min(12, cp + 1))}
+                          <button onClick={() => gainCp(1)}
                             className="text-xs px-2 py-0.5 rounded-lg font-bold"
                             style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
                             +1
@@ -1149,10 +1150,17 @@ export default function BattleDemo({ theme, onNavigate }) {
                 {opt.label}
               </button>
             ))}
-            {opponentTags.length > 0 && (
-              <span className="ml-auto text-xs flex items-center gap-1" style={{ color: theme.secondary }}>
-                💡 {suggestions.length} suggestions
-              </span>
+            {opponentTags.length > 0 && suggestions.length > 0 && (
+              <button
+                onClick={() => setSourceFilter(f => f === 'suggested' ? 'all' : 'suggested')}
+                className="ml-auto px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
+                style={{
+                  background: sourceFilter === 'suggested' ? `${theme.secondary}22` : `${theme.secondary}10`,
+                  color: theme.secondary,
+                  border: `1px solid ${sourceFilter === 'suggested' ? theme.secondary : theme.secondary + '44'}`,
+                }}>
+                💡 {suggestions.length} suggested
+              </button>
             )}
           </div>
 

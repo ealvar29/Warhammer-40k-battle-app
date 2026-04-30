@@ -106,6 +106,7 @@ export const useBattleStore = create(
       })),
 
       setCp: (cp) => set({ cp: Math.max(0, Math.min(12, cp)) }),
+      gainCp: (amount) => set((s) => ({ cp: Math.max(0, Math.min(12, s.cp + amount)) })),
       spendCp: (amount) => set((s) => ({ cp: Math.max(0, s.cp - amount) })),
 
       setWounds: (unitId, wounds) => set((s) => ({

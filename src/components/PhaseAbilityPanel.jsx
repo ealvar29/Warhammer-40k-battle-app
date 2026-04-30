@@ -51,20 +51,26 @@ export default function PhaseAbilityPanel({ units, activePhase, theme }) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -4 }}
         transition={{ duration: 0.2 }}
-        className="mx-3 mt-2 rounded-2xl border overflow-hidden shrink-0"
-        style={{ background: theme.surface, borderColor: `${accent}50` }}
+        className="mx-3 mt-2 rounded-2xl border overflow-hidden shrink-0 flex flex-col"
+        style={{ background: theme.surface, borderColor: `${accent}50`, maxHeight: '40vh' }}
       >
-        {/* Header */}
-        <div className="px-3 py-2 flex items-center gap-2"
+        {/* Header — always visible */}
+        <div className="px-3 py-2 flex items-center gap-2 shrink-0"
           style={{ background: `${accent}18`, borderBottom: `1px solid ${accent}30` }}>
           <div className="w-1.5 h-1.5 rounded-full" style={{ background: accent }} />
           <p className="text-xs font-black tracking-widest uppercase" style={{ color: accent }}>
             Active This Phase
           </p>
           <p className="text-xs" style={{ color: `${accent}99` }}>— {activePhase?.label}</p>
+          {phaseItems.length > 4 && (
+            <span className="ml-auto text-xs" style={{ color: `${accent}66` }}>
+              {phaseItems.length} abilities ↕
+            </span>
+          )}
         </div>
 
-        {/* Unit abilities */}
+        {/* Unit abilities — scrollable */}
+        <div className="overflow-y-auto">
         {phaseItems.map(({ unit, ability }, i) => {
           const key = `${unit.id}-${ability.name}`
           const isOpen = expandedKey === key
@@ -117,6 +123,7 @@ export default function PhaseAbilityPanel({ units, activePhase, theme }) {
             </div>
           )
         })}
+        </div>
       </motion.div>
     </AnimatePresence>
   )
