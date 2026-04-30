@@ -6,6 +6,7 @@ import ArmyBuilderScreen from './screens/ArmyBuilderScreen'
 import BattleDemo from './components/BattleDemo'
 import DeployScreen from './screens/DeployScreen'
 import CrusadeScreen from './screens/CrusadeScreen'
+import ListBuilderScreen from './screens/ListBuilderScreen'
 import { useBattleStore } from './store/battleStore'
 import { parseShareUrl } from './utils/armyShare'
 import { buildUnitsFromIds, findDetachment, FACTION_META } from './data/factionRegistry'
@@ -15,10 +16,11 @@ const theme = themes.spacewolves
 const NAV_TABS = [
   { id: 'home',    label: 'Home',    icon: '🏠' },
   { id: 'battle',  label: 'Battle',  icon: '⚔️' },
+  { id: 'lists',   label: 'Lists',   icon: '📋' },
   { id: 'crusade', label: 'Crusade', icon: '📜' },
 ]
 
-const TAB_ORDER = ['home', 'battle', 'crusade', 'armyBuilder', 'deploy']
+const TAB_ORDER = ['home', 'battle', 'lists', 'crusade', 'armyBuilder', 'deploy']
 function slideDir(from, to) {
   const fi = TAB_ORDER.indexOf(from)
   const ti = TAB_ORDER.indexOf(to)
@@ -61,6 +63,7 @@ export default function App() {
       case 'armyBuilder':  return <ArmyBuilderScreen theme={theme} onNavigate={navigate} />
       case 'deploy':       return <DeployScreen theme={theme} onNavigate={navigate} />
       case 'battle':       return <BattleDemo theme={theme} onNavigate={navigate} />
+      case 'lists':        return <ListBuilderScreen theme={theme} />
       case 'crusade':      return <CrusadeScreen theme={theme} />
       default:             return <HomeScreen theme={theme} onNavigate={navigate} />
     }
