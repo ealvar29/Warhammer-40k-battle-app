@@ -528,42 +528,49 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
             className="overflow-hidden"
           >
             <div className="mt-3 rounded-xl overflow-hidden border" style={{ borderColor: theme.border }}>
-              {/* Header */}
-              <div className="grid text-center px-2 py-1.5" style={{
-                gridTemplateColumns: '1fr auto auto auto auto auto auto',
-                background: theme.surfaceHigh,
-                borderBottom: `1px solid ${theme.border}`,
-              }}>
-                {['WEAPON','RNG','A','S','AP','D','WS/BS'].map(h => (
-                  <span key={h} className="text-xs font-bold" style={{ color: theme.textSecondary, fontSize: 8, letterSpacing: '0.05em' }}>{h}</span>
-                ))}
-              </div>
-              {unit.weapons.map((w, i) => (
-                <div key={i} className="border-b last:border-b-0"
-                  style={{ borderColor: theme.border, background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88` }}>
-                  {/* Stats row — tap to open MathHammer */}
-                  <div className="grid items-center px-2 py-2 text-center"
-                    style={{ gridTemplateColumns: '1fr auto auto auto auto auto auto', cursor: onCalcWeapon ? 'pointer' : 'default' }}
-                    onClick={() => onCalcWeapon?.(w)}>
-                    <span className="text-xs font-bold text-left flex items-center gap-1" style={{ color: theme.textPrimary }}>
-                      <span className="truncate">{w.name}</span>
-                      {onCalcWeapon && <span style={{ fontSize: 8, opacity: 0.4, flexShrink: 0 }}>🎲</span>}
-                    </span>
-                    <span className="text-xs" style={{ color: theme.textSecondary }}>{w.range || '—'}</span>
-                    <span className="text-xs font-bold" style={{ color: theme.secondary }}>{w.A}</span>
-                    <span className="text-xs" style={{ color: theme.textPrimary }}>{w.S}</span>
-                    <span className="text-xs" style={{ color: theme.textPrimary }}>{w.AP}</span>
-                    <span className="text-xs font-bold" style={{ color: theme.secondary }}>{w.D}</span>
-                    <span className="text-xs" style={{ color: theme.textSecondary }}>{w.WS || w.BS || '—'}</span>
-                  </div>
-                  {/* Keyword chips */}
-                  {w.keywords?.length > 0 && (
-                    <div className="px-2 pb-1.5 flex flex-wrap gap-1">
-                      {w.keywords.map(kw => <KeywordChip key={kw} keyword={kw} theme={theme} />)}
-                    </div>
-                  )}
-                </div>
-              ))}
+              <table className="w-full" style={{ borderCollapse: 'collapse', tableLayout: 'auto' }}>
+                <thead>
+                  <tr style={{ background: theme.surfaceHigh, borderBottom: `1px solid ${theme.border}` }}>
+                    {[['WEAPON','left'],['RNG','center'],['A','center'],['S','center'],['AP','center'],['D','center'],['WS/BS','center']].map(([h, align]) => (
+                      <th key={h} className="px-2 py-1.5 font-bold whitespace-nowrap"
+                        style={{ color: theme.textSecondary, fontSize: 9, letterSpacing: '0.06em', textAlign: align }}>
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {unit.weapons.map((w, i) => (
+                    <React.Fragment key={i}>
+                      <tr
+                        style={{ borderBottom: i < unit.weapons.length - 1 || w.keywords?.length > 0 ? `1px solid ${theme.border}` : undefined, background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88`, cursor: onCalcWeapon ? 'pointer' : 'default' }}
+                        onClick={() => onCalcWeapon?.(w)}>
+                        <td className="px-2 py-2 text-xs font-bold" style={{ color: theme.textPrimary }}>
+                          <span className="flex items-center gap-1">
+                            <span>{w.name}</span>
+                            {onCalcWeapon && <span style={{ fontSize: 8, opacity: 0.4, flexShrink: 0 }}>🎲</span>}
+                          </span>
+                        </td>
+                        <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textSecondary }}>{w.range || '—'}</td>
+                        <td className="px-2 py-2 text-xs font-bold text-center whitespace-nowrap" style={{ color: theme.secondary }}>{w.A}</td>
+                        <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textPrimary }}>{w.S}</td>
+                        <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textPrimary }}>{w.AP}</td>
+                        <td className="px-2 py-2 text-xs font-bold text-center whitespace-nowrap" style={{ color: theme.secondary }}>{w.D}</td>
+                        <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textSecondary }}>{w.WS || w.BS || '—'}</td>
+                      </tr>
+                      {w.keywords?.length > 0 && (
+                        <tr style={{ background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88`, borderBottom: i < unit.weapons.length - 1 ? `1px solid ${theme.border}` : undefined }}>
+                          <td colSpan={7} className="px-2 pb-1.5">
+                            <div className="flex flex-wrap gap-1">
+                              {w.keywords.map(kw => <KeywordChip key={kw} keyword={kw} theme={theme} />)}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </motion.div>
         )}
