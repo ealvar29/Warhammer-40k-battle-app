@@ -4,6 +4,7 @@ import { themes } from './themes/index'
 import HomeScreen from './screens/HomeScreen'
 import ArmyBuilderScreen from './screens/ArmyBuilderScreen'
 import BattleDemo from './components/BattleDemo'
+import DeployScreen from './screens/DeployScreen'
 import CrusadeScreen from './screens/CrusadeScreen'
 import { useBattleStore } from './store/battleStore'
 import { parseShareUrl } from './utils/armyShare'
@@ -17,7 +18,7 @@ const NAV_TABS = [
   { id: 'crusade', label: 'Crusade', icon: '📜' },
 ]
 
-const TAB_ORDER = ['home', 'battle', 'crusade', 'armyBuilder']
+const TAB_ORDER = ['home', 'battle', 'crusade', 'armyBuilder', 'deploy']
 function slideDir(from, to) {
   const fi = TAB_ORDER.indexOf(from)
   const ti = TAB_ORDER.indexOf(to)
@@ -58,6 +59,7 @@ export default function App() {
     switch (screen) {
       case 'home':         return <HomeScreen theme={theme} onNavigate={navigate} />
       case 'armyBuilder':  return <ArmyBuilderScreen theme={theme} onNavigate={navigate} />
+      case 'deploy':       return <DeployScreen theme={theme} onNavigate={navigate} />
       case 'battle':       return <BattleDemo theme={theme} onNavigate={navigate} />
       case 'crusade':      return <CrusadeScreen theme={theme} />
       default:             return <HomeScreen theme={theme} onNavigate={navigate} />

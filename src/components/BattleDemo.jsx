@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PHASES, demoStratagems, demoUnits } from '../data/demoData'
-import { leaders, leaderAbilities } from '../data/leaderData'
+import { leaders, leaderAbilities, unitLeaderMap } from '../data/leaderData'
 import { getSuggestions, opponentProfiles } from '../data/suggestions'
 import { findDetachment } from '../data/factionRegistry'
 import { useBattleStore } from '../store/battleStore'
@@ -299,14 +299,19 @@ function StratCard({ strat, theme, highlighted, highlightReason, motionProps, cp
 // ── Leader Panel ──────────────────────────────────────────────────────────────
 function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, theme }) {
   const [open, setOpen] = useState(false)
-  const unitKey = unit.unitKey || unit.id
-  const eligibleIds = unit.eligibleLeaders?.length > 0 ? unit.eligibleLeaders : []
+  const unitKey = unit.unitKey || unit.id.replace(/_\d+$/, '')
+  // Eligible leaders: use unit.eligibleLeaders if present, else fall back to unitLeaderMap
+  const eligibleIds = unit.eligibleLeaders?.length > 0
+    ? unit.eligibleLeaders
+    : (unitLeaderMap[unitKey] || [])
   const eligible = eligibleIds.map(id => leaders[id]).filter(Boolean)
   const attached = attachedLeaderId ? leaders[attachedLeaderId] : null
-  const abilities = attachedLeaderId ? (leaderAbilities[`${attachedLeaderId}_${unitKey}`]?.abilities || []) : []
-  const activeAbilities = abilities.filter(a => a.phase === activePhase)
+  const baseLeaderId = attachedLeaderId?.replace(/_\d+$/, '')
+  const abilities = baseLeaderId ? (leaderAbilities[`${baseLeaderId}_${unitKey}`]?.abilities || []) : []
+  const activeAbilities = abilities.filter(a => a.phase === activePhase || a.phase === 'any')
 
-  if (eligible.length === 0) return null
+  // Show if there are eligible leaders OR a leader is already attached
+  if (eligible.length === 0 && !attached) return null
 
   return (
     <div className="mt-3">
@@ -875,6 +880,17 @@ export default function BattleDemo({ theme, onNavigate }) {
   const totalThemVp = vpScores?.them.reduce((a, b) => a + b, 0) ?? 0
 
   const units = selectedUnits.length > 0 ? selectedUnits : demoUnits
+  // Inject leader abilities into unit.abilities so PhaseAbilityPanel surfaces them
+  const augmentedUnits = units.map(u => {
+    const leaderId = unitStates[u.id]?.attachedLeaderId
+    if (!leaderId) return u
+    const baseUnitId = u.unitKey || u.id.replace(/_\d+$/, '')
+    const baseLeaderId = leaderId.replace(/_\d+$/, '')
+    const extra = leaderAbilities[`${baseLeaderId}_${baseUnitId}`]?.abilities || []
+    if (!extra.length) return u
+    return { ...u, abilities: [...(u.abilities || []), ...extra] }
+  })
+
   const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const activePhase = PHASES[activePhaseIdx]
@@ -1344,7 +1360,7 @@ export default function BattleDemo({ theme, onNavigate }) {
 
             {/* Phase ability panel */}
             <PhaseAbilityPanel
-              units={units}
+              units={augmentedUnits}
               activePhase={activePhase}
               theme={theme}
             />

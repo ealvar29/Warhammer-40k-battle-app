@@ -164,8 +164,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     store.setDetachment(localDetachment)
     selectedUnitData.forEach(u => store.addUnit(u))
     store.setOpponentTags(localOpponentTags)
-    store.startBattle()
-    onNavigate('battle')
+    onNavigate('deploy')
   }
 
   const handleImportAsMyArmy = (parsed) => {
@@ -176,9 +175,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     store.setFaction(faction)
     store.setDetachment(detId)
     units.forEach(u => store.addUnit({ ...u, currentWounds: u.maxWounds }))
-    store.startBattle()
     setShowImport(false)
-    onNavigate('battle')
+    onNavigate('deploy')
   }
 
   const handleImportAsOpponent = (parsed) => {
