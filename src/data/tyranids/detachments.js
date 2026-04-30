@@ -10,6 +10,8 @@ export const tyranidDetachments = {
     },
     commandPhaseAction: {
       type: 'pick_one',
+      perRound: true,
+      confirmLabel: 'Select this Adaptation →',
       label: 'Hyper-Adaptation',
       prompt: 'Select one Hyper-Adaptation for this battle round:',
       options: [

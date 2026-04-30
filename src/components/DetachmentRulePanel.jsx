@@ -21,15 +21,16 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
   const rule = detachment.detachmentRule
   const isCommandPhase = activePhase?.id === 'command'
 
+  const perRound = action?.perRound === true  // pick fresh every command phase, no "used" tracking
   const needsPick = action?.type === 'pick_one' && !activeSelection && isCommandPhase
   const activeOption = action?.type === 'pick_one'
     ? action.options?.find(o => o.id === activeSelection)
     : null
 
-  const remainingCount = action?.type === 'pick_one'
+  const remainingCount = action?.type === 'pick_one' && !perRound
     ? action.options.filter(o => !usedSelections.includes(o.id)).length
-    : 0
-  const allUsed = action?.type === 'pick_one' && remainingCount === 0
+    : action?.options?.length ?? 0
+  const allUsed = action?.type === 'pick_one' && !perRound && remainingCount === 0
 
   const pendingOption = pendingId ? action?.options?.find(o => o.id === pendingId) : null
 
@@ -81,7 +82,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
             </span>
           )}
 
-          {action?.type === 'pick_one' && usedSelections.length > 0 && (
+          {action?.type === 'pick_one' && !perRound && usedSelections.length > 0 && (
             <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
               style={{
                 background: allUsed ? theme.border : `${theme.secondary}15`,
@@ -134,7 +135,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                     <p className="text-xs" style={{ color: theme.textSecondary }}>
                       {action.prompt}
                     </p>
-                    {action.options.length > 1 && (
+                    {!perRound && action.options.length > 1 && (
                       <span className="text-xs font-bold shrink-0 ml-2"
                         style={{ color: allUsed ? theme.textSecondary : theme.secondary }}>
                         {usedSelections.length}/{action.options.length} used
@@ -145,9 +146,8 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                   <div className="grid grid-cols-3 gap-1.5">
                     {action.options.map(opt => {
                       const isActive = activeSelection === opt.id
-                      const isUsed = usedSelections.includes(opt.id)
+                      const isUsed = !perRound && usedSelections.includes(opt.id)
                       const isPending = pendingId === opt.id
-                      // Reusable via Logan's Howling Onslaught
                       const canReuse = isUsed && !isActive && canUsOnceBuff
                       const isDisabled = isUsed && !isActive && !canReuse
 
@@ -220,7 +220,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                       <button onClick={handleConfirm}
                         className="w-full py-2 rounded-xl text-xs font-black"
                         style={{ background: theme.secondary, color: theme.bg }}>
-                        Select this Pack →
+                        {action.confirmLabel || 'Select this Pack →'}
                       </button>
                     </div>
                   )}
@@ -233,7 +233,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                         <p className="text-xs font-bold" style={{ color: theme.secondary }}>
                           {activeOption.icon} {activeOption.label} — Active
                         </p>
-                        {isCommandPhase && remainingCount > 0 && (
+                        {isCommandPhase && (perRound || remainingCount > 0) && (
                           <button onClick={() => { clearDetachmentSelection(); setPendingId(null) }}
                             className="text-xs font-bold px-2 py-0.5 rounded-lg"
                             style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
@@ -246,7 +246,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                       </p>
                       {!isCommandPhase && (
                         <p className="text-xs mt-1 italic" style={{ color: theme.textSecondary, opacity: 0.7 }}>
-                          Re-pick at start of your next Command phase.
+                          {perRound ? 'You may change this at the start of your next Command phase.' : 'Re-pick at start of your next Command phase.'}
                         </p>
                       )}
                     </div>
