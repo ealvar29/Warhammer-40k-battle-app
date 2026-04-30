@@ -16,6 +16,8 @@ export const useBattleStore = create(
       isYourTurn: true,
       activePhaseIdx: 0,
       cp: 6,
+      cpLog: [], // [{ id, type:'gain'|'spend', amount, reason, cpBefore, cpAfter, phase, round }]
+      cpGainedRounds: [], // array of round numbers where command-phase CP was already claimed
       unitStates: {}, // { [unitId]: { currentWounds, attachedLeaderId } }
       battleActive: false,
       vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
@@ -62,6 +64,8 @@ export const useBattleStore = create(
         vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
         warlordUnitId: null,
         detachmentState: { activeSelection: null, usedSelections: [], targetNote: '', onceBuffUsed: false },
+        cpLog: [],
+        cpGainedRounds: [],
       }),
 
       setWarlord: (unitId) => set((s) => ({
@@ -109,6 +113,26 @@ export const useBattleStore = create(
       gainCp: (amount) => set((s) => ({ cp: Math.max(0, Math.min(12, s.cp + amount)) })),
       spendCp: (amount) => set((s) => ({ cp: Math.max(0, s.cp - amount) })),
 
+      logCpGain: (amount, reason, phase, round) => set(s => {
+        const cpBefore = s.cp
+        const cpAfter = Math.min(12, cpBefore + amount)
+        return {
+          cp: cpAfter,
+          cpLog: [{ id: Date.now() + Math.random(), type: 'gain', amount, reason, cpBefore, cpAfter, phase, round }, ...s.cpLog].slice(0, 80),
+        }
+      }),
+      logCpSpend: (amount, reason, phase, round) => set(s => {
+        const cpBefore = s.cp
+        const cpAfter = Math.max(0, cpBefore - amount)
+        return {
+          cp: cpAfter,
+          cpLog: [{ id: Date.now() + Math.random(), type: 'spend', amount, reason, cpBefore, cpAfter, phase, round }, ...s.cpLog].slice(0, 80),
+        }
+      }),
+      markCpGainedForRound: (round) => set(s => ({
+        cpGainedRounds: s.cpGainedRounds.includes(round) ? s.cpGainedRounds : [...s.cpGainedRounds, round],
+      })),
+
       setWounds: (unitId, wounds) => set((s) => ({
         unitStates: {
           ...s.unitStates,
@@ -148,6 +172,8 @@ export const useBattleStore = create(
         vpScores: state.vpScores,
         warlordUnitId: state.warlordUnitId,
         detachmentState: state.detachmentState,
+        cpLog: state.cpLog,
+        cpGainedRounds: state.cpGainedRounds,
       }),
     }
   )

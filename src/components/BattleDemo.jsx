@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PHASES, demoStratagems, demoUnits } from '../data/demoData'
 import { leaders, leaderAbilities } from '../data/leaderData'
@@ -205,8 +205,10 @@ function SourceBadge({ source, theme }) {
 }
 
 // ── Stratagem Card ────────────────────────────────────────────────────────────
-function StratCard({ strat, theme, highlighted, highlightReason, motionProps }) {
+function StratCard({ strat, theme, highlighted, highlightReason, motionProps, cp, onActivate, activeStratIds }) {
   const [expanded, setExpanded] = useState(false)
+  const isActive = activeStratIds?.has(strat.id) ?? false
+  const canAfford = cp >= strat.cost
   return (
     <motion.button
       {...motionProps}
@@ -215,7 +217,7 @@ function StratCard({ strat, theme, highlighted, highlightReason, motionProps }) 
       whileTap={{ scale: 0.98 }}
       style={{
         background: expanded ? theme.stratHover : theme.stratBg,
-        borderColor: highlighted ? theme.secondary : expanded ? theme.border : theme.stratBorder,
+        borderColor: isActive ? '#22c55e' : highlighted ? theme.secondary : expanded ? theme.border : theme.stratBorder,
         boxShadow: highlighted
           ? `0 0 0 1px ${theme.secondary}44, 0 4px 16px rgba(0,0,0,0.3)`
           : '0 1px 4px rgba(0,0,0,0.2)',
@@ -223,6 +225,9 @@ function StratCard({ strat, theme, highlighted, highlightReason, motionProps }) 
     >
       {highlighted && (
         <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl" style={{ background: theme.secondary }} />
+      )}
+      {isActive && (
+        <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl" style={{ background: '#22c55e' }} />
       )}
       <div className={`flex items-start justify-between gap-2 ${highlighted ? 'pl-2' : ''}`}>
         <div className="flex-1 min-w-0">
@@ -233,6 +238,12 @@ function StratCard({ strat, theme, highlighted, highlightReason, motionProps }) 
               <span className="text-xs font-bold px-1.5 py-0.5 rounded"
                 style={{ background: theme.secondary, color: theme.bg, fontSize: 9 }}>
                 SUGGESTED
+              </span>
+            )}
+            {isActive && (
+              <span className="text-xs font-bold px-1.5 py-0.5 rounded"
+                style={{ background: '#22c55e', color: '#000', fontSize: 9 }}>
+                ACTIVE
               </span>
             )}
           </div>
@@ -265,6 +276,18 @@ function StratCard({ strat, theme, highlighted, highlightReason, motionProps }) 
               {highlighted && highlightReason && (
                 <p className="text-xs italic" style={{ color: theme.secondary }}>💡 {highlightReason}</p>
               )}
+              <button
+                onClick={(e) => { e.stopPropagation(); onActivate?.(strat) }}
+                disabled={!canAfford && !isActive}
+                className="w-full mt-2 py-2 rounded-xl text-xs font-black transition-all"
+                style={{
+                  background: isActive ? '#22c55e22' : canAfford ? `${theme.secondary}22` : theme.surfaceHigh,
+                  color: isActive ? '#22c55e' : canAfford ? theme.secondary : theme.textSecondary,
+                  border: `1px solid ${isActive ? '#22c55e44' : canAfford ? theme.secondary + '44' : theme.border}`,
+                  opacity: !canAfford && !isActive ? 0.5 : 1,
+                }}>
+                {isActive ? '✓ Active this phase' : canAfford ? `Activate — Spend ${strat.cost} CP` : `Need ${strat.cost} CP`}
+              </button>
             </div>
           </motion.div>
         )}
@@ -827,6 +850,7 @@ export default function BattleDemo({ theme, onNavigate }) {
     toggleOpponentTag, vpScores, adjustVp, warlordUnitId, setWarlord,
     opponentArmy, clearOpponentArmy, setOpponentArmy,
     detachmentState,
+    cpLog, logCpGain, logCpSpend, markCpGainedForRound, cpGainedRounds,
   } = store
 
   const crusadeStore = useCrusadeStore()
@@ -844,6 +868,8 @@ export default function BattleDemo({ theme, onNavigate }) {
   const [currentRound, setCurrentRound] = useState(1)
   const [turnFlash, setTurnFlash] = useState(null) // 'yours' | 'theirs' | null
   const [mathHammerWeapon, setMathHammerWeapon] = useState(null)
+  const [showCpLog, setShowCpLog] = useState(false)
+  const [activeStratIds, setActiveStratIds] = useState(new Set())
 
   const totalYouVp = vpScores?.you.reduce((a, b) => a + b, 0) ?? 0
   const totalThemVp = vpScores?.them.reduce((a, b) => a + b, 0) ?? 0
@@ -910,6 +936,24 @@ export default function BattleDemo({ theme, onNavigate }) {
     if (onNavigate) onNavigate(destination === 'crusade' ? 'crusade' : 'home')
   }
 
+  const handleActivateStrat = (strat) => {
+    setActiveStratIds(prev => {
+      const next = new Set(prev)
+      if (next.has(strat.id)) {
+        next.delete(strat.id)
+        logCpGain(strat.cost, `Deactivated: ${strat.name}`, activePhase.id, currentRound)
+      } else {
+        next.add(strat.id)
+        logCpSpend(strat.cost, `Activated: ${strat.name}`, activePhase.id, currentRound)
+      }
+      return next
+    })
+  }
+
+  useEffect(() => {
+    setActiveStratIds(new Set())
+  }, [activePhaseIdx, isYourTurn])
+
   const sourceOptions = [
     { id: 'all', label: 'All' },
     { id: 'detachment', label: 'Detachment' },
@@ -970,6 +1014,12 @@ export default function BattleDemo({ theme, onNavigate }) {
             <motion.button whileTap={{ scale: 0.85 }} onClick={() => setCp(Math.max(0, cp - 1))}
               className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center"
               style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>−</motion.button>
+            <button onClick={() => setShowCpLog(s => !s)}
+              className="w-5 h-5 rounded text-xs flex items-center justify-center"
+              title="CP history"
+              style={{ background: showCpLog ? `${theme.secondary}22` : theme.surfaceHigh, color: showCpLog ? theme.secondary : theme.textSecondary, border: `1px solid ${showCpLog ? theme.secondary + '44' : theme.border}` }}>
+              📋
+            </button>
           </div>
           <motion.button whileTap={{ scale: 0.9 }}
             onClick={() => setShowShare(true)}
@@ -1004,6 +1054,44 @@ export default function BattleDemo({ theme, onNavigate }) {
 
         {/* ── Left column: VP (mobile) + Phase banner + Filters + Stratagems ── */}
         <div className="md:flex-1 md:flex md:flex-col md:overflow-hidden md:border-r" style={{ borderColor: theme.border }}>
+
+          {/* CP Log panel */}
+          <AnimatePresence>
+            {showCpLog && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden mx-3 mt-2 rounded-2xl border shrink-0"
+                style={{ background: theme.surface, borderColor: theme.border }}>
+                <div className="px-3 py-2 flex items-center justify-between"
+                  style={{ borderBottom: `1px solid ${theme.border}`, background: theme.surfaceHigh }}>
+                  <p className="text-xs font-black tracking-widest uppercase" style={{ color: theme.textSecondary }}>CP History</p>
+                  <button onClick={() => setShowCpLog(false)} className="text-xs" style={{ color: theme.textSecondary }}>✕</button>
+                </div>
+                {cpLog.length === 0 ? (
+                  <p className="px-3 py-3 text-xs text-center" style={{ color: theme.textSecondary }}>No CP changes yet</p>
+                ) : (
+                  <div className="max-h-48 overflow-y-auto divide-y" style={{ '--tw-divide-opacity': 1, borderColor: theme.border }}>
+                    {cpLog.map(entry => (
+                      <div key={entry.id} className="px-3 py-2 flex items-center gap-2">
+                        <span className="text-sm shrink-0" style={{ color: entry.type === 'gain' ? '#22c55e' : theme.hpLow }}>
+                          {entry.type === 'gain' ? '+' : '−'}{entry.amount}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs leading-tight truncate" style={{ color: theme.textPrimary }}>{entry.reason}</p>
+                          <p className="text-xs" style={{ color: theme.textSecondary }}>
+                            Round {entry.round} · {entry.phase} · {entry.cpBefore} → {entry.cpAfter} CP
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* VP strip — mobile position (hidden on desktop) */}
           <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowVp(true)}
@@ -1076,45 +1164,60 @@ export default function BattleDemo({ theme, onNavigate }) {
                 const commandConditional = activePhaseEffects.filter(e => e.phase === 'command' && (e.type === 'cpConditional' || e.type === 'cpFree'))
                 const fightKills = activePhaseEffects.filter(e => e.phase === 'fight' && e.type === 'cpKill')
 
-                if (activePhase.id === 'command' && (commandGains.length > 0 || commandConditional.length > 0)) {
+                if (activePhase.id === 'command' && isYourTurn && (commandGains.length > 0 || commandConditional.length > 0)) {
+                  const totalAutoGain = 1 + commandGains.reduce((s, e) => s + (e.amount || 1), 0)
+                  const alreadyGained = cpGainedRounds.includes(currentRound)
+                  const sources = [
+                    { label: 'Standard Command Phase', amount: 1 },
+                    ...commandGains.map(e => ({ label: `${e.unitName} — ${e.abilityName}`, amount: e.amount || 1 })),
+                  ]
+
+                  const handleGainAll = () => {
+                    if (alreadyGained) return
+                    sources.forEach(src => {
+                      logCpGain(src.amount, src.label, 'command', currentRound)
+                    })
+                    markCpGainedForRound(currentRound)
+                  }
+
                   return (
                     <div className="mt-2 rounded-xl px-3 py-2.5 space-y-2"
                       style={{ background: `${theme.secondary}0d`, border: `1px solid ${theme.secondary}25` }}>
-                      <p className="text-xs font-bold" style={{ color: theme.secondary }}>CP gains this phase</p>
-
-                      {/* Standard gain */}
                       <div className="flex items-center justify-between">
-                        <p className="text-xs" style={{ color: theme.textSecondary }}>+1 Standard (Command Phase)</p>
-                        <button onClick={() => gainCp(1)}
-                          className="text-xs px-2 py-0.5 rounded-lg font-bold"
-                          style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
-                          +1
-                        </button>
+                        <p className="text-xs font-bold" style={{ color: theme.secondary }}>CP this Command Phase</p>
+                        {!alreadyGained ? (
+                          <button
+                            onClick={handleGainAll}
+                            className="text-xs px-2.5 py-1 rounded-lg font-black"
+                            style={{ background: theme.secondary, color: theme.bg }}>
+                            +{totalAutoGain} Gain All
+                          </button>
+                        ) : (
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-lg"
+                            style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
+                            ✓ Gained
+                          </span>
+                        )}
                       </div>
 
-                      {/* Guaranteed gains from units */}
-                      {commandGains.map(e => (
-                        <div key={e.unitId} className="flex items-center justify-between">
-                          <p className="text-xs" style={{ color: theme.textSecondary }}>
-                            +1 {e.unitName} — {e.abilityName}
-                          </p>
-                          <button onClick={() => gainCp(1)}
-                            className="text-xs px-2 py-0.5 rounded-lg font-bold"
-                            style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
-                            +1
-                          </button>
+                      {sources.map((src, i) => (
+                        <div key={i} className="flex items-center justify-between">
+                          <p className="text-xs" style={{ color: theme.textSecondary }}>+{src.amount} {src.label}</p>
                         </div>
                       ))}
 
-                      {/* Conditional / free stratagem reminders */}
-                      {commandConditional.map(e => (
-                        <div key={e.unitId} className="pt-1" style={{ borderTop: `1px solid ${theme.border}` }}>
-                          <p className="text-xs font-bold" style={{ color: e.type === 'cpFree' ? theme.cpColor : theme.secondary }}>
-                            {e.unitName} — {e.abilityName}
-                          </p>
-                          <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{e.note}</p>
+                      {commandConditional.length > 0 && (
+                        <div className="pt-1.5" style={{ borderTop: `1px solid ${theme.border}` }}>
+                          {commandConditional.map(e => (
+                            <div key={e.unitId} className="mb-1">
+                              <p className="text-xs font-bold" style={{ color: e.type === 'cpFree' ? theme.cpColor : theme.secondary }}>
+                                {e.unitName} — {e.abilityName}
+                              </p>
+                              <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{e.note}</p>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
                   )
                 }
@@ -1191,6 +1294,9 @@ export default function BattleDemo({ theme, onNavigate }) {
                 <StratCard key={s.id} strat={s} theme={theme}
                   highlighted={suggestedIds.has(s.id)}
                   highlightReason={suggestionMap[s.id]}
+                  cp={cp}
+                  onActivate={handleActivateStrat}
+                  activeStratIds={activeStratIds}
                   motionProps={{
                     initial: { opacity: 0, y: 10 },
                     animate: { opacity: 1, y: 0 },
