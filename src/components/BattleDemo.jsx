@@ -1212,23 +1212,25 @@ export default function BattleDemo({ theme, onNavigate }) {
             </div>
           </motion.button>
 
-          {/* Detachment rule panel — interactive (pick_one / designate_target) or passive reminder */}
-          <DetachmentRulePanel
-            detachment={detachment}
-            activePhase={activePhase}
-            theme={theme}
-            onceBuffAvailable={units.some(u => u.id === 'loganGrimnar')}
-          />
+          {/* Units + panels — single scrollable column so panels scroll away naturally */}
+          <div className="md:flex-1 md:overflow-y-auto pb-2">
 
-          {/* Phase ability panel — unit abilities active this phase */}
-          <PhaseAbilityPanel
-            units={units}
-            activePhase={activePhase}
-            theme={theme}
-          />
+            {/* Detachment rule panel */}
+            <DetachmentRulePanel
+              detachment={detachment}
+              activePhase={activePhase}
+              theme={theme}
+              onceBuffAvailable={units.some(u => u.id === 'loganGrimnar')}
+            />
 
-          {/* Units */}
-          <div className="md:flex-1 md:overflow-y-auto px-3 pb-2 mt-2 space-y-2">
+            {/* Phase ability panel */}
+            <PhaseAbilityPanel
+              units={units}
+              activePhase={activePhase}
+              theme={theme}
+            />
+
+            <div className="px-3 mt-2 space-y-2">
             {/* Phase context chips — weapon + ability counts */}
             <PhaseContextRow
               units={units}
@@ -1311,7 +1313,8 @@ export default function BattleDemo({ theme, onNavigate }) {
                 </motion.button>
               </div>
             )}
-          </div>
+            </div>{/* end px-3 content */}
+          </div>{/* end single scroll column */}
         </div>
       </div>
 
