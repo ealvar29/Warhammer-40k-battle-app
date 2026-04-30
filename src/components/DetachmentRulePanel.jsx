@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 
-export default function DetachmentRulePanel({ detachment, activePhase, theme }) {
+export default function DetachmentRulePanel({ detachment, activePhase, theme, onceBuffAvailable = false }) {
   const {
     detachmentState,
     setDetachmentSelection,
@@ -12,6 +12,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
   } = useBattleStore()
 
   const [expanded, setExpanded] = useState(false)
+  const [pendingId, setPendingId] = useState(null)
 
   if (!detachment) return null
 
@@ -25,17 +26,29 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
     ? action.options?.find(o => o.id === activeSelection)
     : null
 
-  // How many options are still available (not used up this battle)
   const remainingCount = action?.type === 'pick_one'
     ? action.options.filter(o => !usedSelections.includes(o.id)).length
     : 0
   const allUsed = action?.type === 'pick_one' && remainingCount === 0
+
+  const pendingOption = pendingId ? action?.options?.find(o => o.id === pendingId) : null
+
+  // onceBuff (Howling Onslaught) is available only when Logan is on field and not yet spent
+  const canUsOnceBuff = action?.onceBuff && onceBuffAvailable && !onceBuffUsed
 
   const borderColor = needsPick
     ? theme.secondary
     : activeOption
       ? `${theme.secondary}60`
       : `${theme.primary}40`
+
+  const handleConfirm = () => {
+    if (!pendingId) return
+    const isReusingViaBuff = usedSelections.includes(pendingId) && canUsOnceBuff
+    if (isReusingViaBuff) setOnceBuffUsed()
+    setDetachmentSelection(pendingId)
+    setPendingId(null)
+  }
 
   return (
     <div className="mx-3 mt-2 rounded-2xl border overflow-hidden shrink-0"
@@ -45,7 +58,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
         transition: 'border-color 0.25s',
       }}>
 
-      {/* ── Header — always visible ── */}
+      {/* ── Header ── */}
       <button
         onClick={() => setExpanded(e => !e)}
         className="w-full px-3 py-2 flex items-center gap-2 text-left"
@@ -61,7 +74,6 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
             {rule.name}
           </p>
 
-          {/* Active selection badge */}
           {activeOption && (
             <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
               style={{ background: `${theme.secondary}22`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
@@ -69,11 +81,10 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
             </span>
           )}
 
-          {/* Remaining packs indicator */}
           {action?.type === 'pick_one' && usedSelections.length > 0 && (
             <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
               style={{
-                background: allUsed ? `${theme.border}` : `${theme.secondary}15`,
+                background: allUsed ? theme.border : `${theme.secondary}15`,
                 color: allUsed ? theme.textSecondary : theme.secondary,
                 border: `1px solid ${allUsed ? theme.border : theme.secondary + '44'}`,
               }}>
@@ -81,14 +92,12 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
             </span>
           )}
 
-          {/* Quarry target */}
           {action?.type === 'designate_target' && targetNote && (
             <span className="text-xs font-medium truncate" style={{ color: theme.secondary }}>
               🎯 {targetNote}
             </span>
           )}
 
-          {/* "Pick now" pulse when command phase and no selection yet and packs remain */}
           {needsPick && !allUsed && (
             <motion.span
               animate={{ opacity: [1, 0.35, 1] }}
@@ -118,14 +127,13 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
             <div className="px-3 pb-3 pt-1 border-t space-y-2.5"
               style={{ borderColor: theme.border }}>
 
-              {/* ── PICK ONE (e.g. Hunting Packs / Hyper-Adaptations) ── */}
+              {/* ── PICK ONE ── */}
               {action?.type === 'pick_one' && (
                 <>
                   <div className="flex items-center justify-between pt-0.5">
                     <p className="text-xs" style={{ color: theme.textSecondary }}>
                       {action.prompt}
                     </p>
-                    {/* Once-per-battle remaining count */}
                     {action.options.length > 1 && (
                       <span className="text-xs font-bold shrink-0 ml-2"
                         style={{ color: allUsed ? theme.textSecondary : theme.secondary }}>
@@ -136,52 +144,52 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
 
                   <div className="grid grid-cols-3 gap-1.5">
                     {action.options.map(opt => {
-                      const isSelected = activeSelection === opt.id
+                      const isActive = activeSelection === opt.id
                       const isUsed = usedSelections.includes(opt.id)
-                      // Can reuse via onceBuff (e.g. Logan Grimnar's Howling Onslaught)
-                      const canReuseViaOnceBuff = isUsed && !isSelected && !onceBuffUsed && action.onceBuff
-                      const isDisabled = isUsed && !isSelected && !canReuseViaOnceBuff
+                      const isPending = pendingId === opt.id
+                      // Reusable via Logan's Howling Onslaught
+                      const canReuse = isUsed && !isActive && canUsOnceBuff
+                      const isDisabled = isUsed && !isActive && !canReuse
 
                       return (
                         <button key={opt.id}
                           onClick={() => {
                             if (isDisabled) return
-                            if (canReuseViaOnceBuff) setOnceBuffUsed()
-                            setDetachmentSelection(opt.id)
+                            setPendingId(isPending ? null : opt.id)
                           }}
                           disabled={isDisabled}
                           className="rounded-xl border p-2 text-center transition-all relative"
                           style={{
-                            background: isSelected
-                              ? `${theme.secondary}22`
-                              : isUsed
-                                ? `${theme.border}30`
-                                : theme.surfaceHigh,
-                            borderColor: isSelected
+                            background: isPending
+                              ? `${theme.secondary}30`
+                              : isActive
+                                ? `${theme.secondary}22`
+                                : isUsed
+                                  ? `${theme.border}30`
+                                  : theme.surfaceHigh,
+                            borderColor: isPending
                               ? theme.secondary
-                              : isUsed
-                                ? theme.border
+                              : isActive
+                                ? theme.secondary
                                 : theme.border,
-                            opacity: isDisabled ? 0.45 : 1,
+                            opacity: isDisabled ? 0.4 : 1,
                           }}>
                           <div className="text-base mb-1">{opt.icon}</div>
                           <p className="text-xs font-bold leading-tight"
-                            style={{ color: isSelected ? theme.secondary : isUsed ? theme.textSecondary : theme.textPrimary }}>
+                            style={{ color: isPending || isActive ? theme.secondary : isUsed ? theme.textSecondary : theme.textPrimary }}>
                             {opt.label}
                           </p>
                           <p className="mt-0.5 leading-tight"
                             style={{ color: theme.textSecondary, fontSize: 9 }}>
                             {opt.shortEffect}
                           </p>
-                          {/* "Used" badge */}
-                          {isUsed && !isSelected && (
+                          {isUsed && !isActive && !canReuse && (
                             <span className="absolute top-1 right-1 text-xs font-bold px-1 py-0.5 rounded"
                               style={{ background: theme.border, color: theme.textSecondary, fontSize: 8 }}>
                               ✓
                             </span>
                           )}
-                          {/* "Reuse" hint via onceBuff */}
-                          {canReuseViaOnceBuff && (
+                          {canReuse && !isPending && (
                             <span className="absolute top-1 right-1 text-xs font-bold px-1 py-0.5 rounded"
                               style={{ background: `${theme.primary}22`, color: theme.primary, fontSize: 8 }}>
                               ↺
@@ -192,8 +200,33 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
                     })}
                   </div>
 
-                  {/* Active pack detail */}
-                  {activeOption && (
+                  {/* Pending preview + confirm */}
+                  {pendingOption && (
+                    <div className="rounded-xl p-2.5 space-y-2"
+                      style={{ background: `${theme.secondary}12`, border: `1px solid ${theme.secondary}40` }}>
+                      <div>
+                        <p className="text-xs font-bold" style={{ color: theme.secondary }}>
+                          {pendingOption.icon} {pendingOption.label}
+                          {usedSelections.includes(pendingId) && canUsOnceBuff && (
+                            <span className="ml-2 font-normal" style={{ color: theme.primary }}>
+                              — Howling Onslaught (Logan)
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-xs mt-1 leading-relaxed" style={{ color: theme.textPrimary }}>
+                          {pendingOption.fullEffect}
+                        </p>
+                      </div>
+                      <button onClick={handleConfirm}
+                        className="w-full py-2 rounded-xl text-xs font-black"
+                        style={{ background: theme.secondary, color: theme.bg }}>
+                        Select this Pack →
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Active pack detail (no pending) */}
+                  {activeOption && !pendingOption && (
                     <div className="rounded-xl p-2.5"
                       style={{ background: `${theme.secondary}12`, border: `1px solid ${theme.secondary}30` }}>
                       <div className="flex items-center justify-between gap-2">
@@ -201,7 +234,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
                           {activeOption.icon} {activeOption.label} — Active
                         </p>
                         {isCommandPhase && remainingCount > 0 && (
-                          <button onClick={clearDetachmentSelection}
+                          <button onClick={() => { clearDetachmentSelection(); setPendingId(null) }}
                             className="text-xs font-bold px-2 py-0.5 rounded-lg"
                             style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
                             Change
@@ -219,52 +252,47 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
                     </div>
                   )}
 
-                  {/* All packs used banner */}
-                  {allUsed && !activeOption && (
+                  {/* All used + Logan reuse hint */}
+                  {allUsed && !activeOption && !pendingOption && (
                     <div className="rounded-xl p-2.5 text-center"
                       style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
                       <p className="text-xs font-bold" style={{ color: theme.textSecondary }}>
                         All options used this battle
                       </p>
+                      {canUsOnceBuff && (
+                        <p className="text-xs mt-1" style={{ color: theme.primary }}>
+                          Logan Grimnar: tap any pack above to reuse it once (Howling Onslaught)
+                        </p>
+                      )}
                       {action.onceBuff && onceBuffUsed && (
-                        <p className="text-xs mt-0.5" style={{ color: theme.textSecondary, opacity: 0.7 }}>
+                        <p className="text-xs mt-1" style={{ color: theme.textSecondary, opacity: 0.7 }}>
                           Howling Onslaught already used
                         </p>
                       )}
                     </div>
                   )}
 
-                  {/* Once-per-battle buff */}
-                  {action.onceBuff && (
-                    <div className="rounded-xl p-2.5 flex items-start gap-2"
+                  {/* Logan Howling Onslaught status — only shows if Logan is on field */}
+                  {action.onceBuff && onceBuffAvailable && (
+                    <div className="rounded-xl p-2.5"
                       style={{
-                        background: onceBuffUsed ? `${theme.surfaceHigh}` : `${theme.primary}12`,
+                        background: onceBuffUsed ? theme.surfaceHigh : `${theme.primary}10`,
                         border: `1px solid ${onceBuffUsed ? theme.border : theme.primary + '44'}`,
                         opacity: onceBuffUsed ? 0.5 : 1,
                       }}>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold"
-                          style={{ color: onceBuffUsed ? theme.textSecondary : theme.primary }}>
-                          {action.onceBuff.label}
-                          {onceBuffUsed && ' — Used'}
-                        </p>
-                        <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary }}>
-                          {action.onceBuff.description}
-                        </p>
-                      </div>
-                      {!onceBuffUsed && (
-                        <button onClick={setOnceBuffUsed}
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold shrink-0"
-                          style={{ background: theme.primary, color: '#1a1f2e' }}>
-                          Use
-                        </button>
-                      )}
+                      <p className="text-xs font-bold"
+                        style={{ color: onceBuffUsed ? theme.textSecondary : theme.primary }}>
+                        {action.onceBuff.label}{onceBuffUsed ? ' — Used' : ' — Available'}
+                      </p>
+                      <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary }}>
+                        {action.onceBuff.description}
+                      </p>
                     </div>
                   )}
                 </>
               )}
 
-              {/* ── DESIGNATE TARGET (e.g. Pack's Quarry) ── */}
+              {/* ── DESIGNATE TARGET ── */}
               {action?.type === 'designate_target' && (
                 <>
                   <p className="text-xs pt-0.5" style={{ color: theme.textSecondary }}>
@@ -310,7 +338,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme }) 
                 </>
               )}
 
-              {/* ── PASSIVE — just show full rule description ── */}
+              {/* ── PASSIVE ── */}
               {!action && (
                 <p className="text-xs leading-relaxed pt-0.5" style={{ color: theme.textSecondary }}>
                   {rule.description}

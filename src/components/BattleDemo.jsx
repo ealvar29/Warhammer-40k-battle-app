@@ -845,6 +845,8 @@ export default function BattleDemo({ theme, onNavigate }) {
   const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const activePhase = PHASES[activePhaseIdx]
 
+  const hasBjorn = units.some(u => u.id === 'bjorn')
+
   const activeAdaptationBonus = (() => {
     const action = detachment?.commandPhaseAction
     if (!action || action.type !== 'pick_one') return null
@@ -933,18 +935,19 @@ export default function BattleDemo({ theme, onNavigate }) {
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5">
             <span className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>CP</span>
+            <span className="text-sm font-black" style={{ color: cp > 0 ? theme.secondary : theme.textSecondary }}>{cp}</span>
             <div className="flex gap-1">
               {[...Array(6)].map((_, i) => (
                 <motion.div key={i}
                   initial={false}
-                  animate={{ scale: i < cp ? 1 : 0.7, opacity: i < cp ? 1 : 0.35 }}
+                  animate={{ scale: i < Math.min(cp, 6) ? 1 : 0.7, opacity: i < Math.min(cp, 6) ? 1 : 0.35 }}
                   transition={{ duration: 0.2 }}
                   className="w-2.5 h-2.5 rounded-sm"
-                  style={{ background: i < cp ? theme.secondary : theme.border }}
+                  style={{ background: i < Math.min(cp, 6) ? theme.secondary : theme.border }}
                 />
               ))}
             </div>
-            <motion.button whileTap={{ scale: 0.85 }} onClick={() => setCp(Math.min(6, cp + 1))}
+            <motion.button whileTap={{ scale: 0.85 }} onClick={() => setCp(Math.min(12, cp + 1))}
               className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center"
               style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>+</motion.button>
             <motion.button whileTap={{ scale: 0.85 }} onClick={() => setCp(Math.max(0, cp - 1))}
@@ -1049,6 +1052,34 @@ export default function BattleDemo({ theme, onNavigate }) {
                   <TipCard id={`tip_battle_${activePhase.id}`} body={PHASE_TIPS[activePhase.id]} theme={theme} />
                 </div>
               )}
+
+              {/* CP gains reminder — Command Phase only */}
+              {activePhase.id === 'command' && (
+                <div className="mt-2 rounded-xl px-3 py-2.5 space-y-1.5"
+                  style={{ background: `${theme.secondary}0d`, border: `1px solid ${theme.secondary}25` }}>
+                  <p className="text-xs font-bold" style={{ color: theme.secondary }}>CP gains this phase</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs" style={{ color: theme.textSecondary }}>+1 Standard (Command Phase)</p>
+                    <button onClick={() => setCp(Math.min(12, cp + 1))}
+                      className="text-xs px-2 py-0.5 rounded-lg font-bold"
+                      style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
+                      +1
+                    </button>
+                  </div>
+                  {hasBjorn && (
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs" style={{ color: theme.textSecondary }}>
+                        +1 Bjorn — Ancient Tactician
+                      </p>
+                      <button onClick={() => setCp(Math.min(12, cp + 1))}
+                        className="text-xs px-2 py-0.5 rounded-lg font-bold"
+                        style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
+                        +1
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
 
@@ -1136,6 +1167,7 @@ export default function BattleDemo({ theme, onNavigate }) {
             detachment={detachment}
             activePhase={activePhase}
             theme={theme}
+            onceBuffAvailable={units.some(u => u.id === 'loganGrimnar')}
           />
 
           {/* Phase ability panel — unit abilities active this phase */}
