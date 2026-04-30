@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useCrusadeStore, getRank, getNextRank } from '../store/crusadeStore'
+import TipCard from '../components/TipCard'
 import { battleHonours } from '../data/crusade/battleHonours'
 import { battleScars } from '../data/crusade/battleScars'
 import { agendas as AGENDAS } from '../data/crusade/agendas'
@@ -347,7 +348,9 @@ function UnitCrusadeCard({ unit, orderId, onRollHonour, onRollScar, theme }) {
 
           {/* Battle Honours */}
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <TipCard id="tip_honours" theme={theme}
+              body="Roll for a Battle Honour when a unit reaches a new rank milestone. It's a permanent upgrade — or type one in manually from your codex." />
+            <div className="flex items-center justify-between mb-2 mt-2">
               <p className="text-xs font-bold" style={{ color: theme.secondary }}>★ Battle Honours</p>
               <div className="flex gap-1.5">
                 <button onClick={() => onRollHonour(unit)}
@@ -388,7 +391,9 @@ function UnitCrusadeCard({ unit, orderId, onRollHonour, onRollScar, theme }) {
 
           {/* Battle Scars */}
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <TipCard id="tip_scars" theme={theme}
+              body="Roll a Battle Scar when a unit is destroyed in battle. These are permanent penalties. Use the 'Repair and Recuperate' RP action to remove one between games." />
+            <div className="flex items-center justify-between mb-2 mt-2">
               <p className="text-xs font-bold" style={{ color: theme.hpLow }}>⚠ Battle Scars</p>
               <div className="flex gap-1.5">
                 <button onClick={() => onRollScar(unit)}
@@ -479,6 +484,9 @@ function AgendasTab({ order, theme }) {
 
   return (
     <div className="px-4 py-4 space-y-3">
+      <TipCard id="tip_agendas" theme={theme}
+        body="Pick up to 3 Agendas before you play. Complete the agenda's goal during the battle to earn bonus XP on top of the standard award." />
+
       <div className="flex items-center justify-between">
         <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>
           Pre-Battle Agendas
@@ -488,10 +496,6 @@ function AgendasTab({ order, theme }) {
           {active.length} / 3 selected
         </span>
       </div>
-
-      <p className="text-xs" style={{ color: theme.textSecondary }}>
-        Pick up to 3 agendas before your battle. Completing them grants bonus XP to qualifying units.
-      </p>
 
       {active.length > 0 && (
         <div className="rounded-2xl p-3 space-y-2" style={{ background: `${theme.secondary}10`, border: `1px solid ${theme.secondary}30` }}>
@@ -563,6 +567,9 @@ function RPLogTab({ order, onSpend, theme }) {
 
   return (
     <div className="px-4 py-4 space-y-3">
+      <TipCard id="tip_rp" theme={theme}
+        body="You earn 1 Requisition Point after every battle. Spend them between games to upgrade your force — resupply units, recruit reinforcements, or grant relics." />
+
       {/* RP Balance */}
       <div className="rounded-2xl p-4 flex items-center justify-between"
         style={{ background: `${theme.secondary}12`, border: `1px solid ${theme.secondary}30` }}>
@@ -793,6 +800,8 @@ export default function CrusadeScreen({ theme }) {
               </div>
             )}
           </div>
+          <TipCard id="tip_sync" theme={theme}
+            body="Your 6-character code keeps this roster backed up in the cloud. Tap the code to copy it — use it on another device to load the same roster." />
         </div>
 
         {/* Tabs */}
@@ -819,6 +828,8 @@ export default function CrusadeScreen({ theme }) {
       <div className="flex-1 overflow-y-auto">
         {tab === 'roster' && (
           <div className="px-4 py-4 space-y-2">
+            <TipCard id="tip_roster" theme={theme}
+              body="Your Order of Battle is your permanent campaign roster. Units earn XP after each battle and level up from Battle Ready all the way to Legendary." />
             {activeOrder.units.length === 0 && (
               <p className="text-xs text-center py-8" style={{ color: theme.textSecondary }}>
                 No units yet. Tap + Unit to add your first warrior.

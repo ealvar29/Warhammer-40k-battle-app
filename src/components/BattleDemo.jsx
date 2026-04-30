@@ -12,6 +12,7 @@ import MatchupSheet from './MatchupSheet'
 import ImportListSheet from './ImportListSheet'
 import PhaseAbilityPanel from './PhaseAbilityPanel'
 import DetachmentRulePanel from './DetachmentRulePanel'
+import TipCard from './TipCard'
 import MathHammerSheet from './MathHammerSheet'
 import KeywordChip from './KeywordChip'
 
@@ -737,6 +738,14 @@ const PHASE_HINTS = {
   fight:    'Pile in · Fight with melee weapons · No Retreat',
 }
 
+const PHASE_TIPS = {
+  command:  'The Command Phase is your most powerful window — spend CP on Stratagems before anything moves. Check your detachment rule here too; many only trigger in this phase.',
+  movement: 'Units that Advance can\'t shoot (unless a rule says otherwise). Falling Back lets you escape combat but you can\'t shoot or charge afterward.',
+  shooting: 'Declare all targets before rolling any dice. If a unit targets multiple enemies, resolve each target one at a time, fully, before moving to the next.',
+  charge:   'Charge rolls are 2D6 — you need to beat the distance to your target. If you fail, the unit stays put. Only declare a charge if you\'re within 12".',
+  fight:    'Units must fight in the order they were charged (the chargers go first). Models pile in up to 3" before attacking — use this to bring more weapons into range.',
+}
+
 // ── Phase Action Bar (your turn + opponent's turn) ────────────────────────────
 function PhaseActionBar({ isYourTurn, stratCount, reactionCount, theme }) {
   const count = isYourTurn ? stratCount : reactionCount
@@ -1035,6 +1044,11 @@ export default function BattleDemo({ theme, onNavigate }) {
                   <p className="text-xs" style={{ color: theme.textSecondary }}>Available</p>
                 </div>
               </div>
+              {PHASE_TIPS[activePhase.id] && (
+                <div className="mt-2">
+                  <TipCard id={`tip_battle_${activePhase.id}`} body={PHASE_TIPS[activePhase.id]} theme={theme} />
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
 
