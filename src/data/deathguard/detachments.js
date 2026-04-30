@@ -179,23 +179,28 @@ export const dgDetachments = {
     },
     commandPhaseAction: {
       type: 'pick_one',
+      perRound: true,
+      confirmLabel: 'Select this Plague →',
       label: 'Active Plague',
       prompt: 'You may change your active Plague at the start of this battle round:',
       options: [
         {
           id: 'skullsquirmBlight',
+          icon: '🪱',
           label: 'Skullsquirm Blight',
           shortEffect: '−1 to Hit rolls for Afflicted enemies',
           fullEffect: 'Each time a model in this unit (Afflicted enemy) makes an attack, subtract 1 from the Hit roll.',
         },
         {
           id: 'rattlejointAgue',
+          icon: '🦴',
           label: 'Rattlejoint Ague',
           shortEffect: 'Worsen Save by 1 for Afflicted enemies',
           fullEffect: 'Worsen the Save characteristic of models in this unit (Afflicted enemy) by 1.',
         },
         {
           id: 'scabrousSoulrot',
+          icon: '☣️',
           label: 'Scabrous Soulrot',
           shortEffect: 'Worsen Move/Ld/OC by 1 for Afflicted enemies',
           fullEffect: 'Worsen the Move, Leadership, and Objective Control characteristics of models in this unit (Afflicted enemy) by 1 (OC minimum 1).',
