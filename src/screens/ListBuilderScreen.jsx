@@ -656,7 +656,7 @@ export default function ListBuilderScreen({ theme }) {
       {/* ── Faction picker sheet ── */}
       <AnimatePresence>
         {showFactions && (
-          <motion.div className="fixed inset-0 z-50 flex items-end justify-center"
+          <motion.div className="fixed inset-0 z-50 flex items-end justify-center md:pl-56"
             initial={{ backgroundColor: 'rgba(0,0,0,0)' }} animate={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
             exit={{ backgroundColor: 'rgba(0,0,0,0)' }} onClick={() => setShowFactions(false)}>
             <motion.div className="w-full max-w-lg rounded-t-3xl overflow-hidden"
@@ -727,7 +727,7 @@ export default function ListBuilderScreen({ theme }) {
       {/* ── Saved lists sheet ── */}
       <AnimatePresence>
         {showSaved && (
-          <motion.div className="fixed inset-0 z-50 flex items-end justify-center"
+          <motion.div className="fixed inset-0 z-50 flex items-end justify-center md:pl-56"
             initial={{ backgroundColor: 'rgba(0,0,0,0)' }} animate={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
             exit={{ backgroundColor: 'rgba(0,0,0,0)' }} onClick={() => setShowSaved(false)}>
             <motion.div className="w-full max-w-lg rounded-t-3xl overflow-hidden"
@@ -780,7 +780,7 @@ export default function ListBuilderScreen({ theme }) {
       {/* ── Save sheet ── */}
       <AnimatePresence>
         {showSaveSheet && (
-          <motion.div className="fixed inset-0 z-50 flex items-end justify-center"
+          <motion.div className="fixed inset-0 z-50 flex items-end justify-center md:pl-56"
             initial={{ backgroundColor: 'rgba(0,0,0,0)' }} animate={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
             exit={{ backgroundColor: 'rgba(0,0,0,0)' }} onClick={() => setShowSaveSheet(false)}>
             <motion.div className="w-full max-w-lg rounded-t-3xl p-5 pb-8"
