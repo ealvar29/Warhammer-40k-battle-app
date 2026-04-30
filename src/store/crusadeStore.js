@@ -20,12 +20,29 @@ export function getNextRank(xp) {
 
 export { RANKS }
 
-// Generates a 6-char uppercase code, displayed to users as XXX-XXX
 function generateSyncCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
   return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
 
+function blankOrder(id, name, faction, detachmentId) {
+  return {
+    id,
+    name,
+    faction: faction || 'spacewolves',
+    detachmentId: detachmentId || null,
+    requisitionPoints: 5,
+    supplyLimit: 50,
+    battlesPlayed: 0,
+    battlesWon: 0,
+    crusadePoints: 0,
+    agendas: [],   // active agenda ids for the next battle
+    rpLog: [],     // [{ id, actionId, actionName, cost, note, date }]
+    units: [],
+  }
+}
+
+// Seed order for existing users — will be in localStorage already
 const initialOrder = {
   id: 'order_sw_1',
   name: "Eduardo's Space Wolves",
@@ -33,10 +50,11 @@ const initialOrder = {
   detachmentId: 'sagaOfTheGreatWolf',
   requisitionPoints: 5,
   supplyLimit: 50,
-  supplyUsed: 0,
   battlesPlayed: 0,
   battlesWon: 0,
   crusadePoints: 0,
+  agendas: [],
+  rpLog: [],
   units: [
     {
       id: 'crusade_ragnar',
@@ -83,32 +101,48 @@ export const useCrusadeStore = create(
       orders: [initialOrder],
       activeOrderId: 'order_sw_1',
 
-      // ── Cloud sync state ──
+      // ── Cloud sync ──
       syncCode: generateSyncCode(),
       lastSynced: null,
-      syncStatus: 'idle', // 'idle' | 'syncing' | 'success' | 'error'
+      syncStatus: 'idle',
       syncError: null,
 
       getActiveOrder: () => {
         const s = get()
-        return s.orders.find(o => o.id === s.activeOrderId)
+        return s.orders.find(o => o.id === s.activeOrderId) || null
       },
 
       setActiveOrder: (id) => set({ activeOrderId: id }),
 
-      addUnit: (orderId, unit) => set((s) => ({
+      // ── Roster management ──
+
+      createOrder: (name, faction, detachmentId) => {
+        const id = `order_${Date.now()}`
+        const order = blankOrder(id, name, faction, detachmentId)
+        set(s => ({ orders: [...s.orders, order], activeOrderId: id }))
+      },
+
+      deleteOrder: (orderId) => set(s => {
+        const remaining = s.orders.filter(o => o.id !== orderId)
+        const newActiveId = remaining.length > 0 ? remaining[0].id : null
+        return { orders: remaining, activeOrderId: newActiveId }
+      }),
+
+      // ── Unit actions ──
+
+      addUnit: (orderId, unit) => set(s => ({
         orders: s.orders.map(o =>
           o.id === orderId ? { ...o, units: [...o.units, unit] } : o
         ),
       })),
 
-      removeUnit: (orderId, unitId) => set((s) => ({
+      removeUnit: (orderId, unitId) => set(s => ({
         orders: s.orders.map(o =>
           o.id === orderId ? { ...o, units: o.units.filter(u => u.id !== unitId) } : o
         ),
       })),
 
-      addXp: (orderId, unitId, amount) => set((s) => ({
+      addXp: (orderId, unitId, amount) => set(s => ({
         orders: s.orders.map(o =>
           o.id !== orderId ? o : {
             ...o,
@@ -119,7 +153,7 @@ export const useCrusadeStore = create(
         ),
       })),
 
-      addBattleHonour: (orderId, unitId, honour) => set((s) => ({
+      addBattleHonour: (orderId, unitId, honour) => set(s => ({
         orders: s.orders.map(o =>
           o.id !== orderId ? o : {
             ...o,
@@ -130,7 +164,18 @@ export const useCrusadeStore = create(
         ),
       })),
 
-      addBattleScar: (orderId, unitId, scar) => set((s) => ({
+      removeBattleHonour: (orderId, unitId, index) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : {
+            ...o,
+            units: o.units.map(u =>
+              u.id !== unitId ? u : { ...u, battleHonours: u.battleHonours.filter((_, i) => i !== index) }
+            ),
+          }
+        ),
+      })),
+
+      addBattleScar: (orderId, unitId, scar) => set(s => ({
         orders: s.orders.map(o =>
           o.id !== orderId ? o : {
             ...o,
@@ -141,7 +186,29 @@ export const useCrusadeStore = create(
         ),
       })),
 
-      updateNotes: (orderId, unitId, notes) => set((s) => ({
+      removeBattleScar: (orderId, unitId, index) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : {
+            ...o,
+            units: o.units.map(u =>
+              u.id !== unitId ? u : { ...u, battleScars: u.battleScars.filter((_, i) => i !== index) }
+            ),
+          }
+        ),
+      })),
+
+      addRelic: (orderId, unitId, relic) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : {
+            ...o,
+            units: o.units.map(u =>
+              u.id !== unitId ? u : { ...u, relics: [...(u.relics || []), relic] }
+            ),
+          }
+        ),
+      })),
+
+      updateNotes: (orderId, unitId, notes) => set(s => ({
         orders: s.orders.map(o =>
           o.id !== orderId ? o : {
             ...o,
@@ -150,42 +217,72 @@ export const useCrusadeStore = create(
         ),
       })),
 
-      addUnitFromBattle: (orderId, unit) => set((s) => {
+      addUnitFromBattle: (orderId, unit) => set(s => {
         const order = s.orders.find(o => o.id === orderId)
         if (!order) return s
-        const alreadyExists = order.units.some(u => u.name.toLowerCase() === unit.name.toLowerCase())
-        if (alreadyExists) return s
+        if (order.units.some(u => u.name.toLowerCase() === unit.name.toLowerCase())) return s
         const newUnit = {
           id: `crusade_${unit.id}_${Date.now()}`,
           name: unit.name,
           unitType: unit.type || unit.category || 'Infantry',
           powerRating: unit.powerRating || 1,
-          xp: 0,
-          battlesPlayed: 0,
-          battleHonours: [],
-          battleScars: [],
-          relics: [],
-          notes: '',
+          xp: 0, battlesPlayed: 0,
+          battleHonours: [], battleScars: [], relics: [], notes: '',
         }
-        return {
-          orders: s.orders.map(o =>
-            o.id === orderId ? { ...o, units: [...o.units, newUnit] } : o
-          ),
-        }
+        return { orders: s.orders.map(o => o.id === orderId ? { ...o, units: [...o.units, newUnit] } : o) }
       }),
 
-      recordBattle: (orderId, won) => set((s) => ({
+      recordBattle: (orderId, won) => set(s => ({
         orders: s.orders.map(o =>
           o.id !== orderId ? o : {
             ...o,
             battlesPlayed: o.battlesPlayed + 1,
             battlesWon: won ? o.battlesWon + 1 : o.battlesWon,
-            requisitionPoints: Math.min(o.requisitionPoints + 1, 5),
+            requisitionPoints: o.requisitionPoints + 1,
           }
         ),
       })),
 
-      // ── Sync actions ──
+      // ── Agendas ──
+
+      setOrderAgendas: (orderId, agendaIds) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : { ...o, agendas: agendaIds }
+        ),
+      })),
+
+      // ── Requisition Points ──
+
+      spendRP: (orderId, action, note) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : {
+            ...o,
+            requisitionPoints: Math.max(0, o.requisitionPoints - action.cost),
+            rpLog: [
+              {
+                id: `rp_${Date.now()}`,
+                actionId: action.id,
+                actionName: action.name,
+                cost: action.cost,
+                note: note || '',
+                date: new Date().toISOString(),
+              },
+              ...(o.rpLog || []),
+            ],
+          }
+        ),
+      })),
+
+      adjustRP: (orderId, delta) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : {
+            ...o,
+            requisitionPoints: Math.max(0, o.requisitionPoints + delta),
+          }
+        ),
+      })),
+
+      // ── Cloud sync ──
 
       syncToCloud: async () => {
         const { syncCode, orders, activeOrderId } = get()
@@ -199,7 +296,6 @@ export const useCrusadeStore = create(
         }
       },
 
-      // Pull from cloud using any code — updates local data AND adopts that code
       syncFromCloud: async (code) => {
         const cleanCode = code.replace(/-/g, '').toUpperCase().trim()
         if (cleanCode.length !== 6) {
