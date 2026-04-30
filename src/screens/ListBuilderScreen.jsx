@@ -286,6 +286,7 @@ export default function ListBuilderScreen({ theme }) {
 
   return (
     <div className="flex flex-col h-full" style={{ background: theme.bg }}>
+      <div className="flex flex-col flex-1 w-full max-w-2xl mx-auto min-h-0">
 
       {/* ── Header ── */}
       <div className="px-4 py-3 border-b shrink-0 flex items-center gap-3"
@@ -649,6 +650,8 @@ export default function ListBuilderScreen({ theme }) {
           </div>
         )}
       </div>
+
+      </div>{/* end centered column */}
 
       {/* ── Faction picker sheet ── */}
       <AnimatePresence>
