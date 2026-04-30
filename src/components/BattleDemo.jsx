@@ -859,7 +859,7 @@ export default function BattleDemo({ theme, onNavigate }) {
   } = store
 
   const crusadeStore = useCrusadeStore()
-  const isCrusadeMatch = crusadeStore.getActiveOrder()?.faction === faction
+  const isCrusadeMatch = store.crusadeBattle === true
 
   const [activePhaseIdx, setActivePhaseIdx] = useState(0)
   const [isYourTurn, setIsYourTurn] = useState(true)

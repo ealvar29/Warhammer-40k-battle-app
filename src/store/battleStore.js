@@ -20,6 +20,7 @@ export const useBattleStore = create(
       cpGainedRounds: [], // array of round numbers where command-phase CP was already claimed
       unitStates: {}, // { [unitId]: { currentWounds, attachedLeaderId } }
       battleActive: false,
+      crusadeBattle: false,
       vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
       warlordUnitId: null,
       detachmentState: { activeSelection: null, usedSelections: [], targetNote: '', onceBuffUsed: false },
@@ -57,6 +58,7 @@ export const useBattleStore = create(
 
       // ── Battle actions ─────────────────────────────────────────────
       startBattle: () => set({ battleActive: true, turn: 1, isYourTurn: true, activePhaseIdx: 0 }),
+      setCrusadeBattle: (val) => set({ crusadeBattle: val }),
 
       resetBattle: () => set({
         battleActive: false, turn: 1, isYourTurn: true, activePhaseIdx: 0,
@@ -66,6 +68,7 @@ export const useBattleStore = create(
         detachmentState: { activeSelection: null, usedSelections: [], targetNote: '', onceBuffUsed: false },
         cpLog: [],
         cpGainedRounds: [],
+        crusadeBattle: false,
       }),
 
       setWarlord: (unitId) => set((s) => ({
@@ -169,6 +172,7 @@ export const useBattleStore = create(
         cp: state.cp,
         unitStates: state.unitStates,
         battleActive: state.battleActive,
+        crusadeBattle: state.crusadeBattle,
         vpScores: state.vpScores,
         warlordUnitId: state.warlordUnitId,
         detachmentState: state.detachmentState,
