@@ -13,6 +13,7 @@ import ImportListSheet from './ImportListSheet'
 import PhaseAbilityPanel from './PhaseAbilityPanel'
 import DetachmentRulePanel from './DetachmentRulePanel'
 import TipCard from './TipCard'
+import { PHASE_EFFECTS } from '../data/phaseEffects'
 import MathHammerSheet from './MathHammerSheet'
 import KeywordChip from './KeywordChip'
 
@@ -845,7 +846,9 @@ export default function BattleDemo({ theme, onNavigate }) {
   const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const activePhase = PHASES[activePhaseIdx]
 
-  const hasBjorn = units.some(u => u.id === 'bjorn')
+  const activeUnitIds = new Set(units.map(u => u.id))
+  const activePhaseEffects = PHASE_EFFECTS.filter(e => activeUnitIds.has(e.unitId))
+  const hasBjorn = activeUnitIds.has('bjorn')
 
   const activeAdaptationBonus = (() => {
     const action = detachment?.commandPhaseAction
@@ -1053,33 +1056,72 @@ export default function BattleDemo({ theme, onNavigate }) {
                 </div>
               )}
 
-              {/* CP gains reminder — Command Phase only */}
-              {activePhase.id === 'command' && (
-                <div className="mt-2 rounded-xl px-3 py-2.5 space-y-1.5"
-                  style={{ background: `${theme.secondary}0d`, border: `1px solid ${theme.secondary}25` }}>
-                  <p className="text-xs font-bold" style={{ color: theme.secondary }}>CP gains this phase</p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs" style={{ color: theme.textSecondary }}>+1 Standard (Command Phase)</p>
-                    <button onClick={() => setCp(Math.min(12, cp + 1))}
-                      className="text-xs px-2 py-0.5 rounded-lg font-bold"
-                      style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
-                      +1
-                    </button>
-                  </div>
-                  {hasBjorn && (
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs" style={{ color: theme.textSecondary }}>
-                        +1 Bjorn — Ancient Tactician
-                      </p>
-                      <button onClick={() => setCp(Math.min(12, cp + 1))}
-                        className="text-xs px-2 py-0.5 rounded-lg font-bold"
-                        style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
-                        +1
-                      </button>
+              {/* CP / phase effects — contextual per phase, data-driven */}
+              {(() => {
+                const commandGains = activePhaseEffects.filter(e => e.phase === 'command' && e.type === 'cpGain')
+                const commandConditional = activePhaseEffects.filter(e => e.phase === 'command' && (e.type === 'cpConditional' || e.type === 'cpFree'))
+                const fightKills = activePhaseEffects.filter(e => e.phase === 'fight' && e.type === 'cpKill')
+
+                if (activePhase.id === 'command' && (commandGains.length > 0 || commandConditional.length > 0)) {
+                  return (
+                    <div className="mt-2 rounded-xl px-3 py-2.5 space-y-2"
+                      style={{ background: `${theme.secondary}0d`, border: `1px solid ${theme.secondary}25` }}>
+                      <p className="text-xs font-bold" style={{ color: theme.secondary }}>CP gains this phase</p>
+
+                      {/* Standard gain */}
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs" style={{ color: theme.textSecondary }}>+1 Standard (Command Phase)</p>
+                        <button onClick={() => setCp(Math.min(12, cp + 1))}
+                          className="text-xs px-2 py-0.5 rounded-lg font-bold"
+                          style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
+                          +1
+                        </button>
+                      </div>
+
+                      {/* Guaranteed gains from units */}
+                      {commandGains.map(e => (
+                        <div key={e.unitId} className="flex items-center justify-between">
+                          <p className="text-xs" style={{ color: theme.textSecondary }}>
+                            +1 {e.unitName} — {e.abilityName}
+                          </p>
+                          <button onClick={() => setCp(Math.min(12, cp + 1))}
+                            className="text-xs px-2 py-0.5 rounded-lg font-bold"
+                            style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
+                            +1
+                          </button>
+                        </div>
+                      ))}
+
+                      {/* Conditional / free stratagem reminders */}
+                      {commandConditional.map(e => (
+                        <div key={e.unitId} className="pt-1" style={{ borderTop: `1px solid ${theme.border}` }}>
+                          <p className="text-xs font-bold" style={{ color: e.type === 'cpFree' ? theme.cpColor : theme.secondary }}>
+                            {e.unitName} — {e.abilityName}
+                          </p>
+                          <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{e.note}</p>
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
-              )}
+                  )
+                }
+
+                if (activePhase.id === 'fight' && fightKills.length > 0) {
+                  return (
+                    <div className="mt-2 rounded-xl px-3 py-2.5 space-y-2"
+                      style={{ background: `${theme.secondary}0d`, border: `1px solid ${theme.secondary}25` }}>
+                      <p className="text-xs font-bold" style={{ color: theme.secondary }}>CP on kill</p>
+                      {fightKills.map(e => (
+                        <div key={e.unitId}>
+                          <p className="text-xs font-bold" style={{ color: theme.textPrimary }}>{e.unitName} — {e.abilityName}</p>
+                          <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{e.note}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                }
+
+                return null
+              })()}
             </motion.div>
           </AnimatePresence>
 
