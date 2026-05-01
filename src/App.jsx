@@ -7,6 +7,7 @@ import BattleDemo from './components/BattleDemo'
 import DeployScreen from './screens/DeployScreen'
 import CrusadeScreen from './screens/CrusadeScreen'
 import ListBuilderScreen from './screens/ListBuilderScreen'
+import UnitLookupOverlay from './components/UnitLookupOverlay'
 import { useBattleStore } from './store/battleStore'
 import { parseShareUrl } from './utils/armyShare'
 import { buildUnitsFromIds, findDetachment, FACTION_META } from './data/factionRegistry'
@@ -18,6 +19,7 @@ const NAV_TABS = [
   { id: 'battle',  label: 'Battle',  icon: '⚔️' },
   { id: 'lists',   label: 'Lists',   icon: '📋' },
   { id: 'crusade', label: 'Crusade', icon: '📜' },
+  { id: 'search',  label: 'Search',  icon: '🔍', isOverlay: true },
 ]
 
 const TAB_ORDER = ['home', 'battle', 'lists', 'crusade', 'armyBuilder', 'deploy']
@@ -30,7 +32,8 @@ function slideDir(from, to) {
 export default function App() {
   const [screen, setScreen] = useState('home')
   const [prevScreen, setPrevScreen] = useState('home')
-  const [pendingImport, setPendingImport] = useState(null) // decoded army payload
+  const [pendingImport, setPendingImport] = useState(null)
+  const [showLookup, setShowLookup] = useState(false) // decoded army payload
   const battleActive = useBattleStore(s => s.battleActive)
   const setOpponentArmy = useBattleStore(s => s.setOpponentArmy)
 
@@ -71,6 +74,7 @@ export default function App() {
 
   const showBottomNav = screen !== 'armyBuilder'
   const activeTabId = screen === 'armyBuilder' || screen === 'calc' ? 'battle' : screen
+  const navTabsDesktop = NAV_TABS.filter(t => !t.isOverlay)
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: theme.bg }}>
@@ -134,6 +138,21 @@ export default function App() {
         })()}
       </AnimatePresence>
 
+      {/* ── Unit Lookup Overlay ── */}
+      <AnimatePresence>
+        {showLookup && (
+          <motion.div
+            className="fixed inset-0 z-[70] flex flex-col md:pl-56"
+            style={{ background: theme.bg }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}>
+            <UnitLookupOverlay theme={theme} onClose={() => setShowLookup(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Desktop sidebar ── */}
       <aside
         className="hidden md:flex flex-col w-56 shrink-0 border-r"
@@ -152,7 +171,7 @@ export default function App() {
 
         {/* Nav items */}
         <nav className="flex-1 p-2 space-y-0.5">
-          {NAV_TABS.map(tab => {
+          {navTabsDesktop.map(tab => {
             const isActive = activeTabId === tab.id
             const hasBadge = tab.id === 'battle' && battleActive
             return (
@@ -185,6 +204,18 @@ export default function App() {
             )
           })}
         </nav>
+
+        {/* Search button */}
+        <div className="px-2 pb-2">
+          <motion.button
+            onClick={() => setShowLookup(true)}
+            whileTap={{ scale: 0.97 }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl"
+            style={{ background: 'transparent', border: `1px solid ${theme.border}` }}>
+            <span className="text-base leading-none">🔍</span>
+            <span className="text-sm font-bold" style={{ color: theme.textSecondary }}>Unit Lookup</span>
+          </motion.button>
+        </div>
 
         {/* Footer note */}
         <div className="px-4 py-4 border-t" style={{ borderColor: theme.border }}>
@@ -224,15 +255,17 @@ export default function App() {
             }}
           >
             {NAV_TABS.map(tab => {
-              const isActive = activeTabId === tab.id
+              const isActive = !tab.isOverlay && activeTabId === tab.id
               const hasBadge = tab.id === 'battle' && battleActive
               return (
                 <motion.button
                   key={tab.id}
-                  onClick={() => tab.id === 'battle'
-                    ? navigate(battleActive ? 'battle' : 'armyBuilder')
-                    : navigate(tab.id)
-                  }
+                  onClick={() => {
+                    if (tab.isOverlay) { setShowLookup(true); return }
+                    tab.id === 'battle'
+                      ? navigate(battleActive ? 'battle' : 'armyBuilder')
+                      : navigate(tab.id)
+                  }}
                   whileTap={{ scale: 0.88 }}
                   className="flex flex-col items-center justify-center py-2.5 gap-0.5 relative"
                   style={{
