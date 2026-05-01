@@ -16,22 +16,21 @@ const CORE_STRATAGEMS = [
 ]
 
 const PHASE_SUMMARY = [
-  { id: 'command', icon: '⚜️', label: 'Command', steps: ['Gain +1 CP', 'Resolve Battleshock for shaken units', 'Use Command phase stratagems'] },
-  { id: 'movement', icon: '🏃', label: 'Movement', steps: ['Move all eligible units', 'Advance: add D6" but no shooting this turn', 'Fall Back: disengage, but no shooting/charging', 'Arrive units from Strategic Reserves (9"+ away)'] },
-  { id: 'shooting', icon: '🎯', label: 'Shooting', steps: ['Select eligible units (not Advanced/Fell Back, not in Engagement Range)', 'Pick targets within range and line of sight', 'Roll hits → wounds → saves', 'Damage applies per model — no spill-over (except Devastating Wounds)'] },
-  { id: 'charge', icon: '⚔️', label: 'Charge', steps: ['Declare charge against units within 12"', 'Roll 2D6 — must equal or exceed the distance', 'Charging units get +1 to hit in Fight phase', 'Opponent may Fire Overwatch (1 CP) or Heroic Intervention (1 CP)'] },
-  { id: 'fight', icon: '💀', label: 'Fight', steps: ['Charging units fight first', 'Then players alternate selecting units', 'Models in Engagement Range (1" / 5" vertically) can fight', 'Destroyed models fight before removal if they charged'] },
+  { id: 'command',  icon: '⚜️', label: 'Command',  steps: ['Gain +1 CP', 'Resolve Battleshock for shaken units', 'Use Command phase stratagems'] },
+  { id: 'movement', icon: '🏃', label: 'Movement',  steps: ['Move all eligible units', 'Advance: add D6" but no shooting this turn', 'Fall Back: disengage, but no shooting/charging', 'Arrive units from Strategic Reserves (9"+ away)'] },
+  { id: 'shooting', icon: '🎯', label: 'Shooting',  steps: ['Select eligible units (not Advanced/Fell Back, not in Engagement Range)', 'Pick targets within range and line of sight', 'Roll hits → wounds → saves', 'Damage applies per model — no spill-over (except Devastating Wounds)'] },
+  { id: 'charge',   icon: '⚔️', label: 'Charge',   steps: ['Declare charge against units within 12"', 'Roll 2D6 — must equal or exceed the distance', 'Charging units get +1 to hit in Fight phase', 'Opponent may Fire Overwatch (1 CP) or Heroic Intervention (1 CP)'] },
+  { id: 'fight',    icon: '💀', label: 'Fight',    steps: ['Charging units fight first', 'Then players alternate selecting units', 'Models in Engagement Range (1" / 5" vertically) can fight', 'Destroyed models fight before removal if they charged'] },
 ]
 
 const SHEET_SPRING = { type: 'spring', stiffness: 340, damping: 32 }
 
-// ── Bottom Sheet Wrapper ──────────────────────────────────────────────────────
 function BottomSheet({ onClose, children }) {
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-end justify-center"
       initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
-      animate={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
+      animate={{ backgroundColor: 'rgba(0,0,0,0.8)' }}
       exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
       onClick={onClose}
     >
@@ -50,6 +49,17 @@ function BottomSheet({ onClose, children }) {
   )
 }
 
+// Thin ornamental divider like the chrome lines on the box art
+function Divider({ color }) {
+  return (
+    <div className="flex items-center gap-2 w-full">
+      <div className="flex-1 h-px" style={{ background: `linear-gradient(to right, transparent, ${color}60)` }} />
+      <div className="w-1 h-1 rotate-45 shrink-0" style={{ background: color, opacity: 0.6 }} />
+      <div className="flex-1 h-px" style={{ background: `linear-gradient(to left, transparent, ${color}60)` }} />
+    </div>
+  )
+}
+
 export default function HomeScreen({ theme, onNavigate }) {
   const { battleActive, faction, turn, isYourTurn } = useBattleStore()
   const { orders, activeOrderId } = useCrusadeStore()
@@ -58,42 +68,112 @@ export default function HomeScreen({ theme, onNavigate }) {
 
   const cards = [
     { key: 'stratagems', label: 'Core Stratagems', icon: '📋', desc: '10th Ed universal', color: theme.secondary },
-    { key: 'phases', label: 'Phase Summary', icon: '⏱', desc: 'Turn structure', color: theme.hpFull },
+    { key: 'phases',     label: 'Phase Summary',   icon: '⏱',  desc: 'Turn structure',   color: theme.hpFull },
   ]
 
   return (
     <div className="flex flex-col h-full overflow-y-auto" style={{ background: theme.bg }}>
 
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className="px-5 pt-8 pb-4"
-        style={{ background: theme.surface, borderBottom: `1px solid ${theme.border}` }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>
-              W40K Battle Companion
-            </p>
-            <h1 className="text-2xl font-black mt-0.5" style={{ color: theme.textPrimary }}>
-              For Russ and the Allfather!
-            </h1>
-          </div>
+      {/* ── HERO ─────────────────────────────────────────────────────────── */}
+      <div className="relative flex flex-col items-center justify-center px-6 pt-12 pb-10 text-center overflow-hidden"
+        style={{ minHeight: '46vh' }}>
+
+        {/* Radial warm glow — mimics the dramatic centre lighting on the box art */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: `radial-gradient(ellipse 80% 60% at 50% 45%, ${theme.secondary}1a 0%, transparent 70%)` }} />
+
+        {/* Animated icon */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.7 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="mb-5 relative"
+        >
           <motion.div
-            animate={{ rotate: [0, -8, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
-            className="text-3xl"
+            animate={{ rotate: [0, -6, 6, 0] }}
+            transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: 'easeInOut' }}
+            className="text-5xl"
           >
             ⚔️
           </motion.div>
-        </div>
-      </motion.div>
+          {/* Glow ring behind icon */}
+          <motion.div
+            animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.9, 1.1, 0.9] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute inset-0 rounded-full blur-xl -z-10"
+            style={{ background: theme.secondary, opacity: 0.25 }}
+          />
+        </motion.div>
 
-      <div className="flex-1 px-4 py-5 space-y-4">
+        {/* WARHAMMER 40,000 — small eyebrow */}
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+          className="text-xs font-black tracking-[0.3em] uppercase mb-2"
+          style={{ color: theme.secondary }}
+        >
+          Warhammer 40,000
+        </motion.p>
 
-        {/* Resume battle card */}
+        {/* BATTLE COMPANION — hero title with gradient */}
+        <motion.h1
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18, duration: 0.45 }}
+          className="font-black uppercase leading-none mb-4"
+          style={{
+            fontSize: 'clamp(2rem, 8vw, 3.25rem)',
+            letterSpacing: '0.04em',
+            background: `linear-gradient(to bottom, #ffffff 20%, ${theme.secondary} 100%)`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          Battle Companion
+        </motion.h1>
+
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ delay: 0.28, duration: 0.4 }}
+          className="w-48 mb-4"
+        >
+          <Divider color={theme.secondary} />
+        </motion.div>
+
+        {/* The tagline */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.38, duration: 0.5 }}
+          className="text-xs italic leading-relaxed max-w-xs"
+          style={{ color: theme.textSecondary, opacity: 0.75 }}
+        >
+          "In the grim darkness of the far future, there is only war."
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.48, duration: 0.4 }}
+          className="text-xs mt-3 font-bold tracking-widest uppercase"
+          style={{ color: theme.textSecondary, opacity: 0.4 }}
+        >
+          10th Edition
+        </motion.p>
+      </div>
+
+      {/* Divider into content area */}
+      <div className="px-6 mb-1">
+        <Divider color={theme.secondary} />
+      </div>
+
+      {/* ── CONTENT ──────────────────────────────────────────────────────── */}
+      <div className="flex-1 px-4 py-5 space-y-3">
+
+        {/* Resume battle */}
         <AnimatePresence>
           {battleActive && (
             <motion.button
@@ -103,36 +183,29 @@ export default function HomeScreen({ theme, onNavigate }) {
               whileTap={{ scale: 0.97 }}
               onClick={() => onNavigate('battle')}
               className="w-full rounded-2xl border-2 p-4 text-left relative overflow-hidden"
-              style={{
-                background: theme.surface,
-                borderColor: theme.secondary,
-                boxShadow: `0 0 24px ${theme.primaryGlow || theme.secondary}44`,
-              }}
+              style={{ background: theme.surface, borderColor: theme.secondary, boxShadow: `0 0 28px ${theme.secondary}33` }}
             >
-              {/* Animated top line */}
               <motion.div
-                className="absolute top-0 left-6 right-6 h-px"
-                animate={{ opacity: [0.4, 1, 0.4] }}
+                className="absolute top-0 left-8 right-8 h-px"
+                animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 style={{ background: `linear-gradient(90deg, transparent, ${theme.secondary}, transparent)` }}
               />
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: theme.secondary }}>
+                  <p className="text-xs font-black tracking-widest uppercase mb-1" style={{ color: theme.secondary }}>
                     Battle In Progress
                   </p>
-                  <p className="font-black text-lg" style={{ color: theme.textPrimary }}>
+                  <p className="font-black text-lg leading-tight" style={{ color: theme.textPrimary }}>
                     Turn {turn} · {isYourTurn ? 'Your Turn' : "Opponent's Turn"}
                   </p>
-                  <p className="text-xs mt-1" style={{ color: theme.textSecondary }}>
-                    {faction === 'spacewolves' ? 'Space Wolves' : 'Tyranids'} · Tap to resume
-                  </p>
+                  <p className="text-xs mt-1" style={{ color: theme.textSecondary }}>Tap to resume →</p>
                 </div>
                 <motion.div
-                  animate={{ scale: [1, 1.08, 1] }}
+                  animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-                  style={{ background: theme.surfaceHigh }}
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                  style={{ background: `${theme.secondary}18`, border: `1px solid ${theme.secondary}44` }}
                 >
                   🎯
                 </motion.div>
@@ -141,30 +214,34 @@ export default function HomeScreen({ theme, onNavigate }) {
           )}
         </AnimatePresence>
 
-        {/* New Battle */}
+        {/* New Battle — primary CTA */}
         <motion.button
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.3 }}
+          transition={{ delay: 0.05, duration: 0.35 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => onNavigate('armyBuilder')}
-          className="w-full rounded-2xl border p-4 text-left"
-          style={{ background: theme.surface, borderColor: theme.border }}
+          className="w-full rounded-2xl p-4 text-left relative overflow-hidden"
+          style={{ background: theme.secondary }}
         >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
-              style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
-              ⚔️
-            </div>
-            <div className="flex-1">
-              <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>New Battle</p>
-              <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>Pick your faction, detachment and units</p>
+          {/* Subtle inner shine */}
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%)' }} />
+          <div className="flex items-center justify-between relative">
+            <div>
+              <p className="font-black text-sm tracking-widest uppercase" style={{ color: theme.bg, opacity: 0.7 }}>
+                Prepare for War
+              </p>
+              <p className="font-black text-xl leading-tight mt-0.5" style={{ color: theme.bg }}>New Battle</p>
             </div>
             <motion.span
-              animate={{ x: [0, 3, 0] }}
+              animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
-              style={{ color: theme.textSecondary }}
-            >›</motion.span>
+              className="text-2xl"
+              style={{ color: theme.bg }}
+            >
+              ›
+            </motion.span>
           </div>
         </motion.button>
 
@@ -173,9 +250,9 @@ export default function HomeScreen({ theme, onNavigate }) {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.3 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
           >
-            <p className="text-xs font-bold tracking-widest uppercase px-1 mb-2" style={{ color: theme.textSecondary }}>
+            <p className="text-xs font-black tracking-widest uppercase px-1 mb-2" style={{ color: theme.textSecondary }}>
               Your Crusade
             </p>
             <motion.button whileTap={{ scale: 0.97 }}
@@ -222,9 +299,9 @@ export default function HomeScreen({ theme, onNavigate }) {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.3 }}
+          transition={{ delay: 0.15, duration: 0.3 }}
         >
-          <p className="text-xs font-bold tracking-widest uppercase px-1 mb-2" style={{ color: theme.textSecondary }}>
+          <p className="text-xs font-black tracking-widest uppercase px-1 mb-2" style={{ color: theme.textSecondary }}>
             Quick Reference
           </p>
           <div className="grid grid-cols-2 gap-2">
@@ -234,21 +311,22 @@ export default function HomeScreen({ theme, onNavigate }) {
                 onClick={() => setQuickRef(item.key)}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.25 + i * 0.07 }}
+                transition={{ delay: 0.2 + i * 0.07 }}
                 whileTap={{ scale: 0.95 }}
-                className="rounded-2xl border p-3 text-left relative overflow-hidden"
-                style={{ background: theme.surface, borderColor: theme.border }}
+                className="rounded-2xl border p-3.5 text-left relative overflow-hidden"
+                style={{ background: theme.surface, borderColor: `${item.color}44` }}
               >
-                <div className="absolute top-0 right-0 w-16 h-16 rounded-full opacity-10 -translate-y-4 translate-x-4"
-                  style={{ background: item.color }} />
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full -translate-y-6 translate-x-6 pointer-events-none"
+                  style={{ background: item.color, opacity: 0.08 }} />
                 <div className="text-xl mb-2">{item.icon}</div>
-                <p className="text-xs font-bold" style={{ color: theme.textPrimary }}>{item.label}</p>
-                <p className="text-xs mt-0.5 font-medium" style={{ color: item.color }}>Tap to view →</p>
+                <p className="text-xs font-bold leading-tight" style={{ color: theme.textPrimary }}>{item.label}</p>
+                <p className="text-xs mt-1 font-medium" style={{ color: item.color }}>Tap to view →</p>
               </motion.button>
             ))}
           </div>
         </motion.div>
 
+        <div className="h-2" />
       </div>
 
       {/* ── Core Stratagems Sheet ── */}
