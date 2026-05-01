@@ -142,12 +142,12 @@ export default function App() {
       <AnimatePresence>
         {showLookup && (
           <motion.div
-            className="fixed inset-0 z-[70] flex flex-col md:pl-56"
+            className="fixed inset-0 md:left-56 z-[70] flex flex-col"
             style={{ background: theme.bg }}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 24 }}
-            transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}>
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}>
             <UnitLookupOverlay theme={theme} onClose={() => setShowLookup(false)} />
           </motion.div>
         )}

@@ -131,12 +131,12 @@ function UnitDetail({ unit, theme, onBack }) {
       <div className="px-3 py-2.5 flex items-center gap-2 shrink-0 border-b"
         style={{ borderColor: theme.border, background: theme.navBg }}>
         <button onClick={onBack}
-          className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 font-bold text-sm"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0"
           style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-          ←
+          ← Back
         </button>
-        <p className="flex-1 text-sm font-bold truncate" style={{ color: theme.textSecondary }}>
-          Unit Datasheet
+        <p className="flex-1 text-sm font-bold truncate px-1" style={{ color: theme.textSecondary }}>
+          📖 Unit Lookup
         </p>
         <a href={imageSearchUrl} target="_blank" rel="noopener noreferrer"
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold"
@@ -292,33 +292,39 @@ export default function UnitLookupOverlay({ theme, onClose }) {
     <div className="flex flex-col h-full">
 
       {/* Search header */}
-      <div className="px-3 pt-3 pb-2 shrink-0 border-b" style={{ borderColor: theme.border, background: theme.navBg }}>
-        <div className="flex items-center gap-2">
-          <div className="flex-1 flex items-center gap-2 rounded-2xl px-3 py-2.5"
-            style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
-            <span style={{ color: theme.textSecondary, fontSize: 16 }}>🔍</span>
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Search units, characters, keywords…"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-sm font-medium"
-              style={{ color: theme.textPrimary }}
-            />
-            {query && (
-              <button onClick={() => setQuery('')}
-                className="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0"
-                style={{ background: theme.border, color: theme.textSecondary }}>
-                ✕
-              </button>
-            )}
+      <div className="px-3 pt-3 pb-3 shrink-0 border-b" style={{ borderColor: theme.border, background: theme.navBg }}>
+        {/* Title row */}
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2">
+            <span style={{ fontSize: 16 }}>📖</span>
+            <p className="text-sm font-black" style={{ color: theme.textPrimary }}>Unit Lookup</p>
           </div>
           <button onClick={onClose}
-            className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 font-bold"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
             style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-            ✕
+            ✕ Close
           </button>
+        </div>
+        {/* Search input */}
+        <div className="flex items-center gap-2 rounded-2xl px-3 py-2.5"
+          style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
+          <span style={{ color: theme.textSecondary, fontSize: 16 }}>🔍</span>
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="Search units, characters, keywords…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            className="flex-1 bg-transparent outline-none text-sm font-medium"
+            style={{ color: theme.textPrimary }}
+          />
+          {query && (
+            <button onClick={() => setQuery('')}
+              className="w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0"
+              style={{ background: theme.border, color: theme.textSecondary }}>
+              ✕
+            </button>
+          )}
         </div>
       </div>
 
