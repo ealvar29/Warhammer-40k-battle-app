@@ -75,8 +75,8 @@ export default function HomeScreen({ theme, onNavigate }) {
     <div className="flex flex-col h-full overflow-y-auto" style={{ background: theme.bg }}>
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <div className="relative flex flex-col items-center justify-center px-6 pt-12 pb-10 text-center overflow-hidden"
-        style={{ minHeight: '46vh' }}>
+      <div className="relative flex flex-col items-center justify-center px-6 pt-10 pb-8 md:pt-6 md:pb-5 text-center overflow-hidden"
+        style={{ minHeight: '40vh' }}>
 
         {/* Radial warm glow — mimics the dramatic centre lighting on the box art */}
         <div className="absolute inset-0 pointer-events-none"
