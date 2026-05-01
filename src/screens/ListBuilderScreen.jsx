@@ -691,30 +691,50 @@ export default function ListBuilderScreen({ theme }) {
                     </button>
                   ))}
                 </div>
-                {/* Faction grid */}
-                <div className="grid grid-cols-3 gap-2 p-3">
+                {/* Faction grid — gacha-style portrait cards */}
+                <div className="grid grid-cols-2 gap-2 p-3">
                   {ALLEGIANCE_GROUPS.find(g => g.id === allegianceTab)?.factionIds.map(id => {
                     const f = FACTION_META[id]
                     if (!f) return null
                     const selected = faction === id
                     return (
                       <button key={id} onClick={() => handleChangeFaction(id)}
-                        className="rounded-2xl border-2 p-3 flex flex-col items-center text-center relative"
+                        className="rounded-2xl overflow-hidden text-left transition-all relative"
                         style={{
-                          background: selected ? `${f.color}18` : theme.surface,
-                          borderColor: selected ? f.color : theme.border,
+                          minHeight: 140,
+                          border: `2px solid ${selected ? f.color : 'transparent'}`,
+                          boxShadow: selected ? `0 0 18px ${f.color}55` : 'none',
                         }}>
+
+                        {/* Art or gradient background */}
+                        <div className="absolute inset-0"
+                          style={{
+                            backgroundImage: f.artUrl ? `url(${f.artUrl})` : f.gradient,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center top',
+                          }} />
+
+                        {/* Dark gradient overlay */}
+                        <div className="absolute inset-0"
+                          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.10) 100%)' }} />
+
+                        {/* Selected checkmark */}
                         {selected && (
-                          <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center z-10"
                             style={{ background: f.color }}>
-                            <span style={{ color: '#fff', fontSize: 8, fontWeight: 900, lineHeight: 1 }}>✓</span>
+                            <span style={{ color: '#000', fontSize: 9, fontWeight: 900 }}>✓</span>
                           </div>
                         )}
-                        <span className="text-3xl mb-1">{f.icon}</span>
-                        <p className="text-xs font-bold leading-tight"
-                          style={{ color: selected ? f.color : theme.textPrimary }}>
-                          {f.name}
-                        </p>
+
+                        {/* Bottom label */}
+                        <div className="absolute bottom-0 left-0 right-0 px-3 pb-2.5 pt-6">
+                          <div className="flex items-end justify-between">
+                            <p className="text-sm font-black leading-tight truncate flex-1" style={{ color: '#fff' }}>
+                              {f.name}
+                            </p>
+                            <span className="text-xl ml-1 shrink-0">{f.icon}</span>
+                          </div>
+                        </div>
                       </button>
                     )
                   })}
