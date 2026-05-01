@@ -54,6 +54,19 @@ function getUnitsByCategory(unitList) {
   return result
 }
 
+function hasMixedWeapons(unit) {
+  const weapons = unit.weapons || []
+  const hasRanged = weapons.some(w => w.type === 'ranged' && !w.keywords?.includes('PISTOL'))
+  const hasMelee  = weapons.some(w => w.type === 'melee')
+  return hasRanged && hasMelee
+}
+
+const ROLE_OPTIONS = [
+  { id: 'ranged', label: '🔫 Ranged' },
+  { id: 'mixed',  label: '⚔/🔫 Mixed' },
+  { id: 'melee',  label: '⚔ Melee' },
+]
+
 const categoryLabels = {
   epicHero: 'Epic Heroes', character: 'Characters', battleline: 'Battleline',
   infantry: 'Infantry', cavalry: 'Cavalry', monster: 'Monsters', vehicle: 'Vehicles',
@@ -121,6 +134,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const totalUnits = Object.values(unitCounts).reduce((a, b) => a + b, 0)
   const [showImport, setShowImport] = useState(false)
   const [allegianceTab, setAllegianceTab] = useState(() => getAllegianceFor(store.faction || 'spacewolves'))
+  const [unitRoleOverrides, setUnitRoleOverrides] = useState({})
 
   const isSW = localFaction === 'spacewolves'
   const factionMeta = FACTION_META[localFaction] || { name: '', color: '#888' }
@@ -156,6 +170,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           maxWounds: totalWounds,
           currentWounds: totalWounds,
           unitKey: u.unitKey || u.id,
+          phaseRole: unitRoleOverrides[u.id] || null,
         })
       }
     }
@@ -436,6 +451,26 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                   <span>W {u.W}</span>
                                   {u.InvSv && <span>Inv {u.InvSv}</span>}
                                 </div>
+                                {selected && hasMixedWeapons(u) && (
+                                  <div className="flex gap-1 mt-2" onClick={e => e.stopPropagation()}>
+                                    {ROLE_OPTIONS.map(opt => {
+                                      const active = (unitRoleOverrides[u.id] || 'mixed') === opt.id
+                                      return (
+                                        <button key={opt.id}
+                                          onClick={() => setUnitRoleOverrides(prev => ({ ...prev, [u.id]: opt.id }))}
+                                          className="px-2 py-0.5 rounded-lg text-xs font-bold transition-all"
+                                          style={{
+                                            background: active ? section.accent : theme.surfaceHigh,
+                                            color: active ? theme.bg : theme.textSecondary,
+                                            border: `1px solid ${active ? section.accent : theme.border}`,
+                                            fontSize: 10,
+                                          }}>
+                                          {opt.label}
+                                        </button>
+                                      )
+                                    })}
+                                  </div>
+                                )}
                               </div>
                               <div className="flex items-center gap-2 shrink-0">
                                 <span className="text-xs px-2 py-1 rounded-full"

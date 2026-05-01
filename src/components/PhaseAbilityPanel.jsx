@@ -32,8 +32,9 @@ function parseTextWithKeywords(text, theme) {
   })
 }
 
-// Determines a unit's combat role based on its weapons
+// Determines a unit's combat role based on its weapons (or user override)
 function getUnitRole(unit) {
+  if (unit.phaseRole) return unit.phaseRole
   const weapons = unit.weapons || []
   // A real ranged weapon is one that isn't PISTOL (pistols are secondary / fight-phase)
   const hasRanged = weapons.some(w => w.type === 'ranged' && !w.keywords?.includes('PISTOL'))
