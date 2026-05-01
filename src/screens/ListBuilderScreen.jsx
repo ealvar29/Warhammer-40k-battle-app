@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FACTION_UNITS, FACTION_META } from '../data/factionRegistry'
 import { useListStore } from '../store/listStore'
-import { unitLeaderMap, leaderAbilities } from '../data/leaderData'
+import { unitLeaderMap } from '../data/leaderData'
+import { getLeaderAbilities } from '../data/factionRegistry'
 
 const CATEGORY_LABELS = {
   epicHero: 'Epic Heroes',
@@ -30,7 +31,7 @@ function PairingSection({ unit, allUnits, inListIds, onAdd, theme }) {
       // Leader → show which units it can lead
       return (unit.leadsUnits || []).map(targetId => {
         const targetUnit = allUnits.find(u => (u.unitKey || baseId(u.id)) === targetId || u.id === targetId)
-        const abilities = leaderAbilities[`${unitKey}_${targetId}`]?.abilities || []
+        const abilities = getLeaderAbilities(unitKey)
         return { id: targetId, name: targetUnit?.name || targetId, inList: inListIds.has(targetId), unit: targetUnit, abilities, isUnitRow: true }
       })
     } else {
@@ -38,7 +39,7 @@ function PairingSection({ unit, allUnits, inListIds, onAdd, theme }) {
       const eligibleIds = unitLeaderMap[unitKey] || []
       return eligibleIds.map(leaderId => {
         const leaderUnit = allUnits.find(u => u.id === leaderId || (u.unitKey || baseId(u.id)) === leaderId)
-        const abilities = leaderAbilities[`${leaderId}_${unitKey}`]?.abilities || []
+        const abilities = getLeaderAbilities(leaderId)
         return { id: leaderId, name: leaderUnit?.name || leaderId, inList: inListIds.has(leaderId), unit: leaderUnit, abilities, isUnitRow: false }
       })
     }

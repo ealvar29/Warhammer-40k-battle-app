@@ -159,6 +159,16 @@ export function buildUnitsFromIds(faction, unitIds) {
     }))
 }
 
+// Returns a leader unit's abilities straight from units.js — single source of truth.
+// Replaces the leaderAbilities map in leaderData.js which was a manual duplicate prone to drift.
+export function getLeaderAbilities(leaderId) {
+  for (const unitList of Object.values(FACTION_UNITS)) {
+    const unit = unitList.find(u => u.id === leaderId)
+    if (unit) return unit.abilities || []
+  }
+  return []
+}
+
 export function findDetachment(faction, detachmentId) {
   if (faction === 'spacewolves') {
     return swDetachments[detachmentId]

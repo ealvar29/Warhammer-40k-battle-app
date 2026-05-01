@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
-import { unitLeaderMap, leaderAbilities, leaders as leaderMeta } from '../data/leaderData'
+import { unitLeaderMap, leaders as leaderMeta } from '../data/leaderData'
+import { getLeaderAbilities } from '../data/factionRegistry'
 
 const PHASE_ICON = { command: '📋', movement: '🏃', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '✦' }
 const baseId = (id) => id?.replace(/_\d+$/, '') ?? id
@@ -95,9 +96,7 @@ export default function DeployScreen({ theme, onNavigate }) {
                 const assignedId   = unitStates[unit.id]?.attachedLeaderId
                 const assignedUnit = assignedId ? leaderUnits.find(l => l.id === assignedId) : null
                 const unitKey      = unit.unitKey || baseId(unit.id)
-                const abilities    = assignedId
-                  ? (leaderAbilities[`${baseId(assignedId)}_${unitKey}`]?.abilities || [])
-                  : []
+                const abilities    = assignedId ? getLeaderAbilities(baseId(assignedId)) : []
 
                 return (
                   <div key={unit.id} className="rounded-2xl border overflow-hidden"

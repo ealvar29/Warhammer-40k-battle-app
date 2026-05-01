@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PHASES, demoStratagems, demoUnits } from '../data/demoData'
-import { leaders, leaderAbilities, unitLeaderMap } from '../data/leaderData'
+import { leaders, unitLeaderMap } from '../data/leaderData'
+import { getLeaderAbilities } from '../data/factionRegistry'
 import { getSuggestions, opponentProfiles } from '../data/suggestions'
 import { findDetachment } from '../data/factionRegistry'
 import { useBattleStore } from '../store/battleStore'
@@ -307,7 +308,7 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
   const eligible = eligibleIds.map(id => leaders[id]).filter(Boolean)
   const attached = attachedLeaderId ? leaders[attachedLeaderId] : null
   const baseLeaderId = attachedLeaderId?.replace(/_\d+$/, '')
-  const abilities = baseLeaderId ? (leaderAbilities[`${baseLeaderId}_${unitKey}`]?.abilities || []) : []
+  const abilities = baseLeaderId ? getLeaderAbilities(baseLeaderId) : []
   const activeAbilities = abilities.filter(a => a.phase === activePhase || a.phase === 'any')
 
   // Show if there are eligible leaders OR a leader is already attached
@@ -387,7 +388,7 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
             <div className="rounded-xl border overflow-hidden" style={{ background: theme.stratBg, borderColor: theme.border }}>
               {eligible.map(l => {
                 const pairKey = `${l.id}_${unitKey}`
-                const pairAbilities = leaderAbilities[pairKey]?.abilities || []
+                const pairAbilities = getLeaderAbilities(l.id)
                 return (
                   <button key={l.id}
                     onClick={() => { onAttach(unit.id, l.id); setOpen(false) }}
@@ -886,7 +887,7 @@ export default function BattleDemo({ theme, onNavigate }) {
     if (!leaderId) return u
     const baseUnitId = u.unitKey || u.id.replace(/_\d+$/, '')
     const baseLeaderId = leaderId.replace(/_\d+$/, '')
-    const extra = leaderAbilities[`${baseLeaderId}_${baseUnitId}`]?.abilities || []
+    const extra = getLeaderAbilities(baseLeaderId)
     if (!extra.length) return u
     return { ...u, abilities: [...(u.abilities || []), ...extra] }
   })
