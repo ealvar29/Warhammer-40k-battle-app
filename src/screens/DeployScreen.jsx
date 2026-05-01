@@ -172,9 +172,9 @@ export default function DeployScreen({ theme, onNavigate }) {
                                     {ability.phase}
                                   </span>
                                 </div>
-                                {ability.reminder && (
+                                {(ability.description || ability.reminder) && (
                                   <p className="text-xs mt-1 leading-snug" style={{ color: theme.textPrimary }}>
-                                    {ability.reminder}
+                                    {ability.description || ability.reminder}
                                   </p>
                                 )}
                               </div>

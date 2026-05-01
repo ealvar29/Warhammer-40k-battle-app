@@ -268,8 +268,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               ))}
             </div>
 
-            {/* Faction grid */}
-            <div className="grid grid-cols-3 gap-2">
+            {/* Faction grid — gacha-style portrait cards */}
+            <div className="grid grid-cols-2 gap-2">
               {ALLEGIANCE_GROUPS.find(g => g.id === allegianceTab)?.factionIds.map(id => {
                 const f = FACTION_META[id]
                 if (!f) return null
@@ -277,25 +277,47 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                 return (
                   <button key={id}
                     onClick={() => { setLocalFaction(id); setLocalDetachment(null); setUnitCounts({}) }}
-                    className="rounded-2xl border-2 p-3 flex flex-col items-center text-center transition-all relative"
+                    className="rounded-2xl overflow-hidden text-left transition-all relative"
                     style={{
-                      background: selected ? `${f.color}18` : theme.surface,
-                      borderColor: selected ? f.color : theme.border,
+                      minHeight: 160,
+                      border: `2px solid ${selected ? f.color : 'transparent'}`,
+                      boxShadow: selected ? `0 0 18px ${f.color}55` : 'none',
                     }}>
+
+                    {/* Art or gradient background */}
+                    <div className="absolute inset-0"
+                      style={{
+                        backgroundImage: f.artUrl ? `url(${f.artUrl})` : f.gradient,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center top',
+                      }} />
+
+                    {/* Dark gradient overlay so text is always readable */}
+                    <div className="absolute inset-0"
+                      style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.10) 100%)' }} />
+
+                    {/* Selected checkmark */}
                     {selected && (
-                      <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
+                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center z-10"
                         style={{ background: f.color }}>
-                        <span style={{ color: '#fff', fontSize: 8, fontWeight: 900, lineHeight: 1 }}>✓</span>
+                        <span style={{ color: '#000', fontSize: 9, fontWeight: 900 }}>✓</span>
                       </div>
                     )}
-                    <span className="text-3xl mb-1.5">{f.icon}</span>
-                    <p className="text-xs font-bold leading-tight"
-                      style={{ color: selected ? f.color : theme.textPrimary }}>
-                      {f.name}
-                    </p>
-                    <p className="mt-0.5" style={{ color: theme.textSecondary, fontSize: 9 }}>
-                      {(FACTION_UNITS[id] || []).length} units
-                    </p>
+
+                    {/* Bottom label */}
+                    <div className="absolute bottom-0 left-0 right-0 px-3 pb-2.5 pt-6">
+                      <div className="flex items-end justify-between">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-black leading-tight truncate" style={{ color: '#fff' }}>
+                            {f.name}
+                          </p>
+                          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10, fontWeight: 600 }}>
+                            {(FACTION_UNITS[id] || []).length} units
+                          </p>
+                        </div>
+                        <span className="text-xl ml-1 shrink-0">{f.icon}</span>
+                      </div>
+                    </div>
                   </button>
                 )
               })}
