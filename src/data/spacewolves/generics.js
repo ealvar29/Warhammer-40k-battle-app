@@ -122,15 +122,16 @@ export const smGenericUnits = {
   eradicators: {
     id: 'eradicators', name: 'Eradicators', category: 'infantry',
     powerRating: 5, points: 90,
-    M: '5"', T: 5, Sv: '3+', W: 3, Ld: '6+', OC: 1,
+    M: '5"', T: 6, Sv: '3+', W: 3, Ld: '6+', OC: 1,
     models: 3, minModels: 3, maxModels: 6,
     weapons: [
-      { name: 'Melta Rifle', type: 'ranged', range: '18"', A: 1, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 3'] },
-      { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1 },
-      { name: 'Close Combat Weapon', type: 'melee', A: 3, WS: '3+', S: 4, AP: 0, D: 1 },
+      { name: 'Melta Rifle', type: 'ranged', range: '18"', A: 1, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
+      { name: 'Multi-melta', type: 'ranged', range: '18"', A: 2, BS: '4+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
+      { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Close Combat Weapon', type: 'melee', A: 3, WS: '3+', S: 4, AP: 0, D: 1, keywords: [] },
     ],
     abilities: [
-      { name: 'Total Obliteration', phase: 'shooting', description: 'Each time a model in this unit makes an attack that targets a VEHICLE or MONSTER unit, that attack has the [MELTA 3] ability.' },
+      { name: 'Total Obliteration', phase: 'shooting', description: 'Each time a ranged attack made by a model in this unit targets a MONSTER or VEHICLE unit, you can re-roll the Hit roll, you can re-roll the Wound roll, and you can re-roll the Damage roll.' },
     ],
     isLeader: false,
     eligibleLeaders: [],
