@@ -8,6 +8,7 @@ import DeployScreen from './screens/DeployScreen'
 import CrusadeScreen from './screens/CrusadeScreen'
 import ListBuilderScreen from './screens/ListBuilderScreen'
 import UnitLookupOverlay from './components/UnitLookupOverlay'
+import FactionAmbience from './components/FactionAmbience'
 import { useBattleStore } from './store/battleStore'
 import { parseShareUrl } from './utils/armyShare'
 import { buildUnitsFromIds, findDetachment, FACTION_META } from './data/factionRegistry'
@@ -35,6 +36,7 @@ export default function App() {
   const [pendingImport, setPendingImport] = useState(null)
   const [showLookup, setShowLookup] = useState(false) // decoded army payload
   const battleActive = useBattleStore(s => s.battleActive)
+  const faction      = useBattleStore(s => s.faction)
   const setOpponentArmy = useBattleStore(s => s.setOpponentArmy)
 
   useEffect(() => {
@@ -77,7 +79,10 @@ export default function App() {
   const navTabsDesktop = NAV_TABS.filter(t => !t.isOverlay)
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: theme.bg }}>
+    <div className="flex h-screen overflow-hidden relative" style={{ background: theme.bg }}>
+
+      {/* ── Faction ambient particles ── */}
+      <FactionAmbience factionId={faction} />
 
       {/* ── Import opponent army modal ── */}
       <AnimatePresence>

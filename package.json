@@ -22,6 +22,8 @@
     "workbox-window": "^7.4.0"
   },
   "dependencies": {
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
     "firebase": "^12.12.1",
     "framer-motion": "^12.38.0",
     "react": "^19.2.5",
