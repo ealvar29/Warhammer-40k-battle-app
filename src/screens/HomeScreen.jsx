@@ -245,56 +245,6 @@ export default function HomeScreen({ theme, onNavigate }) {
           </div>
         </motion.button>
 
-        {/* Crusade preview */}
-        {activeOrder && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.3 }}
-          >
-            <p className="text-xs font-black tracking-widest uppercase px-1 mb-2" style={{ color: theme.textSecondary }}>
-              Your Crusade
-            </p>
-            <motion.button whileTap={{ scale: 0.97 }}
-              onClick={() => onNavigate('crusade')}
-              className="w-full rounded-2xl border p-4 text-left"
-              style={{ background: theme.surface, borderColor: theme.border }}>
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>{activeOrder.name}</p>
-                  <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
-                    {activeOrder.battlesPlayed} battles · {activeOrder.battlesWon} wins
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-lg font-black" style={{ color: theme.secondary }}>{activeOrder.requisitionPoints}</p>
-                  <p className="text-xs" style={{ color: theme.textSecondary }}>Req. Pts</p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                {activeOrder.units.slice(0, 3).map(u => (
-                  <div key={u.id} className="flex items-center justify-between">
-                    <p className="text-xs" style={{ color: theme.textPrimary }}>{u.name}</p>
-                    <div className="flex items-center gap-2">
-                      {u.battleScars.length > 0 && (
-                        <span className="text-xs" style={{ color: theme.hpLow }}>⚠ {u.battleScars.length} scar{u.battleScars.length > 1 ? 's' : ''}</span>
-                      )}
-                      {u.battleHonours.length > 0 && (
-                        <span className="text-xs" style={{ color: theme.secondary }}>★ {u.battleHonours.length}</span>
-                      )}
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                        style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
-                        {u.xp} XP
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs mt-2 text-right" style={{ color: theme.secondary }}>View full roster →</p>
-            </motion.button>
-          </motion.div>
-        )}
-
         {/* Quick Reference */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}

@@ -4,7 +4,7 @@ export const tyranidUnits = {
     id: 'swarmlord', name: 'The Swarmlord', category: 'epicHero',
     powerRating: 12, points: 220,
     M: '8"', T: 10, Sv: '2+', W: 10, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106060_SwarmlordLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Bone Sabres', type: 'melee', A: 8, WS: '2+', S: 9, AP: -2, D: 3, keywords: ['TWIN-LINKED'] },
       { name: 'Synaptic Pulse', type: 'ranged', range: '18"', A: 'D6+3', BS: 'N/A', S: 5, AP: -1, D: 2, keywords: ['PSYCHIC', 'TORRENT'] },
@@ -24,7 +24,7 @@ export const tyranidUnits = {
     id: 'oldOneEye', name: 'Old One Eye', category: 'epicHero',
     powerRating: 9, points: 150,
     M: '8"', T: 9, Sv: '2+', W: 9, Ld: '8+', OC: 3,
-    models: 1,
+    models: 1, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/threeSixty/99120106010_OldOneEye360/01-01.jpg?fm=webp&w=892',
     weapons: [
       { name: "Old One Eye's claws and talons — strike", type: 'melee', A: 6, WS: '3+', S: 14, AP: -3, D: 'D6+1' },
       { name: "Old One Eye's claws and talons — sweep", type: 'melee', A: 12, WS: '3+', S: 6, AP: -1, D: 1 },
@@ -44,7 +44,7 @@ export const tyranidUnits = {
     id: 'deathleaper', name: 'Deathleaper', category: 'epicHero',
     powerRating: 5, points: 80,
     M: '8"', T: 6, Sv: '3+', W: 7, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106067_Deathleaper1.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Lictor claws and talons', type: 'melee', A: 6, WS: '2+', S: 7, AP: -2, D: 2, keywords: ['PRECISION'] },
     ],
@@ -63,7 +63,7 @@ export const tyranidUnits = {
     id: 'hiveTyrant', name: 'Hive Tyrant', category: 'character',
     powerRating: 10, points: 195,
     M: '8"', T: 10, Sv: '2+', W: 10, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106060_HiveTyrantLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Monstrous Bonesword & Lash Whip', type: 'melee', A: 6, WS: '2+', S: 9, AP: -2, D: 3, keywords: ['TWIN-LINKED'] },
       { name: 'Monstrous Scything Talons', type: 'melee', A: 4, WS: '2+', S: 7, AP: -2, D: 2, keywords: ['EXTRA ATTACKS'] },
@@ -84,7 +84,7 @@ export const tyranidUnits = {
     id: 'wingedHiveTyrant', name: 'Winged Hive Tyrant', category: 'character',
     powerRating: 10, points: 170,
     M: '12"', T: 9, Sv: '2+', W: 10, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106060_WingedHiveTyrantLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Monstrous Bonesword & Lash Whip', type: 'melee', A: 6, WS: '2+', S: 9, AP: -2, D: 3, keywords: ['TWIN-LINKED'] },
       { name: 'Monstrous Scything Talons', type: 'melee', A: 4, WS: '2+', S: 7, AP: -2, D: 2, keywords: ['EXTRA ATTACKS'] },
@@ -106,7 +106,7 @@ export const tyranidUnits = {
     id: 'neurotyrant', name: 'Neurotyrant', category: 'character',
     powerRating: 6, points: 105,
     M: '6"', T: 8, Sv: '4+', W: 9, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106076_HorrorsHive3.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Neurotyrant Claws and Lashes', type: 'melee', A: 6, WS: '3+', S: 5, AP: 0, D: 1 },
       { name: 'Psychic Scream', type: 'ranged', range: '18"', A: '2D6', BS: 'N/A', S: 5, AP: -1, D: 2, keywords: ['IGNORES COVER', 'PSYCHIC', 'TORRENT'] },
@@ -125,7 +125,7 @@ export const tyranidUnits = {
     id: 'broodlord', name: 'Broodlord', category: 'character',
     powerRating: 5, points: 80,
     M: '8"', T: 5, Sv: '4+', W: 6, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106059_BroodlordLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Broodlord Claws and Talons', type: 'melee', A: 5, WS: '2+', S: 6, AP: -2, D: 2, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
     ],
@@ -143,7 +143,7 @@ export const tyranidUnits = {
     id: 'wingedTyranidPrime', name: 'Winged Tyranid Prime', category: 'character',
     powerRating: 4, points: 65,
     M: '12"', T: 5, Sv: '4+', W: 6, Ld: '7+', OC: 1,
-    models: 1,
+    models: 1, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106084_TyranidPrimewithLashWhip01.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Prime talons', type: 'melee', A: 6, WS: '2+', S: 6, AP: -1, D: 2 },
     ],
@@ -161,7 +161,7 @@ export const tyranidUnits = {
     id: 'tervigon', name: 'Tervigon', category: 'character',
     powerRating: 11, points: 160,
     M: '8"', T: 11, Sv: '2+', W: 16, Ld: '7+', OC: 5,
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106054_TYRTyrannofexLeadALT.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Massive crushing claws', type: 'melee', A: 4, WS: '4+', S: 12, AP: -3, D: 'D6+1' },
       { name: 'Massive scything talons — strike', type: 'melee', A: 4, WS: '3+', S: 9, AP: -2, D: 'D6' },
@@ -204,7 +204,7 @@ export const tyranidUnits = {
     id: 'termagants', name: 'Termagants', category: 'battleline',
     powerRating: 3, points: 60,
     M: '6"', T: 3, Sv: '5+', W: 1, Ld: '8+', OC: 2,
-    models: 10, minModels: 10, maxModels: 20, weaponRole: 'ranged',
+    models: 10, minModels: 10, maxModels: 20, weaponRole: 'ranged', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106066_Termagaunts2.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Fleshborer', type: 'ranged', range: '18"', A: 1, BS: '4+', S: 5, AP: 0, D: 1, keywords: ['ASSAULT'] },
       { name: 'Termagant Devourer', type: 'ranged', range: '18"', A: 2, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT'] },
@@ -227,7 +227,7 @@ export const tyranidUnits = {
     id: 'hormagaunts', name: 'Hormagaunts', category: 'battleline',
     powerRating: 3, points: 65,
     M: '10"', T: 3, Sv: '5+', W: 1, Ld: '8+', OC: 2,
-    models: 10, minModels: 10, maxModels: 20,
+    models: 10, minModels: 10, maxModels: 20, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106073_Hormagaunts2.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Hormagaunt talons', type: 'melee', A: 3, WS: '4+', S: 3, AP: -1, D: 1 },
     ],
@@ -244,7 +244,7 @@ export const tyranidUnits = {
     id: 'gargoyles', name: 'Gargoyles', category: 'battleline',
     powerRating: 3, points: 85,
     M: '12"', T: 3, Sv: '6+', W: 1, Ld: '8+', OC: 2,
-    models: 10, minModels: 10, maxModels: 20, weaponRole: 'mixed',
+    models: 10, minModels: 10, maxModels: 20, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106052_TYRGargoylesLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Fleshborer', type: 'ranged', range: '18"', A: 1, BS: '4+', S: 5, AP: 0, D: 1, keywords: ['ASSAULT'] },
       { name: 'Blinding Venom', type: 'melee', A: 1, WS: '4+', S: 3, AP: 0, D: 1 },
@@ -263,7 +263,7 @@ export const tyranidUnits = {
     nameDetail: '(Ranged Bio-weapons)',
     powerRating: 5, points: 65,
     M: '6"', T: 5, Sv: '4+', W: 3, Ld: '7+', OC: 2,
-    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged',
+    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106058_TYRWarriorsLeadPrime.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Devourer', type: 'ranged', range: '18"', A: 5, BS: '4+', S: 4, AP: 0, D: 1 },
       { name: 'Deathspitter', type: 'ranged', range: '24"', A: 3, BS: '4+', S: 5, AP: -1, D: 1 },
@@ -287,7 +287,7 @@ export const tyranidUnits = {
     nameDetail: '(Melee Bio-weapons)',
     powerRating: 5, points: 75,
     M: '6"', T: 5, Sv: '4+', W: 3, Ld: '7+', OC: 2,
-    models: 3, minModels: 3, maxModels: 6,
+    models: 3, minModels: 3, maxModels: 6, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106058_TYRWarriorsLeadPrime.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Tyranid Warrior Claws and Talons', type: 'melee', A: 6, WS: '3+', S: 5, AP: -2, D: 1, keywords: ['TWIN-LINKED'] },
     ],
@@ -306,7 +306,7 @@ export const tyranidUnits = {
     id: 'tyrantGuard', name: 'Tyrant Guard', category: 'infantry',
     powerRating: 5, points: 80,
     M: '6"', T: 8, Sv: '3+', W: 4, Ld: '8+', OC: 1,
-    models: 3, minModels: 3, maxModels: 6,
+    models: 3, minModels: 3, maxModels: 6, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106055_TYRHiveGuardLeadALT.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Scything talons and rending claws', type: 'melee', A: 5, WS: '3+', S: 5, AP: -1, D: 1 },
       { name: 'Bone cleaver, lash whip and rending claws', type: 'melee', A: 3, WS: '3+', S: 5, AP: -1, D: 2 },
@@ -325,7 +325,7 @@ export const tyranidUnits = {
     id: 'hiveGuard', name: 'Hive Guard', category: 'infantry',
     powerRating: 5, points: 90,
     M: '6"', T: 7, Sv: '3+', W: 4, Ld: '8+', OC: 1,
-    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged',
+    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106055_TYRHiveGuardLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Impaler Cannon', type: 'ranged', range: '36"', A: 4, BS: '4+', S: 5, AP: -1, D: 1, keywords: ['HEAVY', 'INDIRECT FIRE'] },
       { name: 'Shockcannon', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 7, AP: -1, D: 3, keywords: ['ANTI-VEHICLE 2+'] },
@@ -344,7 +344,7 @@ export const tyranidUnits = {
     id: 'genestealers', name: 'Genestealers', category: 'infantry',
     powerRating: 5, points: 75,
     M: '8"', T: 4, Sv: '5+', W: 2, Ld: '7+', OC: 1, InvSv: '5+',
-    models: 5, minModels: 5, maxModels: 10,
+    models: 5, minModels: 5, maxModels: 10, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106068_Genestealers2.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Genestealer Claws and Talons', type: 'melee', A: 4, WS: '2+', S: 4, AP: -2, D: 1, keywords: ['DEVASTATING WOUNDS'] },
     ],
@@ -362,7 +362,7 @@ export const tyranidUnits = {
     id: 'vonRyansLeapers', name: "Von Ryan's Leapers", category: 'infantry',
     powerRating: 4, points: 70,
     M: '10"', T: 5, Sv: '4+', W: 3, Ld: '8+', OC: 1, InvSv: '6+',
-    models: 3, minModels: 3, maxModels: 6,
+    models: 3, minModels: 3, maxModels: 6, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/60010199057_LeviathanEXTRA13.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: "Leaper's Talons", type: 'melee', A: 6, WS: '3+', S: 5, AP: -1, D: 1 },
     ],
@@ -396,7 +396,7 @@ export const tyranidUnits = {
     id: 'lictors', name: 'Lictor', category: 'infantry',
     powerRating: 4, points: 60,
     M: '8"', T: 6, Sv: '4+', W: 6, Ld: '7+', OC: 1,
-    models: 1, minModels: 1, maxModels: 1,
+    models: 1, minModels: 1, maxModels: 1, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106069_Lictor1.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Lictor Claws and Talons', type: 'melee', A: 6, WS: '2+', S: 7, AP: -2, D: 2, keywords: ['PRECISION'] },
     ],
@@ -414,7 +414,7 @@ export const tyranidUnits = {
     id: 'zoanthropes', name: 'Zoanthropes', category: 'infantry',
     powerRating: 5, points: 100,
     M: '5"', T: 5, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged',
+    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106057_NeurothropesLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Witchfire Blast', type: 'ranged', range: '24"', A: 'D3', BS: '3+', S: 7, AP: -2, D: 'D3', keywords: ['PSYCHIC'] },
       { name: 'Focused Witchfire', type: 'ranged', range: '24"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['LETHAL HITS', 'PSYCHIC'] },
@@ -452,7 +452,7 @@ export const tyranidUnits = {
     id: 'raveners', name: 'Raveners', category: 'infantry',
     powerRating: 4, points: 125,
     M: '10"', T: 5, Sv: '4+', W: 3, Ld: '8+', OC: 1,
-    models: 5, minModels: 5, maxModels: 5,
+    models: 5, minModels: 5, maxModels: 5, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106083_ENGKillTeamTyphonCoreGame3.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Ravener Claws and Talons', type: 'melee', A: 3, WS: '3+', S: 5, AP: -2, D: 2, keywords: ['TWIN-LINKED'] },
     ],
@@ -487,7 +487,7 @@ export const tyranidUnits = {
     id: 'pyrovores', name: 'Pyrovores', category: 'infantry',
     powerRating: 3, points: 40,
     M: '5"', T: 6, Sv: '3+', W: 5, Ld: '8+', OC: 1,
-    models: 1, minModels: 1, maxModels: 3, weaponRole: 'mixed',
+    models: 1, minModels: 1, maxModels: 3, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106065_Pyrovore1.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Flamespurt', type: 'ranged', range: '12"', A: 'D6+1', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
       { name: 'Chitin-barbed limbs', type: 'melee', A: 2, WS: '4+', S: 5, AP: 0, D: 1 },
@@ -506,7 +506,7 @@ export const tyranidUnits = {
     id: 'biovores', name: 'Biovores', category: 'infantry',
     powerRating: 4, points: 50,
     M: '5"', T: 6, Sv: '3+', W: 5, Ld: '8+', OC: 1,
-    models: 1, minModels: 1, maxModels: 3, weaponRole: 'ranged',
+    models: 1, minModels: 1, maxModels: 3, weaponRole: 'ranged', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106065_Biovore1.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Spore Mine Launcher', type: 'ranged', range: '48"', A: 'D3', BS: '4+', S: 6, AP: -1, D: 2, keywords: ['BLAST', 'DEVASTATING WOUNDS', 'HEAVY', 'INDIRECT FIRE'] },
       { name: 'Chitin-barbed limbs', type: 'melee', A: 2, WS: '4+', S: 5, AP: 0, D: 1 },
@@ -544,7 +544,7 @@ export const tyranidUnits = {
     id: 'carnifex', name: 'Carnifexes', category: 'monster',
     powerRating: 8, points: 90,
     M: '8"', T: 9, Sv: '2+', W: 8, Ld: '8+', OC: 3,
-    models: 1, minModels: 1, maxModels: 2,
+    models: 1, minModels: 1, maxModels: 2, artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106031_CarnifexBrood01.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Carnifex crushing claws', type: 'melee', A: 4, WS: '4+', S: 12, AP: -3, D: 'D6+1' },
       { name: 'Carnifex scything talons', type: 'melee', A: 6, WS: '4+', S: 9, AP: -2, D: 3 },
@@ -571,7 +571,7 @@ export const tyranidUnits = {
     id: 'screamerKiller', name: 'Screamer-Killer', category: 'monster',
     powerRating: 7, points: 125,
     M: '8"', T: 9, Sv: '2+', W: 10, Ld: '8+', OC: 3,
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106076_HorrorsHive1.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Bio-plasmic scream', type: 'ranged', range: '18"', A: 'D6+3', BS: '4+', S: 8, AP: -2, D: 1, keywords: ['ASSAULT', 'BLAST'] },
       { name: 'Screamer-Killer talons', type: 'melee', A: 10, WS: '3+', S: 10, AP: -2, D: 3 },
@@ -590,7 +590,7 @@ export const tyranidUnits = {
     id: 'exocrine', name: 'Exocrine', category: 'monster',
     powerRating: 9, points: 140,
     M: '8"', T: 10, Sv: '3+', W: 14, Ld: '8+', OC: 4,
-    models: 1, weaponRole: 'ranged',
+    models: 1, weaponRole: 'ranged', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106056_ExocreneLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Bio-plasmic Cannon', type: 'ranged', range: '36"', A: 'D6+3', BS: '3+', S: 9, AP: -3, D: 3, keywords: ['BLAST', 'HEAVY'] },
       { name: 'Powerful Limbs', type: 'melee', A: 3, WS: '3+', S: 7, AP: 0, D: 2 },
@@ -610,7 +610,7 @@ export const tyranidUnits = {
     id: 'nornEmissary', name: 'Norn Emissary', category: 'monster',
     powerRating: 14, points: 260,
     M: '10"', T: 11, Sv: '2+', W: 16, Ld: '7+', OC: 5, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106064_NornEmissary1.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Psychic Tendril — Neuroparasite', type: 'ranged', range: '18"', A: 2, BS: '2+', S: 8, AP: -2, D: 'D3', keywords: ['PRECISION', 'PSYCHIC'] },
       { name: 'Psychic Tendril — Neuroblast', type: 'ranged', range: '18"', A: '2D6', BS: '2+', S: 6, AP: -2, D: 1, keywords: ['BLAST', 'PSYCHIC'] },
@@ -634,7 +634,7 @@ export const tyranidUnits = {
     id: 'psychophage', name: 'Psychophage', category: 'monster',
     powerRating: 7, points: 110,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '8+', OC: 3,
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106074_Psychophage1.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Psychoclastic Torrent', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Talons and Betentacled Maw', type: 'melee', A: 6, WS: '3+', S: 6, AP: -2, D: 2, keywords: ['ANTI-PSYKER 4+', 'DEVASTATING WOUNDS'] },
@@ -655,7 +655,7 @@ export const tyranidUnits = {
     id: 'tyrannofex', name: 'Tyrannofex', category: 'monster',
     powerRating: 11, points: 200,
     M: '9"', T: 12, Sv: '2+', W: 16, Ld: '8+', OC: 5,
-    models: 1, weaponRole: 'ranged',
+    models: 1, weaponRole: 'ranged', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106054_TYRTyrannofexLead.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Rupture Cannon', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 18, AP: -4, D: 'D6+6', keywords: ['HEAVY'] },
       { name: 'Fleshborer Hive', type: 'ranged', range: '24"', A: 20, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['HEAVY', 'SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -678,7 +678,7 @@ export const tyranidUnits = {
     id: 'trygon', name: 'Trygon', category: 'monster',
     powerRating: 9, points: 140,
     M: '10"', T: 10, Sv: '3+', W: 14, Ld: '8+', OC: 4,
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106019_TrygonNEW01.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Bio-electric Pulse', type: 'ranged', range: '12"', A: 6, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['SUSTAINED HITS 2'] },
       { name: 'Trygon Scything Talons', type: 'melee', A: 12, WS: '3+', S: 9, AP: -2, D: 3 },
@@ -779,7 +779,7 @@ export const tyranidUnits = {
     id: 'tyrannocyte', name: 'Tyrannocyte', category: 'monster',
     powerRating: 7, points: 105,
     M: '8"', T: 9, Sv: '3+', W: 10, Ld: '8+', OC: 2,
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120106034_Tyrannocyte01.jpg?fm=webp&w=892&h=920',
     weapons: [
       { name: 'Tyrannocyte bio-weapons', type: 'ranged', range: '24"', A: 5, BS: '4+', S: 5, AP: -1, D: 2 },
       { name: 'Flensing Whips', type: 'melee', A: 6, WS: '4+', S: 7, AP: -1, D: 2 },

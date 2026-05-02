@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import ImportListSheet from '../components/ImportListSheet'
 import { swUnitsByCategory } from '../data/spacewolves/units'
@@ -148,6 +148,183 @@ function DetachmentCard({ d, selected, accent, theme, onClick }) {
   )
 }
 
+const SHEET_SPRING = { type: 'spring', stiffness: 340, damping: 32 }
+
+function phaseColor(phase, theme) {
+  if (!phase) return theme.textSecondary
+  const p = phase.toLowerCase()
+  if (p.includes('command')) return '#c8a84c'
+  if (p.includes('movement') || p.includes('move')) return '#3b82f6'
+  if (p.includes('shoot')) return '#f59e0b'
+  if (p.includes('charge')) return '#ef4444'
+  if (p.includes('fight')) return '#8b5cf6'
+  return theme.textSecondary
+}
+
+function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-end justify-center md:items-center"
+      initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
+      animate={{ backgroundColor: 'rgba(0,0,0,0.85)' }}
+      exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="w-full max-w-lg rounded-t-3xl flex flex-col overflow-hidden md:rounded-3xl md:mx-4"
+        style={{ maxHeight: '92vh', background: theme.bg, border: `1px solid ${theme.border}` }}
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
+        transition={SHEET_SPRING}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Handle */}
+        <div className="flex justify-center pt-3 shrink-0">
+          <div className="w-10 h-1 rounded-full" style={{ background: theme.border }} />
+        </div>
+
+        {/* Accent bar */}
+        <div className="h-1 mx-5 mt-2 rounded-full shrink-0"
+          style={{ background: `linear-gradient(to right, ${accent}, ${accent}44)` }} />
+
+        {/* Scrollable body */}
+        <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-3 pb-2 space-y-4">
+
+          {/* Header */}
+          <div>
+            <p className="font-black text-xl leading-tight" style={{ color: accent }}>{d.name}</p>
+            {d.subtitle && (
+              <p className="text-sm italic mt-0.5" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
+            )}
+            {d.playstyle && (
+              <div className="mt-2 px-3 py-2 rounded-xl"
+                style={{ background: `${accent}10`, border: `1px solid ${accent}22` }}>
+                <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{d.playstyle}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Detachment Rule */}
+          <div>
+            <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+              ⚡ Detachment Rule
+            </p>
+            <div className="px-3 py-3 rounded-xl space-y-1.5"
+              style={{ background: `${accent}10`, border: `1px solid ${accent}2a` }}>
+              <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>
+                {d.detachmentRule.name}
+              </p>
+              <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
+                {d.detachmentRule.description || d.detachmentRule.reminder}
+              </p>
+            </div>
+          </div>
+
+          {/* Adaptations (commandPhaseAction options) */}
+          {d.commandPhaseAction?.options?.length > 0 && (
+            <div>
+              <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                🔄 {d.commandPhaseAction.label || 'Adaptations'} — pick one each round
+              </p>
+              <div className="space-y-2">
+                {d.commandPhaseAction.options.map(opt => (
+                  <div key={opt.id} className="px-3 py-2.5 rounded-xl"
+                    style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="text-base">{opt.icon}</span>
+                      <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>{opt.label}</p>
+                      {opt.shortEffect && (
+                        <span className="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0"
+                          style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
+                          {opt.shortEffect}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
+                      {opt.fullEffect}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Stratagems */}
+          {d.stratagems?.length > 0 && (
+            <div>
+              <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                📜 Stratagems ({d.stratagems.length})
+              </p>
+              <div className="space-y-2">
+                {d.stratagems.map(s => (
+                  <div key={s.id} className="px-3 py-2.5 rounded-xl"
+                    style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
+                    <div className="flex items-start justify-between gap-2 mb-1.5">
+                      <p className="font-bold text-sm leading-tight" style={{ color: theme.textPrimary }}>
+                        {s.name}
+                      </p>
+                      <span className="text-xs font-black shrink-0 px-2 py-0.5 rounded-full"
+                        style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
+                        {s.cost}CP
+                      </span>
+                    </div>
+                    {s.timing && (
+                      <p className="text-[10px] font-bold mb-1.5 px-2 py-0.5 rounded-full inline-block"
+                        style={{ background: `${phaseColor(s.phase, theme)}18`, color: phaseColor(s.phase, theme) }}>
+                        {s.timing}
+                      </p>
+                    )}
+                    <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{s.effect}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Enhancements */}
+          {d.enhancements?.length > 0 && (
+            <div>
+              <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                ⭐ Enhancements ({d.enhancements.length})
+              </p>
+              <div className="space-y-2">
+                {d.enhancements.map((enh, i) => (
+                  <div key={i} className="px-3 py-2.5 rounded-xl"
+                    style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>{enh.name}</p>
+                      <span className="text-xs font-black shrink-0 px-2 py-0.5 rounded-full"
+                        style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                        {enh.cost}pts
+                      </span>
+                    </div>
+                    <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
+                      {enh.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="h-2" />
+        </div>
+
+        {/* CTA footer */}
+        <div className="px-5 pb-6 pt-3 shrink-0 border-t" style={{ borderColor: theme.border, background: theme.surface }}>
+          <button
+            onClick={() => onChoose(d.id)}
+            className="w-full py-3.5 rounded-2xl font-black text-sm tracking-wide"
+            style={{ background: accent, color: '#000' }}>
+            Choose {d.name} →
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const store = useBattleStore()
   const [step, setStep] = useState('faction') // faction → detachment → units → opponent → ready
@@ -185,6 +362,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const [showImport, setShowImport] = useState(false)
   const [allegianceTab, setAllegianceTab] = useState(() => getAllegianceFor(store.faction || 'spacewolves'))
   const [unitRoleOverrides, setUnitRoleOverrides] = useState({})
+  const [infoSheetDetachment, setInfoSheetDetachment] = useState(null)
 
   const isSW = localFaction === 'spacewolves'
   const factionMeta = FACTION_META[localFaction] || { name: '', color: '#888' }
@@ -408,7 +586,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                 </div>
                 {swDetachmentList.map(d => (
                   <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
-                    accent={theme.secondary} theme={theme} onClick={() => setLocalDetachment(d.id)} />
+                    accent={theme.secondary} theme={theme} onClick={() => setInfoSheetDetachment({ d, accent: theme.secondary })} />
                 ))}
                 {/* Generic SM detachments */}
                 <div className="flex items-center gap-2 pt-2">
@@ -418,13 +596,13 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                 </div>
                 {smGenericDetachmentList.map(d => (
                   <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
-                    accent={theme.primary} theme={theme} onClick={() => setLocalDetachment(d.id)} />
+                    accent={theme.primary} theme={theme} onClick={() => setInfoSheetDetachment({ d, accent: theme.primary })} />
                 ))}
               </>
             )}
             {!isSW && detachments.map(d => (
               <DetachmentCard key={d.id} d={d} selected={localDetachment === d.id}
-                accent={factionMeta.color} theme={theme} onClick={() => setLocalDetachment(d.id)} />
+                accent={factionMeta.color} theme={theme} onClick={() => setInfoSheetDetachment({ d, accent: factionMeta.color })} />
             ))}
           </div>
         )}
@@ -662,6 +840,18 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
             onLoadAsMyArmy={handleImportAsMyArmy}
             onLoadAsOpponent={handleImportAsOpponent}
             onClose={() => setShowImport(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {infoSheetDetachment && (
+          <DetachmentInfoSheet
+            d={infoSheetDetachment.d}
+            accent={infoSheetDetachment.accent}
+            theme={theme}
+            onChoose={(id) => { setLocalDetachment(id); setInfoSheetDetachment(null); setStep('units') }}
+            onClose={() => setInfoSheetDetachment(null)}
           />
         )}
       </AnimatePresence>
