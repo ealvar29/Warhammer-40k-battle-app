@@ -109,7 +109,7 @@ export const tyranidDetachments = {
     id: 'crusherStampede',
     name: 'Crusher Stampede',
     subtitle: 'The earth shakes. Bones shatter.',
-    playstyle: 'Monster-heavy shock assault.',
+    playstyle: 'Monster-heavy shock assault — every Charge move triggers D3 mortal wounds on anything nearby. Stack as many Monsters as possible, charge into multiple enemies at once, and watch the mortals cascade. Enhancements make your Monsters nearly unkillable or devastatingly lethal on the charge.',
     detachmentRule: {
       name: 'Stampede',
       description: 'Each time a MONSTER unit from your army ends a Charge move, roll one D6 for each enemy unit within Engagement Range: on a 2+, that unit suffers D3 mortal wounds.',
