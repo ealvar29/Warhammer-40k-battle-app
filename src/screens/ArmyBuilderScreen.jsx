@@ -73,26 +73,75 @@ const categoryLabels = {
 }
 
 function DetachmentCard({ d, selected, accent, theme, onClick }) {
+  const desc = d.detachmentRule?.description || d.detachmentRule?.reminder || ''
   return (
     <button onClick={onClick}
-      className="w-full rounded-2xl border-2 p-4 text-left transition-all"
+      className="w-full rounded-2xl overflow-hidden text-left transition-all"
       style={{
-        background: selected ? `${accent}12` : theme.surface,
-        borderColor: selected ? accent : theme.border,
+        border: `2px solid ${selected ? accent : theme.border}`,
+        boxShadow: selected ? `0 0 22px ${accent}33` : 'none',
+        background: theme.surface,
       }}>
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1">
-          <p className="font-bold text-sm" style={{ color: selected ? accent : theme.textPrimary }}>{d.name}</p>
-          <p className="text-xs italic mt-0.5" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
-          <div className="mt-2 rounded-xl p-2.5 border" style={{ background: theme.surfaceHigh, borderColor: theme.border }}>
-            <p className="text-xs font-bold" style={{ color: theme.textPrimary }}>{d.detachmentRule.name}</p>
-            <p className="text-xs mt-1 leading-relaxed" style={{ color: theme.textSecondary }}>{d.detachmentRule.description}</p>
+
+      {/* Coloured accent bar at top */}
+      <div className="h-1.5" style={{ background: selected ? accent : `${accent}35` }} />
+
+      <div className="p-4">
+        {/* Name + badge row */}
+        <div className="flex items-start gap-3 mb-3">
+          <div className="flex-1 min-w-0">
+            <p className="font-black text-base leading-tight"
+              style={{ color: selected ? accent : theme.textPrimary }}>
+              {d.name}
+            </p>
+            {d.subtitle && (
+              <p className="text-xs italic mt-0.5" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
+            )}
           </div>
-          <p className="text-xs mt-2" style={{ color: theme.textSecondary }}>
-            {d.stratagems.length} stratagems · {d.enhancements.length} enhancements
-          </p>
+          <div className="flex flex-col gap-1 shrink-0 items-end">
+            <span className="text-xs font-bold px-2 py-0.5 rounded-lg"
+              style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
+              {d.stratagems.length} stratagems
+            </span>
+            <span className="text-xs font-bold px-2 py-0.5 rounded-lg"
+              style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+              {d.enhancements.length} enhancements
+            </span>
+          </div>
         </div>
-        {selected && <span className="text-lg shrink-0" style={{ color: accent }}>✓</span>}
+
+        {/* Detachment rule highlight */}
+        <div className="rounded-xl px-3 py-2.5"
+          style={{ background: `${accent}10`, border: `1px solid ${accent}28` }}>
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <span style={{ fontSize: 11 }}>⚡</span>
+            <p className="text-xs font-black uppercase tracking-widest" style={{ color: accent }}>
+              {d.detachmentRule.name}
+            </p>
+          </div>
+          {desc && (
+            <p className="text-xs leading-relaxed"
+              style={{
+                color: theme.textSecondary,
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}>
+              {desc}
+            </p>
+          )}
+        </div>
+
+        {selected && (
+          <div className="mt-3 flex items-center gap-1.5">
+            <div className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: accent }}>
+              <span style={{ color: '#000', fontSize: 8, fontWeight: 900 }}>✓</span>
+            </div>
+            <p className="text-xs font-bold" style={{ color: accent }}>Selected — tap Continue below</p>
+          </div>
+        )}
       </div>
     </button>
   )
@@ -275,13 +324,12 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                 if (!f) return null
                 const selected = localFaction === id
                 return (
-                  <button key={id}
-                    onClick={() => { setLocalFaction(id); setLocalDetachment(null); setUnitCounts({}) }}
-                    className="rounded-2xl overflow-hidden text-left transition-all relative"
+                  <div key={id}
+                    onClick={() => { setLocalFaction(id); setLocalDetachment(null); setUnitCounts({}); store.setFaction(id) }}
+                    className="rounded-2xl overflow-hidden text-left transition-all relative cursor-pointer min-h-[160px] md:min-h-[280px] flex flex-col justify-end"
                     style={{
-                      minHeight: 160,
                       border: `2px solid ${selected ? f.color : 'transparent'}`,
-                      boxShadow: selected ? `0 0 18px ${f.color}55` : 'none',
+                      boxShadow: selected ? `0 0 20px ${f.color}55` : 'none',
                     }}>
 
                     {/* Art or gradient background */}
@@ -292,9 +340,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                         backgroundPosition: 'center center',
                       }} />
 
-                    {/* Dark gradient overlay so text is always readable */}
+                    {/* Dark gradient overlay */}
                     <div className="absolute inset-0"
-                      style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.10) 100%)' }} />
+                      style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.08) 100%)' }} />
 
                     {/* Selected checkmark */}
                     {selected && (
@@ -305,8 +353,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                     )}
 
                     {/* Bottom label */}
-                    <div className="absolute bottom-0 left-0 right-0 px-3 pb-2.5 pt-6">
-                      <div className="flex items-end justify-between">
+                    <div className="relative z-10 px-3 pb-2.5 pt-6">
+                      <div className="flex items-end justify-between mb-2">
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-black leading-tight truncate" style={{ color: '#fff' }}>
                             {f.name}
@@ -318,7 +366,17 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                         <span className="text-xl ml-1 shrink-0">{f.icon}</span>
                       </div>
                     </div>
-                  </button>
+
+                    {/* Continue button — embedded on card, faction-coloured */}
+                    {selected && (
+                      <button
+                        onClick={e => { e.stopPropagation(); setStep('detachment') }}
+                        className="relative z-10 w-full py-2.5 font-black text-sm tracking-wide"
+                        style={{ background: f.color, color: '#fff' }}>
+                        Continue with {f.name} →
+                      </button>
+                    )}
+                  </div>
                 )
               })}
             </div>
@@ -410,7 +468,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                     <p className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: theme.textSecondary }}>
                       {categoryLabels[cat] || cat}
                     </p>
-                    <div className="space-y-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                       {units.map(u => {
                         const count = unitCount(u.id)
                         const selected = count > 0
@@ -423,100 +481,111 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                           else if (!atMax) addUnit(u.id)
                         }
                         return (
-                          <button key={u.id} onClick={handleCardClick}
-                            className="w-full rounded-2xl border p-3 text-left transition-all"
+                          <div key={u.id}
+                            onClick={handleCardClick}
+                            className="relative rounded-2xl overflow-hidden cursor-pointer transition-all flex flex-col justify-end"
                             style={{
-                              background: selected ? `${section.accent}12` : theme.surface,
-                              borderColor: selected ? section.accent : isLegends ? `${theme.border}80` : theme.border,
-                              opacity: isLegends ? 0.65 : 1,
+                              minHeight: 130,
+                              border: `2px solid ${selected ? section.accent : 'transparent'}`,
+                              boxShadow: selected ? `0 0 14px ${section.accent}44` : 'none',
+                              opacity: isLegends ? 0.7 : 1,
                             }}>
-                            <div className="flex items-center justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <p className="font-bold text-sm" style={{ color: selected ? section.accent : theme.textPrimary }}>
-                                    {u.name}
-                                  </p>
-                                  {isEpicHero && (
-                                    <span className="text-xs font-black px-1.5 py-0.5 rounded" style={{ background: `${section.accent}20`, color: section.accent, fontSize: 8, letterSpacing: '0.06em' }}>
-                                      UNIQUE
-                                    </span>
-                                  )}
-                                  {isLegends && (
-                                    <span className="text-xs font-black px-1.5 py-0.5 rounded" style={{ background: `${theme.textSecondary}20`, color: theme.textSecondary, fontSize: 8, letterSpacing: '0.06em' }}>
-                                      LEGENDS
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="flex gap-3 mt-1 text-xs" style={{ color: theme.textSecondary }}>
-                                  <span>M {u.M}</span>
-                                  <span>T {u.T}</span>
-                                  <span>Sv {u.Sv}</span>
-                                  <span>W {u.W}</span>
-                                  {u.InvSv && <span>Inv {u.InvSv}</span>}
-                                </div>
-                                {selected && hasMixedWeapons(u) && (
-                                  <div className="flex gap-1 mt-2" onClick={e => e.stopPropagation()}>
-                                    {ROLE_OPTIONS.map(opt => {
-                                      const active = (unitRoleOverrides[u.id] || 'mixed') === opt.id
-                                      return (
-                                        <button key={opt.id}
-                                          onClick={() => setUnitRoleOverrides(prev => ({ ...prev, [u.id]: opt.id }))}
-                                          className="px-2 py-0.5 rounded-lg text-xs font-bold transition-all"
-                                          style={{
-                                            background: active ? section.accent : theme.surfaceHigh,
-                                            color: active ? theme.bg : theme.textSecondary,
-                                            border: `1px solid ${active ? section.accent : theme.border}`,
-                                            fontSize: 10,
-                                          }}>
-                                          {opt.label}
-                                        </button>
-                                      )
-                                    })}
-                                  </div>
-                                )}
+
+                            {/* Background: unit art or faction gradient */}
+                            <div className="absolute inset-0"
+                              style={{
+                                backgroundImage: u.artUrl ? `url(${u.artUrl})` : factionMeta.gradient,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center center',
+                              }} />
+
+                            {/* Overlay */}
+                            <div className="absolute inset-0"
+                              style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.08) 100%)' }} />
+
+                            {/* Top-left count badge */}
+                            {count > 0 && (
+                              <div className="absolute top-2 left-2 w-6 h-6 rounded-full flex items-center justify-center font-black text-xs z-10"
+                                style={{ background: section.accent, color: '#000' }}>
+                                ×{count}
                               </div>
-                              <div className="flex items-center gap-2 shrink-0">
-                                <span className="text-xs px-2 py-1 rounded-full"
-                                  style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
-                                  {u.points} pts
+                            )}
+
+                            {/* Top-right flags */}
+                            <div className="absolute top-2 right-2 flex gap-1 z-10">
+                              {isEpicHero && (
+                                <span className="px-1.5 py-0.5 rounded font-black"
+                                  style={{ background: `${section.accent}cc`, color: '#000', fontSize: 8 }}>
+                                  UNIQUE
                                 </span>
-                                {selected && isEpicHero ? (
-                                  /* Epic heroes: just a checkmark, no stepper */
-                                  <div className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-sm"
-                                    style={{ background: section.accent, color: theme.bg }}>
-                                    ✓
-                                  </div>
-                                ) : selected ? (
-                                  /* Regular units: +/− stepper capped at 3 */
-                                  <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
-                                    <button
-                                      onClick={() => removeUnit(u.id)}
-                                      className="w-6 h-6 rounded-lg flex items-center justify-center font-black text-sm"
-                                      style={{ background: `${section.accent}22`, color: section.accent, border: `1px solid ${section.accent}50` }}>
-                                      −
-                                    </button>
-                                    <span className="text-xs font-black w-5 text-center" style={{ color: section.accent }}>
-                                      ×{count}
-                                    </span>
-                                    <button
-                                      onClick={e => { e.stopPropagation(); addUnit(u.id) }}
-                                      disabled={atMax}
-                                      className="w-6 h-6 rounded-lg flex items-center justify-center font-black text-sm"
-                                      style={{
-                                        background: atMax ? theme.border : section.accent,
-                                        color: atMax ? theme.textSecondary : theme.bg,
-                                        opacity: atMax ? 0.5 : 1,
-                                      }}>
-                                      +
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <div className="w-5 h-5 rounded-full"
-                                    style={{ background: theme.border }} />
-                                )}
-                              </div>
+                              )}
+                              {isLegends && (
+                                <span className="px-1.5 py-0.5 rounded font-black"
+                                  style={{ background: 'rgba(0,0,0,0.65)', color: 'rgba(255,255,255,0.45)', fontSize: 8 }}>
+                                  LEGENDS
+                                </span>
+                              )}
                             </div>
-                          </button>
+
+                            {/* Bottom content */}
+                            <div className="relative z-10 px-2.5 pb-2.5">
+                              {/* Mini stats */}
+                              <div className="flex gap-2 mb-1">
+                                {['M','T','Sv','W'].map(stat => (
+                                  <span key={stat} style={{ color: 'rgba(255,255,255,0.4)', fontSize: 8 }}>
+                                    {stat}{u[stat]}
+                                  </span>
+                                ))}
+                              </div>
+
+                              <p className="text-xs font-black leading-tight truncate" style={{ color: '#fff' }}>{u.name}</p>
+                              <div className="flex items-center justify-between mt-0.5 mb-1.5">
+                                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 9 }}>
+                                  {categoryLabels[u.category || u.type] || ''}
+                                </p>
+                                <p style={{ color: section.accent, fontSize: 10, fontWeight: 800 }}>{u.points}pts</p>
+                              </div>
+
+                              {/* Stepper for regular selected units */}
+                              {selected && !isEpicHero && (
+                                <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+                                  <button onClick={() => removeUnit(u.id)}
+                                    className="flex-1 py-1 rounded-lg font-black text-xs"
+                                    style={{ background: 'rgba(0,0,0,0.7)', color: section.accent, border: `1px solid ${section.accent}55` }}>
+                                    −
+                                  </button>
+                                  <span className="text-xs font-black w-5 text-center" style={{ color: section.accent }}>×{count}</span>
+                                  <button onClick={e => { e.stopPropagation(); if (!atMax) addUnit(u.id) }}
+                                    className="flex-1 py-1 rounded-lg font-black text-xs"
+                                    style={{ background: atMax ? 'rgba(255,255,255,0.08)' : section.accent, color: atMax ? 'rgba(255,255,255,0.25)' : '#000' }}>
+                                    +
+                                  </button>
+                                </div>
+                              )}
+
+                              {/* Role picker for mixed-weapon units */}
+                              {selected && hasMixedWeapons(u) && (
+                                <div className="flex gap-1 mt-1" onClick={e => e.stopPropagation()}>
+                                  {ROLE_OPTIONS.map(opt => {
+                                    const active = (unitRoleOverrides[u.id] || 'mixed') === opt.id
+                                    return (
+                                      <button key={opt.id}
+                                        onClick={() => setUnitRoleOverrides(prev => ({ ...prev, [u.id]: opt.id }))}
+                                        className="flex-1 py-0.5 rounded font-bold"
+                                        style={{
+                                          background: active ? section.accent : 'rgba(0,0,0,0.6)',
+                                          color: active ? '#000' : 'rgba(255,255,255,0.45)',
+                                          border: `1px solid ${active ? section.accent : 'rgba(255,255,255,0.1)'}`,
+                                          fontSize: 8,
+                                        }}>
+                                        {opt.label}
+                                      </button>
+                                    )
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         )
                       })}
                     </div>
@@ -564,26 +633,6 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           </div>
         )}
       </div>
-
-      {/* Sticky Continue footer — faction step */}
-      {step === 'faction' && (
-        <div className="px-4 pb-4 pt-2 shrink-0 border-t" style={{ background: theme.surface, borderColor: theme.border }}>
-          <div className="flex items-center gap-3 mb-2.5">
-            <span className="text-2xl shrink-0">{factionMeta.icon}</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-black truncate" style={{ color: factionMeta.color }}>{factionMeta.name}</p>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>
-                {(FACTION_UNITS[localFaction] || []).length} units available
-              </p>
-            </div>
-          </div>
-          <button onClick={() => setStep('detachment')}
-            className="w-full py-3.5 rounded-2xl font-bold text-sm"
-            style={{ background: factionMeta.color, color: '#fff' }}>
-            Continue →
-          </button>
-        </div>
-      )}
 
       {/* Sticky Continue footer — only for detachment and units steps */}
       {(step === 'detachment' || step === 'units') && (() => {
