@@ -10,7 +10,7 @@ export const daUnits = {
     id: 'azrael', name: 'Azrael', category: 'epicHero',
     points: 125,
     M: '6"', T: 4, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: "Lion's Wrath", type: 'ranged', range: '24"', A: 2, BS: '2+', S: 8, AP: -3, D: 2, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS', 'RAPID FIRE 1'] },
       { name: 'The Sword of Secrets', type: 'melee', A: 6, WS: '2+', S: 6, AP: -4, D: 2, keywords: ['DEVASTATING WOUNDS'] },
@@ -31,7 +31,7 @@ export const daUnits = {
     id: 'belial', name: 'Belial', category: 'epicHero',
     points: 85,
     M: '5"', T: 5, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Master-crafted storm bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 2, keywords: ['PRECISION', 'RAPID FIRE 2'] },
       { name: 'The Sword of Silence', type: 'melee', A: 6, WS: '2+', S: 6, AP: -2, D: 2, keywords: ['PRECISION'] },
@@ -52,7 +52,7 @@ export const daUnits = {
     id: 'sammael', name: 'Sammael', category: 'epicHero',
     points: 115,
     M: '12"', T: 5, Sv: '3+', W: 7, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Master-crafted plasma cannon', type: 'ranged', range: '36"', A: 'D3', BS: '2+', S: 8, AP: -3, D: 2, keywords: ['BLAST'] },
@@ -95,7 +95,7 @@ export const daUnits = {
     id: 'ezekiel', name: 'Ezekiel', category: 'epicHero',
     points: 75,
     M: '6"', T: 4, Sv: '2+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'The Deliverer', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: -1, D: 2, keywords: ['PISTOL', 'PRECISION'] },
       { name: 'Mind Wipe — Witchfire', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 6, AP: -2, D: 6, keywords: ['DEVASTATING WOUNDS', 'PRECISION', 'PSYCHIC'] },
@@ -422,7 +422,7 @@ export const daUnits = {
     id: 'redemptorDreadnought', name: 'Redemptor Dreadnought', category: 'vehicle',
     points: 205,
     M: '8"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 4,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Heavy onslaught gatling cannon', type: 'ranged', range: '24"', A: 12, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
       { name: 'Macro plasma incinerator (standard)', type: 'ranged', range: '36"', A: 'D6+1', BS: '3+', S: 8, AP: -3, D: 2, keywords: ['BLAST'] },
@@ -449,7 +449,7 @@ export const daUnits = {
     id: 'darkTalon', name: 'Ravenwing Dark Talon', category: 'vehicle',
     points: 210,
     M: '20"', T: 8, Sv: '3+', W: 11, Ld: '6+', OC: 0, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Hurricane bolter', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 6', 'TWIN-LINKED'] },
       { name: 'Rift cannon', type: 'ranged', range: '18"', A: 'D3+1', BS: '3+', S: 16, AP: -4, D: 3, keywords: ['BLAST', 'DEVASTATING WOUNDS', 'HAZARDOUS'] },
@@ -472,7 +472,7 @@ export const daUnits = {
     id: 'nephilimJetfighter', name: 'Nephilim Jetfighter', category: 'vehicle',
     points: 195,
     M: '20"', T: 8, Sv: '3+', W: 11, Ld: '6+', OC: 0, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Avenger mega bolter', type: 'ranged', range: '36"', A: 10, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
       { name: 'Blacksword missiles', type: 'ranged', range: '36"', A: 2, BS: '3+', S: 8, AP: -2, D: 'D6', keywords: ['ANTI-FLY 2+'] },
@@ -497,7 +497,7 @@ export const daUnits = {
     id: 'landRaider', name: 'Land Raider', category: 'vehicle',
     points: 220,
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Godhammer lascannon (×2)', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -519,7 +519,7 @@ export const daUnits = {
     id: 'predatorAnnihilator', name: 'Predator Annihilator', category: 'vehicle',
     points: 135,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator twin lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 14, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },

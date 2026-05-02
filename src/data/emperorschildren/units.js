@@ -9,7 +9,7 @@ export const ecUnits = {
     id: 'fulgrim', name: 'Fulgrim', category: 'epicHero',
     powerRating: 17, points: 340,
     M: '16"', T: 11, Sv: '2+', W: 16, Ld: '5+', OC: 6, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Malefic Lash', type: 'ranged', range: '12"', A: 6, BS: '2+', S: 8, AP: -2, D: 2, keywords: ['SUSTAINED HITS 1'] },
       { name: 'Daemonic Blades — Strike', type: 'melee', A: 6, WS: '2+', S: 14, AP: -3, D: 'D6+1', keywords: ['SUSTAINED HITS 1'] },
@@ -63,7 +63,7 @@ export const ecUnits = {
     id: 'shalaxiHelbane', name: 'Shalaxi Helbane', category: 'epicHero',
     powerRating: 17, points: 340,
     M: '14"', T: 10, Sv: '3+', W: 20, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Lash of Slaanesh', type: 'ranged', range: '12"', A: 6, BS: '2+', S: 6, AP: -1, D: 2, keywords: ['ASSAULT', 'DEVASTATING WOUNDS'] },
       { name: 'Pavane of Slaanesh — Witchfire', type: 'ranged', range: '18"', A: 'D6', BS: '2+', S: 9, AP: -1, D: 'D3', keywords: ['DEVASTATING WOUNDS', 'PSYCHIC'] },
@@ -92,7 +92,7 @@ export const ecUnits = {
     id: 'daemonPrinceOfSlaanesh', name: 'Daemon Prince of Slaanesh', category: 'character',
     powerRating: 9, points: 180,
     M: '10"', T: 10, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -1, D: 2, keywords: [] },
       { name: 'Hellforged Weapons — Strike', type: 'melee', A: 6, WS: '2+', S: 8, AP: -2, D: 3, keywords: [] },
@@ -116,7 +116,7 @@ export const ecUnits = {
     id: 'daemonPrinceOfSlaaneshWithWings', name: 'Daemon Prince of Slaanesh with Wings', category: 'character',
     powerRating: 11, points: 215,
     M: '14"', T: 9, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -1, D: 2, keywords: [] },
       { name: 'Hellforged Weapons — Strike', type: 'melee', A: 6, WS: '2+', S: 8, AP: -2, D: 3, keywords: [] },
@@ -140,7 +140,7 @@ export const ecUnits = {
     id: 'keeperOfSecrets', name: 'Keeper of Secrets', category: 'character',
     powerRating: 12, points: 240,
     M: '14"', T: 10, Sv: '5+', W: 18, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Living Whip', type: 'ranged', range: '12"', A: 6, BS: '2+', S: 6, AP: -1, D: 2, keywords: ['ASSAULT'] },
       { name: 'Phantasmagoria — Witchfire', type: 'ranged', range: '18"', A: 6, BS: '2+', S: 6, AP: -2, D: 1, keywords: ['DEVASTATING WOUNDS', 'PSYCHIC'] },
@@ -219,7 +219,7 @@ export const ecUnits = {
     id: 'sorcerer', name: 'Sorcerer', category: 'character',
     powerRating: 3, points: 60,
     M: '7"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Agonising Energies — Witchfire', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 5, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
@@ -459,7 +459,7 @@ export const ecUnits = {
     id: 'heldrake', name: 'Heldrake', category: 'vehicle',
     powerRating: 10, points: 195,
     M: '20"+', T: 10, Sv: '3+', W: 14, Ld: '7+', OC: 0, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Baleflamer', type: 'ranged', range: '12"', A: 'D6+3', BS: 'N/A', S: 6, AP: -1, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Hades Autocannon', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 8, AP: -1, D: 2, keywords: [] },
@@ -483,7 +483,7 @@ export const ecUnits = {
     id: 'maulerfiend', name: 'Maulerfiend', category: 'vehicle',
     powerRating: 7, points: 130,
     M: '10"', T: 10, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Magma Cutters', type: 'ranged', range: '6"', A: 2, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
       { name: 'Lasher Tendrils', type: 'melee', A: 6, WS: '3+', S: 7, AP: -1, D: 1, keywords: ['EXTRA ATTACKS'] },
@@ -506,7 +506,7 @@ export const ecUnits = {
     id: 'defiler', name: 'Defiler', category: 'vehicle',
     powerRating: 13, points: 250,
     M: '12"', T: 11, Sv: '3+', W: 18, Ld: '6+', OC: 5, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Hades Battle Cannon', type: 'ranged', range: '48"', A: 'D6+3', BS: '3+', S: 10, AP: -1, D: 3, keywords: ['BLAST'] },
       { name: 'Ectoplasma Destructor', type: 'ranged', range: '36"', A: 'D6', BS: '3+', S: 12, AP: -3, D: 3, keywords: ['BLAST'] },
@@ -539,7 +539,7 @@ export const ecUnits = {
     id: 'chaosRhino', name: 'Chaos Rhino', category: 'vehicle',
     powerRating: 5, points: 80,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Combi-weapon', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS', 'RAPID FIRE 1'] },
@@ -563,7 +563,7 @@ export const ecUnits = {
     id: 'chaosLandRaider', name: 'Chaos Land Raider', category: 'vehicle',
     powerRating: 11, points: 220,
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Combi-weapon', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS', 'RAPID FIRE 1'] },

@@ -9,7 +9,7 @@ export const tauUnits = {
     id: 'commanderFarsight', name: 'Commander Farsight', category: 'epicHero',
     points: 85,
     M: '10"', T: 5, Sv: '2+', W: 8, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'High-intensity plasma rifle', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 8, AP: -3, D: 3, keywords: [] },
       { name: 'Dawn Blade — Strike', type: 'melee', A: 4, WS: '2+', S: 10, AP: -2, D: 3, keywords: [] },
@@ -32,7 +32,7 @@ export const tauUnits = {
     id: 'commanderShadowsun', name: 'Commander Shadowsun', category: 'epicHero',
     points: 100,
     M: '10"', T: 4, Sv: '3+', W: 6, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Flechette launcher', type: 'ranged', range: '18"', A: 5, BS: '2+', S: 3, AP: 0, D: 1, keywords: [] },
       { name: 'High-energy fusion blaster', type: 'ranged', range: '18"', A: 1, BS: '2+', S: 10, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
@@ -62,7 +62,7 @@ export const tauUnits = {
     id: 'theTwinLance', name: 'The Twin Lance', category: 'epicHero',
     points: 185,
     M: '10"', T: 6, Sv: '2+', W: 8, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Fusion eliminator', type: 'ranged', range: '18"', A: 2, BS: '2+', S: 10, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
       { name: 'Ion scattercannon (Standard)', type: 'ranged', range: '18"', A: 4, BS: '2+', S: 7, AP: -2, D: 2, keywords: [] },
@@ -95,7 +95,7 @@ export const tauUnits = {
     id: 'commanderInColdstarBattlesuit', name: 'Commander in Coldstar Battlesuit', category: 'character',
     points: 95,
     M: '12"', T: 5, Sv: '3+', W: 6, Ld: '7+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Airbursting fragmentation projector', type: 'ranged', range: '24"', A: 'D6', BS: '3+', S: 3, AP: 0, D: 1, keywords: ['BLAST', 'INDIRECT FIRE'] },
       { name: 'Burst cannon', type: 'ranged', range: '18"', A: 4, BS: '3+', S: 5, AP: 0, D: 1, keywords: [] },
@@ -125,7 +125,7 @@ export const tauUnits = {
     id: 'commanderInEnforcerBattlesuit', name: 'Commander in Enforcer Battlesuit', category: 'character',
     points: 80,
     M: '8"', T: 5, Sv: '2+', W: 6, Ld: '7+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Airbursting fragmentation projector', type: 'ranged', range: '24"', A: 'D6', BS: '3+', S: 3, AP: 0, D: 1, keywords: ['BLAST', 'INDIRECT FIRE'] },
       { name: 'Burst cannon', type: 'ranged', range: '18"', A: 4, BS: '3+', S: 5, AP: 0, D: 1, keywords: [] },
@@ -154,7 +154,7 @@ export const tauUnits = {
     id: 'cadreFireblade', name: 'Cadre Fireblade', category: 'character',
     points: 50,
     M: '6"', T: 3, Sv: '4+', W: 3, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Fireblade pulse rifle', type: 'ranged', range: '30"', A: 1, BS: '3+', S: 5, AP: 0, D: 2, keywords: ['RAPID FIRE 1'] },
       { name: 'Close combat weapon', type: 'melee', A: 3, WS: '4+', S: 3, AP: 0, D: 1, keywords: [] },
@@ -195,7 +195,7 @@ export const tauUnits = {
     id: 'darkstrider', name: 'Darkstrider', category: 'epicHero',
     points: 60,
     M: '7"', T: 3, Sv: '4+', W: 3, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Shade assault rifle', type: 'ranged', range: '18"', A: 2, BS: '2+', S: 5, AP: 0, D: 2, keywords: [] },
       { name: 'Close combat weapon', type: 'melee', A: 3, WS: '4+', S: 3, AP: 0, D: 1, keywords: [] },
@@ -218,7 +218,7 @@ export const tauUnits = {
     id: 'firesightTeam', name: 'Firesight Team', category: 'character',
     points: 60,
     M: '6"', T: 3, Sv: '4+', W: 4, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Longshot pulse rifles', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 5, AP: -1, D: 2, keywords: ['HEAVY', 'PRECISION'] },
       { name: 'Pulse pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['PISTOL'] },
@@ -242,7 +242,7 @@ export const tauUnits = {
     id: 'krootFleshShaper', name: 'Kroot Flesh Shaper', category: 'character',
     points: 45,
     M: '7"', T: 3, Sv: '6+', W: 3, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kroot scattergun', type: 'ranged', range: '12"', A: 2, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT'] },
       { name: 'Twin ritualistic blades', type: 'melee', A: 4, WS: '2+', S: 5, AP: -1, D: 1, keywords: ['TWIN-LINKED'] },
@@ -265,7 +265,7 @@ export const tauUnits = {
     id: 'krootTrailShaper', name: 'Kroot Trail Shaper', category: 'character',
     points: 55,
     M: '7"', T: 3, Sv: '6+', W: 3, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kroot rifle', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 1'] },
       { name: 'Shaper\'s blade', type: 'melee', A: 4, WS: '2+', S: 5, AP: 0, D: 1, keywords: [] },
@@ -288,7 +288,7 @@ export const tauUnits = {
     id: 'krootWarShaper', name: 'Kroot War Shaper', category: 'character',
     points: 50,
     M: '7"', T: 3, Sv: '6+', W: 3, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Dart-bow and tri-blade', type: 'ranged', range: '24"', A: 'D3+1', BS: '4+', S: 4, AP: 0, D: 2, keywords: ['ANTI-INFANTRY 4+', 'ASSAULT', 'HEAVY'] },
       { name: 'Kroot pistol', type: 'ranged', range: '12"', A: 1, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
@@ -313,7 +313,7 @@ export const tauUnits = {
     id: 'krootLoneSpear', name: 'Kroot Lone-Spear', category: 'character',
     points: 80,
     M: '12"', T: 5, Sv: '5+', W: 6, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kroot long gun', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 6, AP: -2, D: 3, keywords: ['HEAVY', 'PRECISION'] },
       { name: 'Blast javelin', type: 'ranged', range: '18"', A: 'D6', BS: '4+', S: 10, AP: -2, D: 2, keywords: ['ASSAULT', 'BLAST'] },
@@ -585,7 +585,7 @@ export const tauUnits = {
     id: 'broadsideBattlesuits', name: 'Broadside Battlesuits', category: 'infantry',
     points: 80,
     M: '5"', T: 6, Sv: '2+', W: 8, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Heavy rail rifle', type: 'ranged', range: '60"', A: 2, BS: '4+', S: 12, AP: -4, D: 'D6+1', keywords: ['DEVASTATING WOUNDS', 'HEAVY'] },
       { name: 'High-yield missile pods', type: 'ranged', range: '30"', A: 6, BS: '4+', S: 7, AP: -1, D: 2, keywords: ['TWIN-LINKED'] },
@@ -633,7 +633,7 @@ export const tauUnits = {
     id: 'krootoxRiders', name: 'Krootox Riders', category: 'infantry',
     points: 40,
     M: '7"', T: 6, Sv: '5+', W: 5, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Repeater cannon', type: 'ranged', range: '36"', A: 2, BS: '4+', S: 7, AP: -1, D: 2, keywords: ['RAPID FIRE 2'] },
       { name: 'Tanglecannon', type: 'ranged', range: '36"', A: 'D6+1', BS: '4+', S: 6, AP: 0, D: 1, keywords: ['BLAST', 'HEAVY'] },
@@ -678,7 +678,7 @@ export const tauUnits = {
     id: 'devilfish', name: 'Devilfish', category: 'vehicle',
     points: 85,
     M: '12"', T: 9, Sv: '3+', W: 13, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Accelerator burst cannon', type: 'ranged', range: '18"', A: 4, BS: '4+', S: 6, AP: -1, D: 1, keywords: [] },
       { name: 'Seeker missile', type: 'ranged', range: '48"', A: 1, BS: '4+', S: 14, AP: -3, D: 'D6+1', keywords: ['ONE SHOT'] },
@@ -702,7 +702,7 @@ export const tauUnits = {
     id: 'piranhas', name: 'Piranhas', category: 'vehicle',
     points: 60,
     M: '14"', T: 7, Sv: '4+', W: 7, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Piranha burst cannon', type: 'ranged', range: '18"', A: 4, BS: '4+', S: 6, AP: -1, D: 1, keywords: [] },
       { name: 'Piranha fusion blaster', type: 'ranged', range: '12"', A: 1, BS: '4+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
@@ -727,7 +727,7 @@ export const tauUnits = {
     id: 'hammerheadGunship', name: 'Hammerhead Gunship', category: 'vehicle',
     points: 145,
     M: '10"', T: 10, Sv: '3+', W: 14, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Railgun', type: 'ranged', range: '72"', A: 1, BS: '4+', S: 20, AP: -5, D: 'D6+6', keywords: ['DEVASTATING WOUNDS', 'HEAVY'] },
       { name: 'Ion cannon (Standard)', type: 'ranged', range: '60"', A: 'D6+3', BS: '4+', S: 7, AP: -1, D: 2, keywords: ['BLAST'] },
@@ -756,7 +756,7 @@ export const tauUnits = {
     id: 'skyRayGunship', name: 'Sky Ray Gunship', category: 'vehicle',
     points: 150,
     M: '10"', T: 10, Sv: '3+', W: 14, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Seeker missile rack', type: 'ranged', range: '48"', A: 3, BS: '4+', S: 14, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Accelerator burst cannon', type: 'ranged', range: '18"', A: 4, BS: '4+', S: 6, AP: -1, D: 1, keywords: [] },
@@ -784,7 +784,7 @@ export const tauUnits = {
     id: 'ghostkeelBattlesuit', name: 'Ghostkeel Battlesuit', category: 'vehicle',
     points: 160,
     M: '10"', T: 8, Sv: '2+', W: 12, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Cyclic ion raker (Standard)', type: 'ranged', range: '36"', A: 6, BS: '4+', S: 7, AP: -1, D: 2, keywords: [] },
       { name: 'Cyclic ion raker (Overcharge)', type: 'ranged', range: '36"', A: 6, BS: '4+', S: 8, AP: -2, D: 3, keywords: ['HAZARDOUS'] },
@@ -814,7 +814,7 @@ export const tauUnits = {
     id: 'riptideBattlesuit', name: 'Riptide Battlesuit', category: 'vehicle',
     points: 200,
     M: '10"', T: 9, Sv: '2+', W: 14, Ld: '7+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Heavy burst cannon', type: 'ranged', range: '36"', A: 12, BS: '4+', S: 6, AP: -1, D: 2, keywords: [] },
       { name: 'Ion accelerator (Standard)', type: 'ranged', range: '72"', A: 6, BS: '4+', S: 9, AP: -2, D: 3, keywords: [] },
@@ -842,7 +842,7 @@ export const tauUnits = {
     id: 'stormsurge', name: 'Stormsurge', category: 'vehicle',
     points: 360,
     M: '8"', T: 11, Sv: '2+', W: 20, Ld: '7+', OC: 6, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Cluster rocket system', type: 'ranged', range: '48"', A: '4D6', BS: '4+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'HEAVY'] },
       { name: 'Destroyer missiles', type: 'ranged', range: '72"', A: 1, BS: '4+', S: 16, AP: -4, D: 'D6+2', keywords: ['HEAVY'] },
@@ -876,7 +876,7 @@ export const tauUnits = {
     id: 'razorsharkStrikeFighter', name: 'Razorshark Strike Fighter', category: 'vehicle',
     points: 170,
     M: '20"+', T: 10, Sv: '3+', W: 12, Ld: '7+', OC: 0, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Quad ion turret (Standard)', type: 'ranged', range: '30"', A: 8, BS: '4+', S: 7, AP: -1, D: 1, keywords: ['TWIN-LINKED'] },
       { name: 'Quad ion turret (Overcharge)', type: 'ranged', range: '30"', A: 8, BS: '4+', S: 8, AP: -2, D: 2, keywords: ['HAZARDOUS', 'TWIN-LINKED'] },
@@ -902,7 +902,7 @@ export const tauUnits = {
     id: 'sunSharkBomber', name: 'Sun Shark Bomber', category: 'vehicle',
     points: 160,
     M: '20"+', T: 9, Sv: '3+', W: 12, Ld: '7+', OC: 0, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Missile pod', type: 'ranged', range: '30"', A: 2, BS: '4+', S: 7, AP: -1, D: 2, keywords: [] },
       { name: 'Twin missile pod', type: 'ranged', range: '30"', A: 2, BS: '4+', S: 7, AP: -1, D: 2, keywords: ['TWIN-LINKED'] },

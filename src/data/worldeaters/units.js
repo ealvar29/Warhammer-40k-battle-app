@@ -149,7 +149,7 @@ export const weUnits = {
     id: 'daemonPrinceOfKhorne', name: 'Daemon Prince of Khorne', category: 'character',
     powerRating: 10, points: 200,
     M: '10"', T: 10, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['RAPID FIRE 1'] },
       { name: 'Hellforged Weapons — Strike', type: 'melee', A: 8, WS: '2+', S: 8, AP: -2, D: 3, keywords: [] },
@@ -173,7 +173,7 @@ export const weUnits = {
     id: 'daemonPrinceOfKhorneWithWings', name: 'Daemon Prince of Khorne with Wings', category: 'character',
     powerRating: 9, points: 180,
     M: '14"', T: 9, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['RAPID FIRE 1'] },
       { name: 'Hellforged Weapons — Strike', type: 'melee', A: 8, WS: '2+', S: 8, AP: -2, D: 3, keywords: [] },
@@ -359,7 +359,7 @@ export const weUnits = {
     id: 'helbrute', name: 'Helbrute', category: 'vehicle',
     powerRating: 6, points: 120,
     M: '9"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -391,7 +391,7 @@ export const weUnits = {
     id: 'maulerfiend', name: 'Maulerfiend', category: 'vehicle',
     powerRating: 8, points: 150,
     M: '12"', T: 10, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Magma Cutter', type: 'ranged', range: '6"', A: 2, BS: '4+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2', 'RAPID FIRE 1'] },
       { name: 'Lasher Tendrils', type: 'melee', A: 6, WS: '3+', S: 7, AP: -1, D: 1, keywords: ['EXTRA ATTACKS'] },
@@ -415,7 +415,7 @@ export const weUnits = {
     id: 'forgefiend', name: 'Forgefiend', category: 'vehicle',
     powerRating: 8, points: 165,
     M: '10"', T: 10, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Ectoplasma Cannon (Standard)', type: 'ranged', range: '36"', A: 'D3', BS: '4+', S: 10, AP: -3, D: 3, keywords: ['BLAST', 'RAPID FIRE 1'] },
       { name: 'Ectoplasma Cannon (Overcharge)', type: 'ranged', range: '36"', A: 'D3', BS: '4+', S: 12, AP: -3, D: 3, keywords: ['BLAST', 'HAZARDOUS', 'RAPID FIRE 1'] },
@@ -440,7 +440,7 @@ export const weUnits = {
     id: 'defiler', name: 'Defiler', category: 'vehicle',
     powerRating: 13, points: 250,
     M: '14"', T: 11, Sv: '3+', W: 18, Ld: '6+', OC: 5, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Hades Battle Cannon', type: 'ranged', range: '48"', A: 'D6+3', BS: '4+', S: 10, AP: -1, D: 3, keywords: ['BLAST', 'RAPID FIRE 3'] },
       { name: 'Ectoplasma Destructor', type: 'ranged', range: '36"', A: 'D6', BS: '4+', S: 12, AP: -3, D: 3, keywords: ['BLAST', 'RAPID FIRE 2'] },
@@ -473,7 +473,7 @@ export const weUnits = {
     id: 'heldrake', name: 'Heldrake', category: 'vehicle',
     powerRating: 10, points: 200,
     M: '20"+', T: 9, Sv: '3+', W: 12, Ld: '6+', OC: 0, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Baleflamer', type: 'ranged', range: '12"', A: 'D6+3', BS: 'N/A', S: 6, AP: -1, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Hades Autocannon', type: 'ranged', range: '36"', A: 6, BS: '4+', S: 8, AP: -1, D: 2, keywords: ['RAPID FIRE 4'] },
@@ -497,7 +497,7 @@ export const weUnits = {
     id: 'chaosPredatorAnnihilator', name: 'Chaos Predator Annihilator', category: 'vehicle',
     powerRating: 7, points: 145,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator Twin Lascannon', type: 'ranged', range: '48"', A: 1, BS: '4+', S: 14, AP: -3, D: 'D6+1', keywords: ['RAPID FIRE 2', 'TWIN-LINKED'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
@@ -523,7 +523,7 @@ export const weUnits = {
     id: 'chaosPredatorDestructor', name: 'Chaos Predator Destructor', category: 'vehicle',
     powerRating: 7, points: 145,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator Autocannon', type: 'ranged', range: '48"', A: 4, BS: '4+', S: 9, AP: -1, D: 3, keywords: ['RAPID FIRE 4'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
@@ -549,7 +549,7 @@ export const weUnits = {
     id: 'chaosRhino', name: 'Chaos Rhino', category: 'vehicle',
     powerRating: 4, points: 85,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Combi-weapon', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS', 'RAPID FIRE 1'] },
@@ -573,7 +573,7 @@ export const weUnits = {
     id: 'chaosLandRaider', name: 'Chaos Land Raider', category: 'vehicle',
     powerRating: 11, points: 220,
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Soulshatter Lascannon (×2)', type: 'ranged', range: '48"', A: 2, BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: ['RAPID FIRE 2'] },
       { name: 'Twin Heavy Bolter', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 5, AP: -1, D: 2, keywords: ['RAPID FIRE 2', 'SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -600,7 +600,7 @@ export const weUnits = {
     id: 'khorneLordOfSkulls', name: 'Khorne Lord of Skulls', category: 'monster',
     powerRating: 25, points: 505,
     M: '12"', T: 13, Sv: '3+', W: 24, Ld: '6+', OC: 8, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Daemongore Cannon', type: 'ranged', range: '18"', A: 'D6', BS: '4+', S: 14, AP: -4, D: 'D6+2', keywords: ['BLAST', 'RAPID FIRE 3'] },
       { name: 'Gorestorm Cannon', type: 'ranged', range: '24"', A: 'D6+3', BS: '4+', S: 10, AP: -2, D: 3, keywords: ['BLAST', 'RAPID FIRE 3'] },

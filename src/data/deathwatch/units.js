@@ -10,7 +10,7 @@ export const deathwatchUnits = {
     id: 'watchCaptainArtemis', name: 'Watch Captain Artemis', category: 'epicHero',
     points: 65,
     M: '6"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Hellfire Extremis', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 4, AP: -1, D: 1, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS', 'IGNORES COVER', 'TORRENT'] },
       { name: 'Master-crafted power weapon', type: 'melee', A: 6, WS: '2+', S: 5, AP: -2, D: 2, keywords: [] },
@@ -33,7 +33,7 @@ export const deathwatchUnits = {
     id: 'watchMaster', name: 'Watch Master', category: 'character',
     points: 95,
     M: '6"', T: 4, Sv: '2+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Vigil spear', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: -1, D: 2, keywords: [] },
       { name: 'Vigil spear', type: 'melee', A: 6, WS: '2+', S: 6, AP: -2, D: 'D3', keywords: ['LANCE'] },
@@ -273,7 +273,7 @@ export const deathwatchUnits = {
     id: 'corvusBlackstar', name: 'Corvus Blackstar', category: 'vehicle',
     points: 180,
     M: '20"+"', T: 10, Sv: '3+', W: 14, Ld: '6+', OC: 0, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Blackstar rocket launcher', type: 'ranged', range: '30"', A: 'D6+1', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST'] },
       { name: 'Hurricane bolter', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 6', 'TWIN-LINKED'] },

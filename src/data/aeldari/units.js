@@ -9,7 +9,7 @@ export const aeldariUnits = {
     id: 'eldradUlthran', name: 'Eldrad Ulthran', category: 'epicHero',
     points: 115,
     M: '7"', T: 3, Sv: '6+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Singing spear', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 9, AP: -1, D: 3, keywords: ['PSYCHIC'] },
       { name: 'Singing spear', type: 'melee', A: 3, WS: '2+', S: 5, AP: -1, D: 3, keywords: ['PSYCHIC'] },
@@ -33,7 +33,7 @@ export const aeldariUnits = {
     id: 'illicNightspear', name: 'Illic Nightspear', category: 'epicHero',
     points: 80,
     M: '7"', T: 3, Sv: '5+', W: 4, Ld: '6+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Void rifle', type: 'ranged', range: '36"', A: 1, BS: '2+', S: 8, AP: -4, D: 3, keywords: ['DEVASTATING WOUNDS', 'PRECISION'] },
       { name: 'Witchblade', type: 'melee', A: 3, WS: '3+', S: 3, AP: -1, D: 1, keywords: ['PSYCHIC'] },
@@ -55,7 +55,7 @@ export const aeldariUnits = {
     id: 'jainZar', name: 'Jain Zar', category: 'epicHero',
     points: 95,
     M: '7"', T: 3, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'The Silent Death', type: 'ranged', range: '12"', A: 4, BS: '2+', S: 4, AP: -1, D: 1, keywords: ['ASSAULT'] },
       { name: 'Zha\'eil — Blade of Destruction', type: 'melee', A: 6, WS: '2+', S: 5, AP: -3, D: 2, keywords: [] },
@@ -77,7 +77,7 @@ export const aeldariUnits = {
     id: 'baharroth', name: 'Baharroth', category: 'epicHero',
     points: 95,
     M: '14"', T: 3, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Shrieker', type: 'ranged', range: '12"', A: 6, BS: '2+', S: 3, AP: -1, D: 1, keywords: ['ASSAULT'] },
       { name: 'The Blade of Dawn', type: 'melee', A: 6, WS: '2+', S: 4, AP: -2, D: 2, keywords: [] },
@@ -99,7 +99,7 @@ export const aeldariUnits = {
     id: 'mauganRa', name: 'Maugan Ra', category: 'epicHero',
     points: 90,
     M: '7"', T: 3, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'The Maugetar — shuriken cannon', type: 'ranged', range: '24"', A: 4, BS: '2+', S: 6, AP: -1, D: 1, keywords: ['ASSAULT', 'DEVASTATING WOUNDS'] },
       { name: 'The Maugetar — blade', type: 'melee', A: 4, WS: '2+', S: 5, AP: -2, D: 2, keywords: [] },
@@ -120,7 +120,7 @@ export const aeldariUnits = {
     id: 'fuegan', name: 'Fuegan', category: 'epicHero',
     points: 105,
     M: '7"', T: 4, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Fire Pike', type: 'ranged', range: '18"', A: 1, BS: '2+', S: 12, AP: -3, D: 'D6', keywords: ['MELTA 3'] },
       { name: 'The Firepike', type: 'ranged', range: '18"', A: 2, BS: '2+', S: 8, AP: -4, D: 'D6+1', keywords: ['MELTA 2'] },
@@ -142,7 +142,7 @@ export const aeldariUnits = {
     id: 'karandras', name: 'Karandras', category: 'epicHero',
     points: 105,
     M: '7"', T: 4, Sv: '3+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Scorpion\'s Claw — shuriken pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'PISTOL'] },
       { name: 'The Scorpion\'s Claw — powerblast', type: 'ranged', range: '12"', A: 3, BS: '2+', S: 6, AP: -2, D: 2, keywords: [] },
@@ -166,7 +166,7 @@ export const aeldariUnits = {
     id: 'asurmen', name: 'Asurmen', category: 'epicHero',
     points: 115,
     M: '7"', T: 4, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Avenger shuriken catapult', type: 'ranged', range: '18"', A: 4, BS: '2+', S: 4, AP: -1, D: 1, keywords: ['ASSAULT'] },
       { name: 'The Sword of Asur', type: 'melee', A: 6, WS: '2+', S: 5, AP: -3, D: 2, keywords: [] },
@@ -210,7 +210,7 @@ export const aeldariUnits = {
     id: 'autarch', name: 'Autarch', category: 'character',
     points: 95,
     M: '7"', T: 3, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Fusion pistol', type: 'ranged', range: '6"', A: 1, BS: '2+', S: 8, AP: -4, D: 'D6', keywords: ['MELTA 2', 'PISTOL'] },
       { name: 'Laser lance', type: 'ranged', range: '9"', A: 1, BS: '2+', S: 6, AP: -3, D: 3, keywords: [] },
@@ -235,7 +235,7 @@ export const aeldariUnits = {
     id: 'autarchSkyrunner', name: 'Autarch Skyrunner', category: 'character',
     points: 110,
     M: '14"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Twin shuriken catapult', type: 'ranged', range: '18"', A: 4, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'TWIN-LINKED'] },
       { name: 'Fusion gun', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 8, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
@@ -260,7 +260,7 @@ export const aeldariUnits = {
     id: 'farseer', name: 'Farseer', category: 'character',
     points: 90,
     M: '7"', T: 3, Sv: '6+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Shuriken pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'PISTOL'] },
       { name: 'Witchblade', type: 'melee', A: 3, WS: '3+', S: 3, AP: -1, D: 1, keywords: ['PSYCHIC'] },
@@ -284,7 +284,7 @@ export const aeldariUnits = {
     id: 'farseerSkyrunner', name: 'Farseer Skyrunner', category: 'character',
     points: 110,
     M: '14"', T: 4, Sv: '6+', W: 5, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Twin shuriken catapult', type: 'ranged', range: '18"', A: 4, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'TWIN-LINKED'] },
       { name: 'Witchblade', type: 'melee', A: 3, WS: '3+', S: 3, AP: -1, D: 1, keywords: ['PSYCHIC'] },
@@ -308,7 +308,7 @@ export const aeldariUnits = {
     id: 'warlock', name: 'Warlock', category: 'character',
     points: 45,
     M: '7"', T: 3, Sv: '6+', W: 2, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Shuriken pistol', type: 'ranged', range: '12"', A: 1, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'PISTOL'] },
       { name: 'Witchblade', type: 'melee', A: 2, WS: '4+', S: 3, AP: -1, D: 1, keywords: ['PSYCHIC'] },
@@ -331,7 +331,7 @@ export const aeldariUnits = {
     id: 'warlockSkyrunner', name: 'Warlock Skyrunner', category: 'character',
     points: 55,
     M: '14"', T: 4, Sv: '6+', W: 3, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Twin shuriken catapult', type: 'ranged', range: '18"', A: 4, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'TWIN-LINKED'] },
       { name: 'Witchblade', type: 'melee', A: 2, WS: '4+', S: 3, AP: -1, D: 1, keywords: ['PSYCHIC'] },
@@ -399,7 +399,7 @@ export const aeldariUnits = {
     id: 'avatarOfKhaine', name: 'Avatar of Khaine', category: 'character',
     points: 295,
     M: '10"', T: 9, Sv: '2+', W: 12, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'The Wailing Doom — ranged', type: 'ranged', range: '12"', A: 6, BS: '2+', S: 14, AP: -4, D: 'D6+2', keywords: ['DEVASTATING WOUNDS'] },
       { name: 'The Wailing Doom — melee (strike)', type: 'melee', A: 8, WS: '2+', S: 14, AP: -4, D: 'D6+2', keywords: [] },
@@ -739,7 +739,7 @@ export const aeldariUnits = {
     id: 'waveSerpent', name: 'Wave Serpent', category: 'vehicle',
     points: 120,
     M: '14"', T: 9, Sv: '3+', W: 13, Ld: '6+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin brightlance', type: 'ranged', range: '36"', A: 2, BS: '3+', S: 14, AP: -4, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Twin scatter laser', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['ASSAULT', 'TWIN-LINKED'] },
@@ -768,7 +768,7 @@ export const aeldariUnits = {
     id: 'falcon', name: 'Falcon', category: 'vehicle',
     points: 150,
     M: '14"', T: 9, Sv: '3+', W: 12, Ld: '6+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Pulse laser', type: 'ranged', range: '48"', A: 3, BS: '3+', S: 10, AP: -3, D: 3, keywords: ['HEAVY'] },
       { name: 'Brightlance', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 14, AP: -4, D: 'D6+1', keywords: [] },
@@ -796,7 +796,7 @@ export const aeldariUnits = {
     id: 'firePrism', name: 'Fire Prism', category: 'vehicle',
     points: 150,
     M: '14"', T: 9, Sv: '3+', W: 12, Ld: '6+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Prism cannon — dispersed', type: 'ranged', range: '60"', A: 'D6+3', BS: '3+', S: 6, AP: -3, D: 2, keywords: ['BLAST', 'HEAVY'] },
       { name: 'Prism cannon — focused', type: 'ranged', range: '60"', A: 1, BS: '3+', S: 12, AP: -4, D: 'D6+5', keywords: ['HEAVY'] },
@@ -820,7 +820,7 @@ export const aeldariUnits = {
     id: 'nightSpinner', name: 'Night Spinner', category: 'vehicle',
     points: 130,
     M: '14"', T: 9, Sv: '3+', W: 12, Ld: '6+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Doomweaver — dispersed', type: 'ranged', range: '48"', A: 'D6+3', BS: '3+', S: 7, AP: -2, D: 2, keywords: ['BLAST', 'HEAVY', 'INDIRECT FIRE'] },
       { name: 'Doomweaver — focused', type: 'ranged', range: '48"', A: 'D3+3', BS: '3+', S: 9, AP: -3, D: 3, keywords: ['HEAVY', 'INDIRECT FIRE'] },
@@ -844,7 +844,7 @@ export const aeldariUnits = {
     id: 'warWalker', name: 'War Walker', category: 'vehicle',
     points: 85,
     M: '10"', T: 7, Sv: '4+', W: 6, Ld: '6+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Aeldari missile launcher — sunburst', type: 'ranged', range: '48"', A: 'D6+1', BS: '3+', S: 4, AP: -1, D: 1, keywords: ['BLAST'] },
       { name: 'Aeldari missile launcher — starshot', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 10, AP: -2, D: 'D6', keywords: [] },
@@ -869,7 +869,7 @@ export const aeldariUnits = {
     id: 'wraithlord', name: 'Wraithlord', category: 'monster',
     points: 125,
     M: '8"', T: 10, Sv: '3+', W: 10, Ld: '6+', OC: 4, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Brightlance', type: 'ranged', range: '36"', A: 1, BS: '4+', S: 14, AP: -4, D: 'D6+1', keywords: [] },
       { name: 'Aeldari missile launcher — sunburst', type: 'ranged', range: '48"', A: 'D6+1', BS: '4+', S: 4, AP: -1, D: 1, keywords: ['BLAST'] },
@@ -895,7 +895,7 @@ export const aeldariUnits = {
     id: 'wraithknight', name: 'Wraithknight', category: 'monster',
     points: 430,
     M: '12"', T: 13, Sv: '2+', W: 22, Ld: '6+', OC: 8, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Heavy wraithcannons (pair)', type: 'ranged', range: '24"', A: 2, BS: '4+', S: 16, AP: -4, D: 'D6+6', keywords: ['DEVASTATING WOUNDS'] },
       { name: 'Suncannon', type: 'ranged', range: '48"', A: 'D6+3', BS: '4+', S: 10, AP: -3, D: 3, keywords: ['BLAST'] },
@@ -921,7 +921,7 @@ export const aeldariUnits = {
     id: 'hemlockWraithfighter', name: 'Hemlock Wraithfighter', category: 'vehicle',
     points: 185,
     M: '20"+', T: 9, Sv: '3+', W: 12, Ld: '6+', OC: 0, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'D-scythes (twin)', type: 'ranged', range: '8"', A: 'D6', BS: 'N/A', S: 10, AP: -4, D: 2, keywords: ['DEVASTATING WOUNDS', 'TORRENT', 'TWIN-LINKED'] },
       { name: 'Spirit stones', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 6, AP: -2, D: 1, keywords: ['PSYCHIC'] },
@@ -944,7 +944,7 @@ export const aeldariUnits = {
     id: 'crimsonHunter', name: 'Crimson Hunter', category: 'vehicle',
     points: 155,
     M: '20"+', T: 8, Sv: '3+', W: 10, Ld: '6+', OC: 0, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Brightlances (pair)', type: 'ranged', range: '36"', A: 2, BS: '3+', S: 14, AP: -4, D: 'D6+1', keywords: [] },
       { name: 'Pulse laser', type: 'ranged', range: '48"', A: 3, BS: '3+', S: 10, AP: -3, D: 3, keywords: ['HEAVY'] },
@@ -968,7 +968,7 @@ export const aeldariUnits = {
     id: 'vyper', name: 'Vyper', category: 'vehicle',
     points: 75,
     M: '14"', T: 7, Sv: '4+', W: 6, Ld: '6+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Scatter laser', type: 'ranged', range: '36"', A: 6, BS: '4+', S: 6, AP: 0, D: 1, keywords: ['ASSAULT'] },
       { name: 'Brightlance', type: 'ranged', range: '36"', A: 1, BS: '4+', S: 14, AP: -4, D: 'D6+1', keywords: [] },

@@ -10,7 +10,7 @@ const characters = [
     leadsUnits: [],
     unitKey: 'belisariusCawl',
     M: '8"', T: 8, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    points: 210, models: 1,
+    points: 210, models: 1, weaponRole: 'mixed',
     keywords: ['VEHICLE', 'WALKER', 'CHARACTER', 'EPIC HERO', 'IMPERIUM', 'TECH-PRIEST', 'CULT MECHANICUS', 'BELISARIUS CAWL'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -34,7 +34,7 @@ const characters = [
     leadsUnits: ['corpuscariiElectroPriests', 'fulguritElectroPriests', 'kataphronBreachers', 'kataphronDestroyers', 'skitariiRangers', 'skitariiVanguard'],
     unitKey: 'techPriestDominus',
     M: '6"', T: 4, Sv: '2+', W: 4, Ld: '7+', OC: 1, InvSv: '5+',
-    points: 65, models: 1,
+    points: 65, models: 1, weaponRole: 'mixed',
     keywords: ['INFANTRY', 'CHARACTER', 'IMPERIUM', 'CULT MECHANICUS', 'TECH-PRIEST', 'DOMINUS'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -80,7 +80,7 @@ const characters = [
     leadsUnits: ['corpuscariiElectroPriests', 'fulguritElectroPriests', 'kataphronBreachers', 'kataphronDestroyers', 'skitariiRangers', 'skitariiVanguard'],
     unitKey: 'techPriestManipulus',
     M: '6"', T: 4, Sv: '2+', W: 4, Ld: '7+', OC: 1,
-    points: 60, models: 1,
+    points: 60, models: 1, weaponRole: 'mixed',
     keywords: ['INFANTRY', 'CHARACTER', 'IMPERIUM', 'CULT MECHANICUS', 'TECH-PRIEST', 'MANIPULUS'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -123,7 +123,7 @@ const characters = [
     leadsUnits: [],
     unitKey: 'sydonianSkatros',
     M: '8"', T: 4, Sv: '4+', W: 4, Ld: '7+', OC: 1,
-    points: 50, models: 1,
+    points: 50, models: 1, weaponRole: 'ranged',
     keywords: ['INFANTRY', 'CHARACTER', 'IMPERIUM', 'SKITARII', 'SYDONIAN', 'SKATROS'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -542,7 +542,7 @@ const vehicles = [
     leadsUnits: [],
     unitKey: 'sydonianDragoonsRadium',
     M: '10"', T: 7, Sv: '3+', W: 7, Ld: '7+', OC: 2, InvSv: '5+',
-    points: 55, models: 1,
+    points: 55, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'WALKER', 'SMOKE', 'IMPERIUM', 'SKITARII', 'SYDONIAN', 'DRAGOONS WITH RADIUM JEZZAILS'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -566,7 +566,7 @@ const vehicles = [
     leadsUnits: [],
     unitKey: 'skorpiusDisintegrator',
     M: '10"', T: 10, Sv: '2+', W: 11, Ld: '7+', OC: 3,
-    points: 165, models: 1,
+    points: 165, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'IMPERIUM', 'SKITARII', 'SMOKE', 'SKORPIUS DISINTEGRATOR'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -592,7 +592,7 @@ const vehicles = [
     leadsUnits: [],
     unitKey: 'skorpiusDunerider',
     M: '12"', T: 9, Sv: '3+', W: 11, Ld: '7+', OC: 2,
-    points: 85, models: 1,
+    points: 85, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'TRANSPORT', 'IMPERIUM', 'SKITARII', 'SMOKE', 'SKORPIUS DUNERIDER'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -614,7 +614,7 @@ const vehicles = [
     leadsUnits: [],
     unitKey: 'onagedDunecrawler',
     M: '8"', T: 10, Sv: '2+', W: 10, Ld: '7+', OC: 3, InvSv: '4+',
-    points: 155, models: 1,
+    points: 155, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'WALKER', 'IMPERIUM', 'SKITARII', 'SMOKE', 'ONAGER DUNECRAWLER'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -640,7 +640,7 @@ const vehicles = [
     leadsUnits: [],
     unitKey: 'archaeopterFusilave',
     M: '20+"', T: 9, Sv: '3+', W: 10, Ld: '7+', OC: 0,
-    points: 160, models: 1,
+    points: 160, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'AIRCRAFT', 'FLY', 'IMPERIUM', 'SKITARII', 'ARCHAEOPTER FUSILAVE'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -662,7 +662,7 @@ const vehicles = [
     leadsUnits: [],
     unitKey: 'archaeopterStratoraptor',
     M: '20+"', T: 9, Sv: '3+', W: 10, Ld: '7+', OC: 0,
-    points: 185, models: 1,
+    points: 185, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'AIRCRAFT', 'FLY', 'IMPERIUM', 'SKITARII', 'ARCHAEOPTER STRATORAPTOR'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [
@@ -686,7 +686,7 @@ const vehicles = [
     leadsUnits: [],
     unitKey: 'archaeopterTransvector',
     M: '20+"', T: 9, Sv: '3+', W: 10, Ld: '7+', OC: 0,
-    points: 150, models: 1,
+    points: 150, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'AIRCRAFT', 'FLY', 'TRANSPORT', 'IMPERIUM', 'SKITARII', 'ARCHAEOPTER TRANSVECTOR'],
     factionKeywords: ['ADEPTUS MECHANICUS'],
     abilities: [

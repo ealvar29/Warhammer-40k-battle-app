@@ -9,7 +9,7 @@ export const adeptusCustodesUnits = {
     id: 'trajannValoris', name: 'Trajann Valoris', category: 'epicHero',
     points: 140,
     M: '6"', T: 6, Sv: '2+', W: 7, Ld: '5+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Eagle\'s Scream', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 5, AP: -2, D: 3, keywords: ['ASSAULT'] },
       { name: 'Watcher\'s Axe', type: 'melee', A: 6, WS: '2+', S: 10, AP: -2, D: 3, keywords: [] },
@@ -33,7 +33,7 @@ export const adeptusCustodesUnits = {
     id: 'valerian', name: 'Valerian', category: 'epicHero',
     points: 110,
     M: '6"', T: 6, Sv: '2+', W: 6, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Gnosis — assault', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 4, AP: -1, D: 2, keywords: ['ASSAULT'] },
       { name: 'Gnosis', type: 'melee', A: 7, WS: '2+', S: 8, AP: -3, D: 2, keywords: [] },
@@ -80,7 +80,7 @@ export const adeptusCustodesUnits = {
     id: 'shieldCaptain', name: 'Shield-Captain', category: 'character',
     points: 120,
     M: '6"', T: 6, Sv: '2+', W: 6, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Castellan Axe — assault', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: -1, D: 2, keywords: ['ASSAULT'] },
       { name: 'Guardian Spear — assault', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: -1, D: 2, keywords: ['ASSAULT'] },
@@ -108,7 +108,7 @@ export const adeptusCustodesUnits = {
     id: 'shieldCaptainAllarusTerminator', name: 'Shield-Captain in Allarus Terminator Armour', category: 'character',
     points: 130,
     M: '5"', T: 7, Sv: '2+', W: 7, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Balistus Grenade Launcher', type: 'ranged', range: '18"', A: 'D6', BS: '2+', S: 4, AP: -1, D: 1, keywords: ['BLAST'] },
       { name: 'Castellan Axe — assault', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: -1, D: 2, keywords: ['ASSAULT'] },
@@ -133,7 +133,7 @@ export const adeptusCustodesUnits = {
     id: 'shieldCaptainDawneagleJetbike', name: 'Shield-Captain on Dawneagle Jetbike', category: 'character',
     points: 150,
     M: '12"', T: 7, Sv: '2+', W: 8, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Vertus Hurricane Bolter', type: 'ranged', range: '18"', A: 3, BS: '2+', S: 4, AP: -1, D: 2, keywords: ['RAPID FIRE 3', 'TWIN-LINKED'] },
       { name: 'Salvo Launcher', type: 'ranged', range: '24"', A: 1, BS: '2+', S: 10, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
@@ -178,7 +178,7 @@ export const adeptusCustodesUnits = {
     id: 'knightCentura', name: 'Knight-Centura', category: 'character',
     points: 55,
     M: '6"', T: 3, Sv: '3+', W: 4, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Master-crafted boltgun', type: 'ranged', range: '24"', A: 1, BS: '2+', S: 4, AP: 0, D: 2, keywords: ['RAPID FIRE 1'] },
       { name: 'Witchseeker flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 4, AP: 0, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -367,7 +367,7 @@ export const adeptusCustodesUnits = {
     id: 'venerableContemptor', name: 'Venerable Contemptor Dreadnought', category: 'vehicle',
     points: 170,
     M: '6"', T: 9, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Kheres-pattern assault cannon', type: 'ranged', range: '24"', A: 6, BS: '2+', S: 7, AP: -1, D: 1, keywords: ['DEVASTATING WOUNDS'] },
@@ -390,7 +390,7 @@ export const adeptusCustodesUnits = {
     id: 'venerableLandRaider', name: 'Venerable Land Raider', category: 'vehicle',
     points: 220,
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Godhammer Lascannon', type: 'ranged', range: '48"', A: 2, BS: '2+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
       { name: 'Hunter-killer missile', type: 'ranged', range: '48"', A: 1, BS: '2+', S: 14, AP: -3, D: 'D6', keywords: ['ONE SHOT'] },
@@ -415,7 +415,7 @@ export const adeptusCustodesUnits = {
     id: 'anathemaPsykanaRhino', name: 'Anathema Psykana Rhino', category: 'vehicle',
     points: 75,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Hunter-killer missile', type: 'ranged', range: '48"', A: 1, BS: '2+', S: 14, AP: -3, D: 'D6', keywords: ['ONE SHOT'] },
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },

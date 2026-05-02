@@ -496,8 +496,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                             <div className="absolute inset-0"
                               style={{
                                 backgroundImage: u.artUrl ? `url(${u.artUrl})` : factionMeta.gradient,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center center',
+                                backgroundSize: u.artUrl ? 'cover' : '100% 100%',
+                                backgroundPosition: u.artPosition || 'center center',
                               }} />
 
                             {/* Overlay */}

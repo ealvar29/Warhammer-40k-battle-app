@@ -9,7 +9,7 @@ export const swUnits = {
     id: 'ragnar', name: 'Ragnar Blackmane', category: 'epicHero',
     points: 100,
     M: '7"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, artUrl: '/units/spacewolves/ds-3.png', artPosition: 'center bottom',
     weapons: [
       { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Frostfang', type: 'melee', A: 8, WS: '2+', S: 6, AP: -3, D: 2, keywords: ['SUSTAINED HITS 1'] },
@@ -28,7 +28,7 @@ export const swUnits = {
     id: 'loganGrimnar', name: 'Logan Grimnar', category: 'epicHero',
     points: 110,
     M: '6"', T: 5, Sv: '2+', W: 8, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: '/units/spacewolves/logan.png', artPosition: 'center center',
     weapons: [
       { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Axe Morkai — Strike', type: 'melee', A: 6, WS: '2+', S: 8, AP: -2, D: 3, keywords: [] },
@@ -50,7 +50,7 @@ export const swUnits = {
     id: 'bjorn', name: 'Bjorn the Fell-Handed', category: 'epicHero',
     points: 160,
     M: '9"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: '/units/spacewolves/ds-3.png', artPosition: 'center top',
     weapons: [
       { name: 'Assault Cannon', type: 'ranged', range: '24"', A: 6, BS: '2+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
       { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -75,7 +75,7 @@ export const swUnits = {
     id: 'njal', name: 'Njal Stormcaller', category: 'epicHero',
     points: 85,
     M: '7"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: '/units/spacewolves/datasheet-2.png', artPosition: 'center top',
     weapons: [
       { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Living Lightning — Witchfire', type: 'ranged', range: '24"', A: 'D6', BS: '3+', S: 7, AP: -1, D: 1, keywords: ['PSYCHIC', 'SUSTAINED HITS 2'] },
@@ -96,7 +96,7 @@ export const swUnits = {
     id: 'murderfang', name: 'Murderfang', category: 'epicHero',
     points: 150,
     M: '9"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 0,
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: '/units/spacewolves/ds-12.png', artPosition: 'center top',
     weapons: [
       { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -118,7 +118,7 @@ export const swUnits = {
     id: 'arjacRockfist', name: 'Arjac Rockfist', category: 'epicHero',
     points: 105,
     M: '6"', T: 5, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: '/units/spacewolves/ds-4.png', artPosition: 'center top',
     weapons: [
       { name: 'Foehammer (ranged)', type: 'ranged', range: '6"', A: 1, BS: '2+', S: 8, AP: -2, D: 3, keywords: ['ANTI-MONSTER 3+', 'ANTI-VEHICLE 3+', 'ASSAULT'] },
       { name: 'Foehammer (melee)', type: 'melee', A: 5, WS: '2+', S: 8, AP: -2, D: 3, keywords: ['ANTI-MONSTER 3+', 'ANTI-VEHICLE 3+', 'PRECISION'] },
@@ -138,7 +138,7 @@ export const swUnits = {
     id: 'ulrik', name: 'Ulrik the Slayer', category: 'epicHero',
     points: 70,
     M: '7"', T: 4, Sv: '3+', W: 4, Ld: '5+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, artUrl: '/units/spacewolves/datasheet-2.png', artPosition: 'center bottom',
     weapons: [
       { name: 'Plasma Pistol (standard)', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 7, AP: -2, D: 1, keywords: ['PISTOL'] },
       { name: 'Plasma Pistol (supercharge)', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 8, AP: -3, D: 2, keywords: ['HAZARDOUS', 'PISTOL'] },
@@ -161,7 +161,7 @@ export const swUnits = {
     id: 'ironPriest', name: 'Iron Priest', category: 'character',
     points: 55,
     M: '7"', T: 4, Sv: '2+', W: 4, Ld: '6+', OC: 1,
-    models: 1,
+    models: 1, artUrl: '/units/spacewolves/iron-priest.png', artPosition: 'center top',
     weapons: [
       { name: 'Helfrost Pistol — Dispersed', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 4, AP: -1, D: 1, keywords: ['PISTOL', 'TORRENT'] },
       { name: 'Helfrost Pistol — Focused', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 6, AP: -3, D: 3, keywords: ['PISTOL'] },
@@ -182,7 +182,7 @@ export const swUnits = {
     id: 'wolfGuardBattleLeader', name: 'Wolf Guard Battle Leader', category: 'character',
     points: 65,
     M: '7"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: '/units/spacewolves/ds-5.png', artPosition: 'center top',
     weapons: [
       { name: 'Master-crafted bolt carbine', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 2, keywords: [] },
       { name: 'Master-crafted heavy bolt pistol', type: 'ranged', range: '18"', A: 1, BS: '3+', S: 4, AP: -1, D: 2, keywords: ['PISTOL'] },
@@ -205,7 +205,7 @@ export const swUnits = {
     id: 'wolfPriest', name: 'Wolf Priest', category: 'character',
     points: 70,
     M: '7"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, artUrl: '/units/spacewolves/ds-4.png', artPosition: 'center bottom',
     weapons: [
       { name: 'Absolvor Bolt Pistol', type: 'ranged', range: '18"', A: 1, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['PISTOL'] },
       { name: 'Crozius Arcanum', type: 'melee', A: 5, WS: '2+', S: 6, AP: -1, D: 2, keywords: [] },
@@ -245,7 +245,7 @@ export const swUnits = {
     id: 'bloodClaws', name: 'Blood Claws', category: 'battleline',
     points: 135,
     M: '7"', T: 4, Sv: '3+', W: 2, Ld: '6+', OC: 2,
-    models: 10, minModels: 10, maxModels: 20,
+    models: 10, minModels: 10, maxModels: 20, artUrl: '/units/spacewolves/ds-6.png', artPosition: 'center top',
     weapons: [
       { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Plasma Pistol (standard)', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 7, AP: -2, D: 1, keywords: ['PISTOL'] },
@@ -266,7 +266,7 @@ export const swUnits = {
     id: 'greyHunters', name: 'Grey Hunters', category: 'battleline',
     points: 165,
     M: '7"', T: 4, Sv: '3+', W: 2, Ld: '6+', OC: 3,
-    models: 10, minModels: 10, maxModels: 10,
+    models: 10, minModels: 10, maxModels: 10, artUrl: '/units/spacewolves/ds-6.png', artPosition: 'center bottom',
     weapons: [
       { name: 'Bolt Carbine', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 1'] },
       { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
@@ -291,7 +291,7 @@ export const swUnits = {
     id: 'wolfGuardHeadtakers', name: 'Wolf Guard Headtakers', category: 'infantry',
     points: 85,
     M: '7"', T: 4, Sv: '3+', W: 3, Ld: '6+', OC: 1,
-    models: 3, minModels: 3, maxModels: 6,
+    models: 3, minModels: 3, maxModels: 6, artUrl: '/units/spacewolves/ds-7.png', artPosition: 'center top',
     weapons: [
       { name: 'Heavy Bolt Pistol', type: 'ranged', range: '18"', A: 1, BS: '3+', S: 4, AP: -1, D: 1, keywords: ['PISTOL'] },
       { name: 'Master-crafted power weapon', type: 'melee', A: 4, WS: '3+', S: 5, AP: -2, D: 2, keywords: [] },
@@ -312,7 +312,7 @@ export const swUnits = {
     id: 'wulfen', name: 'Wulfen', category: 'infantry',
     points: 85,
     M: '9"', T: 6, Sv: '4+', W: 2, Ld: '7+', OC: 0,
-    models: 5, minModels: 5, maxModels: 10,
+    models: 5, minModels: 5, maxModels: 10, artUrl: '/units/spacewolves/ds-11.png', artPosition: 'center top',
     weapons: [
       { name: 'Stormfrag auto-launcher', type: 'ranged', range: '12"', A: 'D3', BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'BLAST'] },
       { name: 'Wulfen weapons', type: 'melee', A: 3, WS: '3+', S: 5, AP: -2, D: 2, keywords: ['SUSTAINED HITS 1'] },
@@ -331,7 +331,7 @@ export const swUnits = {
     id: 'wulfenWithStormShields', name: 'Wulfen with Storm Shields', category: 'infantry',
     points: 100,
     M: '9"', T: 6, Sv: '4+', W: 2, Ld: '7+', OC: 0, InvSv: '4+',
-    models: 5, minModels: 5, maxModels: 10,
+    models: 5, minModels: 5, maxModels: 10, artUrl: '/units/spacewolves/ds-11.png', artPosition: 'center bottom',
     weapons: [
       { name: 'Stormfrag auto-launcher', type: 'ranged', range: '12"', A: 'D3', BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'BLAST'] },
       { name: 'Thunder hammer', type: 'melee', A: 2, WS: '3+', S: 5, AP: -2, D: 3, keywords: ['ANTI-MONSTER 3+', 'ANTI-VEHICLE 3+'] },
@@ -350,7 +350,7 @@ export const swUnits = {
     id: 'wolfGuardTerminators', name: 'Wolf Guard Terminators', category: 'infantry',
     points: 170,
     M: '6"', T: 5, Sv: '2+', W: 3, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 5, minModels: 5, maxModels: 10,
+    models: 5, minModels: 5, maxModels: 10, artUrl: '/units/spacewolves/ds-9.png', artPosition: 'center top',
     weapons: [
       { name: 'Assault Cannon', type: 'ranged', range: '24"', A: 6, BS: '2+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
       { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -375,7 +375,7 @@ export const swUnits = {
     id: 'wulfenDreadnought', name: 'Wulfen Dreadnought', category: 'vehicle',
     points: 145,
     M: '9"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 0,
-    models: 1, weaponRole: 'mixed',
+    models: 1, weaponRole: 'mixed', artUrl: '/units/spacewolves/ds-12.png', artPosition: 'center bottom',
     weapons: [
       { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -401,7 +401,7 @@ export const swUnits = {
     id: 'thunderwolfCavalry', name: 'Thunderwolf Cavalry', category: 'cavalry',
     points: 115,
     M: '12"', T: 6, Sv: '3+', W: 4, Ld: '6+', OC: 2,
-    models: 3, minModels: 3, maxModels: 6,
+    models: 3, minModels: 3, maxModels: 6, artUrl: '/units/spacewolves/ds-8.png', artPosition: 'center center',
     weapons: [
       { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Boltgun', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: [] },
@@ -423,7 +423,7 @@ export const swUnits = {
     id: 'fenrisianWolves', name: 'Fenrisian Wolves', category: 'cavalry',
     points: 40,
     M: '10"', T: 4, Sv: '6+', W: 1, Ld: '8+', OC: 0,
-    models: 5, minModels: 5, maxModels: 10,
+    models: 5, minModels: 5, maxModels: 10, artUrl: '/units/spacewolves/ds-10.png', artPosition: 'center top',
     weapons: [
       { name: 'Teeth and Claws', type: 'melee', A: 3, WS: '4+', S: 4, AP: 0, D: 1, keywords: [] },
     ],

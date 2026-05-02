@@ -11,7 +11,7 @@ const characters = [
     eligibleUnits: ['chosen', 'chaosTerminators'],
     unitKey: 'abaddon',
     M: '6"', T: 8, Sv: '2+', W: 9, OC: 2, InvSv: '4+',
-    points: 285, models: 1,
+    points: 285, models: 1, weaponRole: 'mixed',
     keywords: ['CHARACTER', 'INFANTRY', 'CHAOS LORD', 'HERETIC ASTARTES', 'ABADDON'],
     abilities: [
       { name: 'Eternal Warmaster', phase: 'fight', description: 'Reroll hit and wound rolls of 1 for melee attacks made by this model and its unit.' },
@@ -85,7 +85,7 @@ const characters = [
     eligibleUnits: ['chaosTerminators'],
     unitKey: 'chaosLordInTerminatorArmour',
     M: '5"', T: 4, Sv: '2+', W: 5, OC: 1, InvSv: '4+',
-    points: 95, models: 1,
+    points: 95, models: 1, weaponRole: 'mixed',
     keywords: ['CHARACTER', 'INFANTRY', 'TERMINATOR', 'CHAOS LORD', 'HERETIC ASTARTES'],
     abilities: [
       { name: 'Eternal Hatred', phase: 'fight', description: 'Reroll wound rolls for this model and its unit in the Fight phase.' },
@@ -141,7 +141,7 @@ const characters = [
     eligibleUnits: ['chaosSpaceMarines', 'helbrute'],
     unitKey: 'warpsmith',
     M: '6"', T: 4, Sv: '3+', W: 4, OC: 1, InvSv: '5+',
-    points: 65, models: 1,
+    points: 65, models: 1, weaponRole: 'mixed',
     keywords: ['CHARACTER', 'INFANTRY', 'HERETIC ASTARTES', 'WARPSMITH'],
     abilities: [
       { name: 'Master of Mechanisms', phase: 'command', description: 'Once per Command phase, one friendly HERETIC ASTARTES VEHICLE within 6" regains up to D3 lost wounds.' },
@@ -195,7 +195,7 @@ const characters = [
     eligibleUnits: ['chaosSpaceMarines', 'chosen'],
     unitKey: 'fabiusBile',
     M: '6"', T: 4, Sv: '3+', W: 5, OC: 1, InvSv: '5+',
-    points: 75, models: 1,
+    points: 75, models: 1, weaponRole: 'mixed',
     keywords: ['CHARACTER', 'INFANTRY', 'HERETIC ASTARTES', 'FABIUS BILE'],
     abilities: [
       { name: 'Enhanced Warriors', phase: 'command', description: 'Models in this model\'s unit gain +1 Attack and +1 to wound rolls for melee attacks.' },
@@ -235,7 +235,7 @@ const characters = [
     eligibleUnits: ['raptors'],
     unitKey: 'haarkenWorldclaimer',
     M: '12"', T: 4, Sv: '3+', W: 5, OC: 1, InvSv: '4+',
-    points: 90, models: 1,
+    points: 90, models: 1, weaponRole: 'mixed',
     keywords: ['CHARACTER', 'INFANTRY', 'EPIC HERO', 'FLY', 'JUMP PACK', 'HERETIC ASTARTES'],
     abilities: [
       { name: 'Head Taker', phase: 'charge', description: 'After completing a Charge move, select one enemy unit within Engagement Range. Roll one D6 for each model in this unit in Engagement Range: on a 4+, that enemy unit suffers 1 mortal wound.' },
@@ -275,7 +275,7 @@ const characters = [
     eligibleUnits: [],
     unitKey: 'vashtorr',
     M: '12"', T: 10, Sv: '2+', W: 14, OC: 3, InvSv: '4+',
-    points: 175, models: 1,
+    points: 175, models: 1, weaponRole: 'mixed',
     keywords: ['CHARACTER', 'MONSTER', 'EPIC HERO', 'FLY', 'DAEMON', 'HERETIC ASTARTES', 'VASHTORR'],
     abilities: [
       { name: 'Unholy Mechanisms', phase: 'any', description: 'Aura. While a friendly DAEMON VEHICLE unit is within 6" of this model, add 2 to the Strength characteristic of weapons equipped by models in that unit.' },
@@ -419,7 +419,7 @@ const vehicles = [
     eligibleLeaders: ['warpsmith'],
     unitKey: 'helbrute',
     M: '8"', T: 10, Sv: '3+', W: 8, OC: 3, InvSv: '4+',
-    points: 115, models: 1,
+    points: 115, models: 1, weaponRole: 'mixed',
     keywords: ['VEHICLE', 'WALKER', 'HELBRUTE', 'HERETIC ASTARTES'],
     abilities: [
       { name: 'Crazed', phase: 'fight', description: 'Each time this model is selected to fight, if it has lost any wounds, it makes 2 additional attacks.' },
@@ -457,7 +457,7 @@ const vehicles = [
     eligibleLeaders: [],
     unitKey: 'forgefiend',
     M: '8"', T: 10, Sv: '3+', W: 12, OC: 3, InvSv: '5+',
-    points: 150, models: 1,
+    points: 150, models: 1, weaponRole: 'mixed',
     keywords: ['VEHICLE', 'DAEMON ENGINE', 'HERETIC ASTARTES', 'FORGEFIEND'],
     abilities: [
       { name: 'Infernal Aim', phase: 'shoot', description: 'This model does not suffer the penalty for remaining stationary when firing Heavy weapons.' },

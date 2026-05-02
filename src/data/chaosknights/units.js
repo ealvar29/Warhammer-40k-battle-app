@@ -13,7 +13,7 @@ export const chaosKnightsUnits = {
     points: 150,
     maxWounds: 14,
     M: '14"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 6, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Diabolus heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
       { name: 'Havoc multi-launcher', type: 'ranged', range: '48"', A: 'D6', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'INDIRECT FIRE'] },
@@ -61,7 +61,7 @@ export const chaosKnightsUnits = {
     points: 140,
     maxWounds: 14,
     M: '12"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 6, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Avenger chaincannon', type: 'ranged', range: '24"', A: 12, BS: '3+', S: 6, AP: -1, D: 1, keywords: [] },
       { name: 'Daemonbreath spear', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 12, AP: -4, D: 'D6', keywords: ['MELTA 4'] },
@@ -118,7 +118,7 @@ export const chaosKnightsUnits = {
     points: 140,
     maxWounds: 14,
     M: '12"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 6, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Avenger chaincannon', type: 'ranged', range: '24"', A: 12, BS: '3+', S: 6, AP: -1, D: 1, keywords: [] },
       { name: 'Daemonbreath spear', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 12, AP: -4, D: 'D6', keywords: ['MELTA 4'] },
@@ -167,7 +167,7 @@ export const chaosKnightsUnits = {
     points: 140,
     maxWounds: 14,
     M: '12"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 6, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Daemonbreath meltagun', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
       { name: 'Daemonbreath spear', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 12, AP: -4, D: 'D6', keywords: ['MELTA 4'] },
@@ -216,7 +216,7 @@ export const chaosKnightsUnits = {
     points: 130,
     maxWounds: 14,
     M: '12"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 6, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Daemonbreath meltagun', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
       { name: 'Diabolus heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
@@ -266,7 +266,7 @@ export const chaosKnightsUnits = {
     points: 390,
     maxWounds: 26,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Daemonbreath meltagun', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
       { name: 'Daemonbreath thermal cannon', type: 'ranged', range: '24"', A: '2D3', BS: '3+', S: 12, AP: -4, D: 'D6', keywords: ['BLAST', 'MELTA 2'] },
@@ -336,7 +336,7 @@ export const chaosKnightsUnits = {
     points: 365,
     maxWounds: 26,
     M: '12"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Diabolus heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
       { name: 'Reaper chainsword — Strike', type: 'melee', range: null, A: 6, WS: '2+', S: 14, AP: -4, D: 6, keywords: ['SUSTAINED HITS 1'] },
@@ -397,7 +397,7 @@ export const chaosKnightsUnits = {
     points: 355,
     maxWounds: 26,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Diabolus heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
       { name: 'Volkite combustor', type: 'ranged', range: '30"', A: 12, BS: '3+', S: 12, AP: 0, D: 3, keywords: ['DEVASTATING WOUNDS'] },
@@ -457,7 +457,7 @@ export const chaosKnightsUnits = {
     points: 355,
     maxWounds: 26,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Desecrator laser destructor', type: 'ranged', range: '72"', A: 3, BS: '2+', S: 18, AP: -4, D: 'D6+3', keywords: [] },
       { name: 'Diabolus heavy stubber', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
@@ -519,7 +519,7 @@ export const chaosKnightsUnits = {
     points: 355,
     maxWounds: 26,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Darkflame lance', type: 'ranged', range: '18"', A: '2D6', BS: 'N/A', S: 8, AP: -1, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Terrorpulse missiles', type: 'ranged', range: '36"', A: '2D6', BS: '3+', S: 8, AP: -2, D: 2, keywords: ['BLAST'] },
@@ -581,7 +581,7 @@ export const chaosKnightsUnits = {
     points: 410,
     maxWounds: 28,
     M: '8"', T: 12, Sv: '3+', W: 28, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Brimstone volcano lance', type: 'ranged', range: '60"', A: 'D3', BS: '3+', S: 20, AP: -5, D: 'D6+8', keywords: ['BLAST'] },
       { name: 'Darkflame cannon', type: 'ranged', range: '18"', A: '3D6', BS: 'N/A', S: 8, AP: -1, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -648,7 +648,7 @@ export const chaosKnightsUnits = {
     points: 385,
     maxWounds: 28,
     M: '12"', T: 11, Sv: '3+', W: 28, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Acheron flame cannon', type: 'ranged', range: '18"', A: '2D6', BS: 'N/A', S: 8, AP: -1, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },

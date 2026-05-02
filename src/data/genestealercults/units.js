@@ -94,7 +94,7 @@ export const genestealerCultsUnits = {
     id: 'kelermorph', name: 'Kelermorph', category: 'character',
     powerRating: 3, points: 60,
     M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Liberator autostubs', type: 'ranged', range: '12"', A: 6, BS: '2+', S: 6, AP: -2, D: 1, keywords: ['DEVASTATING WOUNDS'] },
       { name: 'Close combat weapon', type: 'melee', A: 3, WS: '3+', S: 3, AP: 0, D: 1, keywords: [] },
@@ -135,7 +135,7 @@ export const genestealerCultsUnits = {
     id: 'jackAlphus', name: 'Jackal Alphus', category: 'character',
     powerRating: 3, points: 55,
     M: '12"', T: 4, Sv: '5+', W: 4, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Cult sniper rifle', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 5, AP: -2, D: 3, keywords: ['HEAVY', 'PRECISION'] },
@@ -179,7 +179,7 @@ export const genestealerCultsUnits = {
     id: 'biophagus', name: 'Biophagus', category: 'character',
     powerRating: 2, points: 50,
     M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Chemical vials', type: 'ranged', range: '6"', A: 1, BS: '3+', S: 1, AP: -1, D: 2, keywords: ['ANTI-INFANTRY 2+'] },
@@ -245,7 +245,7 @@ export const genestealerCultsUnits = {
     id: 'benefictus', name: 'Benefictus', category: 'character',
     powerRating: 3, points: 70,
     M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Psionic Cascade — witchfire', type: 'ranged', range: '18"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['IGNORES COVER', 'PSYCHIC'] },
       { name: 'Psionic Cascade — focused witchfire', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['HAZARDOUS', 'IGNORES COVER', 'PSYCHIC'] },
@@ -267,7 +267,7 @@ export const genestealerCultsUnits = {
     id: 'reductusSaboteur', name: 'Reductus Saboteur', category: 'character',
     powerRating: 3, points: 65,
     M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Autopistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Demolition charges', type: 'ranged', range: '8"', A: 'D6', BS: '3+', S: 9, AP: -2, D: 2, keywords: ['ASSAULT', 'BLAST', 'HAZARDOUS', 'ONE SHOT'] },
@@ -293,7 +293,7 @@ export const genestealerCultsUnits = {
     id: 'sanctus', name: 'Sanctus', category: 'character',
     powerRating: 3, points: 50,
     M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Cult sniper rifle', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 7, AP: -2, D: 3, keywords: ['ANTI-PSYKER 2+', 'HEAVY', 'PRECISION'] },
       { name: 'Sanctus bio-dagger', type: 'melee', A: 6, WS: '2+', S: 3, AP: -2, D: 2, keywords: ['ANTI-INFANTRY 3+', 'PRECISION'] },
@@ -505,7 +505,7 @@ export const genestealerCultsUnits = {
     id: 'achillesRidgerunners', name: 'Achilles Ridgerunners', category: 'vehicle',
     powerRating: 6, points: 95,
     M: '12"', T: 7, Sv: '3+', W: 8, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Heavy mining laser', type: 'ranged', range: '36"', A: 'D3', BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
       { name: 'Achilles missile launcher', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 9, AP: -2, D: 3, keywords: [] },
@@ -531,7 +531,7 @@ export const genestealerCultsUnits = {
     id: 'goliathTruck', name: 'Goliath Truck', category: 'vehicle',
     powerRating: 4, points: 85,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin autocannon', type: 'ranged', range: '48"', A: 2, BS: '4+', S: 9, AP: -1, D: 3, keywords: ['TWIN-LINKED'] },
       { name: 'Demolition charge cache', type: 'ranged', range: '8"', A: 'D6', BS: '5+', S: 9, AP: -2, D: 2, keywords: ['ASSAULT', 'BLAST', 'HAZARDOUS'] },
@@ -554,7 +554,7 @@ export const genestealerCultsUnits = {
     id: 'goliathRockgrinder', name: 'Goliath Rockgrinder', category: 'vehicle',
     powerRating: 6, points: 120,
     M: '12"', T: 10, Sv: '3+', W: 10, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Clearance incinerator', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Demolition charge cache', type: 'ranged', range: '8"', A: 'D6', BS: '5+', S: 9, AP: -2, D: 2, keywords: ['ASSAULT', 'BLAST', 'HAZARDOUS'] },

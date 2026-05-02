@@ -9,7 +9,7 @@ export const thousandSonsUnits = {
     id: 'magnusTheRed', name: 'Magnus the Red', category: 'epicHero',
     powerRating: 21, points: 435,
     M: '14"', T: 11, Sv: '2+', W: 16, Ld: '5+', OC: 6, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Gaze of Magnus', type: 'ranged', range: '24"', A: '3D3', BS: '2+', S: 11, AP: -2, D: 3, keywords: ['DEVASTATING WOUNDS', 'PSYCHIC'] },
       { name: "Tzeentch's Firestorm", type: 'ranged', range: '24"', A: 'D6+3', BS: '2+', S: 6, AP: -1, D: 2, keywords: ['BLAST', 'IGNORES COVER', 'PSYCHIC'] },
@@ -38,7 +38,7 @@ export const thousandSonsUnits = {
     id: 'ahriman', name: 'Ahriman', category: 'epicHero',
     powerRating: 5, points: 100,
     M: '10"', T: 4, Sv: '3+', W: 6, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Inferno bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: -1, D: 1, keywords: ['PISTOL'] },
       { name: 'Transmogrifying Blast', type: 'ranged', range: '18"', A: 'D6+1', BS: '2+', S: 6, AP: -1, D: 'D3', keywords: ['BLAST', 'PSYCHIC'] },
@@ -61,7 +61,7 @@ export const thousandSonsUnits = {
     id: 'exaltedSorcerer', name: 'Exalted Sorcerer', category: 'character',
     powerRating: 4, points: 80,
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Inferno bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: -1, D: 1, keywords: ['PISTOL'] },
       { name: 'Astral Blast', type: 'ranged', range: '18"', A: 'D6', BS: '2+', S: 6, AP: -2, D: 'D3', keywords: ['BLAST', 'DEVASTATING WOUNDS', 'PSYCHIC'] },
@@ -83,7 +83,7 @@ export const thousandSonsUnits = {
     id: 'exaltedSorcererDisc', name: 'Exalted Sorcerer on Disc of Tzeentch', category: 'character',
     powerRating: 5, points: 100,
     M: '10"', T: 4, Sv: '3+', W: 6, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Inferno bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: -1, D: 1, keywords: ['PISTOL'] },
       { name: 'Arcane Fire', type: 'ranged', range: '18"', A: 'D6', BS: 'N/A', S: 6, AP: -2, D: 'D3', keywords: ['IGNORES COVER', 'PSYCHIC', 'TORRENT'] },
@@ -105,7 +105,7 @@ export const thousandSonsUnits = {
     id: 'infernalMaster', name: 'Infernal Master', category: 'character',
     powerRating: 4, points: 95,
     M: '6"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Inferno bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: -1, D: 1, keywords: ['PISTOL'] },
       { name: 'Fires of the Abyss — Witchfire', type: 'ranged', range: '18"', A: 'D6', BS: 'N/A', S: 6, AP: -2, D: 1, keywords: ['PSYCHIC', 'TORRENT'] },
@@ -127,7 +127,7 @@ export const thousandSonsUnits = {
     id: 'sorcerer', name: 'Sorcerer', category: 'character',
     powerRating: 3, points: 80,
     M: '6"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Inferno bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: -1, D: 1, keywords: ['PISTOL'] },
       { name: 'Pandaemonic Delusion', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 5, AP: -1, D: 1, keywords: ['PSYCHIC', 'SUSTAINED HITS 3'] },
@@ -149,7 +149,7 @@ export const thousandSonsUnits = {
     id: 'sorcererInTerminatorArmour', name: 'Sorcerer in Terminator Armour', category: 'character',
     powerRating: 4, points: 85,
     M: '5"', T: 5, Sv: '2+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Gaze of Hate', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 4, AP: -3, D: 2, keywords: ['ANTI-MONSTER 4+', 'ANTI-VEHICLE 4+', 'DEVASTATING WOUNDS', 'PSYCHIC'] },
       { name: 'Inferno Combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: -2, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -172,7 +172,7 @@ export const thousandSonsUnits = {
     id: 'tzaangorShaman', name: 'Tzaangor Shaman', category: 'character',
     powerRating: 3, points: 60,
     M: '10"', T: 4, Sv: '5+', W: 4, Ld: '7+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Baleful Devolution', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 9, AP: 0, D: 1, keywords: ['BLAST', 'DEVASTATING WOUNDS', 'PSYCHIC'] },
       { name: 'Force Stave', type: 'melee', A: 3, WS: '3+', S: 5, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
@@ -192,7 +192,7 @@ export const thousandSonsUnits = {
     id: 'daemonPrinceOfTzeentch', name: 'Daemon Prince of Tzeentch', category: 'character',
     powerRating: 9, points: 180,
     M: '9"', T: 10, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Dark Blessing', type: 'ranged', range: '24"', A: 9, BS: '2+', S: 4, AP: -1, D: 1, keywords: ['IGNORES COVER', 'PSYCHIC', 'SUSTAINED HITS 1'] },
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -2, D: 2, keywords: [] },
@@ -216,7 +216,7 @@ export const thousandSonsUnits = {
     id: 'daemonPrinceOfTzeentchWithWings', name: 'Daemon Prince of Tzeentch with Wings', category: 'character',
     powerRating: 9, points: 170,
     M: '13"', T: 9, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Dark Blessing', type: 'ranged', range: '24"', A: 9, BS: '2+', S: 4, AP: -1, D: 1, keywords: ['IGNORES COVER', 'PSYCHIC', 'SUSTAINED HITS 1'] },
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -2, D: 2, keywords: [] },
@@ -378,7 +378,7 @@ export const thousandSonsUnits = {
     id: 'mutalidhVortexBeast', name: 'Mutalith Vortex Beast', category: 'monster',
     powerRating: 8, points: 170,
     M: '10"', T: 10, Sv: '4+', W: 13, Ld: '6+', OC: 4, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Warp vortex — blast', type: 'ranged', range: '24"', A: 'D6+3', BS: '3+', S: 9, AP: -2, D: 2, keywords: ['BLAST'] },
       { name: 'Warp vortex — beam', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 18, AP: -3, D: 'D6+6', keywords: ['DEVASTATING WOUNDS'] },
@@ -406,7 +406,7 @@ export const thousandSonsUnits = {
     id: 'forgefiend', name: 'Forgefiend', category: 'vehicle',
     powerRating: 7, points: 130,
     M: '8"', T: 10, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Ectoplasma Cannon', type: 'ranged', range: '36"', A: 'D3', BS: '3+', S: 10, AP: -3, D: 3, keywords: ['BLAST'] },
       { name: 'Hades Autocannon', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 8, AP: -2, D: 2, keywords: [] },
@@ -429,7 +429,7 @@ export const thousandSonsUnits = {
     id: 'maulerfiend', name: 'Maulerfiend', category: 'vehicle',
     powerRating: 6, points: 120,
     M: '10"', T: 10, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Magma cutter', type: 'ranged', range: '6"', A: 2, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
       { name: 'Lasher tendrils', type: 'melee', A: 6, WS: '3+', S: 7, AP: -1, D: 1, keywords: [] },
@@ -451,7 +451,7 @@ export const thousandSonsUnits = {
     id: 'heldrake', name: 'Heldrake', category: 'vehicle',
     powerRating: 11, points: 215,
     M: '20"+', T: 9, Sv: '3+', W: 12, Ld: '6+', OC: 0, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Baleflamer', type: 'ranged', range: '12"', A: 'D6+3', BS: 'N/A', S: 6, AP: -2, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Hades Autocannon', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 8, AP: -2, D: 2, keywords: [] },
@@ -474,7 +474,7 @@ export const thousandSonsUnits = {
     id: 'defiler', name: 'Defiler', category: 'vehicle',
     powerRating: 12, points: 250,
     M: '12"', T: 11, Sv: '3+', W: 18, Ld: '6+', OC: 5, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Hades battle cannon', type: 'ranged', range: '48"', A: 'D6+3', BS: '3+', S: 10, AP: -1, D: 3, keywords: ['BLAST'] },
       { name: 'Ectoplasma destructor', type: 'ranged', range: '36"', A: 'D6', BS: '3+', S: 12, AP: -3, D: 3, keywords: ['BLAST'] },
@@ -506,7 +506,7 @@ export const thousandSonsUnits = {
     id: 'chaosRhino', name: 'Chaos Rhino', category: 'vehicle',
     powerRating: 4, points: 90,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Havoc launcher', type: 'ranged', range: '48"', A: 'D6', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST'] },
       { name: 'Inferno combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: -2, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -529,7 +529,7 @@ export const thousandSonsUnits = {
     id: 'chaosLandRaider', name: 'Chaos Land Raider', category: 'vehicle',
     powerRating: 11, points: 220,
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Soulshatter Lascannon (×2)', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
       { name: 'Twin Inferno Heavy Bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -2, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -553,7 +553,7 @@ export const thousandSonsUnits = {
     id: 'chaosPredatorAnnihilator', name: 'Chaos Predator Annihilator', category: 'vehicle',
     powerRating: 7, points: 130,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator twin lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 14, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
@@ -578,7 +578,7 @@ export const thousandSonsUnits = {
     id: 'chaosPredatorDestructor', name: 'Chaos Predator Destructor', category: 'vehicle',
     powerRating: 7, points: 130,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator Autocannon', type: 'ranged', range: '48"', A: 4, BS: '3+', S: 9, AP: -1, D: 3, keywords: ['RAPID FIRE 2'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },

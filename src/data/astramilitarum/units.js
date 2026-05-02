@@ -31,7 +31,7 @@ export const astraMilitarumUnits = {
     id: 'commissarYarrick', name: 'Commissar Yarrick', category: 'epicHero',
     points: 150,
     M: '6"', T: 4, Sv: '4+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bale Eye', type: 'ranged', range: '12"', A: 2, BS: '2+', S: 6, AP: -2, D: 'D3+1', keywords: ['PRECISION'] },
       { name: 'Laspistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
@@ -56,7 +56,7 @@ export const astraMilitarumUnits = {
     id: 'gauntSGhosts', name: "Gaunt's Ghosts", category: 'epicHero',
     points: 100,
     M: '6"', T: 3, Sv: '4+', W: 2, Ld: '7+', OC: 1, InvSv: '5+',
-    models: 6,
+    models: 6, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: "Corbec's hot-shot lascarbine", type: 'ranged', range: '24"', A: 3, BS: '3+', S: 3, AP: -1, D: 1, keywords: ['ASSAULT'] },
@@ -112,7 +112,7 @@ export const astraMilitarumUnits = {
     id: 'norkDeddog', name: 'Nork Deddog', category: 'epicHero',
     points: 60,
     M: '6"', T: 6, Sv: '4+', W: 6, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Ripper gun', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['RAPID FIRE 3'] },
       { name: 'Huge knife', type: 'melee', A: 6, WS: '2+', S: 8, AP: -1, D: 2, keywords: ['DEVASTATING WOUNDS'] },
@@ -186,7 +186,7 @@ export const astraMilitarumUnits = {
     id: 'primarisPsyker', name: 'Primaris Psyker', category: 'character',
     points: 60,
     M: '6"', T: 3, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Laspistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Psychic Maelstrom — Witchfire Blast', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 5, AP: -2, D: 1, keywords: ['DEVASTATING WOUNDS', 'PSYCHIC'] },
@@ -253,7 +253,7 @@ export const astraMilitarumUnits = {
     id: 'ministorumPriest', name: 'Ministorum Priest', category: 'character',
     points: 35,
     M: '6"', T: 3, Sv: '6+', W: 3, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Holy pistol', type: 'ranged', range: '12"', A: 3, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: "Zealot's vindictor — shooting", type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: 0, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -276,7 +276,7 @@ export const astraMilitarumUnits = {
     id: 'ogrinBodyguard', name: 'Ogryn Bodyguard', category: 'character',
     points: 40,
     M: '6"', T: 6, Sv: '5+', W: 6, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Grenadier gauntlet blast', type: 'ranged', range: '18"', A: 'D6', BS: '4+', S: 4, AP: 0, D: 1, keywords: [] },
       { name: 'Ripper gun', type: 'ranged', range: '18"', A: 3, BS: '4+', S: 5, AP: -1, D: 2, keywords: ['RAPID FIRE 3'] },
@@ -599,7 +599,7 @@ export const astraMilitarumUnits = {
     id: 'lemanRussBattleTank', name: 'Leman Russ Battle Tank', category: 'vehicle',
     points: 185,
     M: '10"', T: 11, Sv: '2+', W: 13, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Leman Russ battle cannon', type: 'ranged', range: '48"', A: 'D6+3', BS: '4+', S: 10, AP: -1, D: 3, keywords: ['BLAST'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
@@ -629,7 +629,7 @@ export const astraMilitarumUnits = {
     id: 'lemanRussDemolisher', name: 'Leman Russ Demolisher', category: 'vehicle',
     points: 190,
     M: '10"', T: 11, Sv: '2+', W: 13, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Demolisher battle cannon', type: 'ranged', range: '24"', A: 'D6+1', BS: '4+', S: 14, AP: -3, D: 'D6', keywords: ['BLAST'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
@@ -659,7 +659,7 @@ export const astraMilitarumUnits = {
     id: 'chimera', name: 'Chimera', category: 'vehicle',
     points: 85,
     M: '10"', T: 9, Sv: '3+', W: 11, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Multi-laser', type: 'ranged', range: '36"', A: 4, BS: '4+', S: 6, AP: 0, D: 1, keywords: [] },
       { name: 'Heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
@@ -686,7 +686,7 @@ export const astraMilitarumUnits = {
     id: 'hellhound', name: 'Hellhound', category: 'vehicle',
     points: 125,
     M: '10"', T: 10, Sv: '2+', W: 11, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Inferno cannon', type: 'ranged', range: '18"', A: '2D6', BS: 'N/A', S: 6, AP: -2, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Chem cannon — anti-infantry', type: 'ranged', range: '12"', A: 'D6+1', BS: 'N/A', S: 2, AP: -2, D: 2, keywords: ['ANTI-INFANTRY 2+', 'TORRENT'] },
@@ -713,7 +713,7 @@ export const astraMilitarumUnits = {
     id: 'basilisk', name: 'Basilisk', category: 'vehicle',
     points: 140,
     M: '10"', T: 9, Sv: '3+', W: 11, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Earthshaker cannon', type: 'ranged', range: '240"', A: 'D6+3', BS: '4+', S: 8, AP: -2, D: 2, keywords: ['BLAST', 'INDIRECT FIRE'] },
       { name: 'Heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
@@ -737,7 +737,7 @@ export const astraMilitarumUnits = {
     id: 'manticore', name: 'Manticore', category: 'vehicle',
     points: 165,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Storm eagle rockets', type: 'ranged', range: '120"', A: 'D6', BS: '4+', S: 7, AP: -2, D: 3, keywords: ['ANTI-INFANTRY 2+', 'BLAST', 'INDIRECT FIRE'] },
       { name: 'Heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
@@ -761,7 +761,7 @@ export const astraMilitarumUnits = {
     id: 'wyvern', name: 'Wyvern', category: 'vehicle',
     points: 110,
     M: '10"', T: 9, Sv: '3+', W: 11, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Wyvern quad stormshard mortar', type: 'ranged', range: '48"', A: '2D6', BS: '4+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'INDIRECT FIRE', 'TWIN-LINKED'] },
       { name: 'Heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
@@ -785,7 +785,7 @@ export const astraMilitarumUnits = {
     id: 'hydra', name: 'Hydra', category: 'vehicle',
     points: 95,
     M: '10"', T: 9, Sv: '3+', W: 11, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Hydra autocannon', type: 'ranged', range: '72"', A: 4, BS: '4+', S: 9, AP: -1, D: 3, keywords: ['ANTI-FLY 2+', 'TWIN-LINKED'] },
       { name: 'Heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
@@ -809,7 +809,7 @@ export const astraMilitarumUnits = {
     id: 'valkyrie', name: 'Valkyrie', category: 'vehicle',
     points: 190,
     M: '20"+', T: 10, Sv: '2+', W: 14, Ld: '7+', OC: 0, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Multi-laser', type: 'ranged', range: '36"', A: 4, BS: '4+', S: 6, AP: 0, D: 1, keywords: [] },
       { name: 'Hellstrike missiles', type: 'ranged', range: '48"', A: 1, BS: '4+', S: 10, AP: -3, D: 'D6', keywords: ['ANTI-FLY 2+'] },
@@ -835,7 +835,7 @@ export const astraMilitarumUnits = {
     id: 'taurox', name: 'Taurox', category: 'vehicle',
     points: 75,
     M: '12"', T: 8, Sv: '3+', W: 10, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin autocannon', type: 'ranged', range: '48"', A: 2, BS: '4+', S: 9, AP: -1, D: 3, keywords: ['TWIN-LINKED'] },
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -856,7 +856,7 @@ export const astraMilitarumUnits = {
     id: 'tauroxPrime', name: 'Taurox Prime', category: 'vehicle',
     points: 90,
     M: '12"', T: 8, Sv: '3+', W: 10, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Taurox battle cannon', type: 'ranged', range: '48"', A: 'D6', BS: '3+', S: 8, AP: -1, D: 2, keywords: ['BLAST'] },
       { name: 'Taurox gatling cannon', type: 'ranged', range: '24"', A: 8, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
@@ -882,7 +882,7 @@ export const astraMilitarumUnits = {
     id: 'baneblade', name: 'Baneblade', category: 'vehicle',
     points: 450,
     M: '12"', T: 13, Sv: '2+', W: 24, Ld: '7+', OC: 8, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Baneblade cannon', type: 'ranged', range: '72"', A: '3D6', BS: '4+', S: 12, AP: -2, D: 3, keywords: ['BLAST'] },
       { name: 'Coaxial autocannon', type: 'ranged', range: '48"', A: 2, BS: '4+', S: 9, AP: -1, D: 3, keywords: [] },
@@ -909,7 +909,7 @@ export const astraMilitarumUnits = {
     id: 'shadowsword', name: 'Shadowsword', category: 'vehicle',
     points: 410,
     M: '12"', T: 13, Sv: '2+', W: 24, Ld: '7+', OC: 8, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Volcano cannon', type: 'ranged', range: '96"', A: 'D3+1', BS: '4+', S: 24, AP: -5, D: 12, keywords: ['BLAST', 'HEAVY'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },

@@ -184,7 +184,7 @@ export const bloodAngelsUnits = {
     id: 'captain', name: 'Captain', category: 'character',
     points: 80,
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Master-crafted bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: -1, D: 2, keywords: [] },
       { name: 'Master-crafted power weapon', type: 'melee', A: 6, WS: '2+', S: 5, AP: -2, D: 2, keywords: [] },
@@ -223,7 +223,7 @@ export const bloodAngelsUnits = {
     id: 'librarian', name: 'Librarian', category: 'character',
     points: 75,
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Smite — witchfire', type: 'ranged', range: '24"', A: 'D6', BS: '3+', S: 5, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
@@ -245,7 +245,7 @@ export const bloodAngelsUnits = {
     id: 'librarianWithJumpPack', name: 'Librarian with Jump Pack', category: 'character',
     points: 90,
     M: '12"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Smite — witchfire', type: 'ranged', range: '24"', A: 'D6', BS: '3+', S: 5, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
@@ -309,7 +309,7 @@ export const bloodAngelsUnits = {
     id: 'lieutenant', name: 'Lieutenant', category: 'character',
     points: 65,
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Master-crafted bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: -1, D: 2, keywords: [] },
@@ -330,7 +330,7 @@ export const bloodAngelsUnits = {
     id: 'techmarine', name: 'Techmarine', category: 'character',
     points: 45,
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Forge bolter', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -1, D: 2, keywords: [] },
       { name: 'Grav-pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 3, AP: -1, D: 0, keywords: ['ANTI-VEHICLE 2+', 'PISTOL'] },
@@ -683,7 +683,7 @@ export const bloodAngelsUnits = {
     id: 'baalPredator', name: 'Baal Predator', category: 'vehicle',
     points: 125,
     M: '12"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Baal flamestorm cannon', type: 'ranged', range: '18"', A: 'D6+3', BS: 'N/A', S: 6, AP: -2, D: 2, keywords: ['ASSAULT', 'IGNORES COVER', 'TORRENT'] },
       { name: 'Twin assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['ASSAULT', 'DEVASTATING WOUNDS', 'TWIN-LINKED'] },
@@ -707,7 +707,7 @@ export const bloodAngelsUnits = {
     id: 'predatorAnnihilator', name: 'Predator Annihilator', category: 'vehicle',
     points: 130,
     M: '10"', T: 11, Sv: '3+', W: 11, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator twin lascannon', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Lascannon (sponson)', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['HEAVY'] },
@@ -730,7 +730,7 @@ export const bloodAngelsUnits = {
     id: 'predatorDestructor', name: 'Predator Destructor', category: 'vehicle',
     points: 110,
     M: '10"', T: 11, Sv: '3+', W: 11, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator autocannon', type: 'ranged', range: '48"', A: '2D3', BS: '3+', S: 9, AP: -2, D: 3, keywords: ['HEAVY'] },
       { name: 'Heavy bolter (sponson x2)', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
@@ -751,7 +751,7 @@ export const bloodAngelsUnits = {
     id: 'rhino', name: 'Rhino', category: 'vehicle',
     points: 75,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Armoured tracks', type: 'melee', A: 3, WS: '4+', S: 6, AP: 0, D: 1, keywords: [] },
@@ -772,7 +772,7 @@ export const bloodAngelsUnits = {
     id: 'razorback', name: 'Razorback', category: 'vehicle',
     points: 105,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
       { name: 'Twin assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
@@ -793,7 +793,7 @@ export const bloodAngelsUnits = {
     id: 'dropPod', name: 'Drop Pod', category: 'vehicle',
     points: 65,
     M: '0"', T: 7, Sv: '3+', W: 8, Ld: '6+', OC: 0,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
     ],
@@ -813,7 +813,7 @@ export const bloodAngelsUnits = {
     id: 'dreadnought', name: 'Dreadnought', category: 'vehicle',
     points: 100,
     M: '6"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Multi-melta', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['HEAVY', 'MELTA 2'] },
       { name: 'Twin lascannon', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
@@ -834,7 +834,7 @@ export const bloodAngelsUnits = {
     id: 'furiousoDreadnought', name: 'Furioso Dreadnought', category: 'vehicle',
     points: 130,
     M: '7"', T: 10, Sv: '2+', W: 9, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Frag cannon', type: 'ranged', range: '18"', A: 'D6+3', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Heavy flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -858,7 +858,7 @@ export const bloodAngelsUnits = {
     id: 'librarianDreadnought', name: 'Librarian Dreadnought', category: 'vehicle',
     points: 150,
     M: '7"', T: 10, Sv: '2+', W: 9, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Force halberd', type: 'melee', A: 5, WS: '2+', S: 12, AP: -3, D: 3, keywords: ['PSYCHIC'] },
       { name: 'Furioso fist', type: 'melee', A: 5, WS: '2+', S: 14, AP: -3, D: 'D6', keywords: ['DEVASTATING WOUNDS'] },
@@ -883,7 +883,7 @@ export const bloodAngelsUnits = {
     id: 'landRaider', name: 'Land Raider', category: 'vehicle',
     points: 265,
     M: '10"', T: 13, Sv: '2+', W: 16, Ld: '6+', OC: 5, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: '2× Twin lascannon', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -906,7 +906,7 @@ export const bloodAngelsUnits = {
     id: 'landRaiderCrusader', name: 'Land Raider Crusader', category: 'vehicle',
     points: 275,
     M: '10"', T: 13, Sv: '2+', W: 16, Ld: '6+', OC: 5, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
       { name: 'Hurricane bolter', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT', 'RAPID FIRE 6'] },
@@ -930,7 +930,7 @@ export const bloodAngelsUnits = {
     id: 'landRaiderRedeemer', name: 'Land Raider Redeemer', category: 'vehicle',
     points: 275,
     M: '10"', T: 13, Sv: '2+', W: 16, Ld: '6+', OC: 5, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Flamestorm cannon', type: 'ranged', range: '12"', A: 'D6+3', BS: 'N/A', S: 6, AP: -2, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Twin assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
@@ -954,7 +954,7 @@ export const bloodAngelsUnits = {
     id: 'stormravenGunship', name: 'Stormraven Gunship', category: 'vehicle',
     points: 280,
     M: '20"+', T: 10, Sv: '3+', W: 14, Ld: '6+', OC: 0, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
       { name: 'Twin multi-melta', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['HEAVY', 'MELTA 2', 'TWIN-LINKED'] },
@@ -981,7 +981,7 @@ export const bloodAngelsUnits = {
     id: 'repulsor', name: 'Repulsor', category: 'vehicle',
     points: 210,
     M: '10"', T: 12, Sv: '3+', W: 16, Ld: '6+', OC: 5, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Repulsor field', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 4, AP: 0, D: 1, keywords: ['TORRENT'] },
       { name: 'Twin lascannon', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
@@ -1003,7 +1003,7 @@ export const bloodAngelsUnits = {
     id: 'impulsor', name: 'Impulsor', category: 'vehicle',
     points: 100,
     M: '12"', T: 9, Sv: '3+', W: 11, Ld: '6+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Fragstorm grenade launcher (x2)', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
       { name: 'Bellicatus missile array', type: 'ranged', range: '48"', A: 'D3', BS: '3+', S: 8, AP: -2, D: 3, keywords: [] },
@@ -1026,7 +1026,7 @@ export const bloodAngelsUnits = {
     id: 'gladiatorLancer', name: 'Gladiator Lancer', category: 'vehicle',
     points: 160,
     M: '10"', T: 11, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Lancer laser destroyer', type: 'ranged', range: '60"', A: 2, BS: '3+', S: 14, AP: -4, D: 'D6+2', keywords: ['ASSAULT', 'HEAVY'] },
       { name: 'Multi-melta', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['HEAVY', 'MELTA 2'] },
@@ -1048,7 +1048,7 @@ export const bloodAngelsUnits = {
     id: 'gladiatorReaper', name: 'Gladiator Reaper', category: 'vehicle',
     points: 155,
     M: '10"', T: 11, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin heavy onslaught gatling cannon', type: 'ranged', range: '30"', A: 20, BS: '3+', S: 6, AP: -1, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
       { name: 'Multi-melta', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['HEAVY', 'MELTA 2'] },
@@ -1070,7 +1070,7 @@ export const bloodAngelsUnits = {
     id: 'gladiatorValiant', name: 'Gladiator Valiant', category: 'vehicle',
     points: 160,
     M: '10"', T: 11, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin las-talon', type: 'ranged', range: '36"', A: 2, BS: '3+', S: 16, AP: -4, D: 'D6+2', keywords: ['TWIN-LINKED'] },
       { name: 'Multi-melta (x2)', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['HEAVY', 'MELTA 2'] },

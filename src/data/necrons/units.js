@@ -36,7 +36,7 @@ export const necronsUnits = {
     id: 'imotekhTheStormlord', name: 'Imotekh the Stormlord', category: 'epicHero',
     points: 100,
     M: '5"', T: 5, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Gauntlet of Fire', type: 'ranged', range: '12"', A: 'D6', BS: '2+', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Staff of the Destroyer', type: 'melee', A: 4, WS: '2+', S: 6, AP: -3, D: 2, keywords: ['DEVASTATING WOUNDS'] },
@@ -57,7 +57,7 @@ export const necronsUnits = {
     id: 'nemesorZahndrekh', name: 'Nemesor Zahndrekh', category: 'epicHero',
     points: 85,
     M: '5"', T: 5, Sv: '2+', W: 6, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Staff of Light', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 5, AP: -2, D: 1, keywords: [] },
       { name: 'Staff of Light', type: 'melee', A: 4, WS: '3+', S: 5, AP: -2, D: 1, keywords: [] },
@@ -138,7 +138,7 @@ export const necronsUnits = {
     id: 'illuminorSzeras', name: 'Illuminor Szeras', category: 'epicHero',
     points: 165,
     M: '8"', T: 8, Sv: '2+', W: 9, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Eldritch Lance', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 9, AP: -3, D: 3, keywords: [] },
       { name: 'Eldritch Lance', type: 'melee', A: 4, WS: '3+', S: 9, AP: -3, D: 3, keywords: [] },
@@ -162,7 +162,7 @@ export const necronsUnits = {
     id: 'ctanShardOfTheNightbringer', name: "C'tan Shard of the Nightbringer", category: 'epicHero',
     points: 340,
     M: '10"', T: 11, Sv: '3+', W: 16, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Gaze of Death', type: 'ranged', range: '18"', A: 'D3', BS: '2+', S: 12, AP: -3, D: 'D6+3', keywords: [] },
       { name: 'Scythe of the Nightbringer — Strike', type: 'melee', A: 6, WS: '2+', S: 14, AP: -4, D: 'D6+2', keywords: ['DEVASTATING WOUNDS'] },
@@ -188,7 +188,7 @@ export const necronsUnits = {
     id: 'ctanShardOfTheDeceiver', name: "C'tan Shard of the Deceiver", category: 'epicHero',
     points: 310,
     M: '8"', T: 11, Sv: '3+', W: 16, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Cosmic Insanity', type: 'ranged', range: '18"', A: 6, BS: '2+', S: 6, AP: -2, D: 2, keywords: ['ANTI-CHARACTER 4+', 'DEVASTATING WOUNDS', 'PRECISION'] },
       { name: 'Golden Fists', type: 'melee', A: 8, WS: '2+', S: 10, AP: -3, D: 3, keywords: [] },
@@ -214,7 +214,7 @@ export const necronsUnits = {
     id: 'ctanShardOfTheVoidDragon', name: "C'tan Shard of the Void Dragon", category: 'epicHero',
     points: 330,
     M: '10"', T: 11, Sv: '3+', W: 16, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Spear of the Void Dragon', type: 'ranged', range: '12"', A: 'D3', BS: '2+', S: 8, AP: -3, D: 'D6+2', keywords: ['ANTI-VEHICLE 2+'] },
       { name: 'Voltaic Storm', type: 'ranged', range: '18"', A: 'D6+3', BS: '2+', S: 7, AP: -1, D: 2, keywords: ['BLAST', 'SUSTAINED HITS 2'] },
@@ -244,7 +244,7 @@ export const necronsUnits = {
     id: 'overlord', name: 'Overlord', category: 'character',
     points: 85,
     M: '5"', T: 5, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Staff of Light', type: 'ranged', range: '18"', A: 3, BS: '2+', S: 5, AP: -2, D: 1, keywords: [] },
       { name: 'Tachyon Arrow', type: 'ranged', range: '72"', A: 1, BS: '2+', S: 16, AP: -5, D: 'D6+2', keywords: ['ONE SHOT'] },
@@ -269,7 +269,7 @@ export const necronsUnits = {
     id: 'technomancer', name: 'Technomancer', category: 'character',
     points: 80,
     M: '10"', T: 4, Sv: '4+', W: 4, Ld: '6+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Staff of Light', type: 'ranged', range: '18"', A: 3, BS: '4+', S: 5, AP: -2, D: 1, keywords: [] },
       { name: 'Staff of Light', type: 'melee', A: 2, WS: '4+', S: 5, AP: -2, D: 1, keywords: [] },
@@ -290,7 +290,7 @@ export const necronsUnits = {
     id: 'plasmancer', name: 'Plasmancer', category: 'character',
     points: 55,
     M: '5"', T: 4, Sv: '4+', W: 4, Ld: '6+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Plasmic Lance', type: 'ranged', range: '18"', A: 3, BS: '4+', S: 7, AP: -3, D: 2, keywords: [] },
       { name: 'Plasmic Lance', type: 'melee', A: 2, WS: '4+', S: 7, AP: -3, D: 2, keywords: [] },
@@ -311,7 +311,7 @@ export const necronsUnits = {
     id: 'psychomancer', name: 'Psychomancer', category: 'character',
     points: 55,
     M: '5"', T: 4, Sv: '4+', W: 4, Ld: '6+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Abyssal Lance', type: 'ranged', range: '18"', A: 1, BS: '4+', S: 6, AP: -3, D: 3, keywords: [] },
       { name: 'Abyssal Lance', type: 'melee', A: 1, WS: '4+', S: 6, AP: -3, D: 3, keywords: [] },
@@ -332,7 +332,7 @@ export const necronsUnits = {
     id: 'chronomancer', name: 'Chronomancer', category: 'character',
     points: 65,
     M: '5"', T: 4, Sv: '4+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Aeonstave Blast', type: 'ranged', range: '18"', A: 'D6', BS: '4+', S: 5, AP: -1, D: 1, keywords: [] },
       { name: 'Aeonstave', type: 'melee', A: 3, WS: '4+', S: 5, AP: -1, D: 1, keywords: [] },
@@ -353,7 +353,7 @@ export const necronsUnits = {
     id: 'royalWarden', name: 'Royal Warden', category: 'character',
     points: 50,
     M: '5"', T: 5, Sv: '3+', W: 4, Ld: '6+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Relic Gauss Blaster', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['LETHAL HITS', 'RAPID FIRE 2'] },
       { name: 'Close Combat Weapon', type: 'melee', A: 4, WS: '3+', S: 5, AP: 0, D: 1, keywords: [] },
@@ -374,7 +374,7 @@ export const necronsUnits = {
     id: 'skorpekhLord', name: 'Skorpekh Lord', category: 'character',
     points: 90,
     M: '8"', T: 7, Sv: '3+', W: 7, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Enmitic Annihilator', type: 'ranged', range: '18"', A: 2, BS: '2+', S: 6, AP: -1, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Flensing Claw', type: 'melee', A: 8, WS: '2+', S: 6, AP: -1, D: 1, keywords: [] },
@@ -396,7 +396,7 @@ export const necronsUnits = {
     id: 'lokhustLord', name: 'Lokhust Lord', category: 'character',
     points: 80,
     M: '8"', T: 6, Sv: '3+', W: 6, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Staff of Light', type: 'ranged', range: '18"', A: 3, BS: '2+', S: 5, AP: -2, D: 1, keywords: [] },
       { name: "Lord's Blade", type: 'melee', A: 4, WS: '2+', S: 8, AP: -3, D: 2, keywords: ['DEVASTATING WOUNDS'] },
@@ -442,7 +442,7 @@ export const necronsUnits = {
     id: 'canoptekReanimator', name: 'Canoptek Reanimator', category: 'character',
     points: 75,
     M: '8"', T: 6, Sv: '3+', W: 6, Ld: '7+', OC: 3, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Atomiser Beam', type: 'ranged', range: '12"', A: 3, BS: '4+', S: 6, AP: -2, D: 1, keywords: [] },
       { name: "Reanimator's Claws", type: 'melee', A: 4, WS: '4+', S: 5, AP: 0, D: 1, keywords: [] },
@@ -721,7 +721,7 @@ export const necronsUnits = {
     id: 'lokhustHeavyDestroyers', name: 'Lokhust Heavy Destroyers', category: 'infantry',
     points: 55,
     M: '8"', T: 6, Sv: '3+', W: 4, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Gauss Destructor', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 14, AP: -4, D: 6, keywords: ['HEAVY', 'LETHAL HITS'] },
       { name: 'Enmitic Exterminator', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 6, AP: -1, D: 1, keywords: ['HEAVY', 'RAPID FIRE 6', 'SUSTAINED HITS 1'] },
@@ -744,7 +744,7 @@ export const necronsUnits = {
     id: 'triarchStalker', name: 'Triarch Stalker', category: 'vehicle',
     points: 110,
     M: '8"', T: 8, Sv: '3+', W: 12, Ld: '7+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Heat Ray — Dispersed', type: 'ranged', range: '12"', A: '2D6', BS: null, S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Heat Ray — Focused', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 4'] },
@@ -769,7 +769,7 @@ export const necronsUnits = {
     id: 'doomsdayArk', name: 'Doomsday Ark', category: 'vehicle',
     points: 200,
     M: '10"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Doomsday Cannon', type: 'ranged', range: '72"', A: 'D6+1', BS: '3+', S: 18, AP: -4, D: 4, keywords: ['BLAST', 'HEAVY'] },
       { name: 'Gauss Flayer Array', type: 'ranged', range: '24"', A: 5, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['LETHAL HITS', 'RAPID FIRE 5'] },
@@ -792,7 +792,7 @@ export const necronsUnits = {
     id: 'ghostArk', name: 'Ghost Ark', category: 'vehicle',
     points: 115,
     M: '10"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Gauss Flayer Array (×2)', type: 'ranged', range: '24"', A: 5, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['LETHAL HITS', 'RAPID FIRE 5'] },
       { name: 'Armoured Bulk', type: 'melee', A: 3, WS: '4+', S: 6, AP: 0, D: 1, keywords: [] },
@@ -813,7 +813,7 @@ export const necronsUnits = {
     id: 'annihilationBarge', name: 'Annihilation Barge', category: 'vehicle',
     points: 105,
     M: '10"', T: 8, Sv: '3+', W: 9, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin Tesla Destructor', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 8, AP: 0, D: 2, keywords: ['SUSTAINED HITS 2', 'TWIN-LINKED'] },
       { name: 'Gauss Cannon', type: 'ranged', range: '24"', A: 3, BS: '3+', S: 5, AP: -2, D: 2, keywords: ['LETHAL HITS'] },
@@ -836,7 +836,7 @@ export const necronsUnits = {
     id: 'catacomandCommandBarge', name: 'Catacomb Command Barge', category: 'vehicle',
     points: 120,
     M: '10"', T: 8, Sv: '3+', W: 9, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Staff of Light', type: 'ranged', range: '18"', A: 3, BS: '2+', S: 5, AP: -2, D: 1, keywords: [] },
       { name: 'Gauss Cannon', type: 'ranged', range: '24"', A: 3, BS: '3+', S: 5, AP: -2, D: 2, keywords: ['LETHAL HITS'] },
@@ -862,7 +862,7 @@ export const necronsUnits = {
     id: 'canoptekDoomstalker', name: 'Canoptek Doomstalker', category: 'vehicle',
     points: 140,
     M: '8"', T: 8, Sv: '3+', W: 12, Ld: '8+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Doomsday Blaster', type: 'ranged', range: '48"', A: 'D6+1', BS: '4+', S: 14, AP: -3, D: 3, keywords: ['BLAST', 'HEAVY'] },
       { name: 'Twin Gauss Flayer', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['LETHAL HITS', 'RAPID FIRE 1', 'TWIN-LINKED'] },
@@ -885,7 +885,7 @@ export const necronsUnits = {
     id: 'canoptekSpyders', name: 'Canoptek Spyders', category: 'vehicle',
     points: 75,
     M: '5"', T: 7, Sv: '3+', W: 6, Ld: '8+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Particle Beamer', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 6, AP: 0, D: 1, keywords: ['BLAST', 'DEVASTATING WOUNDS'] },
       { name: 'Automaton Claws', type: 'melee', A: 5, WS: '4+', S: 8, AP: -2, D: 2, keywords: [] },
@@ -908,7 +908,7 @@ export const necronsUnits = {
     id: 'monolith', name: 'Monolith', category: 'vehicle',
     points: 400,
     M: '8"', T: 13, Sv: '2+', W: 22, Ld: '7+', OC: 8, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Death Ray', type: 'ranged', range: '24"', A: 1, BS: '3+', S: 12, AP: -4, D: 'D6+1', keywords: ['SUSTAINED HITS D3'] },
       { name: 'Gauss Flux Arc', type: 'ranged', range: '24"', A: 3, BS: '3+', S: 6, AP: -1, D: 1, keywords: ['LETHAL HITS', 'RAPID FIRE 3'] },
@@ -932,7 +932,7 @@ export const necronsUnits = {
     id: 'tesseractVault', name: 'Tesseract Vault', category: 'vehicle',
     points: 425,
     M: '8"', T: 12, Sv: '2+', W: 24, Ld: '7+', OC: 8, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Tesla Spheres (×4)', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 7, AP: 0, D: 1, keywords: ['SUSTAINED HITS 2'] },
       { name: 'Antimatter Meteor', type: 'ranged', range: '24"', A: 'D6+3', BS: '3+', S: 10, AP: -3, D: 3, keywords: ["C'TAN POWER", 'BLAST', 'DEVASTATING WOUNDS', 'INDIRECT FIRE'] },
@@ -957,7 +957,7 @@ export const necronsUnits = {
     id: 'seraptekhHeavyConstruct', name: 'Seraptek Heavy Construct', category: 'vehicle',
     points: 540,
     M: '10"', T: 12, Sv: '3+', W: 24, Ld: '7+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Singularity Generator', type: 'ranged', range: '36"', A: '2D6', BS: '3+', S: 10, AP: -3, D: 4, keywords: ['BLAST', 'DEVASTATING WOUNDS'] },
       { name: 'Synaptic Obliterator', type: 'ranged', range: '48"', A: 8, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 2'] },

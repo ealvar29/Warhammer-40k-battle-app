@@ -9,7 +9,7 @@ export const imperialKnightsUnits = {
     id: 'canisRex', name: 'Canis Rex', category: 'epicHero',
     points: 415,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Las-impulsor — high intensity', type: 'ranged', range: '24"', A: 'D6', BS: '2+', S: 14, AP: -3, D: 4, keywords: ['BLAST', 'SUSTAINED HITS 1'] },
       { name: 'Las-impulsor — low intensity', type: 'ranged', range: '36"', A: '2D6', BS: '2+', S: 7, AP: -1, D: 2, keywords: ['BLAST', 'SUSTAINED HITS 1'] },
@@ -58,7 +58,7 @@ export const imperialKnightsUnits = {
     id: 'knightErrant', name: 'Knight Errant', category: 'vehicle',
     points: 355,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Thermal cannon — blast', type: 'ranged', range: '24"', A: '2D3', BS: '3+', S: 12, AP: -4, D: 'D6', keywords: ['BLAST', 'MELTA 6'] },
       { name: 'Ironstorm missile pod', type: 'ranged', range: '48"', A: 'D6+1', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'INDIRECT FIRE'] },
@@ -90,7 +90,7 @@ export const imperialKnightsUnits = {
     id: 'knightPaladin', name: 'Knight Paladin', category: 'vehicle',
     points: 375,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Rapid-fire battle cannon', type: 'ranged', range: '72"', A: 'D6+3', BS: '3+', S: 10, AP: -1, D: 3, keywords: ['BLAST', 'RAPID FIRE D6+3'] },
       { name: 'Ironstorm missile pod', type: 'ranged', range: '48"', A: 'D6+1', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'INDIRECT FIRE'] },
@@ -122,7 +122,7 @@ export const imperialKnightsUnits = {
     id: 'knightGallant', name: 'Knight Gallant', category: 'vehicle',
     points: 355,
     M: '12"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Ironstorm missile pod', type: 'ranged', range: '48"', A: 'D6+1', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'INDIRECT FIRE'] },
       { name: 'Meltagun', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
@@ -153,7 +153,7 @@ export const imperialKnightsUnits = {
     id: 'knightWarden', name: 'Knight Warden', category: 'vehicle',
     points: 375,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Avenger gatling cannon', type: 'ranged', range: '36"', A: 18, BS: '3+', S: 6, AP: -2, D: 2, keywords: [] },
       { name: 'Heavy flamer', type: 'ranged', range: '12"', A: 'D6', BS: null, S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -186,7 +186,7 @@ export const imperialKnightsUnits = {
     id: 'knightCrusader', name: 'Knight Crusader', category: 'vehicle',
     points: 385,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Avenger gatling cannon', type: 'ranged', range: '36"', A: 18, BS: '3+', S: 6, AP: -2, D: 2, keywords: [] },
       { name: 'Rapid-fire battle cannon', type: 'ranged', range: '72"', A: 'D6+3', BS: '3+', S: 10, AP: -1, D: 3, keywords: ['BLAST', 'RAPID FIRE D6+3'] },
@@ -218,7 +218,7 @@ export const imperialKnightsUnits = {
     id: 'knightPreceptor', name: 'Knight Preceptor', category: 'vehicle',
     points: 365,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Las-impulsor — high intensity', type: 'ranged', range: '24"', A: 'D6', BS: '3+', S: 14, AP: -3, D: 4, keywords: ['BLAST'] },
       { name: 'Las-impulsor — low intensity', type: 'ranged', range: '36"', A: '2D6', BS: '3+', S: 7, AP: -1, D: 2, keywords: ['BLAST'] },
@@ -252,7 +252,7 @@ export const imperialKnightsUnits = {
     id: 'knightDefender', name: 'Knight Defender', category: 'vehicle',
     points: 415,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Conversion beam obliterator', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 12, AP: -2, D: 4, keywords: ['CONVERSION', 'SUSTAINED HITS D3'] },
       { name: 'Plasma executor — standard', type: 'ranged', range: '36"', A: 'D6+3', BS: '3+', S: 8, AP: -2, D: 2, keywords: ['BLAST'] },
@@ -282,7 +282,7 @@ export const imperialKnightsUnits = {
     id: 'knightValiant', name: 'Knight Valiant', category: 'vehicle',
     points: 410,
     M: '8"', T: 12, Sv: '3+', W: 28, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Conflagration cannon', type: 'ranged', range: '18"', A: '3D6', BS: null, S: 8, AP: -1, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Shieldbreaker missile launcher', type: 'ranged', range: '72"', A: 1, BS: '3+', S: 12, AP: -6, D: 'D6+1', keywords: ['ANTI-TITANIC 4+', 'DEVASTATING WOUNDS'] },
@@ -310,7 +310,7 @@ export const imperialKnightsUnits = {
     id: 'knightCastellan', name: 'Knight Castellan', category: 'vehicle',
     points: 410,
     M: '8"', T: 12, Sv: '3+', W: 28, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Plasma decimator — standard', type: 'ranged', range: '48"', A: 'D6+3', BS: '3+', S: 8, AP: -3, D: 2, keywords: ['BLAST'] },
       { name: 'Plasma decimator — supercharge', type: 'ranged', range: '48"', A: 'D6+3', BS: '3+', S: 9, AP: -4, D: 3, keywords: ['BLAST', 'HAZARDOUS'] },
@@ -341,7 +341,7 @@ export const imperialKnightsUnits = {
     id: 'knightDestrier', name: 'Knight Destrier', category: 'vehicle',
     points: 250,
     M: '12"', T: 10, Sv: '3+', W: 18, Ld: '6+', OC: 8, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Chastiser gatling cannon', type: 'ranged', range: '24"', A: 12, BS: '3+', S: 6, AP: -1, D: 2, keywords: ['ASSAULT'] },
       { name: 'Frag bombard', type: 'ranged', range: '24"', A: 'D6+3', BS: '3+', S: 7, AP: -1, D: 2, keywords: ['ASSAULT', 'BLAST', 'RAPID FIRE'] },
@@ -374,7 +374,7 @@ export const imperialKnightsUnits = {
     id: 'cerastusKnightAcheron', name: 'Cerastus Knight Acheron', category: 'vehicle',
     points: 395,
     M: '12"', T: 11, Sv: '3+', W: 28, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Acheron flame cannon', type: 'ranged', range: '18"', A: '2D6', BS: null, S: 8, AP: -1, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -400,7 +400,7 @@ export const imperialKnightsUnits = {
     id: 'cerastusKnightCastigator', name: 'Cerastus Knight Castigator', category: 'vehicle',
     points: 395,
     M: '12"', T: 11, Sv: '3+', W: 28, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Castigator bolt cannon', type: 'ranged', range: '36"', A: 18, BS: '3+', S: 6, AP: -2, D: 2, keywords: ['TWIN-LINKED'] },
       { name: 'Tempest warblade — strike', type: 'melee', range: null, A: 4, WS: '3+', BS: null, S: 14, AP: -4, D: 6, keywords: [] },
@@ -425,7 +425,7 @@ export const imperialKnightsUnits = {
     id: 'cerastusKnightLancer', name: 'Cerastus Knight Lancer', category: 'vehicle',
     points: 395,
     M: '14"', T: 11, Sv: '3+', W: 28, Ld: '6+', OC: 10, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Cerastus shock lance — ranged', type: 'ranged', range: '12"', A: 6, BS: '3+', S: 6, AP: 0, D: 2, keywords: ['ASSAULT', 'SUSTAINED HITS 2'] },
       { name: 'Cerastus shock lance — strike', type: 'melee', range: null, A: 5, WS: '2+', BS: null, S: 20, AP: -3, D: 8, keywords: [] },
@@ -452,7 +452,7 @@ export const imperialKnightsUnits = {
     id: 'questorisKnightMagaera', name: 'Questoris Knight Magaera', category: 'vehicle',
     points: 385,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Lightning cannon', type: 'ranged', range: '48"', A: 12, BS: '3+', S: 9, AP: 0, D: 2, keywords: ['SUSTAINED HITS 2'] },
       { name: 'Phased plasma-fusil', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 8, AP: -3, D: 2, keywords: ['RAPID FIRE 2'] },
@@ -481,7 +481,7 @@ export const imperialKnightsUnits = {
     id: 'questorisKnightStyrix', name: 'Questoris Knight Styrix', category: 'vehicle',
     points: 385,
     M: '10"', T: 11, Sv: '3+', W: 26, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Graviton crusher', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 6, AP: -1, D: 2, keywords: ['ANTI-VEHICLE 2+', 'BLAST'] },
       { name: 'Twin rad cleanser', type: 'ranged', range: '12"', A: 'D6', BS: null, S: 2, AP: 0, D: 1, keywords: ['ANTI-INFANTRY 2+', 'IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
@@ -512,7 +512,7 @@ export const imperialKnightsUnits = {
     id: 'acastusKnightPorphyrion', name: 'Acastus Knight Porphyrion', category: 'vehicle',
     points: 700,
     M: '8"', T: 13, Sv: '2+', W: 30, Ld: '6+', OC: 10, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Twin magna lascannon', type: 'ranged', range: '72"', A: 'D6', BS: '3+', S: 18, AP: -4, D: 'D6+6', keywords: ['BLAST', 'TWIN-LINKED'] },
       { name: 'Acastus ironstorm missile pod', type: 'ranged', range: '48"', A: 'D6+6', BS: '3+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'HEAVY', 'INDIRECT FIRE'] },
@@ -541,7 +541,7 @@ export const imperialKnightsUnits = {
     id: 'armigerWarglaive', name: 'Armiger Warglaive', category: 'battleline',
     points: 140,
     M: '12"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 6, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Thermal spear', type: 'ranged', range: '18"', A: 2, BS: '3+', S: 12, AP: -4, D: 'D6', keywords: ['MELTA 4'] },
       { name: 'Meltagun', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
@@ -566,7 +566,7 @@ export const imperialKnightsUnits = {
     id: 'armigerHelverin', name: 'Armiger Helverin', category: 'battleline',
     points: 135,
     M: '12"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 6, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Armiger autocannon', type: 'ranged', range: '48"', A: 4, BS: '3+', S: 9, AP: -1, D: 3, keywords: [] },
       { name: 'Meltagun', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 9, AP: -4, D: 'D6', keywords: ['MELTA 2'] },
@@ -590,7 +590,7 @@ export const imperialKnightsUnits = {
     id: 'armigerMoirax', name: 'Armiger Moirax', category: 'battleline',
     points: 150,
     M: '12"', T: 9, Sv: '3+', W: 14, Ld: '7+', OC: 6, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Conversion beam cannon', type: 'ranged', range: '24"', A: 1, BS: '3+', S: 10, AP: -2, D: 3, keywords: ['CONVERSION', 'SUSTAINED HITS D3'] },
       { name: 'Graviton pulsar', type: 'ranged', range: '24"', A: 'D6', BS: '3+', S: 7, AP: -1, D: 2, keywords: ['ANTI-VEHICLE 2+', 'BLAST'] },

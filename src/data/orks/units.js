@@ -9,7 +9,7 @@ export const orksUnits = {
     id: 'ghazghkullThraka', name: 'Ghazghkull Thraka', category: 'epicHero',
     points: 235,
     M: '5"', T: 6, Sv: '2+', W: 10, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 2,
+    models: 2, weaponRole: 'mixed',
     weapons: [
       { name: "Mork's Roar", type: 'ranged', range: '36"', A: 4, BS: '5+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 4'] },
       { name: "Gork's Klaw — Strike", type: 'melee', A: 6, WS: '2+', S: 14, AP: -3, D: 4, keywords: [] },
@@ -55,7 +55,7 @@ export const orksUnits = {
     id: 'wazdakkaGutsmek', name: 'Wazdakka Gutsmek', category: 'epicHero',
     points: 175,
     M: '14"', T: 8, Sv: '3+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Grabba Dragga', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 10, AP: -2, D: 3, keywords: ['ASSAULT', 'PRECISION'] },
       { name: 'Psyko-Gatler', type: 'ranged', range: '24"', A: 12, BS: '4+', S: 6, AP: -2, D: 2, keywords: ['ASSAULT', 'SUSTAINED HITS 1'] },
@@ -121,7 +121,7 @@ export const orksUnits = {
     id: 'mozrogSkragbad', name: 'Mozrog Skragbad', category: 'epicHero',
     points: 145,
     M: '10"', T: 8, Sv: '3+', W: 8, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Thump gun blast', type: 'ranged', range: '18"', A: 'D3', BS: '5+', S: 6, AP: 0, D: 2, keywords: [] },
       { name: "Big Chompa's jaws", type: 'melee', A: 3, WS: '3+', S: 7, AP: -2, D: 4, keywords: ['DEVASTATING WOUNDS', 'EXTRA ATTACKS'] },
@@ -145,7 +145,7 @@ export const orksUnits = {
     id: 'warboss', name: 'Warboss', category: 'character',
     points: 75,
     M: '6"', T: 5, Sv: '4+', W: 6, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kombi-weapon', type: 'ranged', range: '24"', A: 1, BS: '5+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 1', 'DEVASTATING WOUNDS'] },
       { name: 'Twin slugga pistol', type: 'ranged', range: '12"', A: 2, BS: '5+', S: 4, AP: 0, D: 1, keywords: ['PISTOL', 'TWIN-LINKED'] },
@@ -168,7 +168,7 @@ export const orksUnits = {
     id: 'warbossInMegaArmour', name: 'Warboss in Mega Armour', category: 'character',
     points: 80,
     M: '5"', T: 6, Sv: '2+', W: 7, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Big shoota', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: "'Uge choppa", type: 'melee', A: 4, WS: '2+', S: 12, AP: -2, D: 2, keywords: [] },
@@ -188,7 +188,7 @@ export const orksUnits = {
     id: 'warbossOnWarbike', name: 'Warboss on Warbike', category: 'character',
     points: 75,
     M: '12"', T: 6, Sv: '4+', W: 7, Ld: '6+', OC: 2, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Twin dakkagun', type: 'ranged', range: '18"', A: 3, BS: '5+', S: 5, AP: 0, D: 1, keywords: ['ASSAULT', 'RAPID FIRE 2', 'TWIN-LINKED'] },
       { name: 'Big choppa', type: 'melee', A: 5, WS: '2+', S: 8, AP: -1, D: 2, keywords: [] },
@@ -209,7 +209,7 @@ export const orksUnits = {
     id: 'bigMek', name: 'Big Mek', category: 'character',
     points: 70,
     M: '6"', T: 5, Sv: '3+', W: 6, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kustom mega-blasta', type: 'ranged', range: '24"', A: 3, BS: '5+', S: 9, AP: -2, D: 'D6', keywords: ['HAZARDOUS'] },
       { name: 'Traktor blasta', type: 'ranged', range: '36"', A: 1, BS: '5+', S: 10, AP: -2, D: 'D6+1', keywords: ['ANTI-FLY 3+', 'DEVASTATING WOUNDS'] },
@@ -231,7 +231,7 @@ export const orksUnits = {
     id: 'bigMekInMegaArmour', name: 'Big Mek in Mega Armour', category: 'character',
     points: 90,
     M: '5"', T: 6, Sv: '2+', W: 5, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kustom mega-blasta', type: 'ranged', range: '24"', A: 3, BS: '5+', S: 9, AP: -2, D: 'D6', keywords: ['HAZARDOUS'] },
       { name: 'Kustom shoota', type: 'ranged', range: '18"', A: 4, BS: '5+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -255,7 +255,7 @@ export const orksUnits = {
     id: 'mek', name: 'Mek', category: 'character',
     points: 45,
     M: '6"', T: 5, Sv: '5+', W: 4, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kustom mega-slugga blast', type: 'ranged', range: '12"', A: 'D3', BS: '5+', S: 8, AP: -2, D: 'D6', keywords: ['HAZARDOUS'] },
       { name: 'Killsaw', type: 'melee', A: 1, WS: '4+', S: 12, AP: -3, D: 2, keywords: [] },
@@ -318,7 +318,7 @@ export const orksUnits = {
     id: 'weirdboy', name: 'Weirdboy', category: 'character',
     points: 65,
     M: '6"', T: 5, Sv: '5+', W: 4, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: "'Eadbanger", type: 'ranged', range: '24"', A: 1, BS: '4+', S: 6, AP: -3, D: 1, keywords: ['PSYCHIC'] },
       { name: 'Weirdboy Staff', type: 'melee', A: 3, WS: '3+', S: 8, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
@@ -339,7 +339,7 @@ export const orksUnits = {
     id: 'wurrboy', name: 'Wurrboy', category: 'character',
     points: 60,
     M: '6"', T: 5, Sv: '5+', W: 4, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Eyez of Mork', type: 'ranged', range: '18"', A: 'D6', BS: '5+', S: 8, AP: -3, D: 2, keywords: ['PSYCHIC'] },
       { name: 'Close combat weapon', type: 'melee', A: 3, WS: '3+', S: 5, AP: 0, D: 1, keywords: [] },
@@ -361,7 +361,7 @@ export const orksUnits = {
     id: 'beastboss', name: 'Beastboss', category: 'character',
     points: 80,
     M: '6"', T: 5, Sv: '4+', W: 6, Ld: '6+', OC: 1, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Shoota', type: 'ranged', range: '18"', A: 2, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 1'] },
       { name: 'Beast Snagga klaw', type: 'melee', A: 4, WS: '3+', S: 10, AP: -2, D: 2, keywords: ['ANTI-MONSTER 4+', 'ANTI-VEHICLE 4+'] },
@@ -383,7 +383,7 @@ export const orksUnits = {
     id: 'beastbossOnSquigosaur', name: 'Beastboss on Squigosaur', category: 'character',
     points: 110,
     M: '10"', T: 8, Sv: '3+', W: 8, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Slugga pistol', type: 'ranged', range: '12"', A: 1, BS: '5+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Thump gun blast', type: 'ranged', range: '18"', A: 'D3', BS: '5+', S: 6, AP: 0, D: 2, keywords: [] },
@@ -406,7 +406,7 @@ export const orksUnits = {
     id: 'deffkillaWartrike', name: 'Deffkilla Wartrike', category: 'character',
     points: 80,
     M: '12"', T: 6, Sv: '4+', W: 9, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Boomstikks', type: 'ranged', range: '12"', A: 6, BS: '5+', S: 5, AP: 0, D: 1, keywords: ['ASSAULT'] },
       { name: 'Killa jet — burna', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -755,7 +755,7 @@ export const orksUnits = {
     id: 'deffDread', name: 'Deff Dread', category: 'vehicle',
     points: 120,
     M: '8"', T: 9, Sv: '2+', W: 8, Ld: '7+', OC: 3, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Big shoota', type: 'ranged', range: '36"', A: 3, BS: '5+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Kustom mega-blasta', type: 'ranged', range: '24"', A: 3, BS: '5+', S: 9, AP: -2, D: 'D6', keywords: ['HAZARDOUS'] },
@@ -802,7 +802,7 @@ export const orksUnits = {
     id: 'gorkanaut', name: 'Gorkanaut', category: 'vehicle',
     points: 265,
     M: '8"', T: 12, Sv: '3+', W: 20, Ld: '7+', OC: 8, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Deffstorm mega-shoota', type: 'ranged', range: '36"', A: 20, BS: '5+', S: 6, AP: -1, D: 1, keywords: ['RAPID FIRE 10'] },
       { name: 'Rokkit launcha', type: 'ranged', range: '24"', A: 'D3', BS: '5+', S: 9, AP: -2, D: 3, keywords: ['BLAST'] },
@@ -828,7 +828,7 @@ export const orksUnits = {
     id: 'morkanaut', name: 'Morkanaut', category: 'vehicle',
     points: 280,
     M: '8"', T: 12, Sv: '3+', W: 20, Ld: '7+', OC: 8, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kustom mega-blasta', type: 'ranged', range: '24"', A: 3, BS: '5+', S: 9, AP: -2, D: 'D6', keywords: ['HAZARDOUS'] },
       { name: 'Kustom mega-zappa blast', type: 'ranged', range: '36"', A: 'D6+3', BS: '5+', S: 10, AP: -2, D: 'D6', keywords: ['BLAST', 'HAZARDOUS'] },
@@ -854,7 +854,7 @@ export const orksUnits = {
     id: 'battlewagon', name: 'Battlewagon', category: 'vehicle',
     points: 160,
     M: '10"', T: 10, Sv: '3+', W: 16, Ld: '7+', OC: 5, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Killkannon blast', type: 'ranged', range: '24"', A: 'D6+3', BS: '5+', S: 8, AP: -2, D: 3, keywords: ['BLAST'] },
       { name: 'Kannon — frag blast', type: 'ranged', range: '36"', A: 'D6', BS: '5+', S: 5, AP: 0, D: 1, keywords: ['BLAST'] },
@@ -879,7 +879,7 @@ export const orksUnits = {
     id: 'trukk', name: 'Trukk', category: 'vehicle',
     points: 70,
     M: '12"', T: 8, Sv: '4+', W: 10, Ld: '7+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Big shoota', type: 'ranged', range: '36"', A: 3, BS: '5+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Spiked wheels', type: 'melee', A: 3, WS: '4+', S: 6, AP: 0, D: 1, keywords: [] },
@@ -901,7 +901,7 @@ export const orksUnits = {
     id: 'dakkajet', name: 'Dakkajet', category: 'vehicle',
     points: 135,
     M: '20"+', T: 9, Sv: '3+', W: 12, Ld: '7+', OC: 0, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin supa-shoota', type: 'ranged', range: '36"', A: 4, BS: '5+', S: 6, AP: -1, D: 1, keywords: ['RAPID FIRE 2', 'SUSTAINED HITS 1', 'TWIN-LINKED'] },
       { name: 'Armoured hull', type: 'melee', A: 3, WS: '4+', S: 6, AP: 0, D: 1, keywords: [] },
@@ -922,7 +922,7 @@ export const orksUnits = {
     id: 'burnaBlommer', name: 'Burna-bommer', category: 'vehicle',
     points: 125,
     M: '20"', T: 9, Sv: '3+', W: 12, Ld: '7+', OC: 0, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Skorcha missile rack', type: 'ranged', range: '36"', A: '2D6', BS: '5+', S: 5, AP: -1, D: 1, keywords: ['BLAST', 'IGNORES COVER'] },
       { name: 'Twin big shoota', type: 'ranged', range: '36"', A: 3, BS: '5+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 2', 'TWIN-LINKED'] },
@@ -945,7 +945,7 @@ export const orksUnits = {
     id: 'blitzaBommer', name: 'Blitza-bommer', category: 'vehicle',
     points: 115,
     M: '20"', T: 9, Sv: '3+', W: 12, Ld: '7+', OC: 0, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Big shoota', type: 'ranged', range: '36"', A: 3, BS: '5+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Twin supa-shoota', type: 'ranged', range: '36"', A: 4, BS: '5+', S: 6, AP: -1, D: 1, keywords: ['RAPID FIRE 2', 'SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -967,7 +967,7 @@ export const orksUnits = {
     id: 'shokkjumpDragsta', name: 'Shokkjump Dragsta', category: 'vehicle',
     points: 70,
     M: '12"', T: 7, Sv: '4+', W: 9, Ld: '7+', OC: 3, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Kustom shokk rifle', type: 'ranged', range: '24"', A: 1, BS: '3+', S: 8, AP: -2, D: 'D6+1', keywords: ['DEVASTATING WOUNDS', 'HAZARDOUS', 'PRECISION'] },
       { name: 'Rokkit launcha', type: 'ranged', range: '24"', A: 'D3', BS: '5+', S: 9, AP: -2, D: 3, keywords: ['BLAST'] },
@@ -988,7 +988,7 @@ export const orksUnits = {
     id: 'kustomBoostaBlasta', name: 'Kustom Boosta-blasta', category: 'vehicle',
     points: 70,
     M: '12"', T: 7, Sv: '4+', W: 9, Ld: '7+', OC: 3, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Burna exhausts', type: 'ranged', range: '6"', A: '2D6', BS: 'N/A', S: 4, AP: 0, D: 1, keywords: ['IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
       { name: 'Grot blasta pistol', type: 'ranged', range: '12"', A: 1, BS: '4+', S: 3, AP: 0, D: 1, keywords: ['PISTOL'] },
@@ -1010,7 +1010,7 @@ export const orksUnits = {
     id: 'rukkaTrukkSquigbuggy', name: 'Rukkatrukk Squigbuggy', category: 'vehicle',
     points: 95,
     M: '12"', T: 7, Sv: '4+', W: 9, Ld: '7+', OC: 3, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Sawn-off shotgun', type: 'ranged', range: '12"', A: 2, BS: '5+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT'] },
       { name: 'Squig launchas', type: 'ranged', range: '36"', A: 'D6+6', BS: '5+', S: 5, AP: -1, D: 2, keywords: ['BLAST', 'IGNORES COVER', 'INDIRECT FIRE'] },
@@ -1032,7 +1032,7 @@ export const orksUnits = {
     id: 'megatrakkScrapjet', name: 'Megatrakk Scrapjet', category: 'vehicle',
     points: 75,
     M: '12"', T: 7, Sv: '4+', W: 9, Ld: '7+', OC: 3, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Rokkit kannon', type: 'ranged', range: '24"', A: 'D6+1', BS: '5+', S: 9, AP: -2, D: 3, keywords: ['BLAST'] },
       { name: 'Twin big shoota', type: 'ranged', range: '36"', A: 3, BS: '5+', S: 5, AP: 0, D: 1, keywords: ['RAPID FIRE 2', 'TWIN-LINKED'] },
@@ -1054,7 +1054,7 @@ export const orksUnits = {
     id: 'mekGunz', name: 'Mek Gunz', category: 'vehicle',
     points: 50,
     M: '3"', T: 5, Sv: '5+', W: 6, Ld: '8+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Bubblechukka (1-2)', type: 'ranged', range: '48"', A: '2D6', BS: '4+', S: 6, AP: -1, D: 1, keywords: [] },
       { name: 'Bubblechukka (3-4)', type: 'ranged', range: '48"', A: 'D6', BS: '4+', S: 9, AP: -2, D: 3, keywords: [] },
@@ -1078,7 +1078,7 @@ export const orksUnits = {
     id: 'stompa', name: 'Stompa', category: 'vehicle',
     points: 800,
     M: '10"', T: 14, Sv: '2+', W: 30, Ld: '6+', OC: 12, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Deffkannon', type: 'ranged', range: '72"', A: '3D6', BS: '4+', S: 14, AP: -3, D: 'D6', keywords: ['BLAST'] },
       { name: 'Supa-gatler', type: 'ranged', range: '24"', A: 20, BS: '5+', S: 7, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },

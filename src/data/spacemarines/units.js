@@ -34,7 +34,7 @@ const epicHeroes = [
     eligibleUnits: ['intercessorSquad', 'tacticalSquad', 'hellblasterSquad'],
     unitKey: 'chiefLibrarianTigurius',
     M: '6"', T: 4, Sv: '3+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    points: 110, models: 1,
+    points: 110, models: 1, weaponRole: 'mixed',
     keywords: ['INFANTRY', 'CHARACTER', 'EPIC HERO', 'GRENADES', 'PSYKER', 'IMPERIUM', 'TACTICUS', 'LIBRARIAN', 'ULTRAMARINES'],
     abilities: [
       { name: 'Psychic Hood', phase: 'any', description: 'While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against Psychic Attacks.' },
@@ -59,7 +59,7 @@ const characters = [
     eligibleUnits: ['assaultIntercessorSquad', 'bladeguardVeteranSquad', 'hellblasterSquad', 'infernusSquad', 'intercessorSquad', 'sternguardVeteranSquad', 'tacticalSquad'],
     unitKey: 'captain',
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    points: 80, models: 1,
+    points: 80, models: 1, weaponRole: 'mixed',
     keywords: ['INFANTRY', 'CHARACTER', 'GRENADES', 'IMPERIUM', 'TACTICUS', 'CAPTAIN'],
     abilities: [
       { name: 'Rites of Battle', phase: 'any', description: 'Once per battle round, one unit from your army with this ability can be targeted with a Stratagem for 0CP, even if another unit has already been targeted with that Stratagem this phase.' },
@@ -78,7 +78,7 @@ const characters = [
     eligibleUnits: ['aggressorSquad', 'eradicatorSquad', 'heavyIntercessorSquad'],
     unitKey: 'captainInGravisArmour',
     M: '5"', T: 6, Sv: '3+', W: 6, Ld: '6+', OC: 1,
-    points: 110, models: 1,
+    points: 110, models: 1, weaponRole: 'mixed',
     keywords: ['INFANTRY', 'CHARACTER', 'GRENADES', 'IMPERIUM', 'GRAVIS', 'CAPTAIN'],
     abilities: [
       { name: 'Rites of Battle', phase: 'any', description: 'Once per battle round, one unit from your army with this ability can be targeted with a Stratagem for 0CP, even if another unit has already been targeted with that Stratagem this phase.' },
@@ -97,7 +97,7 @@ const characters = [
     eligibleUnits: ['terminatorAssaultSquad', 'terminatorSquad'],
     unitKey: 'captainInTerminatorArmour',
     M: '5"', T: 5, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    points: 110, models: 1,
+    points: 110, models: 1, weaponRole: 'mixed',
     keywords: ['INFANTRY', 'CHARACTER', 'IMPERIUM', 'TERMINATOR', 'CAPTAIN'],
     abilities: [
       { name: 'Deep Strike', phase: 'movement', description: 'During deployment, you can set up this unit in Strategic Reserves. At the start of the second or subsequent battle round, it can arrive anywhere on the battlefield more than 9" from all enemy models.' },
@@ -137,7 +137,7 @@ const characters = [
     eligibleUnits: ['assaultIntercessorSquad', 'bladeguardVeteranSquad', 'hellblasterSquad', 'infernusSquad', 'intercessorSquad', 'sternguardVeteranSquad', 'tacticalSquad'],
     unitKey: 'lieutenant',
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1,
-    points: 65, models: 1,
+    points: 65, models: 1, weaponRole: 'ranged',
     keywords: ['INFANTRY', 'CHARACTER', 'GRENADES', 'IMPERIUM', 'TACTICUS', 'LIEUTENANT'],
     abilities: [
       { name: 'Tactical Precision', phase: 'any', description: 'While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability.' },
@@ -157,7 +157,7 @@ const characters = [
     eligibleUnits: ['assaultIntercessorSquad', 'desolationSquad', 'devastatorSquad', 'hellblasterSquad', 'infernusSquad', 'intercessorSquad', 'sternguardVeteranSquad', 'tacticalSquad'],
     unitKey: 'librarian',
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '5+',
-    points: 75, models: 1,
+    points: 75, models: 1, weaponRole: 'mixed',
     keywords: ['INFANTRY', 'CHARACTER', 'GRENADES', 'PSYKER', 'IMPERIUM', 'TACTICUS', 'LIBRARIAN'],
     abilities: [
       { name: 'Psychic Hood', phase: 'any', description: 'While this model is leading a unit, models in that unit have the Feel No Pain 4+ ability against Psychic Attacks.' },
@@ -197,7 +197,7 @@ const characters = [
     eligibleUnits: ['assaultIntercessorSquad', 'desolationSquad', 'devastatorSquad', 'intercessorSquad', 'tacticalSquad'],
     unitKey: 'techmarine',
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1,
-    points: 45, models: 1,
+    points: 45, models: 1, weaponRole: 'mixed',
     keywords: ['INFANTRY', 'CHARACTER', 'GRENADES', 'IMPERIUM', 'TACTICUS', 'TECHMARINE'],
     abilities: [
       { name: 'Lone Operative', phase: 'any', description: 'While this model is within 3" of one or more friendly ADEPTUS ASTARTES VEHICLE units, this model has the Lone Operative ability.' },
@@ -482,7 +482,7 @@ const vehicles = [
     isLeader: false,
     unitKey: 'redemptorDreadnought',
     M: '8"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 3, InvSv: '4+',
-    points: 210, models: 1,
+    points: 210, models: 1, weaponRole: 'mixed',
     keywords: ['VEHICLE', 'WALKER', 'SMOKE', 'IMPERIUM', 'DREADNOUGHT'],
     abilities: [
       { name: 'Deadly Demise D3', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 2+, each unit within 6" suffers D3 mortal wounds.' },
@@ -541,7 +541,7 @@ const vehicles = [
     isLeader: false,
     unitKey: 'gladiatorLancer',
     M: '10"', T: 11, Sv: '3+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    points: 160, models: 1,
+    points: 160, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'SMOKE', 'IMPERIUM', 'GLADIATOR'],
     abilities: [
       { name: 'Deadly Demise D3', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 2+, each unit within 6" suffers D3 mortal wounds.' },
@@ -561,7 +561,7 @@ const vehicles = [
     isLeader: false,
     unitKey: 'repulsor',
     M: '10"', T: 12, Sv: '3+', W: 16, Ld: '6+', OC: 5, InvSv: '5+',
-    points: 210, models: 1,
+    points: 210, models: 1, weaponRole: 'ranged',
     keywords: ['VEHICLE', 'SMOKE', 'TRANSPORT', 'IMPERIUM', 'REPULSOR'],
     abilities: [
       { name: 'Deadly Demise D6', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 2+, each unit within 6" suffers D6 mortal wounds.' },

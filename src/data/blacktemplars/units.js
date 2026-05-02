@@ -13,7 +13,7 @@ export const blackTemplarsUnits = {
     category: 'epicHero',
     type: 'Infantry',
     points: 120,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     M: '6"', T: 4, Sv: '2+', W: 6, Ld: '6+', OC: 3, InvSv: '4+',
     weapons: [
       { name: 'Ferocity', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 5, AP: -1, D: 2, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS'] },
@@ -93,7 +93,7 @@ export const blackTemplarsUnits = {
     category: 'character',
     type: 'Infantry',
     points: 80,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     M: '6"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
     weapons: [
       { name: 'Combi-weapon', type: 'ranged', range: '24"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS', 'RAPID FIRE 1'] },
@@ -119,7 +119,7 @@ export const blackTemplarsUnits = {
     category: 'character',
     type: 'Infantry',
     points: 70,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     M: '6"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1,
     weapons: [
       { name: 'Combi-weapon', type: 'ranged', range: '24"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS', 'RAPID FIRE 1'] },
@@ -218,7 +218,7 @@ export const blackTemplarsUnits = {
     category: 'character',
     type: 'Infantry',
     points: 55,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     M: '6"', T: 4, Sv: '2+', W: 4, Ld: '6+', OC: 1,
     weapons: [
       { name: 'Forge bolter', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -1, D: 2, keywords: [] },
@@ -455,7 +455,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 75,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -481,7 +481,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 100,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
     weapons: [
       { name: 'Twin assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
@@ -509,7 +509,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 220,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5,
     weapons: [
       { name: 'Godhammer lascannon (×2)', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
@@ -538,7 +538,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 230,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5,
     weapons: [
       { name: 'Hurricane bolter (×2)', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 6', 'TWIN-LINKED'] },
@@ -566,7 +566,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 230,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5,
     weapons: [
       { name: 'Flamestorm cannon (×2)', type: 'ranged', range: '12"', A: 'D6+2', BS: 'N/A', S: 6, AP: -2, D: 2, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -594,7 +594,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 135,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3,
     weapons: [
       { name: 'Predator twin lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 14, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
@@ -622,7 +622,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 135,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     M: '6"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 3,
     weapons: [
       { name: 'Assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
@@ -654,7 +654,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 70,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '—', T: 7, Sv: '3+', W: 8, Ld: '6+', OC: 0,
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -679,7 +679,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 180,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '10"', T: 12, Sv: '3+', W: 16, Ld: '6+', OC: 5,
     weapons: [
       { name: 'Heavy onslaught gatling cannon', type: 'ranged', range: '24"', A: 12, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
@@ -709,7 +709,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 75,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
     weapons: [
       { name: 'Bellicatus missile array — frag', type: 'ranged', range: '36"', A: 'D6', BS: '3+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
@@ -737,7 +737,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 130,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '10"', T: 11, Sv: '3+', W: 12, Ld: '6+', OC: 3,
     weapons: [
       { name: 'Lancer laser destroyer', type: 'ranged', range: '60"', A: 1, BS: '3+', S: 14, AP: -4, D: 'D6+4', keywords: ['IGNORES COVER'] },
@@ -763,7 +763,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 130,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '10"', T: 11, Sv: '3+', W: 12, Ld: '6+', OC: 3,
     weapons: [
       { name: 'Twin heavy onslaught gatling cannon', type: 'ranged', range: '24"', A: 12, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
@@ -789,7 +789,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 145,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '10"', T: 11, Sv: '3+', W: 12, Ld: '6+', OC: 3,
     weapons: [
       { name: 'Twin las-talon', type: 'ranged', range: '36"', A: 2, BS: '3+', S: 10, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
@@ -815,7 +815,7 @@ export const blackTemplarsUnits = {
     category: 'vehicle',
     type: 'Vehicle',
     points: 280,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     M: '20"+', T: 10, Sv: '3+', W: 14, Ld: '6+', OC: 0,
     weapons: [
       { name: 'Stormstrike missile launcher (×2)', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 10, AP: -2, D: 3, keywords: [] },

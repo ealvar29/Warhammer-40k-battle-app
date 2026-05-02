@@ -9,7 +9,7 @@ export const leaguesOfVotannUnits = {
     id: 'utharTheDestined', name: 'Ûthar the Destined', category: 'epicHero',
     points: 95,
     M: '5"', T: 5, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Volkanite disintegrator', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
       { name: 'Blade of the Ancestors', type: 'melee', A: 5, WS: '2+', S: 6, AP: -3, D: 2, keywords: ['DEVASTATING WOUNDS'] },
@@ -81,7 +81,7 @@ export const leaguesOfVotannUnits = {
     id: 'kahl', name: 'Kâhl', category: 'character',
     points: 65,
     M: '5"', T: 5, Sv: '3+', W: 4, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Autoch-pattern combi-bolter', type: 'ranged', range: '24"', A: 4, BS: '2+', S: 4, AP: 0, D: 1, keywords: [] },
       { name: 'Volkanite disintegrator', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
@@ -105,7 +105,7 @@ export const leaguesOfVotannUnits = {
     id: 'grimnyr', name: 'Grimnyr', category: 'character',
     points: 65,
     M: '5"', T: 5, Sv: '4+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Ancestral Wrath (Witchfire)', type: 'ranged', range: '24"', A: 3, BS: '3+', S: 6, AP: -2, D: 'D3', keywords: ['PSYCHIC'] },
       { name: 'Ancestral Wrath (Focused Witchfire)', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: -2, D: 'D3', keywords: ['HAZARDOUS', 'PSYCHIC'] },
@@ -156,7 +156,7 @@ export const leaguesOfVotannUnits = {
     id: 'einhyrChampion', name: 'Einhyr Champion', category: 'character',
     points: 70,
     M: '5"', T: 5, Sv: '2+', W: 5, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Autoch-pattern combi-bolter', type: 'ranged', range: '24"', A: 4, BS: '2+', S: 4, AP: 0, D: 1, keywords: [] },
       { name: 'Darkstar axe', type: 'melee', A: 6, WS: '2+', S: 6, AP: -3, D: 2, keywords: [] },
@@ -179,7 +179,7 @@ export const leaguesOfVotannUnits = {
     id: 'arkanystEvaluator', name: 'Arkanyst Evaluator', category: 'character',
     points: 65,
     M: '5"', T: 5, Sv: '3+', W: 4, Ld: '7+', OC: 1, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Transmatter inverter — Half Charge', type: 'ranged', range: '12"', A: 3, BS: '2+', S: 8, AP: -1, D: 1, keywords: ['RAPID FIRE 1'] },
       { name: 'Transmatter inverter — Full Charge', type: 'ranged', range: '18"', A: 3, BS: '2+', S: 8, AP: -2, D: 2, keywords: ['HAZARDOUS', 'RAPID FIRE 2'] },
@@ -457,7 +457,7 @@ export const leaguesOfVotannUnits = {
     id: 'hekatonLandFortress', name: 'Hekaton Land Fortress', category: 'vehicle',
     points: 240,
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '7+', OC: 5, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Cyclic ion cannon — blast', type: 'ranged', range: '24"', A: 'D6+2', BS: '4+', S: 7, AP: -2, D: 2, keywords: ['BLAST'] },
       { name: 'Heavy magna-rail cannon', type: 'ranged', range: '30"', A: 2, BS: '4+', S: 18, AP: -4, D: 'D6+4', keywords: ['DEVASTATING WOUNDS', 'HEAVY'] },
@@ -487,7 +487,7 @@ export const leaguesOfVotannUnits = {
     id: 'sagitaur', name: 'Sagitaur', category: 'vehicle',
     points: 90,
     M: '12"', T: 9, Sv: '3+', W: 9, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'HYLas beam cannon', type: 'ranged', range: '24"', A: 2, BS: '4+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
       { name: 'L7 missile launcher — frag', type: 'ranged', range: '36"', A: 'D6', BS: '4+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
@@ -514,7 +514,7 @@ export const leaguesOfVotannUnits = {
     id: 'kapricusCarrier', name: 'Kapricus Carrier', category: 'vehicle',
     points: 75,
     M: '12"', T: 7, Sv: '4+', W: 7, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Magna-coil autocannon', type: 'ranged', range: '24"', A: 3, BS: '4+', S: 7, AP: -1, D: 2, keywords: [] },
       { name: 'Twin magna-coil autocannon', type: 'ranged', range: '24"', A: 3, BS: '4+', S: 7, AP: -1, D: 2, keywords: ['TWIN-LINKED'] },
@@ -539,7 +539,7 @@ export const leaguesOfVotannUnits = {
     id: 'kapricusDefenders', name: 'Kapricus Defenders', category: 'vehicle',
     points: 70,
     M: '12"', T: 7, Sv: '4+', W: 7, Ld: '7+', OC: 2, InvSv: null,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'HYLas rotary cannon', type: 'ranged', range: '24"', A: 6, BS: '4+', S: 6, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
       { name: 'Magna-rail cannon', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 14, AP: -4, D: 'D3+3', keywords: ['DEVASTATING WOUNDS', 'HEAVY'] },

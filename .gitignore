@@ -17,6 +17,10 @@ dist-ssr
 .env.local
 .env.*.local
 
+# Large reference PDFs (too big for GitHub — keep locally only)
+src/data/*.pdf
+src/data/**/*.pdf
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

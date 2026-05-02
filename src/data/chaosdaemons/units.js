@@ -9,7 +9,7 @@ export const chaosDaemonsUnits = {
     id: 'belakor', name: "Be'lakor", category: 'epicHero',
     powerRating: 18, points: 375,
     M: '12"', T: 11, Sv: '3+', W: 20, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Betraying Shades — witchfire', type: 'ranged', range: '18"', A: 9, BS: '2+', S: 5, AP: -2, D: 1, keywords: ['DEVASTATING WOUNDS', 'IGNORES COVER', 'PSYCHIC'] },
       { name: 'Betraying Shades — focused witchfire', type: 'ranged', range: '18"', A: 12, BS: '2+', S: 6, AP: -3, D: 1, keywords: ['DEVASTATING WOUNDS', 'HAZARDOUS', 'IGNORES COVER', 'PSYCHIC'] },
@@ -35,7 +35,7 @@ export const chaosDaemonsUnits = {
     id: 'skarbrand', name: 'Skarbrand', category: 'epicHero',
     powerRating: 15, points: 305,
     M: '10"', T: 11, Sv: '3+', W: 20, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bellow of Endless Fury', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 8, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Slaughter and Carnage — strike', type: 'melee', A: 8, WS: '2+', S: 16, AP: -4, D: 6, keywords: [] },
@@ -59,7 +59,7 @@ export const chaosDaemonsUnits = {
     id: 'kairosFateweaver', name: 'Kairos Fateweaver', category: 'epicHero',
     powerRating: 14, points: 295,
     M: '12"', T: 10, Sv: '6+', W: 20, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Infernal Gateway — witchfire', type: 'ranged', range: '24"', A: 'D6+3', BS: '2+', S: 9, AP: -2, D: 'D3', keywords: ['BLAST', 'INDIRECT FIRE', 'PSYCHIC'] },
       { name: 'Infernal Gateway — focused witchfire', type: 'ranged', range: '24"', A: 'D3+6', BS: '2+', S: 9, AP: -2, D: 3, keywords: ['BLAST', 'HAZARDOUS', 'INDIRECT FIRE', 'PSYCHIC'] },
@@ -84,7 +84,7 @@ export const chaosDaemonsUnits = {
     id: 'shalaxi', name: 'Shalaxi Helbane', category: 'epicHero',
     powerRating: 16, points: 340,
     M: '14"', T: 10, Sv: '3+', W: 20, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Lash of Slaanesh', type: 'ranged', range: '12"', A: 6, BS: '2+', S: 6, AP: -1, D: 2, keywords: ['ASSAULT'] },
       { name: 'Pavane of Slaanesh — witchfire', type: 'ranged', range: '18"', A: 'D6', BS: '2+', S: 9, AP: -1, D: 'D3', keywords: ['DEVASTATING WOUNDS', 'PSYCHIC'] },
@@ -111,7 +111,7 @@ export const chaosDaemonsUnits = {
     id: 'rotigus', name: 'Rotigus', category: 'epicHero',
     powerRating: 13, points: 265,
     M: '7"', T: 12, Sv: '5+', W: 22, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Streams of Brackish Filth', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 8, AP: -2, D: 1, keywords: ['DEVASTATING WOUNDS', 'IGNORES COVER', 'TORRENT'] },
       { name: 'Gnarlrod — strike', type: 'melee', A: 7, WS: '2+', S: 10, AP: -3, D: 3, keywords: ['LETHAL HITS', 'PSYCHIC'] },
@@ -177,7 +177,7 @@ export const chaosDaemonsUnits = {
     id: 'karanak', name: 'Karanak', category: 'epicHero',
     powerRating: 4, points: 75,
     M: '12"', T: 4, Sv: '7+', W: 5, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Scalding Roar', type: 'ranged', range: '12"', A: 'D6+3', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Soul-rending Fangs', type: 'melee', A: 6, WS: '2+', S: 6, AP: -2, D: 2, keywords: ['ANTI-CHARACTER 3+', 'PRECISION'] },
@@ -201,7 +201,7 @@ export const chaosDaemonsUnits = {
     id: 'bloodthirster', name: 'Bloodthirster', category: 'character',
     powerRating: 14, points: 305,
     M: '12"', T: 11, Sv: '3+', W: 18, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Hellfire Breath', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Bloodflail', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 16, AP: -3, D: 'D6+1', keywords: ['DEVASTATING WOUNDS'] },
@@ -230,7 +230,7 @@ export const chaosDaemonsUnits = {
     id: 'greatUncleanOne', name: 'Great Unclean One', category: 'character',
     powerRating: 12, points: 250,
     M: '7"', T: 12, Sv: '5+', W: 20, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Plague Flail', type: 'ranged', range: '6"', A: 'D6+1', BS: '3+', S: 7, AP: -2, D: 2, keywords: [] },
       { name: 'Putrid Vomit', type: 'ranged', range: '12"', A: 'D6+3', BS: 'N/A', S: 5, AP: -2, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -260,7 +260,7 @@ export const chaosDaemonsUnits = {
     id: 'lordOfChange', name: 'Lord of Change', category: 'character',
     powerRating: 14, points: 285,
     M: '12"', T: 10, Sv: '6+', W: 18, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt of Change — witchfire', type: 'ranged', range: '18"', A: 9, BS: '2+', S: 9, AP: -1, D: 1, keywords: ['PSYCHIC'] },
       { name: 'Bolt of Change — focused witchfire', type: 'ranged', range: '18"', A: 9, BS: '2+', S: 9, AP: -2, D: 3, keywords: ['HAZARDOUS', 'PSYCHIC'] },
@@ -287,7 +287,7 @@ export const chaosDaemonsUnits = {
     id: 'keeperOfSecrets', name: 'Keeper of Secrets', category: 'character',
     powerRating: 14, points: 280,
     M: '14"', T: 10, Sv: '3+', W: 18, Ld: '6+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Sinistrous Hand', type: 'ranged', range: '12"', A: 3, BS: '2+', S: 6, AP: -2, D: 2, keywords: ['ANTI-INFANTRY 4+', 'ANTI-PSYKER 4+'] },
       { name: 'Snapping claws', type: 'melee', A: 4, WS: '2+', S: 6, AP: -2, D: 3, keywords: ['DEVASTATING WOUNDS', 'EXTRA ATTACKS'] },
@@ -314,7 +314,7 @@ export const chaosDaemonsUnits = {
     id: 'daemonPrinceOfChaos', name: 'Daemon Prince of Chaos', category: 'character',
     powerRating: 9, points: 190,
     M: '8"', T: 10, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -1, D: 2, keywords: [] },
       { name: 'Hellforged Weapons — strike', type: 'melee', A: 6, WS: '2+', S: 8, AP: -2, D: 3, keywords: [] },
@@ -401,7 +401,7 @@ export const chaosDaemonsUnits = {
     id: 'changecaster', name: 'Changecaster', category: 'character',
     powerRating: 3, points: 60,
     M: '6"', T: 3, Sv: '6+', W: 3, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Arcane Fireball — witchfire', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 5, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
       { name: 'Arcane Fireball — focused witchfire', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 6, AP: -2, D: 'D3', keywords: ['DEVASTATING WOUNDS', 'HAZARDOUS', 'PSYCHIC'] },
@@ -423,7 +423,7 @@ export const chaosDaemonsUnits = {
     id: 'fluxmaster', name: 'Fluxmaster', category: 'character',
     powerRating: 3, points: 60,
     M: '12"', T: 4, Sv: '6+', W: 4, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Arcane Fireball — witchfire', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 5, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
       { name: 'Arcane Fireball — focused witchfire', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 6, AP: -2, D: 'D3', keywords: ['DEVASTATING WOUNDS', 'HAZARDOUS', 'PSYCHIC'] },
@@ -467,7 +467,7 @@ export const chaosDaemonsUnits = {
     id: 'exaltedFlamer', name: 'Exalted Flamer', category: 'character',
     powerRating: 3, points: 65,
     M: '9"', T: 4, Sv: '7+', W: 6, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Fire of Tzeentch — blue fire', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 9, AP: -3, D: 3, keywords: ['IGNORES COVER', 'PSYCHIC'] },
       { name: 'Fire of Tzeentch — pink fire', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'PSYCHIC', 'TORRENT'] },
@@ -489,7 +489,7 @@ export const chaosDaemonsUnits = {
     id: 'fateskimmer', name: 'Fateskimmer', category: 'character',
     powerRating: 5, points: 95,
     M: '12"', T: 7, Sv: '6+', W: 9, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Arcane Fireball — witchfire', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 5, AP: -1, D: 'D3', keywords: ['PSYCHIC'] },
       { name: 'Arcane Fireball — focused witchfire', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 6, AP: -2, D: 'D3', keywords: ['DEVASTATING WOUNDS', 'HAZARDOUS', 'PSYCHIC'] },
@@ -809,7 +809,7 @@ export const chaosDaemonsUnits = {
     id: 'skullCannon', name: 'Skull Cannon', category: 'vehicle',
     powerRating: 5, points: 95,
     M: '8"', T: 9, Sv: '4+', W: 9, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Skull Cannon Blast', type: 'ranged', range: '48"', A: 'D6+2', BS: '3+', S: 9, AP: -1, D: 2, keywords: ['BLAST', 'IGNORES COVER'] },
       { name: "Attendants' Hellblades", type: 'melee', A: 4, WS: '3+', S: 5, AP: -2, D: 2, keywords: ['EXTRA ATTACKS'] },
@@ -831,7 +831,7 @@ export const chaosDaemonsUnits = {
     id: 'burningChariot', name: 'Burning Chariot of Tzeentch', category: 'vehicle',
     powerRating: 6, points: 115,
     M: '12"', T: 8, Sv: '7+', W: 9, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Fire of Tzeentch — blue fire', type: 'ranged', range: '18"', A: 3, BS: '3+', S: 9, AP: -3, D: 3, keywords: ['IGNORES COVER', 'PSYCHIC'] },
       { name: 'Fire of Tzeentch — pink fire', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'PSYCHIC', 'TORRENT'] },
@@ -854,7 +854,7 @@ export const chaosDaemonsUnits = {
     id: 'soulGrinder', name: 'Soul Grinder', category: 'vehicle',
     powerRating: 9, points: 180,
     M: '8"', T: 11, Sv: '3+', W: 14, Ld: '7+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Harvester Cannon', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 10, AP: -1, D: 3, keywords: [] },
       { name: 'Torrent of Burning Blood', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },

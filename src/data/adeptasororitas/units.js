@@ -9,7 +9,7 @@ export const adeptaSororitasUnits = {
     id: 'saintCelestine', name: 'Saint Celestine', category: 'epicHero',
     points: 150,
     M: '12"', T: 3, Sv: '2+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 3,
+    models: 3, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'The Ardent Blade', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 6, AP: -2, D: 1, keywords: ['TORRENT'] },
@@ -34,7 +34,7 @@ export const adeptaSororitasUnits = {
     id: 'morvennVahl', name: 'Morvenn Vahl', category: 'epicHero',
     points: 185,
     M: '8"', T: 7, Sv: '2+', W: 8, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Fidelis', type: 'ranged', range: '36"', A: 3, BS: '2+', S: 6, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
       { name: 'Paragon Missile Launcher — Prioris', type: 'ranged', range: '36"', A: 2, BS: '2+', S: 9, AP: -2, D: 'D6', keywords: [] },
@@ -85,7 +85,7 @@ export const adeptaSororitasUnits = {
     id: 'junithEruita', name: 'Junith Eruita', category: 'epicHero',
     points: 80,
     M: '8"', T: 5, Sv: '2+', W: 8, Ld: '6+', OC: 2, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Twin Ministorum Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
       { name: 'Mace of Castigation', type: 'melee', A: 4, WS: '2+', S: 6, AP: -2, D: 2, keywords: [] },
@@ -150,7 +150,7 @@ export const adeptaSororitasUnits = {
     id: 'intranizaFraye', name: 'Intranzia Fraye', category: 'epicHero',
     points: 150,
     M: '8"', T: 7, Sv: '3+', W: 8, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Heavy bolters (×2)', type: 'ranged', range: '36"', A: 3, BS: '2+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
       { name: 'Melta missile array (×2)', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 9, AP: -2, D: 'D3', keywords: ['MELTA 2'] },
@@ -178,7 +178,7 @@ export const adeptaSororitasUnits = {
     id: 'canoness', name: 'Canoness', category: 'character',
     points: 60,
     M: '6"', T: 3, Sv: '3+', W: 4, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Condemnor boltgun', type: 'ranged', range: '24"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['ANTI-PSYKER 2+', 'DEVASTATING WOUNDS', 'PRECISION', 'RAPID FIRE 1'] },
@@ -316,7 +316,7 @@ export const adeptaSororitasUnits = {
     id: 'imagifier', name: 'Imagifier', category: 'character',
     points: 65,
     M: '6"', T: 3, Sv: '3+', W: 3, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Bolt pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Boltgun', type: 'ranged', range: '24"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 1'] },
@@ -338,7 +338,7 @@ export const adeptaSororitasUnits = {
     id: 'ministorumPriest', name: 'Ministorum Priest', category: 'character',
     points: 50,
     M: '6"', T: 3, Sv: '6+', W: 3, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Holy pistol', type: 'ranged', range: '12"', A: 3, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: "Zealot's vindictor", type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: 0, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -698,7 +698,7 @@ export const adeptaSororitasUnits = {
     id: 'penitentEngines', name: 'Penitent Engines', category: 'vehicle',
     points: 75,
     M: '8"', T: 6, Sv: '4+', W: 5, Ld: '7+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Penitent flamers', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 5, AP: 0, D: 1, keywords: ['ASSAULT', 'IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
       { name: 'Twin penitent buzz-blades', type: 'melee', A: 4, WS: '4+', S: 10, AP: -3, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -723,7 +723,7 @@ export const adeptaSororitasUnits = {
     id: 'mortifiers', name: 'Mortifiers', category: 'vehicle',
     points: 70,
     M: '8"', T: 6, Sv: '4+', W: 5, Ld: '7+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1'] },
       { name: 'Mortifier flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: 0, D: 1, keywords: ['IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
@@ -749,7 +749,7 @@ export const adeptaSororitasUnits = {
     id: 'exorcist', name: 'Exorcist', category: 'vehicle',
     points: 210,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '7+', OC: 3, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Exorcist missile launcher', type: 'ranged', range: '36"', A: 'D6+2', BS: '3+', S: 10, AP: -3, D: 'D6', keywords: ['INDIRECT FIRE'] },
       { name: 'Exorcist conflagration rockets', type: 'ranged', range: '36"', A: '3D6', BS: '3+', S: 6, AP: -1, D: 1, keywords: ['BLAST', 'IGNORES COVER', 'INDIRECT FIRE'] },
@@ -774,7 +774,7 @@ export const adeptaSororitasUnits = {
     id: 'castigator', name: 'Castigator', category: 'vehicle',
     points: 160,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '7+', OC: 3, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Castigator autocannons', type: 'ranged', range: '48"', A: 4, BS: '3+', S: 9, AP: -1, D: 3, keywords: ['RAPID FIRE 4', 'TWIN-LINKED'] },
       { name: 'Castigator battle cannon', type: 'ranged', range: '48"', A: 'D6+3', BS: '3+', S: 10, AP: -1, D: 3, keywords: ['BLAST', 'IGNORES COVER'] },
@@ -800,7 +800,7 @@ export const adeptaSororitasUnits = {
     id: 'immolator', name: 'Immolator', category: 'vehicle',
     points: 115,
     M: '12"', T: 10, Sv: '3+', W: 11, Ld: '7+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Immolation flamers', type: 'ranged', range: '18"', A: '2D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 2', 'TWIN-LINKED'] },
@@ -826,7 +826,7 @@ export const adeptaSororitasUnits = {
     id: 'sororitasRhino', name: 'Sororitas Rhino', category: 'vehicle',
     points: 75,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '7+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Hunter-killer missile', type: 'ranged', range: '48"', A: 1, BS: '2+', S: 14, AP: -3, D: 'D6', keywords: ['ONE SHOT'] },
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },

@@ -474,7 +474,7 @@ export const drukhariUnits = {
     id: 'talos', name: 'Talos', category: 'monster',
     points: 80,
     M: '7"', T: 7, Sv: '3+', W: 7, Ld: '7+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Stinger pod', type: 'ranged', range: '24"', A: '2D6', BS: '3+', S: 5, AP: 0, D: 1, keywords: [] },
       { name: 'Twin haywire blaster', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 3, AP: -1, D: 3, keywords: ['ANTI-VEHICLE 4+', 'DEVASTATING WOUNDS', 'TWIN-LINKED'] },
@@ -505,7 +505,7 @@ export const drukhariUnits = {
     id: 'cronos', name: 'Cronos', category: 'monster',
     points: 55,
     M: '7"', T: 7, Sv: '3+', W: 7, Ld: '7+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Spirit syphon', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Spirit vortex blast', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER'] },
@@ -531,7 +531,7 @@ export const drukhariUnits = {
     id: 'raider', name: 'Raider', category: 'vehicle',
     points: 85,
     M: '14"', T: 8, Sv: '4+', W: 10, Ld: '7+', OC: 2, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Dark lance', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+2', keywords: [] },
       { name: 'Disintegrator cannon', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 6, AP: -3, D: 2, keywords: [] },
@@ -554,7 +554,7 @@ export const drukhariUnits = {
     id: 'venom', name: 'Venom', category: 'vehicle',
     points: 70,
     M: '14"', T: 6, Sv: '4+', W: 6, Ld: '7+', OC: 1, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Splinter cannon', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 3, AP: -1, D: 2, keywords: ['ANTI-INFANTRY 3+', 'SUSTAINED HITS 1'] },
       { name: 'Twin splinter rifle', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 2, AP: 0, D: 1, keywords: ['ANTI-INFANTRY 3+', 'ASSAULT', 'RAPID FIRE 2', 'TWIN-LINKED'] },
@@ -580,7 +580,7 @@ export const drukhariUnits = {
     id: 'ravager', name: 'Ravager', category: 'vehicle',
     points: 110,
     M: '14"', T: 9, Sv: '4+', W: 11, Ld: '7+', OC: 3, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Dark lance (×3)', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+2', keywords: [] },
       { name: 'Disintegrator cannon', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 6, AP: -3, D: 2, keywords: [] },
@@ -605,7 +605,7 @@ export const drukhariUnits = {
     id: 'razorwingJetfighter', name: 'Razorwing Jetfighter', category: 'vehicle',
     points: 170,
     M: '20"+', T: 8, Sv: '4+', W: 10, Ld: '7+', OC: 0, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Dark lance', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+2', keywords: [] },
       { name: 'Disintegrator cannon', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 6, AP: -3, D: 2, keywords: [] },
@@ -634,7 +634,7 @@ export const drukhariUnits = {
     id: 'voidravenBomber', name: 'Voidraven Bomber', category: 'vehicle',
     points: 245,
     M: '20"+', T: 9, Sv: '4+', W: 12, Ld: '7+', OC: 0, InvSv: '6+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Void lance (×2)', type: 'ranged', range: '36"', A: 2, BS: '3+', S: 14, AP: -4, D: 'D6+2', keywords: [] },
       { name: 'Dark scythe (×2)', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 8, AP: -4, D: 2, keywords: [] },

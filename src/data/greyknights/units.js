@@ -9,7 +9,7 @@ export const greyKnightsUnits = {
     id: 'kaldorDraigo', name: 'Kaldor Draigo', category: 'epicHero',
     points: 125,
     M: '5"', T: 5, Sv: '2+', W: 7, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Scourging', type: 'ranged', range: '18"', A: 3, BS: '2+', S: 6, AP: -2, D: 2, keywords: ['PSYCHIC'] },
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -33,7 +33,7 @@ export const greyKnightsUnits = {
     id: 'castellanCrowe', name: 'Castellan Crowe', category: 'epicHero',
     points: 90,
     M: '6"', T: 4, Sv: '2+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Purifying Flame', type: 'ranged', range: '18"', A: 3, BS: '2+', S: 4, AP: -2, D: 1, keywords: ['ANTI-INFANTRY 2+', 'IGNORES COVER', 'PSYCHIC'] },
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -56,7 +56,7 @@ export const greyKnightsUnits = {
     id: 'grandMasterVoldus', name: 'Grand Master Voldus', category: 'epicHero',
     points: 110,
     M: '5"', T: 5, Sv: '2+', W: 7, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Searing Purity', type: 'ranged', range: '12"', A: 'D3+1', BS: '2+', S: 12, AP: -2, D: 2, keywords: ['PSYCHIC'] },
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -81,7 +81,7 @@ export const greyKnightsUnits = {
     id: 'grandMaster', name: 'Grand Master', category: 'character',
     points: 95,
     M: '5"', T: 5, Sv: '2+', W: 7, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Incinerator', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -106,7 +106,7 @@ export const greyKnightsUnits = {
     id: 'grandMasterInNemesisDreadknight', name: 'Grand Master in Nemesis Dreadknight', category: 'character',
     points: 225,
     M: '8"', T: 8, Sv: '2+', W: 13, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Fragstorm grenade launcher', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
       { name: 'Gatling psilencer', type: 'ranged', range: '24"', A: 12, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['PSYCHIC', 'SUSTAINED HITS 1'] },
@@ -139,7 +139,7 @@ export const greyKnightsUnits = {
     id: 'brotherCaptain', name: 'Brother-Captain', category: 'character',
     points: 90,
     M: '5"', T: 5, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Incinerator', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -164,7 +164,7 @@ export const greyKnightsUnits = {
     id: 'brotherhoodChampion', name: 'Brotherhood Champion', category: 'character',
     points: 70,
     M: '6"', T: 4, Sv: '2+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Nemesis force weapon', type: 'melee', A: 5, WS: '2+', S: 6, AP: -2, D: 2, keywords: ['PSYCHIC'] },
@@ -186,7 +186,7 @@ export const greyKnightsUnits = {
     id: 'brotherhoodChaplain', name: 'Brotherhood Chaplain', category: 'character',
     points: 65,
     M: '5"', T: 5, Sv: '2+', W: 5, Ld: '5+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Crozius arcanum', type: 'melee', A: 5, WS: '2+', S: 6, AP: -1, D: 2, keywords: ['PSYCHIC'] },
@@ -208,7 +208,7 @@ export const greyKnightsUnits = {
     id: 'brotherhoodLibrarian', name: 'Brotherhood Librarian', category: 'character',
     points: 80,
     M: '5"', T: 5, Sv: '2+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Vortex of Doom', type: 'ranged', range: '18"', A: 'D6+3', BS: '3+', S: 8, AP: -2, D: 2, keywords: ['BLAST', 'PSYCHIC'] },
@@ -231,7 +231,7 @@ export const greyKnightsUnits = {
     id: 'brotherhoodTechmarine', name: 'Brotherhood Techmarine', category: 'character',
     points: 70,
     M: '6"', T: 4, Sv: '2+', W: 4, Ld: '6+', OC: 1,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Forge bolter', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -1, D: 2, keywords: [] },
       { name: 'Grav-pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: -1, D: 2, keywords: ['ANTI-VEHICLE 6+', 'PISTOL'] },
@@ -256,7 +256,7 @@ export const greyKnightsUnits = {
     id: 'venerableDreadnought', name: 'Venerable Dreadnought', category: 'character',
     points: 140,
     M: '8"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
       { name: 'Heavy plasma cannon — standard', type: 'ranged', range: '36"', A: 'D3', BS: '3+', S: 7, AP: -2, D: 2, keywords: ['BLAST'] },
@@ -437,7 +437,7 @@ export const greyKnightsUnits = {
     id: 'nemesisDreadknight', name: 'Nemesis Dreadknight', category: 'monster',
     points: 225,
     M: '8"', T: 8, Sv: '2+', W: 13, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Fragstorm grenade launcher', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
       { name: 'Gatling psilencer', type: 'ranged', range: '24"', A: 12, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['PSYCHIC', 'SUSTAINED HITS 1'] },
@@ -471,7 +471,7 @@ export const greyKnightsUnits = {
     id: 'razorback', name: 'Razorback', category: 'vehicle',
     points: 85,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
       { name: 'Twin lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
@@ -495,7 +495,7 @@ export const greyKnightsUnits = {
     id: 'rhino', name: 'Rhino', category: 'vehicle',
     points: 80,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Storm bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Hunter-killer missile', type: 'ranged', range: '48"', A: 1, BS: '2+', S: 14, AP: -3, D: 6, keywords: ['ONE SHOT'] },
@@ -518,7 +518,7 @@ export const greyKnightsUnits = {
     id: 'landRaider', name: 'Land Raider', category: 'vehicle',
     points: 220,
     M: '10"', T: 10, Sv: '2+', W: 16, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
       { name: 'Twin lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
@@ -544,7 +544,7 @@ export const greyKnightsUnits = {
     id: 'landRaiderCrusader', name: 'Land Raider Crusader', category: 'vehicle',
     points: 235,
     M: '10"', T: 10, Sv: '2+', W: 16, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
       { name: 'Twin heavy bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -572,7 +572,7 @@ export const greyKnightsUnits = {
     id: 'landRaiderRedeemer', name: 'Land Raider Redeemer', category: 'vehicle',
     points: 235,
     M: '10"', T: 10, Sv: '2+', W: 16, Ld: '6+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin assault cannon', type: 'ranged', range: '24"', A: 6, BS: '3+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS', 'TWIN-LINKED'] },
       { name: 'Twin heavy flamer', type: 'ranged', range: '12"', A: '2D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
@@ -599,7 +599,7 @@ export const greyKnightsUnits = {
     id: 'stormravenGunship', name: 'Stormraven Gunship', category: 'vehicle',
     points: 340,
     M: '14"', T: 11, Sv: '2+', W: 18, Ld: '6+', OC: 5,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Twin plasma cannon — standard', type: 'ranged', range: '36"', A: 'D3', BS: '3+', S: 7, AP: -2, D: 2, keywords: ['BLAST'] },
@@ -629,7 +629,7 @@ export const greyKnightsUnits = {
     id: 'stormhawkInterceptor', name: 'Stormhawk Interceptor', category: 'vehicle',
     points: 250,
     M: '14"', T: 11, Sv: '2+', W: 14, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Twin heavy plasma cannon — standard', type: 'ranged', range: '36"', A: 'D3', BS: '3+', S: 7, AP: -2, D: 2, keywords: ['BLAST'] },
@@ -653,7 +653,7 @@ export const greyKnightsUnits = {
     id: 'stormtalonGunship', name: 'Stormtalon Gunship', category: 'vehicle',
     points: 200,
     M: '14"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Twin lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Twin plasma cannon — standard', type: 'ranged', range: '36"', A: 'D3', BS: '3+', S: 7, AP: -2, D: 2, keywords: ['BLAST'] },

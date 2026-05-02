@@ -9,7 +9,7 @@ export const dgUnits = {
     id: 'mortarion', name: 'Mortarion', category: 'epicHero',
     powerRating: 19, points: 380,
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '5+', OC: 6, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Silence — Strike', type: 'melee', A: 5, WS: '2+', S: 14, AP: -3, D: 'D6+1', keywords: ['DEVASTATING WOUNDS', 'LETHAL HITS'] },
       { name: 'Silence — Sweep', type: 'melee', A: 15, WS: '2+', S: 8, AP: -2, D: 2, keywords: ['LETHAL HITS', 'SUSTAINED HITS 1'] },
@@ -83,7 +83,7 @@ export const dgUnits = {
     id: 'lordOfVirulence', name: 'Lord of Virulence', category: 'character',
     powerRating: 5, points: 100,
     M: '5"', T: 7, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Twin Plague Spewer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['ANTI-INFANTRY 2+', 'IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
       { name: 'Power Fist', type: 'melee', A: 5, WS: '2+', S: 8, AP: -2, D: 2, keywords: ['LETHAL HITS'] },
@@ -105,7 +105,7 @@ export const dgUnits = {
     id: 'malignantPlaguecaster', name: 'Malignant Plaguecaster', category: 'character',
     powerRating: 3, points: 60,
     M: '5"', T: 6, Sv: '3+', W: 4, Ld: '6+', OC: 1,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['LETHAL HITS', 'PISTOL'] },
       { name: 'Plague Wind — Witchfire', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 4, AP: -1, D: 'D3', keywords: ['PSYCHIC', 'TORRENT'] },
@@ -128,7 +128,7 @@ export const dgUnits = {
     id: 'biologusPutrifier', name: 'Biologus Putrifier', category: 'character',
     powerRating: 3, points: 60,
     M: '5"', T: 6, Sv: '3+', W: 4, Ld: '6+', OC: 1,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Hyper Blight Grenades', type: 'ranged', range: '12"', A: 'D6', BS: '3+', S: 7, AP: -1, D: 2, keywords: ['ASSAULT', 'BLAST', 'LETHAL HITS'] },
       { name: 'Injector Pistol', type: 'ranged', range: '3"', A: 1, BS: '3+', S: 4, AP: -1, D: 3, keywords: ['ANTI-INFANTRY 2+', 'PISTOL', 'PRECISION'] },
@@ -216,7 +216,7 @@ export const dgUnits = {
     id: 'foulBlightspawn', name: 'Foul Blightspawn', category: 'character',
     powerRating: 4, points: 75,
     M: '5"', T: 6, Sv: '3+', W: 4, Ld: '6+', OC: 1,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Plague Sprayer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 7, AP: -2, D: 2, keywords: ['ANTI-INFANTRY 2+', 'IGNORES COVER', 'TORRENT'] },
       { name: 'Close Combat Weapon', type: 'melee', A: 4, WS: '3+', S: 4, AP: 0, D: 1, keywords: [] },
@@ -237,7 +237,7 @@ export const dgUnits = {
     id: 'iconBearer', name: 'Icon Bearer', category: 'character',
     powerRating: 3, points: 45,
     M: '5"', T: 6, Sv: '3+', W: 4, Ld: '5+', OC: 1,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Boltgun', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['LETHAL HITS'] },
       { name: 'Plague Knife', type: 'melee', A: 4, WS: '3+', S: 4, AP: 0, D: 1, keywords: ['LETHAL HITS'] },
@@ -280,7 +280,7 @@ export const dgUnits = {
     id: 'daemonPrinceOfNurgle', name: 'Daemon Prince of Nurgle', category: 'character',
     powerRating: 10, points: 195,
     M: '8"', T: 12, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 5, AP: -1, D: 2, keywords: ['LETHAL HITS'] },
       { name: 'Hellforged Weapons — Strike', type: 'melee', A: 7, WS: '2+', S: 8, AP: -2, D: 3, keywords: ['LETHAL HITS'] },
@@ -304,7 +304,7 @@ export const dgUnits = {
     id: 'daemonPrinceOfNurgleWithWings', name: 'Daemon Prince of Nurgle with Wings', category: 'character',
     powerRating: 9, points: 180,
     M: '12"', T: 11, Sv: '2+', W: 10, Ld: '6+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Infernal Cannon', type: 'ranged', range: '24"', A: 3, BS: '2+', S: 7, AP: -1, D: 2, keywords: ['LETHAL HITS'] },
       { name: 'Hellforged Weapons — Strike', type: 'melee', A: 7, WS: '2+', S: 8, AP: -2, D: 3, keywords: ['LETHAL HITS'] },
@@ -457,7 +457,7 @@ export const dgUnits = {
     id: 'myphiticBlighthauler', name: 'Myphitic Blight-hauler', category: 'vehicle',
     powerRating: 5, points: 100,
     M: '10"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bile Spurt', type: 'ranged', range: '12"', A: 3, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['LETHAL HITS'] },
       { name: 'Missile Launcher — Frag', type: 'ranged', range: '48"', A: 'D6', BS: '3+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
@@ -481,7 +481,7 @@ export const dgUnits = {
     id: 'foetidBloatdrone', name: 'Foetid Bloat-drone', category: 'vehicle',
     powerRating: 5, points: 100,
     M: '10"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Plaguespitter (×2)', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['ANTI-INFANTRY 2+', 'IGNORES COVER', 'TORRENT'] },
       { name: 'Fleshmower', type: 'melee', A: 10, WS: '3+', S: 7, AP: -1, D: 2, keywords: ['LETHAL HITS'] },
@@ -503,7 +503,7 @@ export const dgUnits = {
     id: 'foetidBloatdroneHeavy', name: 'Foetid Bloat-drone with Heavy Blight Launcher', category: 'vehicle',
     powerRating: 6, points: 120,
     M: '10"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Heavy Blight Launcher', type: 'ranged', range: '36"', A: 'D6+2', BS: '3+', S: 10, AP: -2, D: 3, keywords: ['BLAST', 'LETHAL HITS'] },
       { name: 'Plague Probe', type: 'melee', A: 3, WS: '3+', S: 6, AP: -1, D: 1, keywords: ['LETHAL HITS'] },
@@ -525,7 +525,7 @@ export const dgUnits = {
     id: 'plagueburtCrawler', name: 'Plagueburst Crawler', category: 'vehicle',
     powerRating: 11, points: 210,
     M: '10"', T: 10, Sv: '2+', W: 12, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Entropy Cannon', type: 'ranged', range: '36"', A: 1, BS: '3+', S: 10, AP: -3, D: 'D6+1', keywords: ['LETHAL HITS'] },
       { name: 'Heavy Slugger', type: 'ranged', range: '36"', A: 4, BS: '3+', S: 5, AP: -1, D: 1, keywords: ['LETHAL HITS'] },
@@ -551,7 +551,7 @@ export const dgUnits = {
     id: 'helbrute', name: 'Helbrute', category: 'vehicle',
     powerRating: 6, points: 115,
     M: '7"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['LETHAL HITS', 'RAPID FIRE 2'] },
       { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -582,7 +582,7 @@ export const dgUnits = {
     id: 'defiler', name: 'Defiler', category: 'vehicle',
     powerRating: 13, points: 250,
     M: '12"', T: 11, Sv: '3+', W: 18, Ld: '6+', OC: 5, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Hades Battle Cannon', type: 'ranged', range: '48"', A: 'D6+3', BS: '3+', S: 10, AP: -1, D: 3, keywords: ['BLAST', 'LETHAL HITS'] },
       { name: 'Ectoplasma Destructor', type: 'ranged', range: '36"', A: 'D6', BS: '3+', S: 12, AP: -3, D: 3, keywords: ['BLAST', 'LETHAL HITS'] },
@@ -615,7 +615,7 @@ export const dgUnits = {
     id: 'chaosLandRaider', name: 'Chaos Land Raider', category: 'vehicle',
     powerRating: 11, points: 220,
     M: '10"', T: 12, Sv: '2+', W: 16, Ld: '6+', OC: 5,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Soulshatter Lascannon (×2)', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
       { name: 'Twin Heavy Bolter', type: 'ranged', range: '36"', A: 3, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['LETHAL HITS', 'SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -640,7 +640,7 @@ export const dgUnits = {
     id: 'chaosPredatorAnnihilator', name: 'Chaos Predator Annihilator', category: 'vehicle',
     powerRating: 7, points: 135,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator Twin Lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 14, AP: -3, D: 'D6+1', keywords: ['TWIN-LINKED'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
@@ -665,7 +665,7 @@ export const dgUnits = {
     id: 'chaosPredatorDestructor', name: 'Chaos Predator Destructor', category: 'vehicle',
     powerRating: 8, points: 145,
     M: '10"', T: 10, Sv: '3+', W: 11, Ld: '6+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Predator Autocannon', type: 'ranged', range: '48"', A: 4, BS: '3+', S: 9, AP: -1, D: 3, keywords: ['LETHAL HITS', 'RAPID FIRE 2'] },
       { name: 'Lascannon', type: 'ranged', range: '48"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: [] },
@@ -691,7 +691,7 @@ export const dgUnits = {
     id: 'chaosRhino', name: 'Chaos Rhino', category: 'vehicle',
     powerRating: 5, points: 85,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '6+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Combi-bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['LETHAL HITS', 'RAPID FIRE 2'] },
       { name: 'Combi-weapon', type: 'ranged', range: '24"', A: 1, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ANTI-INFANTRY 4+', 'DEVASTATING WOUNDS', 'RAPID FIRE 1'] },
