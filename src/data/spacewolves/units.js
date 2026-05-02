@@ -28,7 +28,7 @@ export const swUnits = {
     id: 'loganGrimnar', name: 'Logan Grimnar', category: 'epicHero',
     points: 110,
     M: '6"', T: 5, Sv: '2+', W: 8, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
       { name: 'Axe Morkai — Strike', type: 'melee', A: 6, WS: '2+', S: 8, AP: -2, D: 3, keywords: [] },
@@ -50,7 +50,7 @@ export const swUnits = {
     id: 'bjorn', name: 'Bjorn the Fell-Handed', category: 'epicHero',
     points: 160,
     M: '9"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 3, InvSv: '5+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Assault Cannon', type: 'ranged', range: '24"', A: 6, BS: '2+', S: 6, AP: 0, D: 1, keywords: ['DEVASTATING WOUNDS'] },
       { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
@@ -75,7 +75,7 @@ export const swUnits = {
     id: 'njal', name: 'Njal Stormcaller', category: 'epicHero',
     points: 85,
     M: '7"', T: 4, Sv: '3+', W: 4, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
       { name: 'Living Lightning — Witchfire', type: 'ranged', range: '24"', A: 'D6', BS: '3+', S: 7, AP: -1, D: 1, keywords: ['PSYCHIC', 'SUSTAINED HITS 2'] },
@@ -96,7 +96,7 @@ export const swUnits = {
     id: 'murderfang', name: 'Murderfang', category: 'epicHero',
     points: 150,
     M: '9"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 0,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
@@ -118,7 +118,7 @@ export const swUnits = {
     id: 'arjacRockfist', name: 'Arjac Rockfist', category: 'epicHero',
     points: 105,
     M: '6"', T: 5, Sv: '2+', W: 6, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Foehammer (ranged)', type: 'ranged', range: '6"', A: 1, BS: '2+', S: 8, AP: -2, D: 3, keywords: ['ANTI-MONSTER 3+', 'ANTI-VEHICLE 3+', 'ASSAULT'] },
       { name: 'Foehammer (melee)', type: 'melee', A: 5, WS: '2+', S: 8, AP: -2, D: 3, keywords: ['ANTI-MONSTER 3+', 'ANTI-VEHICLE 3+', 'PRECISION'] },
@@ -182,7 +182,7 @@ export const swUnits = {
     id: 'wolfGuardBattleLeader', name: 'Wolf Guard Battle Leader', category: 'character',
     points: 65,
     M: '7"', T: 4, Sv: '3+', W: 5, Ld: '6+', OC: 1, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Master-crafted bolt carbine', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 2, keywords: [] },
       { name: 'Master-crafted heavy bolt pistol', type: 'ranged', range: '18"', A: 1, BS: '3+', S: 4, AP: -1, D: 2, keywords: ['PISTOL'] },
@@ -375,7 +375,7 @@ export const swUnits = {
     id: 'wulfenDreadnought', name: 'Wulfen Dreadnought', category: 'vehicle',
     points: 145,
     M: '9"', T: 9, Sv: '2+', W: 8, Ld: '6+', OC: 0,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Heavy Flamer', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 5, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },

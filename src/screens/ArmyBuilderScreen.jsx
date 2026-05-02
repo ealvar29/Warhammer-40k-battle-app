@@ -55,6 +55,7 @@ function getUnitsByCategory(unitList) {
 }
 
 function hasMixedWeapons(unit) {
+  if (unit.weaponRole) return false  // explicit role set in data; no picker needed
   const weapons = unit.weapons || []
   const hasRanged = weapons.some(w => w.type === 'ranged' && !w.keywords?.includes('PISTOL'))
   const hasMelee  = weapons.some(w => w.type === 'melee')
@@ -219,7 +220,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           maxWounds: totalWounds,
           currentWounds: totalWounds,
           unitKey: u.unitKey || u.id,
-          phaseRole: unitRoleOverrides[u.id] || null,
+          phaseRole: u.weaponRole || unitRoleOverrides[u.id] || null,
         })
       }
     }

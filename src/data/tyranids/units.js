@@ -4,7 +4,7 @@ export const tyranidUnits = {
     id: 'swarmlord', name: 'The Swarmlord', category: 'epicHero',
     powerRating: 12, points: 220,
     M: '8"', T: 10, Sv: '2+', W: 10, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bone Sabres', type: 'melee', A: 8, WS: '2+', S: 9, AP: -2, D: 3, keywords: ['TWIN-LINKED'] },
       { name: 'Synaptic Pulse', type: 'ranged', range: '18"', A: 'D6+3', BS: 'N/A', S: 5, AP: -1, D: 2, keywords: ['PSYCHIC', 'TORRENT'] },
@@ -63,7 +63,7 @@ export const tyranidUnits = {
     id: 'hiveTyrant', name: 'Hive Tyrant', category: 'character',
     powerRating: 10, points: 195,
     M: '8"', T: 10, Sv: '2+', W: 10, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Monstrous Bonesword & Lash Whip', type: 'melee', A: 6, WS: '2+', S: 9, AP: -2, D: 3, keywords: ['TWIN-LINKED'] },
       { name: 'Monstrous Scything Talons', type: 'melee', A: 4, WS: '2+', S: 7, AP: -2, D: 2, keywords: ['EXTRA ATTACKS'] },
@@ -84,7 +84,7 @@ export const tyranidUnits = {
     id: 'wingedHiveTyrant', name: 'Winged Hive Tyrant', category: 'character',
     powerRating: 10, points: 170,
     M: '12"', T: 9, Sv: '2+', W: 10, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Monstrous Bonesword & Lash Whip', type: 'melee', A: 6, WS: '2+', S: 9, AP: -2, D: 3, keywords: ['TWIN-LINKED'] },
       { name: 'Monstrous Scything Talons', type: 'melee', A: 4, WS: '2+', S: 7, AP: -2, D: 2, keywords: ['EXTRA ATTACKS'] },
@@ -106,7 +106,7 @@ export const tyranidUnits = {
     id: 'neurotyrant', name: 'Neurotyrant', category: 'character',
     powerRating: 6, points: 105,
     M: '6"', T: 8, Sv: '4+', W: 9, Ld: '7+', OC: 3, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Neurotyrant Claws and Lashes', type: 'melee', A: 6, WS: '3+', S: 5, AP: 0, D: 1 },
       { name: 'Psychic Scream', type: 'ranged', range: '18"', A: '2D6', BS: 'N/A', S: 5, AP: -1, D: 2, keywords: ['IGNORES COVER', 'PSYCHIC', 'TORRENT'] },
@@ -161,7 +161,7 @@ export const tyranidUnits = {
     id: 'tervigon', name: 'Tervigon', category: 'character',
     powerRating: 11, points: 160,
     M: '8"', T: 11, Sv: '2+', W: 16, Ld: '7+', OC: 5,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Massive crushing claws', type: 'melee', A: 4, WS: '4+', S: 12, AP: -3, D: 'D6+1' },
       { name: 'Massive scything talons — strike', type: 'melee', A: 4, WS: '3+', S: 9, AP: -2, D: 'D6' },
@@ -204,7 +204,7 @@ export const tyranidUnits = {
     id: 'termagants', name: 'Termagants', category: 'battleline',
     powerRating: 3, points: 60,
     M: '6"', T: 3, Sv: '5+', W: 1, Ld: '8+', OC: 2,
-    models: 10, minModels: 10, maxModels: 20,
+    models: 10, minModels: 10, maxModels: 20, weaponRole: 'ranged',
     weapons: [
       { name: 'Fleshborer', type: 'ranged', range: '18"', A: 1, BS: '4+', S: 5, AP: 0, D: 1, keywords: ['ASSAULT'] },
       { name: 'Termagant Devourer', type: 'ranged', range: '18"', A: 2, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['ASSAULT'] },
@@ -244,7 +244,7 @@ export const tyranidUnits = {
     id: 'gargoyles', name: 'Gargoyles', category: 'battleline',
     powerRating: 3, points: 85,
     M: '12"', T: 3, Sv: '6+', W: 1, Ld: '8+', OC: 2,
-    models: 10, minModels: 10, maxModels: 20,
+    models: 10, minModels: 10, maxModels: 20, weaponRole: 'mixed',
     weapons: [
       { name: 'Fleshborer', type: 'ranged', range: '18"', A: 1, BS: '4+', S: 5, AP: 0, D: 1, keywords: ['ASSAULT'] },
       { name: 'Blinding Venom', type: 'melee', A: 1, WS: '4+', S: 3, AP: 0, D: 1 },
@@ -263,7 +263,7 @@ export const tyranidUnits = {
     nameDetail: '(Ranged Bio-weapons)',
     powerRating: 5, points: 65,
     M: '6"', T: 5, Sv: '4+', W: 3, Ld: '7+', OC: 2,
-    models: 3, minModels: 3, maxModels: 6,
+    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged',
     weapons: [
       { name: 'Devourer', type: 'ranged', range: '18"', A: 5, BS: '4+', S: 4, AP: 0, D: 1 },
       { name: 'Deathspitter', type: 'ranged', range: '24"', A: 3, BS: '4+', S: 5, AP: -1, D: 1 },
@@ -325,7 +325,7 @@ export const tyranidUnits = {
     id: 'hiveGuard', name: 'Hive Guard', category: 'infantry',
     powerRating: 5, points: 90,
     M: '6"', T: 7, Sv: '3+', W: 4, Ld: '8+', OC: 1,
-    models: 3, minModels: 3, maxModels: 6,
+    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged',
     weapons: [
       { name: 'Impaler Cannon', type: 'ranged', range: '36"', A: 4, BS: '4+', S: 5, AP: -1, D: 1, keywords: ['HEAVY', 'INDIRECT FIRE'] },
       { name: 'Shockcannon', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 7, AP: -1, D: 3, keywords: ['ANTI-VEHICLE 2+'] },
@@ -414,7 +414,7 @@ export const tyranidUnits = {
     id: 'zoanthropes', name: 'Zoanthropes', category: 'infantry',
     powerRating: 5, points: 100,
     M: '5"', T: 5, Sv: '5+', W: 3, Ld: '7+', OC: 1, InvSv: '4+',
-    models: 3, minModels: 3, maxModels: 6,
+    models: 3, minModels: 3, maxModels: 6, weaponRole: 'ranged',
     weapons: [
       { name: 'Witchfire Blast', type: 'ranged', range: '24"', A: 'D3', BS: '3+', S: 7, AP: -2, D: 'D3', keywords: ['PSYCHIC'] },
       { name: 'Focused Witchfire', type: 'ranged', range: '24"', A: 1, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['LETHAL HITS', 'PSYCHIC'] },
@@ -487,7 +487,7 @@ export const tyranidUnits = {
     id: 'pyrovores', name: 'Pyrovores', category: 'infantry',
     powerRating: 3, points: 40,
     M: '5"', T: 6, Sv: '3+', W: 5, Ld: '8+', OC: 1,
-    models: 1, minModels: 1, maxModels: 3,
+    models: 1, minModels: 1, maxModels: 3, weaponRole: 'mixed',
     weapons: [
       { name: 'Flamespurt', type: 'ranged', range: '12"', A: 'D6+1', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT', 'TWIN-LINKED'] },
       { name: 'Chitin-barbed limbs', type: 'melee', A: 2, WS: '4+', S: 5, AP: 0, D: 1 },
@@ -506,7 +506,7 @@ export const tyranidUnits = {
     id: 'biovores', name: 'Biovores', category: 'infantry',
     powerRating: 4, points: 50,
     M: '5"', T: 6, Sv: '3+', W: 5, Ld: '8+', OC: 1,
-    models: 1, minModels: 1, maxModels: 3,
+    models: 1, minModels: 1, maxModels: 3, weaponRole: 'ranged',
     weapons: [
       { name: 'Spore Mine Launcher', type: 'ranged', range: '48"', A: 'D3', BS: '4+', S: 6, AP: -1, D: 2, keywords: ['BLAST', 'DEVASTATING WOUNDS', 'HEAVY', 'INDIRECT FIRE'] },
       { name: 'Chitin-barbed limbs', type: 'melee', A: 2, WS: '4+', S: 5, AP: 0, D: 1 },
@@ -525,7 +525,7 @@ export const tyranidUnits = {
     id: 'barbgaunts', name: 'Barbgaunts', category: 'infantry',
     powerRating: 3, points: 55,
     M: '6"', T: 4, Sv: '4+', W: 2, Ld: '8+', OC: 1,
-    models: 5, minModels: 5, maxModels: 10,
+    models: 5, minModels: 5, maxModels: 10, weaponRole: 'ranged',
     weapons: [
       { name: 'Barblauncher', type: 'ranged', range: '24"', A: 'D6', BS: '4+', S: 5, AP: 0, D: 1, keywords: ['BLAST', 'HEAVY', 'LETHAL HITS'] },
       { name: 'Chitinous claws and teeth', type: 'melee', A: 1, WS: '4+', S: 4, AP: 0, D: 1 },
@@ -571,7 +571,7 @@ export const tyranidUnits = {
     id: 'screamerKiller', name: 'Screamer-Killer', category: 'monster',
     powerRating: 7, points: 125,
     M: '8"', T: 9, Sv: '2+', W: 10, Ld: '8+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bio-plasmic scream', type: 'ranged', range: '18"', A: 'D6+3', BS: '4+', S: 8, AP: -2, D: 1, keywords: ['ASSAULT', 'BLAST'] },
       { name: 'Screamer-Killer talons', type: 'melee', A: 10, WS: '3+', S: 10, AP: -2, D: 3 },
@@ -590,7 +590,7 @@ export const tyranidUnits = {
     id: 'exocrine', name: 'Exocrine', category: 'monster',
     powerRating: 9, points: 140,
     M: '8"', T: 10, Sv: '3+', W: 14, Ld: '8+', OC: 4,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Bio-plasmic Cannon', type: 'ranged', range: '36"', A: 'D6+3', BS: '3+', S: 9, AP: -3, D: 3, keywords: ['BLAST', 'HEAVY'] },
       { name: 'Powerful Limbs', type: 'melee', A: 3, WS: '3+', S: 7, AP: 0, D: 2 },
@@ -610,7 +610,7 @@ export const tyranidUnits = {
     id: 'nornEmissary', name: 'Norn Emissary', category: 'monster',
     powerRating: 14, points: 260,
     M: '10"', T: 11, Sv: '2+', W: 16, Ld: '7+', OC: 5, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Psychic Tendril — Neuroparasite', type: 'ranged', range: '18"', A: 2, BS: '2+', S: 8, AP: -2, D: 'D3', keywords: ['PRECISION', 'PSYCHIC'] },
       { name: 'Psychic Tendril — Neuroblast', type: 'ranged', range: '18"', A: '2D6', BS: '2+', S: 6, AP: -2, D: 1, keywords: ['BLAST', 'PSYCHIC'] },
@@ -634,7 +634,7 @@ export const tyranidUnits = {
     id: 'psychophage', name: 'Psychophage', category: 'monster',
     powerRating: 7, points: 110,
     M: '12"', T: 9, Sv: '3+', W: 10, Ld: '8+', OC: 3,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Psychoclastic Torrent', type: 'ranged', range: '12"', A: 'D6', BS: 'N/A', S: 6, AP: -1, D: 1, keywords: ['IGNORES COVER', 'TORRENT'] },
       { name: 'Talons and Betentacled Maw', type: 'melee', A: 6, WS: '3+', S: 6, AP: -2, D: 2, keywords: ['ANTI-PSYKER 4+', 'DEVASTATING WOUNDS'] },
@@ -655,7 +655,7 @@ export const tyranidUnits = {
     id: 'tyrannofex', name: 'Tyrannofex', category: 'monster',
     powerRating: 11, points: 200,
     M: '9"', T: 12, Sv: '2+', W: 16, Ld: '8+', OC: 5,
-    models: 1,
+    models: 1, weaponRole: 'ranged',
     weapons: [
       { name: 'Rupture Cannon', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 18, AP: -4, D: 'D6+6', keywords: ['HEAVY'] },
       { name: 'Fleshborer Hive', type: 'ranged', range: '24"', A: 20, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['HEAVY', 'SUSTAINED HITS 1', 'TWIN-LINKED'] },
@@ -678,7 +678,7 @@ export const tyranidUnits = {
     id: 'trygon', name: 'Trygon', category: 'monster',
     powerRating: 9, points: 140,
     M: '10"', T: 10, Sv: '3+', W: 14, Ld: '8+', OC: 4,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Bio-electric Pulse', type: 'ranged', range: '12"', A: 6, BS: '3+', S: 5, AP: 0, D: 1, keywords: ['SUSTAINED HITS 2'] },
       { name: 'Trygon Scything Talons', type: 'melee', A: 12, WS: '3+', S: 9, AP: -2, D: 3 },
@@ -697,7 +697,7 @@ export const tyranidUnits = {
     id: 'toxicrene', name: 'Toxicrene', category: 'monster',
     powerRating: 10, points: 150,
     M: '8"', T: 11, Sv: '3+', W: 14, Ld: '8+', OC: 4,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Massive Toxic Lashes', type: 'ranged', range: '9"', A: '2D6', BS: '3+', S: 6, AP: -1, D: 2, keywords: ['ANTI-INFANTRY 2+'] },
       { name: 'Massive Toxic Lashes', type: 'melee', A: 12, WS: '3+', S: 6, AP: -1, D: 2, keywords: ['ANTI-INFANTRY 2+'] },
@@ -718,7 +718,7 @@ export const tyranidUnits = {
     id: 'maleceptor', name: 'Maleceptor', category: 'monster',
     powerRating: 10, points: 170,
     M: '8"', T: 11, Sv: '3+', W: 14, Ld: '7+', OC: 4, InvSv: '4+',
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Psychic Overload', type: 'ranged', range: '18"', A: 'D6+3', BS: '3+', S: 10, AP: -2, D: 3, keywords: ['BLAST', 'PSYCHIC'] },
       { name: 'Massive Scything Talons — strike', type: 'melee', A: 3, WS: '3+', S: 9, AP: -2, D: 'D6+1' },
@@ -739,7 +739,7 @@ export const tyranidUnits = {
     id: 'haruspex', name: 'Haruspex', category: 'monster',
     powerRating: 9, points: 125,
     M: '8"', T: 11, Sv: '3+', W: 14, Ld: '8+', OC: 4,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Grasping Tongue', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 6, AP: -2, D: 'D6+1', keywords: ['PRECISION'] },
       { name: 'Ravenous Maw', type: 'melee', A: 14, WS: '3+', S: 7, AP: -1, D: 2 },
@@ -779,7 +779,7 @@ export const tyranidUnits = {
     id: 'tyrannocyte', name: 'Tyrannocyte', category: 'monster',
     powerRating: 7, points: 105,
     M: '8"', T: 9, Sv: '3+', W: 10, Ld: '8+', OC: 2,
-    models: 1,
+    models: 1, weaponRole: 'mixed',
     weapons: [
       { name: 'Tyrannocyte bio-weapons', type: 'ranged', range: '24"', A: 5, BS: '4+', S: 5, AP: -1, D: 2 },
       { name: 'Flensing Whips', type: 'melee', A: 6, WS: '4+', S: 7, AP: -1, D: 2 },
