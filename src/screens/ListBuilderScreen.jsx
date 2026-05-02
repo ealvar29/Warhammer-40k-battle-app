@@ -711,7 +711,7 @@ export default function ListBuilderScreen({ theme }) {
                           style={{
                             backgroundImage: f.artUrl ? `url(${f.artUrl})` : f.gradient,
                             backgroundSize: 'cover',
-                            backgroundPosition: 'center top',
+                            backgroundPosition: 'center center',
                           }} />
 
                         {/* Dark gradient overlay */}

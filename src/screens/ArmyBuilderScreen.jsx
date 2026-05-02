@@ -289,7 +289,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                       style={{
                         backgroundImage: f.artUrl ? `url(${f.artUrl})` : f.gradient,
                         backgroundSize: 'cover',
-                        backgroundPosition: 'center top',
+                        backgroundPosition: 'center center',
                       }} />
 
                     {/* Dark gradient overlay so text is always readable */}
@@ -321,25 +321,6 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                   </button>
                 )
               })}
-            </div>
-
-            {/* Selected faction banner + continue */}
-            <div className="rounded-2xl p-3 flex items-center gap-3"
-              style={{ background: `${factionMeta.color}12`, border: `1px solid ${factionMeta.color}40` }}>
-              <span className="text-2xl shrink-0">{factionMeta.icon}</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-black truncate" style={{ color: factionMeta.color }}>
-                  {factionMeta.name}
-                </p>
-                <p className="text-xs" style={{ color: theme.textSecondary }}>
-                  {(FACTION_UNITS[localFaction] || []).length} units available
-                </p>
-              </div>
-              <button onClick={() => setStep('detachment')}
-                className="px-3.5 py-2 rounded-xl font-bold text-xs shrink-0"
-                style={{ background: factionMeta.color, color: '#fff' }}>
-                Continue →
-              </button>
             </div>
 
             <div className="flex items-center gap-3 py-0.5">
@@ -583,6 +564,26 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           </div>
         )}
       </div>
+
+      {/* Sticky Continue footer — faction step */}
+      {step === 'faction' && (
+        <div className="px-4 pb-4 pt-2 shrink-0 border-t" style={{ background: theme.surface, borderColor: theme.border }}>
+          <div className="flex items-center gap-3 mb-2.5">
+            <span className="text-2xl shrink-0">{factionMeta.icon}</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-black truncate" style={{ color: factionMeta.color }}>{factionMeta.name}</p>
+              <p className="text-xs" style={{ color: theme.textSecondary }}>
+                {(FACTION_UNITS[localFaction] || []).length} units available
+              </p>
+            </div>
+          </div>
+          <button onClick={() => setStep('detachment')}
+            className="w-full py-3.5 rounded-2xl font-bold text-sm"
+            style={{ background: factionMeta.color, color: '#fff' }}>
+            Continue →
+          </button>
+        </div>
+      )}
 
       {/* Sticky Continue footer — only for detachment and units steps */}
       {(step === 'detachment' || step === 'units') && (() => {
