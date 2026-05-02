@@ -459,14 +459,14 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               <div key={section.label} className="space-y-3">
                 <div className="flex items-center gap-2 pt-1">
                   <div className="h-px flex-1" style={{ background: section.accent + '40' }} />
-                  <p className="text-xs font-black tracking-widest uppercase px-2" style={{ color: section.accent }}>
+                  <p className="text-xs md:text-sm font-black tracking-widest uppercase px-2" style={{ color: section.accent }}>
                     {section.label}
                   </p>
                   <div className="h-px flex-1" style={{ background: section.accent + '40' }} />
                 </div>
                 {Object.entries(section.byCategory).map(([cat, units]) => units.length === 0 ? null : (
                   <div key={cat}>
-                    <p className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: theme.textSecondary }}>
+                    <p className="text-xs md:text-sm font-bold tracking-widest uppercase mb-2" style={{ color: theme.textSecondary }}>
                       {categoryLabels[cat] || cat}
                     </p>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -486,7 +486,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                             onClick={handleCardClick}
                             className="relative rounded-2xl overflow-hidden cursor-pointer transition-all flex flex-col justify-end"
                             style={{
-                              minHeight: 130,
+                              minHeight: 'clamp(130px, 18vw, 200px)',
                               border: `2px solid ${selected ? section.accent : 'transparent'}`,
                               boxShadow: selected ? `0 0 14px ${section.accent}44` : 'none',
                               opacity: isLegends ? 0.7 : 1,
@@ -533,18 +533,18 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                               {/* Mini stats */}
                               <div className="flex gap-2 mb-1">
                                 {['M','T','Sv','W'].map(stat => (
-                                  <span key={stat} style={{ color: 'rgba(255,255,255,0.4)', fontSize: 8 }}>
+                                  <span key={stat} className="text-[8px] md:text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
                                     {stat}{u[stat]}
                                   </span>
                                 ))}
                               </div>
 
-                              <p className="text-xs font-black leading-tight truncate" style={{ color: '#fff' }}>{u.name}</p>
+                              <p className="text-xs md:text-sm font-black leading-tight truncate" style={{ color: '#fff' }}>{u.name}</p>
                               <div className="flex items-center justify-between mt-0.5 mb-1.5">
-                                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 9 }}>
+                                <p className="text-[9px] md:text-[11px]" style={{ color: 'rgba(255,255,255,0.45)' }}>
                                   {categoryLabels[u.category || u.type] || ''}
                                 </p>
-                                <p style={{ color: section.accent, fontSize: 10, fontWeight: 800 }}>{u.points}pts</p>
+                                <p className="text-[10px] md:text-xs" style={{ color: section.accent, fontWeight: 800 }}>{u.points}pts</p>
                               </div>
 
                               {/* Stepper for regular selected units */}
