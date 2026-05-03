@@ -86,7 +86,7 @@ export function useBattleSync() {
   // ── Outgoing calls ────────────────────────────────────────────────────────
 
   const createRoom = useCallback(async (playerName, faction) => {
-    if (!_conn) return null
+    if (_conn?.state !== 'Connected') return { success: false, error: 'Not connected to server' }
     try {
       const res = await _conn.invoke('CreateRoom', playerName || 'Player 1', faction || 'unknown')
       _roomCode    = res.code
@@ -94,10 +94,10 @@ export function useBattleSync() {
       setRoomCode(res.code)
       setPlayerIndex(res.playerIndex)
       setStatus('joined')
-      return res.code
+      return { success: true, code: res.code }
     } catch (e) {
       console.error('CreateRoom failed', e)
-      return null
+      return { success: false, error: e.message || 'Server error' }
     }
   }, [])
 

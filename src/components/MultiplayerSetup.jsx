@@ -20,8 +20,9 @@ export default function MultiplayerSetup({ theme }) {
     if (!nameInput.trim()) return
     setLoading(true)
     setError(null)
-    await createRoom(nameInput.trim(), faction || 'unknown')
+    const res = await createRoom(nameInput.trim(), faction || 'unknown')
     setLoading(false)
+    if (!res?.success) setError(res?.error || 'Could not create room')
   }
 
   const handleJoin = async () => {
@@ -94,24 +95,27 @@ export default function MultiplayerSetup({ theme }) {
           </div>
           <div className="flex-1">
             <p className="text-xs font-black" style={{ color: theme.textPrimary }}>Play with a Friend</p>
-            <p className="text-xs" style={{ color: theme.textSecondary }}>
-              {status === 'connecting' ? 'Connecting to server…' : 'Sync phases, CP and stratagem alerts in real time'}
+            <p className="text-xs" style={{ color: status === 'disconnected' ? '#ef4444' : theme.textSecondary }}>
+              {status === 'connecting'   ? 'Connecting to server…'
+               : status === 'disconnected' ? 'Server offline — check connection'
+               : 'Sync phases, CP and stratagem alerts in real time'}
             </p>
           </div>
         </div>
+        {/* Buttons disabled until we have a live connection */}
         <div className="flex gap-2">
           <motion.button whileTap={{ scale: 0.97 }}
             onClick={() => setMode('host')}
-            disabled={status === 'connecting'}
+            disabled={status !== 'connected' && status !== 'joined'}
             className="flex-1 py-2.5 rounded-xl font-black text-xs"
-            style={{ background: accent, color: theme.bg, opacity: status === 'connecting' ? 0.5 : 1 }}>
+            style={{ background: accent, color: theme.bg, opacity: (status !== 'connected' && status !== 'joined') ? 0.4 : 1 }}>
             Host Game
           </motion.button>
           <motion.button whileTap={{ scale: 0.97 }}
             onClick={() => setMode('join')}
-            disabled={status === 'connecting'}
+            disabled={status !== 'connected' && status !== 'joined'}
             className="flex-1 py-2.5 rounded-xl font-black text-xs"
-            style={{ background: `${accent}15`, color: accent, border: `1px solid ${accent}40`, opacity: status === 'connecting' ? 0.5 : 1 }}>
+            style={{ background: `${accent}15`, color: accent, border: `1px solid ${accent}40`, opacity: (status !== 'connected' && status !== 'joined') ? 0.4 : 1 }}>
             Join Game
           </motion.button>
         </div>
@@ -177,11 +181,11 @@ export default function MultiplayerSetup({ theme }) {
 
         <motion.button whileTap={{ scale: 0.97 }}
           onClick={isHost ? handleHost : handleJoin}
-          disabled={loading || !nameInput.trim() || (!isHost && codeInput.length < 4)}
+          disabled={loading || !nameInput.trim() || (!isHost && codeInput.length < 4) || (status !== 'connected' && status !== 'joined')}
           className="w-full py-3 rounded-xl font-black text-sm"
           style={{
             background: accent, color: theme.bg,
-            opacity: (loading || !nameInput.trim() || (!isHost && codeInput.length < 4)) ? 0.5 : 1
+            opacity: (loading || !nameInput.trim() || (!isHost && codeInput.length < 4) || (status !== 'connected' && status !== 'joined')) ? 0.5 : 1
           }}>
           {loading ? 'Connecting…' : isHost ? 'Create Room' : 'Join Room'}
         </motion.button>

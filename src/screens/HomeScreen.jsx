@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import { useCrusadeStore } from '../store/crusadeStore'
+import MultiplayerSetup from '../components/MultiplayerSetup'
 
 const CORE_STRATAGEMS = [
   { name: 'Command Re-roll', cost: 1, phase: 'Any', effect: 'Re-roll one dice roll made for a unit in your army.' },
@@ -60,7 +61,7 @@ function Divider({ color }) {
   )
 }
 
-export default function HomeScreen({ theme, onNavigate }) {
+export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
   const { battleActive, faction, turn, isYourTurn } = useBattleStore()
   const { orders, activeOrderId } = useCrusadeStore()
   const activeOrder = orders.find(o => o.id === activeOrderId)
@@ -244,6 +245,15 @@ export default function HomeScreen({ theme, onNavigate }) {
             </motion.span>
           </div>
         </motion.button>
+
+        {/* Multiplayer */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.35 }}
+        >
+          <MultiplayerSetup theme={theme} />
+        </motion.div>
 
         {/* Quick Reference */}
         <motion.div
