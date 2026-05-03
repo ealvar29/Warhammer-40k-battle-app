@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import { unitLeaderMap, leaders as leaderMeta, leaderAbilities } from '../data/leaderData'
 
-const PHASE_ICON = { command: '📋', movement: '🏃', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '✦' }
+const PHASE_ICON  = { command: '📋', movement: '🏃', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '✦' }
 const PHASE_LABEL = { command: 'Command', movement: 'Move', shooting: 'Shoot', charge: 'Charge', fight: 'Fight', any: 'Any' }
 const baseId = (id) => id?.replace(/_\d+$/, '') ?? id
 
@@ -12,63 +12,113 @@ function getPairingAbilities(leaderId, unitId) {
   return leaderAbilities[key]?.abilities || []
 }
 
-// ── Atom node: the leader portrait ──────────────────────────────────────────
+// ── Shared: art background div ───────────────────────────────────────────────
+function ArtBg({ unit, overlayStrength = 0.85 }) {
+  return (
+    <>
+      <div className="absolute inset-0"
+        style={{
+          backgroundImage: unit.artUrl ? `url(${unit.artUrl})` : undefined,
+          backgroundColor: unit.artUrl ? undefined : 'rgba(255,255,255,0.05)',
+          backgroundSize: 'cover',
+          backgroundPosition: unit.artPosition || 'center top',
+        }} />
+      <div className="absolute inset-0"
+        style={{ background: `linear-gradient(to top, rgba(0,0,0,${overlayStrength}) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.05) 100%)` }} />
+    </>
+  )
+}
+
+// ── Ability card — full description ─────────────────────────────────────────
+function AbilityCard({ ability, accent, theme }) {
+  return (
+    <div className="rounded-xl px-2.5 py-2"
+      style={{ background: `${accent}0d`, border: `1px solid ${accent}1a` }}>
+      <div className="flex items-center gap-1.5">
+        <span style={{ fontSize: 11 }}>{PHASE_ICON[ability.phase] || '✦'}</span>
+        <p className="text-xs font-bold flex-1" style={{ color: accent }}>{ability.name}</p>
+        <span className="font-bold uppercase rounded px-1.5 py-0.5 shrink-0"
+          style={{ background: `${accent}18`, color: accent, fontSize: 7 }}>
+          {PHASE_LABEL[ability.phase] || ability.phase}
+        </span>
+      </div>
+      {(ability.reminder || ability.description) && (
+        <p className="text-xs mt-0.5 leading-snug" style={{ color: theme.textPrimary }}>
+          {ability.reminder || ability.description}
+        </p>
+      )}
+    </div>
+  )
+}
+
+// ── Leader atom node (art portrait) ─────────────────────────────────────────
 function LeaderAtom({ unit, accent, theme, glowing }) {
   const initials = unit.name.split(' ').slice(0, 2).map(w => w[0]).join('')
   return (
-    <div className="flex flex-col items-center gap-1 w-[68px] shrink-0">
+    <div className="flex flex-col items-center gap-1 w-[72px] shrink-0">
       <motion.div
-        className="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-base border-2 select-none"
-        style={{
-          background: `${accent}18`,
-          borderColor: glowing ? accent : `${accent}44`,
-          color: accent,
-        }}
+        className="w-[60px] h-[80px] rounded-2xl overflow-hidden relative border-2"
+        style={{ borderColor: glowing ? accent : `${accent}44` }}
         animate={glowing ? {
-          boxShadow: [`0 0 6px ${accent}44`, `0 0 18px ${accent}88`, `0 0 6px ${accent}44`],
+          boxShadow: [`0 0 6px ${accent}44`, `0 0 20px ${accent}99`, `0 0 6px ${accent}44`],
         } : { boxShadow: 'none' }}
         transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
       >
-        {initials}
+        <ArtBg unit={unit} overlayStrength={0.75} />
+        {!unit.artUrl && (
+          <div className="absolute inset-0 flex items-center justify-center font-black text-lg"
+            style={{ color: accent }}>
+            {initials}
+          </div>
+        )}
+        <p className="absolute bottom-1 left-0 right-0 text-center font-bold leading-tight px-1 z-10"
+          style={{ color: '#fff', fontSize: 7, textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>
+          {unit.name.split(' ')[0]}
+        </p>
       </motion.div>
-      <p className="text-center font-bold leading-tight w-full px-0.5" style={{ color: theme.textPrimary, fontSize: 9 }}>
-        {unit.name.split(' ')[0]}
-      </p>
-      <p className="text-center leading-tight w-full px-0.5" style={{ color: theme.textSecondary, fontSize: 8 }}>
+      <p className="text-center leading-tight w-full px-0.5 truncate"
+        style={{ color: theme.textSecondary, fontSize: 8 }}>
         {leaderMeta[baseId(unit.id)]?.role || 'Character'}
       </p>
     </div>
   )
 }
 
-// ── Atom node: the squad portrait ───────────────────────────────────────────
+// ── Squad atom node (art portrait) ───────────────────────────────────────────
 function SquadAtom({ unit, accent, theme, assigned, onPress }) {
   return (
     <motion.button whileTap={{ scale: 0.93 }} onClick={onPress}
-      className="flex flex-col items-center gap-1 w-[68px] shrink-0">
-      <div className="w-14 h-14 rounded-2xl flex items-center justify-center border-2 px-1"
-        style={{
-          background: theme.surfaceHigh,
-          borderColor: assigned ? `${accent}88` : theme.border,
-        }}>
-        <p className="font-bold text-center leading-tight" style={{ color: theme.textPrimary, fontSize: 8 }}>
-          {unit.name.replace(/\b(Squad|Warriors|Guard)\b/g, '').trim() || unit.name}
+      className="flex flex-col items-center gap-1 w-[72px] shrink-0">
+      <div className="w-[60px] h-[80px] rounded-2xl overflow-hidden relative border-2"
+        style={{ borderColor: assigned ? `${accent}88` : theme.border }}>
+        <ArtBg unit={unit} overlayStrength={0.8} />
+        {!unit.artUrl && (
+          <div className="absolute inset-0 flex items-center justify-center px-1">
+            <p className="font-bold text-center leading-tight" style={{ color: theme.textPrimary, fontSize: 7 }}>
+              {unit.name}
+            </p>
+          </div>
+        )}
+        <p className="absolute bottom-1 left-0 right-0 text-center font-bold leading-tight px-1 z-10"
+          style={{ color: '#fff', fontSize: 7, textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}>
+          {unit.name.split(' ').slice(0, 2).join(' ')}
         </p>
       </div>
-      <p className="text-center leading-tight w-full px-0.5" style={{ color: assigned ? accent : theme.textSecondary, fontSize: 8 }}>
+      <p className="text-center leading-tight w-full px-0.5"
+        style={{ color: assigned ? accent : theme.textSecondary, fontSize: 8 }}>
         {assigned ? 'led ✓' : 'tap'}
       </p>
     </motion.button>
   )
 }
 
-// ── Connection band between leader and squad ────────────────────────────────
+// ── Bond line between atoms ───────────────────────────────────────────────────
 function BondLine({ abilities, accent }) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center gap-1 px-1.5 min-w-0">
-      <div className="w-full flex items-center gap-0">
+      <div className="w-full flex items-center">
         <motion.div className="h-[2px] flex-1 rounded-full"
-          style={{ background: `linear-gradient(90deg, ${accent}00, ${accent}99, ${accent}00)` }}
+          style={{ background: `linear-gradient(90deg, ${accent}00, ${accent}aa, ${accent}00)` }}
           animate={{ opacity: [0.35, 1, 0.35] }}
           transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }} />
       </div>
@@ -89,7 +139,7 @@ function BondLine({ abilities, accent }) {
   )
 }
 
-// ── Formation row: assigned leader ↔ squad bond ─────────────────────────────
+// ── Formation row: assigned leader ↔ squad ────────────────────────────────────
 function FormationRow({ leader, squad, accent, theme, onDetach }) {
   const abilities = getPairingAbilities(leader.id, squad.id)
   return (
@@ -102,37 +152,22 @@ function FormationRow({ leader, squad, accent, theme, onDetach }) {
       style={{ background: theme.surface, borderColor: `${accent}55` }}>
 
       {/* Atom bond row */}
-      <div className="flex items-center px-3 pt-3 pb-2">
+      <div className="flex items-center px-3 pt-3 pb-2.5">
         <LeaderAtom unit={leader} accent={accent} theme={theme} glowing />
         <BondLine abilities={abilities} accent={accent} />
         <SquadAtom unit={squad} accent={accent} theme={theme} assigned onPress={onDetach} />
       </div>
 
-      {/* Ability detail cards */}
+      {/* Full ability detail cards */}
       {abilities.length > 0 && (
-        <div className="px-3 pb-3 space-y-1.5 border-t mx-3 pt-2" style={{ borderColor: `${accent}20` }}>
+        <div className="px-3 pb-3 space-y-1.5 border-t mx-3 pt-2.5"
+          style={{ borderColor: `${accent}20` }}>
           {abilities.map((ab, i) => (
-            <div key={i} className="rounded-xl px-2.5 py-1.5"
-              style={{ background: `${accent}0d`, border: `1px solid ${accent}1a` }}>
-              <div className="flex items-center gap-1.5">
-                <span style={{ fontSize: 11 }}>{PHASE_ICON[ab.phase] || '✦'}</span>
-                <p className="text-xs font-bold flex-1" style={{ color: accent }}>{ab.name}</p>
-                <span className="font-bold uppercase rounded px-1.5 py-0.5 shrink-0"
-                  style={{ background: `${accent}18`, color: accent, fontSize: 7 }}>
-                  {PHASE_LABEL[ab.phase] || ab.phase}
-                </span>
-              </div>
-              {(ab.reminder || ab.description) && (
-                <p className="text-xs mt-0.5 leading-snug" style={{ color: theme.textPrimary }}>
-                  {ab.reminder || ab.description}
-                </p>
-              )}
-            </div>
+            <AbilityCard key={i} ability={ab} accent={accent} theme={theme} />
           ))}
         </div>
       )}
 
-      {/* Detach button */}
       <div className="flex justify-end px-3 pb-2.5">
         <button onClick={onDetach}
           className="text-xs px-2.5 py-1 rounded-lg font-bold"
@@ -144,9 +179,8 @@ function FormationRow({ leader, squad, accent, theme, onDetach }) {
   )
 }
 
-// ── Unassigned leader card: shows eligible squads to pick from ───────────────
-function LeaderAssignCard({ leader, eligibleSquads, unitStates, leaderAssignmentMap, accent, theme, onAssign }) {
-  const canLeadAnyone = eligibleSquads.length > 0
+// ── Unassigned leader card ─────────────────────────────────────────────────────
+function LeaderAssignCard({ leader, eligibleSquads, unitStates, accent, theme, onAssign }) {
   return (
     <motion.div
       layout
@@ -155,34 +189,41 @@ function LeaderAssignCard({ leader, eligibleSquads, unitStates, leaderAssignment
       className="rounded-2xl border overflow-hidden"
       style={{ background: theme.surface, borderColor: theme.border }}>
 
-      {/* Leader header */}
-      <div className="px-3 py-2.5 flex items-center gap-3"
-        style={{ background: theme.surfaceHigh, borderBottom: `1px solid ${theme.border}` }}>
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center font-black border shrink-0"
-          style={{ background: `${accent}12`, borderColor: `${accent}30`, color: accent }}>
-          {leader.name.split(' ').slice(0, 2).map(w => w[0]).join('')}
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold truncate" style={{ color: theme.textPrimary }}>{leader.name}</p>
-          <p className="text-xs" style={{ color: theme.textSecondary }}>
+      {/* Art banner header */}
+      <div className="relative h-24 overflow-hidden">
+        <ArtBg unit={leader} overlayStrength={0.7} />
+        {!leader.artUrl && (
+          <div className="absolute inset-0 flex items-center justify-center font-black text-3xl"
+            style={{ color: `${accent}66` }}>
+            {leader.name.split(' ').slice(0, 2).map(w => w[0]).join('')}
+          </div>
+        )}
+        <div className="absolute bottom-0 left-0 right-0 px-3 pb-2.5">
+          <p className="text-sm font-black leading-tight" style={{ color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>
+            {leader.name}
+          </p>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>
             {leaderMeta[baseId(leader.id)]?.role || 'Character'}
           </p>
         </div>
-        <span className="text-xs px-2 py-0.5 rounded-full font-bold shrink-0"
-          style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-          Unassigned
-        </span>
+        <div className="absolute top-2 right-2">
+          <span className="text-xs px-2 py-0.5 rounded-full font-bold"
+            style={{ background: 'rgba(0,0,0,0.55)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.12)' }}>
+            Unassigned
+          </span>
+        </div>
       </div>
 
       {/* Squad options */}
       <div className="px-3 py-2.5">
-        {!canLeadAnyone ? (
-          <p className="text-xs italic" style={{ color: theme.textSecondary, opacity: 0.55 }}>
+        {eligibleSquads.length === 0 ? (
+          <p className="text-xs italic py-1" style={{ color: theme.textSecondary, opacity: 0.55 }}>
             No eligible squads in your army — operates independently
           </p>
         ) : (
           <div className="space-y-2">
-            <p className="text-xs font-black tracking-wider uppercase mb-1.5" style={{ color: theme.textSecondary, fontSize: 9 }}>
+            <p className="text-xs font-black tracking-wider uppercase mb-2"
+              style={{ color: theme.textSecondary, fontSize: 9 }}>
               Can lead:
             </p>
             {eligibleSquads.map(squad => {
@@ -193,38 +234,76 @@ function LeaderAssignCard({ leader, eligibleSquads, unitStates, leaderAssignment
                 <motion.button key={squad.id} whileTap={{ scale: 0.98 }}
                   onClick={() => !takenByOther && onAssign(squad.id, leader.id)}
                   disabled={takenByOther}
-                  className="w-full rounded-xl border px-3 py-2.5 text-left"
+                  className="w-full rounded-xl border text-left overflow-hidden"
                   style={{
                     background: takenByOther ? theme.surfaceHigh : `${accent}08`,
                     borderColor: takenByOther ? theme.border : `${accent}44`,
                     opacity: takenByOther ? 0.45 : 1,
                   }}>
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs font-bold" style={{ color: takenByOther ? theme.textSecondary : theme.textPrimary }}>
-                      {squad.name}
-                    </p>
-                    {takenByOther ? (
-                      <span style={{ color: theme.textSecondary, fontSize: 9 }}>Already led</span>
-                    ) : (
-                      <span className="font-bold" style={{ color: accent, fontSize: 9 }}>Assign →</span>
-                    )}
-                  </div>
-                  {abilities.length > 0 && !takenByOther && (
-                    <div className="flex flex-wrap gap-1 mt-1.5">
-                      {abilities.map((ab, i) => (
-                        <span key={i}
-                          className="inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 font-bold"
-                          style={{ background: `${accent}18`, border: `1px solid ${accent}22`, color: accent, fontSize: 8 }}>
-                          {PHASE_ICON[ab.phase]} {ab.name}
-                        </span>
-                      ))}
+
+                  {/* Squad row: thumbnail + info */}
+                  <div className="flex gap-3 p-2.5">
+                    {/* Art thumbnail */}
+                    <div className="relative w-14 h-16 rounded-xl overflow-hidden shrink-0 border"
+                      style={{ borderColor: takenByOther ? theme.border : `${accent}33` }}>
+                      <ArtBg unit={squad} overlayStrength={0.6} />
+                      {!squad.artUrl && (
+                        <div className="absolute inset-0 flex items-center justify-center px-1">
+                          <p className="font-bold text-center leading-tight"
+                            style={{ color: theme.textPrimary, fontSize: 7 }}>
+                            {squad.name.split(' ').slice(0, 2).join('\n')}
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                  {abilities.length === 0 && !takenByOther && (
-                    <p className="text-xs mt-1 italic" style={{ color: theme.textSecondary, opacity: 0.55, fontSize: 9 }}>
-                      No special bonuses — general leadership
-                    </p>
-                  )}
+
+                    {/* Right side */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-1 mb-1.5">
+                        <p className="text-xs font-bold leading-tight"
+                          style={{ color: takenByOther ? theme.textSecondary : theme.textPrimary }}>
+                          {squad.name}
+                        </p>
+                        {takenByOther ? (
+                          <span className="text-xs shrink-0" style={{ color: theme.textSecondary, fontSize: 8 }}>
+                            Already led
+                          </span>
+                        ) : (
+                          <span className="text-xs font-black shrink-0" style={{ color: accent, fontSize: 9 }}>
+                            Assign →
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Ability descriptions */}
+                      {abilities.length > 0 && !takenByOther && (
+                        <div className="space-y-1">
+                          {abilities.map((ab, i) => (
+                            <div key={i} className="rounded-lg px-2 py-1.5"
+                              style={{ background: `${accent}0d`, border: `1px solid ${accent}18` }}>
+                              <div className="flex items-center gap-1">
+                                <span style={{ fontSize: 8 }}>{PHASE_ICON[ab.phase] || '✦'}</span>
+                                <p className="font-bold flex-1" style={{ color: accent, fontSize: 9 }}>{ab.name}</p>
+                                <span className="font-bold uppercase rounded px-1 shrink-0"
+                                  style={{ background: `${accent}18`, color: accent, fontSize: 7 }}>
+                                  {PHASE_LABEL[ab.phase] || ab.phase}
+                                </span>
+                              </div>
+                              <p className="text-xs mt-0.5 leading-snug"
+                                style={{ color: theme.textPrimary, fontSize: 9 }}>
+                                {ab.reminder || ab.description}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {abilities.length === 0 && !takenByOther && (
+                        <p className="text-xs italic" style={{ color: theme.textSecondary, opacity: 0.55, fontSize: 9 }}>
+                          General leadership — no special bonuses
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </motion.button>
               )
             })}
@@ -235,7 +314,7 @@ function LeaderAssignCard({ leader, eligibleSquads, unitStates, leaderAssignment
   )
 }
 
-// ── Main screen ──────────────────────────────────────────────────────────────
+// ── Main screen ───────────────────────────────────────────────────────────────
 export default function DeployScreen({ theme, onNavigate }) {
   const { selectedUnits, unitStates, attachLeader, detachLeader, startBattle } = useBattleStore()
 
@@ -250,7 +329,6 @@ export default function DeployScreen({ theme, onNavigate }) {
     return map
   }, [unitStates])
 
-  // For each leader: which squads in this army are they eligible to lead?
   const leaderEligibleSquads = useMemo(() => {
     const map = {}
     for (const leader of leaderUnits) {
@@ -274,9 +352,8 @@ export default function DeployScreen({ theme, onNavigate }) {
   const assignedLeaders   = leaderUnits.filter(l => leaderAssignmentMap[l.id] != null)
   const unassignedLeaders = leaderUnits.filter(l => leaderAssignmentMap[l.id] == null)
 
-  // Squads that have no leader options at all in this army
   const independentSquads = squadUnits.filter(squad => {
-    if (unitStates[squad.id]?.attachedLeaderId) return false // assigned — show in bonds
+    if (unitStates[squad.id]?.attachedLeaderId) return false
     const key = squad.unitKey || baseId(squad.id)
     return !leaderUnits.some(l => (unitLeaderMap[key] || []).includes(baseId(l.id)))
   })
@@ -286,11 +363,6 @@ export default function DeployScreen({ theme, onNavigate }) {
     return leaderUnits.some(l => (unitLeaderMap[key] || []).includes(baseId(l.id)))
   }).length
   const assignedCount = squadUnits.filter(u => unitStates[u.id]?.attachedLeaderId).length
-
-  const handleBeginBattle = () => {
-    startBattle()
-    onNavigate('battle')
-  }
 
   const accent = theme.secondary
 
@@ -306,9 +378,7 @@ export default function DeployScreen({ theme, onNavigate }) {
           ←
         </button>
         <div className="flex-1">
-          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: accent }}>
-            Pre-Battle
-          </p>
+          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: accent }}>Pre-Battle</p>
           <h1 className="font-black text-base leading-tight" style={{ color: theme.textPrimary }}>
             Deploy Your Forces
           </h1>
@@ -321,18 +391,17 @@ export default function DeployScreen({ theme, onNavigate }) {
         )}
       </div>
 
-      {/* Content */}
+      {/* Scroll content */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-4">
 
-        {/* Tip */}
         <div className="rounded-2xl px-3.5 py-3"
           style={{ background: `${accent}0d`, border: `1px solid ${accent}20` }}>
           <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
-            Each leader brings unique abilities to the squad they command. Review what each pairing unlocks, then assign. One leader per squad — each leader can only lead one squad.
+            Each leader brings unique abilities to the squad they command. Review the bonuses each pairing unlocks, then assign. One leader per squad.
           </p>
         </div>
 
-        {/* ── Section 1: Formation Bonds ── */}
+        {/* Formation Bonds */}
         <AnimatePresence>
           {assignedLeaders.length > 0 && (
             <section>
@@ -366,10 +435,11 @@ export default function DeployScreen({ theme, onNavigate }) {
           )}
         </AnimatePresence>
 
-        {/* ── Section 2: Assign a Leader ── */}
+        {/* Available Leaders */}
         {unassignedLeaders.length > 0 && (
           <section>
-            <p className="text-xs font-black tracking-widest uppercase px-1 mb-2" style={{ color: theme.textSecondary }}>
+            <p className="text-xs font-black tracking-widest uppercase px-1 mb-2"
+              style={{ color: theme.textSecondary }}>
               {assignedLeaders.length > 0 ? 'More Leaders' : 'Assign a Leader'}
             </p>
             <div className="space-y-3">
@@ -379,7 +449,6 @@ export default function DeployScreen({ theme, onNavigate }) {
                   leader={leader}
                   eligibleSquads={leaderEligibleSquads[leader.id] || []}
                   unitStates={unitStates}
-                  leaderAssignmentMap={leaderAssignmentMap}
                   accent={accent}
                   theme={theme}
                   onAssign={handleAssign}
@@ -389,10 +458,11 @@ export default function DeployScreen({ theme, onNavigate }) {
           </section>
         )}
 
-        {/* ── Section 3: Independent ── */}
+        {/* Independent squads */}
         {independentSquads.length > 0 && (
           <section>
-            <p className="text-xs font-black tracking-widest uppercase px-1 mb-2" style={{ color: theme.textSecondary }}>
+            <p className="text-xs font-black tracking-widest uppercase px-1 mb-2"
+              style={{ color: theme.textSecondary }}>
               Independent
             </p>
             <div className="flex flex-wrap gap-2">
@@ -419,7 +489,7 @@ export default function DeployScreen({ theme, onNavigate }) {
           ← Back
         </button>
         <motion.button whileTap={{ scale: 0.97 }}
-          onClick={handleBeginBattle}
+          onClick={() => { startBattle(); onNavigate('battle') }}
           className="flex-1 py-3 rounded-2xl font-black text-sm"
           style={{ background: accent, color: theme.bg }}>
           Begin Battle →
