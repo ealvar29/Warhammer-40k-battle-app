@@ -204,6 +204,99 @@ export const leaders = {
     faction: 'tyranids',
     keywords: ['MONSTER', 'CHARACTER', 'SYNAPSE', 'PSYKER', 'SWARMLORD'],
   },
+
+  // ── ADEPTA SORORITAS ───────────────────────────────────────────────
+  saintCelestine: {
+    id: 'saintCelestine',
+    name: 'Saint Celestine',
+    role: 'Living Saint',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'JUMP PACK', 'CHARACTER', 'EPIC HERO', 'ADEPTA SORORITAS'],
+  },
+  morvennVahl: {
+    id: 'morvennVahl',
+    name: 'Morvenn Vahl',
+    role: 'Abbess Sanctorum',
+    faction: 'adeptasororitas',
+    keywords: ['VEHICLE', 'WALKER', 'CHARACTER', 'EPIC HERO', 'ADEPTA SORORITAS'],
+  },
+  junithEruita: {
+    id: 'junithEruita',
+    name: 'Junith Eruita',
+    role: 'Preacher',
+    faction: 'adeptasororitas',
+    keywords: ['MOUNTED', 'CHARACTER', 'FLY', 'EPIC HERO', 'ADEPTA SORORITAS'],
+  },
+  triumphOfSaintKatherine: {
+    id: 'triumphOfSaintKatherine',
+    name: 'Triumph of Saint Katherine',
+    role: 'Sacred Relic Bearer',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'EPIC HERO', 'ADEPTA SORORITAS'],
+  },
+  aestredThurgaAndAgathae: {
+    id: 'aestredThurgaAndAgathae',
+    name: 'Aestred Thurga & Agathae',
+    role: 'Auto-Tapestry Bearer',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'EPIC HERO', 'ADEPTA SORORITAS'],
+  },
+  canoness: {
+    id: 'canoness',
+    name: 'Canoness',
+    role: 'Chapter Commander',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'CANONESS', 'ADEPTA SORORITAS'],
+  },
+  canonessWithJumpPack: {
+    id: 'canonessWithJumpPack',
+    name: 'Canoness with Jump Pack',
+    role: 'Chapter Commander',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'JUMP PACK', 'CANONESS', 'ADEPTA SORORITAS'],
+  },
+  palatine: {
+    id: 'palatine',
+    name: 'Palatine',
+    role: 'Elite Commander',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'PALATINE', 'ADEPTA SORORITAS'],
+  },
+  dogmata: {
+    id: 'dogmata',
+    name: 'Dogmata',
+    role: 'Enforcer of Doctrine',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'DOGMATA', 'ADEPTA SORORITAS'],
+  },
+  hospitaller: {
+    id: 'hospitaller',
+    name: 'Hospitaller',
+    role: 'Field Medic',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'HOSPITALLER', 'ADEPTA SORORITAS'],
+  },
+  dialogus: {
+    id: 'dialogus',
+    name: 'Dialogus',
+    role: 'Battle Orator',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'ADEPTA SORORITAS'],
+  },
+  imagifier: {
+    id: 'imagifier',
+    name: 'Imagifier',
+    role: 'Relic Bearer',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'ADEPTA SORORITAS'],
+  },
+  ministorumPriest: {
+    id: 'ministorumPriest',
+    name: 'Ministorum Priest',
+    role: 'Battle Zealot',
+    faction: 'adeptasororitas',
+    keywords: ['INFANTRY', 'CHARACTER', 'PENITENT', 'MINISTORUM PRIEST', 'ADEPTA SORORITAS'],
+  },
 }
 
 // Abilities unlocked per leader+unit pairing
@@ -1065,6 +1158,188 @@ export const leaderAbilities = {
     ],
   },
 
+  // ── ADEPTA SORORITAS LEADER PAIRINGS ──────────────────────────────────────
+
+  palatine_battleSistersSquad: {
+    leaderId: 'palatine', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: 'Lethal Exemplar', phase: 'any',
+        description: 'While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability.',
+        reminder: '⚡ All weapons in this unit have LETHAL HITS.' },
+      { name: 'Rapturous Blows', phase: 'fight',
+        description: "Each time this model's unit is selected to fight, you can discard 1 Miracle dice. If you do, each time a melee attack made by this model scores a hit, the target suffers 1 mortal wound in addition to normal damage.",
+        reminder: 'Discard 1 Miracle dice → every hit by the Palatine also deals 1 mortal wound.' },
+    ],
+  },
+
+  hospitaller_battleSistersSquad: {
+    leaderId: 'hospitaller', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: 'Medicus Ministorum', phase: 'any',
+        description: 'While this model is leading a unit, models in that unit have the Feel No Pain 5+ ability.',
+        reminder: '⚡ Every model in this unit has Feel No Pain 5+.' },
+      { name: 'Sacred Healing', phase: 'command',
+        description: "While this model is leading a unit, in your Command phase, you can return up to 1 destroyed model (excluding CHARACTER models) to that unit.",
+        reminder: 'Restore 1 destroyed model to this unit each Command phase.' },
+    ],
+  },
+
+  imagifier_battleSistersSquad: {
+    leaderId: 'imagifier', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: 'Stanchion of Holy Martyrs', phase: 'any',
+        description: "While this model is leading a unit, models in that unit have a Save characteristic of 2+ and a 4+ invulnerable save.",
+        reminder: '⚡ Entire unit now has 2+ armour save AND 4+ invuln.' },
+    ],
+  },
+
+  dogmata_battleSistersSquad: {
+    leaderId: 'dogmata', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: 'Unflinching Determination', phase: 'any',
+        description: 'While this model is leading a unit, add 1 to the Objective Control characteristic of models in that unit.',
+        reminder: '+1 OC to every model in this unit.' },
+      { name: 'Executioner of Heretics', phase: 'any',
+        description: 'While this model is on the battlefield, subtract 1 from the Leadership characteristic of enemy models within 6".',
+        reminder: 'Enemy units within 6" suffer -1 Leadership.' },
+    ],
+  },
+
+  ministorumPriest_battleSistersSquad: {
+    leaderId: 'ministorumPriest', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: 'Righteous Smiting', phase: 'fight',
+        description: "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll.",
+        reminder: '+1 to Wound rolls on ALL melee attacks in this unit.' },
+    ],
+  },
+
+  canoness_battleSistersSquad: {
+    leaderId: 'canoness', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: 'Sacred Command', phase: 'any',
+        description: "Once per battle round, one unit from your army with this ability can use it when its unit is targeted with a Stratagem. If it does, reduce the CP cost of that use of that Stratagem by 1CP (to a minimum of 0CP).",
+        reminder: '⚡ Once per round — reduce one Stratagem used on this unit by 1CP.' },
+    ],
+  },
+
+  dialogus_battleSistersSquad: {
+    leaderId: 'dialogus', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: 'Stirring Rhetoric', phase: 'any',
+        description: "While this model is leading a unit, each time this model's unit performs an Act of Faith, the value of one of the Miracle dice used in that Act of Faith is first changed to a 6.",
+        reminder: 'When this unit performs an Act of Faith, change one Miracle dice to a 6 first.' },
+    ],
+  },
+
+  junithEruita_battleSistersSquad: {
+    leaderId: 'junithEruita', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: "The Pulpit of Saint Holline's Basilica", phase: 'any',
+        description: "While this model is leading a unit, each time an attack targets that unit, subtract 1 from the Hit roll.",
+        reminder: '-1 to Hit rolls for all attacks targeting this unit.' },
+      { name: 'Fiery Conviction', phase: 'command',
+        description: "At the start of your Command phase, discard 1 Miracle dice to gain 1CP, or take a Leadership test — if passed, gain 1CP.",
+        reminder: 'Gain 1CP by discarding a Miracle dice, or take a Ld test and pass for 1CP.' },
+    ],
+  },
+
+  aestredThurgaAndAgathae_battleSistersSquad: {
+    leaderId: 'aestredThurgaAndAgathae', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: "Auto-Tapestry of the Emperor's Judgement", phase: 'any',
+        description: "While this unit is leading a unit, weapons equipped by models in that unit (excluding Leader models) have the [DEVASTATING WOUNDS] ability.",
+        reminder: '⚡ All non-leader models in this unit gain DEVASTATING WOUNDS.' },
+      { name: 'Recount the Deeds of the Saints', phase: 'any',
+        description: "Each time a unit led by this unit destroys an enemy unit, you gain 1 Miracle dice. When the Agathae Dolan model is destroyed, you gain D3 Miracle dice.",
+        reminder: 'Gain 1 Miracle dice each time this unit destroys an enemy.' },
+    ],
+  },
+
+  triumphOfSaintKatherine_battleSistersSquad: {
+    leaderId: 'triumphOfSaintKatherine', unitId: 'battleSistersSquad',
+    abilities: [
+      { name: 'Relics of the Matriarchs', phase: 'command',
+        description: 'At the start of each battle round, select up to two auras: Fiery Heart (+2" Move, better Advance/Charge), Censer (re-roll Battle-shock), Simulacrum of Chalice (2 Acts of Faith per phase), Argent Shroud (re-roll Wound 1s, ranged), Valorous Heart (FNP 6+), Bloody Rose (+1 AP melee).',
+        reminder: '⚡ Pick 2 army-wide auras each battle round — read full list on the datasheet.' },
+    ],
+  },
+
+  saintCelestine_seraphimSquad: {
+    leaderId: 'saintCelestine', unitId: 'seraphimSquad',
+    abilities: [
+      { name: 'Miraculous Intervention', phase: 'any',
+        description: "The first time this unit's Celestine model is destroyed, roll one D6 at the end of the phase: on a 2+, set Celestine back up with D3 wounds remaining.",
+        reminder: '⚡ First death: roll D6 — on 2+ Celestine returns with D3 wounds.' },
+      { name: 'Healing Tears', phase: 'command',
+        description: 'At the start of your Command phase, if below Starting Strength, return 1 Geminae Superia to this unit, OR return up to D3 models to a BODYGUARD unit within 12".',
+        reminder: 'Command phase: return 1 Geminae OR restore D3 models to a Bodyguard unit nearby.' },
+    ],
+  },
+
+  canonessWithJumpPack_seraphimSquad: {
+    leaderId: 'canonessWithJumpPack', unitId: 'seraphimSquad',
+    abilities: [
+      { name: 'Sacred Command', phase: 'any',
+        description: "Once per battle round, reduce the CP cost of one Stratagem used on this unit by 1CP (minimum 0CP).",
+        reminder: '⚡ Once per round — reduce one Stratagem on this unit by 1CP.' },
+      { name: 'Divine Deliverance', phase: 'fight',
+        description: 'Once per battle, at the start of the Fight phase, add 3 to the Attacks of this model\'s melee weapons and they gain [DEVASTATING WOUNDS].',
+        reminder: '⚡ Once per battle — +3 Attacks and DEVASTATING WOUNDS on the Canoness.' },
+    ],
+  },
+
+  morvennVahl_paragonWarsuits: {
+    leaderId: 'morvennVahl', unitId: 'paragonWarsuits',
+    abilities: [
+      { name: 'Abbess Sanctorum', phase: 'any',
+        description: "While this model is leading a unit, each time a model in that unit makes an attack, you can re-roll the Hit roll and you can re-roll the Wound roll.",
+        reminder: '⚡ Re-roll BOTH Hit and Wound rolls for every attack in this unit.' },
+    ],
+  },
+
+  palatine_celestianSacresants: {
+    leaderId: 'palatine', unitId: 'celestianSacresants',
+    abilities: [
+      { name: 'Lethal Exemplar', phase: 'any',
+        description: 'While this model is leading a unit, weapons equipped by models in that unit have the [LETHAL HITS] ability.',
+        reminder: '⚡ All weapons in this unit have LETHAL HITS.' },
+    ],
+  },
+
+  hospitaller_celestianSacresants: {
+    leaderId: 'hospitaller', unitId: 'celestianSacresants',
+    abilities: [
+      { name: 'Medicus Ministorum', phase: 'any',
+        description: 'While this model is leading a unit, models in that unit have the Feel No Pain 5+ ability.',
+        reminder: '⚡ Every model in this unit has Feel No Pain 5+.' },
+    ],
+  },
+
+  ministorumPriest_dominionSquad: {
+    leaderId: 'ministorumPriest', unitId: 'dominionSquad',
+    abilities: [
+      { name: 'Righteous Smiting', phase: 'fight',
+        description: "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll.",
+        reminder: '+1 to Wound rolls on all melee attacks in this unit.' },
+      { name: 'Holy Mission — Scout 6"', phase: 'movement',
+        description: "If this model is attached to a Dominion Squad during Declare Battle Formations, that unit gains the Scouts 6\" ability.",
+        reminder: '⚡ This unit deploys with Scouts 6" thanks to the Priest.' },
+    ],
+  },
+
+  ministorumPriest_sistersNovitiateSquad: {
+    leaderId: 'ministorumPriest', unitId: 'sistersNovitiateSquad',
+    abilities: [
+      { name: 'Righteous Smiting', phase: 'fight',
+        description: "While this model is leading a unit, each time a model in that unit makes a melee attack, add 1 to the Wound roll.",
+        reminder: '+1 to Wound rolls on all melee attacks in this unit.' },
+      { name: 'Holy Mission — Infiltrators', phase: 'movement',
+        description: "If this model is attached to a Sisters Novitiate Squad during Declare Battle Formations, that unit gains the Infiltrators ability.",
+        reminder: '⚡ This unit deploys using Infiltrators thanks to the Priest.' },
+    ],
+  },
+
 }
 
 // Maps each unit to eligible leader IDs (Space Wolves — Tyranids use eligibleLeaders on the unit)
@@ -1101,4 +1376,16 @@ export const unitLeaderMap = {
   sternguardVeterans: ['azrael', 'asmodai', 'ezekiel', 'lazarus'],
   ravenwingBlackKnights: ['sammael'],
   outriders: ['sammael'],
+  // Adepta Sororitas
+  battleSistersSquad: ['canoness', 'palatine', 'dogmata', 'hospitaller', 'dialogus', 'imagifier', 'junithEruita', 'ministorumPriest', 'triumphOfSaintKatherine', 'aestredThurgaAndAgathae'],
+  celestianSacresants: ['canoness', 'palatine', 'dogmata', 'hospitaller', 'dialogus', 'imagifier', 'junithEruita'],
+  celestianInsidiants: ['canoness', 'palatine', 'dogmata', 'hospitaller', 'dialogus', 'imagifier', 'junithEruita', 'ministorumPriest', 'aestredThurgaAndAgathae'],
+  dominionSquad: ['canoness', 'palatine', 'dogmata', 'hospitaller', 'dialogus', 'imagifier', 'junithEruita', 'ministorumPriest', 'aestredThurgaAndAgathae'],
+  retributorSquad: ['canoness', 'palatine', 'dogmata', 'hospitaller', 'dialogus', 'imagifier', 'junithEruita', 'aestredThurgaAndAgathae'],
+  sistersNovitiateSquad: ['canoness', 'palatine', 'hospitaller', 'dialogus', 'junithEruita', 'ministorumPriest', 'aestredThurgaAndAgathae'],
+  seraphimSquad: ['saintCelestine', 'canonessWithJumpPack'],
+  zephyrimSquad: ['saintCelestine', 'canonessWithJumpPack'],
+  paragonWarsuits: ['morvennVahl'],
+  arcoFlagellants: ['ministorumPriest'],
+  sanctifiers: ['ministorumPriest'],
 }
