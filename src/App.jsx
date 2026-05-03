@@ -44,7 +44,7 @@ export default function App() {
   const setOpponentArmy = useBattleStore(s => s.setOpponentArmy)
 
   // ── SignalR multiplayer sync ─────────────────────────────────────────────
-  const { isInRoom, syncCp, stratagemAlert, chargeAlert, clearStratagemAlert, clearChargeAlert } = useBattleSync()
+  const { isInRoom, syncCp, syncPhase, syncStratagem, stratagemAlert, chargeAlert, clearStratagemAlert, clearChargeAlert } = useBattleSync()
   const prevCpRef = useRef(cp)
   useEffect(() => {
     if (isInRoom && cp !== prevCpRef.current) {
@@ -81,7 +81,9 @@ export default function App() {
       case 'home':         return <HomeScreen theme={theme} onNavigate={navigate} />
       case 'armyBuilder':  return <ArmyBuilderScreen theme={theme} onNavigate={navigate} />
       case 'deploy':       return <DeployScreen theme={theme} onNavigate={navigate} />
-      case 'battle':       return <BattleDemo theme={theme} onNavigate={navigate} />
+      case 'battle':       return <BattleDemo theme={theme} onNavigate={navigate}
+                             onPhaseChange={isInRoom ? syncPhase : undefined}
+                             onStratagemUse={isInRoom ? syncStratagem : undefined} />
       case 'lists':        return <ListBuilderScreen theme={theme} />
       case 'crusade':      return <CrusadeScreen theme={theme} />
       default:             return <HomeScreen theme={theme} onNavigate={navigate} />

@@ -848,7 +848,7 @@ function PhaseContextRow({ units, phaseId, abilityCount, theme }) {
 }
 
 // ── Main Battle Screen ────────────────────────────────────────────────────────
-export default function BattleDemo({ theme, onNavigate }) {
+export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratagemUse }) {
   const store = useBattleStore()
   const {
     faction, detachmentId, selectedUnits, unitStates, opponentTags,
@@ -962,6 +962,7 @@ export default function BattleDemo({ theme, onNavigate }) {
       } else {
         next.add(strat.id)
         logCpSpend(strat.cost, `Activated: ${strat.name}`, activePhase.id, currentRound)
+        onStratagemUse?.(strat.id, strat.name, strat.cost, activePhase.id, strat.effect)
       }
       return next
     })
@@ -1460,7 +1461,7 @@ export default function BattleDemo({ theme, onNavigate }) {
           const isActive = i === activePhaseIdx
           const isDone = i < activePhaseIdx
           return (
-            <motion.button key={phase.id} onClick={() => setActivePhaseIdx(i)}
+            <motion.button key={phase.id} onClick={() => { setActivePhaseIdx(i); onPhaseChange?.(i) }}
               whileTap={{ scale: 0.92 }}
               className="flex flex-col items-center justify-center py-3 gap-1 relative"
               style={{
