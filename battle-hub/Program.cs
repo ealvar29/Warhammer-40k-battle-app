@@ -4,13 +4,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
 
-// CORS — update ALLOWED_ORIGINS env var in Railway dashboard with your Netlify URL
-var allowedOrigins = (builder.Configuration["ALLOWED_ORIGINS"] ?? "http://localhost:5173")
-    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
+// Allow any origin — no auth/cookies in this app, just room codes.
+// SetIsOriginAllowed(_ => true) is required to combine AllowCredentials() with open origins,
+// because SignalR's negotiate endpoint requests credentials.
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
-        policy.WithOrigins(allowedOrigins)
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials()));
