@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import { unitLeaderMap, leaders as leaderMeta, leaderAbilities } from '../data/leaderData'
+import MultiplayerSetup from '../components/MultiplayerSetup'
 
 const PHASE_ICON  = { command: '📋', movement: '🏃', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '✦' }
 const PHASE_LABEL = { command: 'Command', movement: 'Move', shooting: 'Shoot', charge: 'Charge', fight: 'Fight', any: 'Any' }
@@ -365,6 +366,9 @@ export default function DeployScreen({ theme, onNavigate }) {
 
       {/* Scroll content */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-4">
+
+        {/* Multiplayer setup */}
+        <MultiplayerSetup theme={theme} />
 
         <div className="rounded-2xl px-3.5 py-3"
           style={{ background: `${accent}0d`, border: `1px solid ${accent}20` }}>

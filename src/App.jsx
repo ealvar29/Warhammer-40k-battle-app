@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { themes } from './themes/index'
 import HomeScreen from './screens/HomeScreen'
@@ -10,8 +10,11 @@ import ListBuilderScreen from './screens/ListBuilderScreen'
 import UnitLookupOverlay from './components/UnitLookupOverlay'
 import FactionAmbience from './components/FactionAmbience'
 import { useBattleStore } from './store/battleStore'
+import { useBattleSync } from './hooks/useBattleSync'
 import { parseShareUrl } from './utils/armyShare'
 import { buildUnitsFromIds, findDetachment, FACTION_META } from './data/factionRegistry'
+
+const PHASE_ICON = { command: '📋', movement: '🏃', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '✦' }
 
 const theme = themes.spacewolves
 
@@ -35,9 +38,20 @@ export default function App() {
   const [prevScreen, setPrevScreen] = useState('home')
   const [pendingImport, setPendingImport] = useState(null)
   const [showLookup, setShowLookup] = useState(false) // decoded army payload
-  const battleActive = useBattleStore(s => s.battleActive)
-  const faction      = useBattleStore(s => s.faction)
+  const battleActive   = useBattleStore(s => s.battleActive)
+  const faction        = useBattleStore(s => s.faction)
+  const cp             = useBattleStore(s => s.cp)
   const setOpponentArmy = useBattleStore(s => s.setOpponentArmy)
+
+  // ── SignalR multiplayer sync ─────────────────────────────────────────────
+  const { isInRoom, syncCp, stratagemAlert, chargeAlert, clearStratagemAlert, clearChargeAlert } = useBattleSync()
+  const prevCpRef = useRef(cp)
+  useEffect(() => {
+    if (isInRoom && cp !== prevCpRef.current) {
+      syncCp(cp)
+    }
+    prevCpRef.current = cp
+  }, [cp, isInRoom, syncCp])
 
   useEffect(() => {
     const payload = parseShareUrl()
@@ -83,6 +97,93 @@ export default function App() {
 
       {/* ── Faction ambient particles ── */}
       <FactionAmbience factionId={faction} />
+
+      {/* ── Stratagem alert toast (opponent used a stratagem) ── */}
+      <AnimatePresence>
+        {stratagemAlert && (
+          <motion.div
+            key="strat-alert"
+            className="fixed top-4 left-1/2 z-[80] w-[92vw] max-w-sm -translate-x-1/2 rounded-2xl overflow-hidden shadow-2xl"
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -16, scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+            style={{ border: `1px solid #ef444455`, background: '#1a0a0a' }}
+          >
+            <div className="px-4 py-3">
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-base"
+                  style={{ background: '#ef444420', border: '1px solid #ef444440' }}>
+                  ⚠️
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-black tracking-widest uppercase mb-0.5" style={{ color: '#ef4444' }}>
+                    Opponent Used a Stratagem
+                  </p>
+                  <p className="text-sm font-black leading-tight" style={{ color: '#fff' }}>
+                    {stratagemAlert.stratagemName}
+                    <span className="font-normal text-xs ml-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                      -{stratagemAlert.cost}CP
+                    </span>
+                  </p>
+                  {stratagemAlert.effect && (
+                    <p className="text-xs mt-1 leading-snug" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      {stratagemAlert.effect}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-2 mt-2">
+                    {stratagemAlert.phase && (
+                      <span className="text-xs font-bold px-1.5 py-0.5 rounded"
+                        style={{ background: '#ef444420', color: '#ef4444', fontSize: 8 }}>
+                        {PHASE_ICON[stratagemAlert.phase] || '✦'} {stratagemAlert.phase?.toUpperCase()}
+                      </span>
+                    )}
+                    <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                      Opponent CP left: {stratagemAlert.opponentCpRemaining ?? '—'}
+                    </span>
+                  </div>
+                </div>
+                <button onClick={clearStratagemAlert}
+                  className="text-xs w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)' }}>
+                  ✕
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Charge alert toast (opponent declared a charge) ── */}
+      <AnimatePresence>
+        {chargeAlert && (
+          <motion.div
+            key="charge-alert"
+            className="fixed top-4 left-1/2 z-[79] w-[92vw] max-w-sm -translate-x-1/2 rounded-2xl overflow-hidden shadow-2xl"
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -16, scale: 0.95 }}
+            style={{ border: '1px solid #f59e0b55', background: '#1a1200' }}
+          >
+            <div className="px-4 py-3 flex items-center gap-3">
+              <span className="text-xl shrink-0">⚡</span>
+              <div className="flex-1">
+                <p className="text-xs font-black tracking-widest uppercase mb-0.5" style={{ color: '#f59e0b' }}>
+                  Charge Declared
+                </p>
+                <p className="text-sm font-bold" style={{ color: '#fff' }}>
+                  {chargeAlert} is charging — overwatch opportunity
+                </p>
+              </div>
+              <button onClick={clearChargeAlert}
+                className="text-xs w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)' }}>
+                ✕
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Import opponent army modal ── */}
       <AnimatePresence>
