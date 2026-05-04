@@ -42,6 +42,26 @@ export const smGenericUnits = {
     factionKeywords: ['ADEPTUS ASTARTES'],
   },
 
+  smTechmarine: {
+    id: 'smTechmarine', name: 'Techmarine', category: 'character',
+    powerRating: 4, points: 65,
+    M: '6"', T: 4, Sv: '2+', W: 4, Ld: '6+', OC: 1,
+    models: 1,
+    weapons: [
+      { name: 'Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '2+', S: 4, AP: 0, D: 1, keywords: ['PISTOL'] },
+      { name: 'Omnissian Power Axe', type: 'melee', A: 4, WS: '2+', S: 6, AP: -2, D: 1 },
+      { name: 'Servo-arm', type: 'melee', A: 2, WS: '3+', S: 8, AP: -2, D: 3 },
+    ],
+    abilities: [
+      { name: 'Blessing of the Omnissiah', phase: 'command', description: 'In your Command phase, select one friendly ADEPTUS ASTARTES VEHICLE model within 3" of this model. That model regains up to D3 lost wounds.' },
+      { name: 'Master of Machines', phase: 'command', description: 'This model can use Blessing of the Omnissiah on two different VEHICLE models each Command phase.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'CHARACTER', 'TECHMARINE', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
   smChaplain: {
     id: 'smChaplain', name: 'Chaplain', category: 'character',
     powerRating: 4, points: 75,
@@ -176,6 +196,104 @@ export const smGenericUnits = {
     factionKeywords: ['ADEPTUS ASTARTES'],
   },
 
+  terminators: {
+    id: 'terminators', name: 'Terminators', category: 'infantry',
+    powerRating: 10, points: 195,
+    M: '5"', T: 5, Sv: '2+', W: 3, Ld: '6+', OC: 1, InvSv: '4+',
+    models: 5, minModels: 5, maxModels: 10,
+    weapons: [
+      { name: 'Storm Bolter', type: 'ranged', range: '24"', A: 2, BS: '3+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 2'] },
+      { name: 'Power Fist', type: 'melee', A: 3, WS: '3+', S: 8, AP: -2, D: 2 },
+    ],
+    abilities: [
+      { name: 'Fury of the First', phase: 'fight', description: 'Each time a model in this unit makes a melee attack, re-roll a Wound roll of 1. If this unit made a Charge move this turn, re-roll all Wound rolls instead.' },
+      { name: 'Teleport Strike', phase: 'movement', description: 'During deployment, you can set up this unit in teleportation instead of on the battlefield. At the start of any of your Movement phases, set up this unit anywhere on the battlefield that is more than 9" from all enemy models.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'TERMINATOR', 'CORE', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
+  bladeguardVeterans: {
+    id: 'bladeguardVeterans', name: 'Bladeguard Veterans', category: 'infantry',
+    powerRating: 6, points: 100,
+    M: '5"', T: 4, Sv: '2+', W: 3, Ld: '6+', OC: 1, InvSv: '4+',
+    models: 3, minModels: 3, maxModels: 6,
+    weapons: [
+      { name: 'Heavy Bolt Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: -1, D: 1, keywords: ['PISTOL'] },
+      { name: 'Master-crafted Power Sword', type: 'melee', A: 4, WS: '3+', S: 5, AP: -2, D: 2 },
+    ],
+    abilities: [
+      { name: 'Bladeguard', phase: 'any', description: 'This unit has a 4+ invulnerable save from their storm shields. Each time this model makes a melee attack, add 1 to the Wound roll if the target unit has a Wounds characteristic of 6 or more.' },
+      { name: 'Righteous Reckoning', phase: 'fight', description: 'Each time a model in this unit makes a melee attack, re-roll a Wound roll of 1.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: ['smCaptain'],
+    keywords: ['INFANTRY', 'BLADEGUARD VETERANS', 'CORE', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
+  sternguardVeterans: {
+    id: 'sternguardVeterans', name: 'Sternguard Veterans', category: 'infantry',
+    powerRating: 5, points: 90,
+    M: '6"', T: 4, Sv: '3+', W: 2, Ld: '6+', OC: 2,
+    models: 5, minModels: 5, maxModels: 10,
+    weapons: [
+      { name: 'Sternguard Bolt Rifle', type: 'ranged', range: '30"', A: 2, BS: '3+', S: 4, AP: -2, D: 1 },
+      { name: 'Sternguard Pistol', type: 'ranged', range: '12"', A: 1, BS: '3+', S: 4, AP: -1, D: 1, keywords: ['PISTOL'] },
+      { name: 'Close Combat Weapon', type: 'melee', A: 2, WS: '3+', S: 4, AP: 0, D: 1 },
+    ],
+    abilities: [
+      { name: 'Veteran Marksmen', phase: 'shooting', description: 'Each time a model in this unit makes a ranged attack, re-roll a Hit roll of 1. If the target unit contains 5 or more models, re-roll all Hit rolls instead.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: ['smCaptain', 'smChaplain'],
+    keywords: ['INFANTRY', 'STERNGUARD VETERANS', 'CORE', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
+  inceptors: {
+    id: 'inceptors', name: 'Inceptors', category: 'infantry',
+    powerRating: 5, points: 80,
+    M: '12"', T: 5, Sv: '3+', W: 3, Ld: '6+', OC: 1,
+    models: 3, minModels: 3, maxModels: 6,
+    weapons: [
+      { name: 'Assault Bolters', type: 'ranged', range: '18"', A: 6, BS: '3+', S: 5, AP: -1, D: 1, keywords: ['ASSAULT'] },
+      { name: 'Close Combat Weapon', type: 'melee', A: 3, WS: '3+', S: 4, AP: 0, D: 1 },
+    ],
+    abilities: [
+      { name: 'Devastating Descent', phase: 'movement', description: 'During deployment, you can set up this unit in high orbit instead of on the battlefield. At the start of any of your Movement phases, set up this unit anywhere on the battlefield more than 9" from all enemy models. This unit can shoot in the same turn it arrives.' },
+      { name: 'Meteoric Descent', phase: 'fight', description: 'Each time this unit ends a Charge move, select one enemy unit within Engagement Range: that unit suffers D3 mortal wounds.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['INFANTRY', 'JUMP PACK', 'FLY', 'INCEPTORS', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+    weaponRole: 'ranged',
+  },
+
+  // ── CAVALRY ───────────────────────────────────────────────────────
+  outriders: {
+    id: 'outriders', name: 'Outriders', category: 'cavalry',
+    powerRating: 5, points: 90,
+    M: '14"', T: 5, Sv: '3+', W: 3, Ld: '6+', OC: 2,
+    models: 3, minModels: 3, maxModels: 6,
+    weapons: [
+      { name: 'Twin Bolt Rifle', type: 'ranged', range: '24"', A: 4, BS: '3+', S: 4, AP: -1, D: 1, keywords: ['TWIN-LINKED'] },
+      { name: 'Astartes Chainsword', type: 'melee', A: 3, WS: '3+', S: 4, AP: -1, D: 1 },
+      { name: 'Keel Blade', type: 'melee', A: 1, WS: '3+', S: 6, AP: -1, D: 1, keywords: ['LANCE'] },
+    ],
+    abilities: [
+      { name: 'Turbo-boost', phase: 'movement', description: 'Each time this unit Advances, add 6" to its Move characteristic until the end of the phase instead of rolling.' },
+      { name: 'Shock Assault', phase: 'charge', description: 'Each time this unit ends a Charge move, until the end of the battle round, add 1 to the Attacks characteristic of models in this unit.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['MOUNTED', 'OUTRIDERS', 'CORE', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
   // ── VEHICLES / MONSTERS ──────────────────────────────────────────
   redemptorDreadnought: {
     id: 'redemptorDreadnought', name: 'Redemptor Dreadnought', category: 'vehicle',
@@ -277,6 +395,100 @@ export const smGenericUnits = {
     eligibleLeaders: [],
     keywords: ['VEHICLE', 'TRANSPORT', 'DEDICATED TRANSPORT', 'RHINO', 'ADEPTUS ASTARTES'],
     factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
+  impulsor: {
+    id: 'impulsor', name: 'Impulsor', category: 'vehicle',
+    powerRating: 5, points: 75,
+    M: '12"', T: 9, Sv: '3+', W: 11, Ld: '6+', OC: 2, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Fragstorm Grenade Launcher', type: 'ranged', range: '18"', A: 'D6', BS: '3+', S: 4, AP: 0, D: 1, keywords: ['BLAST'] },
+      { name: 'Ironhail Heavy Stubber', type: 'ranged', range: '36"', A: 3, BS: '4+', S: 4, AP: 0, D: 1, keywords: ['RAPID FIRE 3'] },
+      { name: 'Armoured Tracks', type: 'melee', A: 3, WS: '4+', S: 6, AP: 0, D: 1 },
+    ],
+    abilities: [
+      { name: 'Assault Vehicle', phase: 'movement', description: 'Units that disembark from this Transport after it has made a Normal Move can still declare charges this turn.' },
+      { name: 'Hover Tank', phase: 'movement', description: 'This model can move over models and terrain features that are 4" or less in height.' },
+      { name: 'Transport', phase: 'movement', description: 'This model has a transport capacity of 6 PRIMARIS INFANTRY models.' },
+      { name: 'Explodes', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 6, each unit within 6" suffers D3 mortal wounds.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'FLY', 'HOVER', 'TRANSPORT', 'DEDICATED TRANSPORT', 'IMPULSOR', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+  },
+
+  repulsorExecutioner: {
+    id: 'repulsorExecutioner', name: 'Repulsor Executioner', category: 'vehicle',
+    powerRating: 12, points: 230,
+    M: '10"', T: 12, Sv: '3+', W: 16, Ld: '6+', OC: 3, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Heavy Laser Destroyer', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 14, AP: -4, D: 'D6+4', keywords: ['HEAVY'] },
+      { name: 'Macro Plasma Incinerator', type: 'ranged', range: '36"', A: 'D3+3', BS: '3+', S: 8, AP: -3, D: 3, keywords: ['BLAST', 'HAZARDOUS', 'HEAVY'] },
+      { name: 'Ironhail Skytalon Array', type: 'ranged', range: '24"', A: 8, BS: '4+', S: 5, AP: -1, D: 1, keywords: ['ANTI-FLY 2+', 'HEAVY'] },
+      { name: 'Twin Fragstorm Grenade Launchers', type: 'ranged', range: '18"', A: '2D6', BS: '4+', S: 4, AP: 0, D: 1, keywords: ['BLAST', 'HEAVY'] },
+      { name: 'Armoured Tracks', type: 'melee', A: 3, WS: '4+', S: 8, AP: -1, D: 1 },
+    ],
+    abilities: [
+      { name: 'Deadly Demise D6', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 4+, each unit within 6" suffers D6 mortal wounds.' },
+      { name: 'Firing Protocols', phase: 'shooting', description: 'Each time this model is selected to shoot, select one: until the end of the phase, ranged attacks made by this model have the [LETHAL HITS] ability, or they have the [SUSTAINED HITS 1] ability.' },
+      { name: 'Hover Tank', phase: 'movement', description: 'This model can move over models and terrain features that are 4" or less in height.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'FLY', 'HOVER', 'REPULSOR EXECUTIONER', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+    weaponRole: 'ranged',
+  },
+
+  landRaider: {
+    id: 'landRaider', name: 'Land Raider', category: 'vehicle',
+    powerRating: 12, points: 230,
+    M: '10"', T: 13, Sv: '2+', W: 16, Ld: '6+', OC: 5, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Twin Lascannon (port)', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['HEAVY', 'TWIN-LINKED'] },
+      { name: 'Twin Lascannon (starboard)', type: 'ranged', range: '48"', A: 2, BS: '3+', S: 12, AP: -3, D: 'D6+1', keywords: ['HEAVY', 'TWIN-LINKED'] },
+      { name: 'Twin Heavy Bolter', type: 'ranged', range: '36"', A: 6, BS: '3+', S: 5, AP: -1, D: 2, keywords: ['HEAVY', 'SUSTAINED HITS 1', 'TWIN-LINKED'] },
+      { name: 'Armoured Tracks', type: 'melee', A: 6, WS: '4+', S: 8, AP: -1, D: 1 },
+    ],
+    abilities: [
+      { name: 'Assault Vehicle', phase: 'movement', description: 'Units that disembark from this Transport after it has made a Normal Move can still declare charges this turn.' },
+      { name: 'Bunker', phase: 'any', description: 'Each time a ranged attack targets a unit embarked within this Transport, subtract 1 from the Hit roll.' },
+      { name: 'Frag Assault Launchers', phase: 'charge', description: 'Each time an enemy unit ends a Charge move within Engagement Range of this model, roll one D6: on a 4+, that unit suffers D3 mortal wounds.' },
+      { name: 'Transport', phase: 'movement', description: 'This model has a transport capacity of 12 ADEPTUS ASTARTES INFANTRY models.' },
+      { name: 'Explodes', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 6, each unit within 6" suffers D6 mortal wounds.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'TRANSPORT', 'LAND RAIDER', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+    weaponRole: 'ranged',
+  },
+
+  gladiatorLancer: {
+    id: 'gladiatorLancer', name: 'Gladiator Lancer', category: 'vehicle',
+    powerRating: 9, points: 140,
+    M: '10"', T: 11, Sv: '3+', W: 14, Ld: '6+', OC: 3, InvSv: '5+',
+    models: 1,
+    weapons: [
+      { name: 'Lancer Laser Destructor', type: 'ranged', range: '54"', A: 3, BS: '3+', S: 14, AP: -4, D: 'D6+2', keywords: ['HEAVY'] },
+      { name: 'Icarus Rocket Pod', type: 'ranged', range: '24"', A: 'D3', BS: '3+', S: 8, AP: -1, D: 2, keywords: ['ANTI-FLY 2+', 'HEAVY'] },
+      { name: 'Ironhail Skytalon Array', type: 'ranged', range: '24"', A: 8, BS: '4+', S: 5, AP: -1, D: 1, keywords: ['ANTI-FLY 2+', 'HEAVY'] },
+      { name: 'Armoured Tracks', type: 'melee', A: 3, WS: '4+', S: 8, AP: -1, D: 1 },
+    ],
+    abilities: [
+      { name: 'Deadly Demise D3', phase: 'any', description: 'When this model is destroyed, roll one D6: on a 4+, each unit within 6" suffers D3 mortal wounds.' },
+      { name: 'Lock and Kill', phase: 'shooting', description: 'Each time this model makes a ranged attack with the Lancer Laser Destructor that targets a VEHICLE or MONSTER unit, you can re-roll the Hit roll.' },
+      { name: 'Hover Tank', phase: 'movement', description: 'This model can move over models and terrain features that are 4" or less in height.' },
+    ],
+    isLeader: false,
+    eligibleLeaders: [],
+    keywords: ['VEHICLE', 'FLY', 'HOVER', 'GLADIATOR', 'GLADIATOR LANCER', 'ADEPTUS ASTARTES'],
+    factionKeywords: ['ADEPTUS ASTARTES'],
+    weaponRole: 'ranged',
   },
 }
 
