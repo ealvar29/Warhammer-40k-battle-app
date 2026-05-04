@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import ImportListSheet from '../components/ImportListSheet'
@@ -449,6 +449,71 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
   )
 }
 
+function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCount }) {
+  const [imgLoaded, setImgLoaded] = useState(false)
+  return (
+    <div
+      onClick={onSelect}
+      className="rounded-2xl overflow-hidden text-left transition-all relative cursor-pointer min-h-[160px] md:min-h-[280px] flex flex-col justify-end"
+      style={{
+        border: `2px solid ${selected ? f.color : 'transparent'}`,
+        boxShadow: selected ? `0 0 20px ${f.color}55` : 'none',
+      }}>
+
+      {/* Gradient base — renders instantly */}
+      <div className="absolute inset-0"
+        style={{ backgroundImage: f.gradient, backgroundSize: '100% 100%' }} />
+
+      {/* Art layer — fades in once loaded */}
+      {f.artUrl && (
+        <>
+          <img src={f.artUrl} alt="" aria-hidden="true"
+            style={{ position: 'absolute', width: 0, height: 0, opacity: 0 }}
+            onLoad={() => setImgLoaded(true)} />
+          <div className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${f.artUrl})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center center',
+              opacity: imgLoaded ? 1 : 0,
+              transition: 'opacity 0.45s ease',
+            }} />
+        </>
+      )}
+
+      {/* Dark gradient overlay */}
+      <div className="absolute inset-0"
+        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.08) 100%)' }} />
+
+      {selected && (
+        <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center z-10"
+          style={{ background: f.color }}>
+          <span style={{ color: '#000', fontSize: 9, fontWeight: 900 }}>✓</span>
+        </div>
+      )}
+
+      <div className="relative z-10 px-3 pb-2.5 pt-6">
+        <div className="flex items-end justify-between mb-2">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-black leading-tight truncate" style={{ color: '#fff' }}>{f.name}</p>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10, fontWeight: 600 }}>{unitCount} units</p>
+          </div>
+          <span className="text-xl ml-1 shrink-0">{f.icon}</span>
+        </div>
+      </div>
+
+      {selected && (
+        <button
+          onClick={e => { e.stopPropagation(); onContinue() }}
+          className="relative z-10 w-full py-2.5 font-black text-sm tracking-wide"
+          style={{ background: f.color, color: '#fff' }}>
+          Continue with {f.name} →
+        </button>
+      )}
+    </div>
+  )
+}
+
 export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const store = useBattleStore()
   const [step, setStep] = useState('faction') // faction → detachment → units → opponent → ready
@@ -463,6 +528,13 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     return counts
   })
   const [localOpponentTags, setLocalOpponentTags] = useState(store.opponentTags)
+
+  // Kick off image preloads so they're in cache when the faction grid renders
+  useEffect(() => {
+    Object.values(FACTION_META).forEach(f => {
+      if (f.artUrl) { const img = new Image(); img.src = f.artUrl }
+    })
+  }, [])
 
   const getMaxCount = (unitId) => {
     const u = unitList.find(x => x.id === unitId)
@@ -531,7 +603,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     store.setDetachment(localDetachment)
     selectedUnitData.forEach(u => store.addUnit(u))
     store.setOpponentTags(localOpponentTags)
-    onNavigate('deploy')
+    onNavigate('missionSetup')
   }
 
   const handleImportAsMyArmy = (parsed) => {
@@ -543,7 +615,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     store.setDetachment(detId)
     units.forEach(u => store.addUnit({ ...u, currentWounds: u.maxWounds }))
     setShowImport(false)
-    onNavigate('deploy')
+    onNavigate('missionSetup')
   }
 
   const handleImportAsOpponent = (parsed) => {
@@ -625,61 +697,17 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               {ALLEGIANCE_GROUPS.find(g => g.id === allegianceTab)?.factionIds.map(id => {
                 const f = FACTION_META[id]
                 if (!f) return null
-                const selected = localFaction === id
                 return (
-                  <div key={id}
-                    onClick={() => { setLocalFaction(id); setLocalDetachment(null); setUnitCounts({}); store.setFaction(id) }}
-                    className="rounded-2xl overflow-hidden text-left transition-all relative cursor-pointer min-h-[160px] md:min-h-[280px] flex flex-col justify-end"
-                    style={{
-                      border: `2px solid ${selected ? f.color : 'transparent'}`,
-                      boxShadow: selected ? `0 0 20px ${f.color}55` : 'none',
-                    }}>
-
-                    {/* Art or gradient background */}
-                    <div className="absolute inset-0"
-                      style={{
-                        backgroundImage: f.artUrl ? `url(${f.artUrl})` : f.gradient,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center center',
-                      }} />
-
-                    {/* Dark gradient overlay */}
-                    <div className="absolute inset-0"
-                      style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.08) 100%)' }} />
-
-                    {/* Selected checkmark */}
-                    {selected && (
-                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center z-10"
-                        style={{ background: f.color }}>
-                        <span style={{ color: '#000', fontSize: 9, fontWeight: 900 }}>✓</span>
-                      </div>
-                    )}
-
-                    {/* Bottom label */}
-                    <div className="relative z-10 px-3 pb-2.5 pt-6">
-                      <div className="flex items-end justify-between mb-2">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-black leading-tight truncate" style={{ color: '#fff' }}>
-                            {f.name}
-                          </p>
-                          <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10, fontWeight: 600 }}>
-                            {(FACTION_UNITS[id] || []).length} units
-                          </p>
-                        </div>
-                        <span className="text-xl ml-1 shrink-0">{f.icon}</span>
-                      </div>
-                    </div>
-
-                    {/* Continue button — embedded on card, faction-coloured */}
-                    {selected && (
-                      <button
-                        onClick={e => { e.stopPropagation(); setStep('detachment') }}
-                        className="relative z-10 w-full py-2.5 font-black text-sm tracking-wide"
-                        style={{ background: f.color, color: '#fff' }}>
-                        Continue with {f.name} →
-                      </button>
-                    )}
-                  </div>
+                  <FactionArtCard
+                    key={id}
+                    f={f}
+                    id={id}
+                    selected={localFaction === id}
+                    theme={theme}
+                    onSelect={() => { setLocalFaction(id); setLocalDetachment(null); setUnitCounts({}); store.setFaction(id) }}
+                    onContinue={() => setStep('detachment')}
+                    unitCount={(FACTION_UNITS[id] || []).length}
+                  />
                 )
               })}
             </div>

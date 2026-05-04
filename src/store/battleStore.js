@@ -11,6 +11,15 @@ export const useBattleStore = create(
       opponentTags: [],
       opponentArmy: null, // { faction, detachmentId, units, detachment }
 
+      // ── Mission ────────────────────────────────────────────────────
+      mission: null,          // rolled MISSION_POOL entry
+      secondaryMode: 'tactical', // 'fixed' | 'tactical'
+      secondaries: [],        // array of active secondary mission objects (max 2)
+      secondaryDeck: [],      // remaining shuffled deck for tactical draws
+      primaryVP:   { you: 0, them: 0 },
+      secondaryVP: { you: 0, them: 0 },
+      battleReady: { you: false, them: false },
+
       // ── In-battle ──────────────────────────────────────────────────
       turn: 1,
       isYourTurn: true,
@@ -24,6 +33,58 @@ export const useBattleStore = create(
       vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
       warlordUnitId: null,
       detachmentState: { activeSelection: null, usedSelections: [], targetNote: '', onceBuffUsed: false },
+
+      // ── Mission actions ────────────────────────────────────────────
+      setMission: (mission) => set({ mission }),
+      setSecondaryMode: (mode) => set({ secondaryMode: mode }),
+      setSecondaries: (secondaries) => set({ secondaries }),
+      setSecondaryDeck: (deck) => set({ secondaryDeck: deck }),
+
+      // Discard a tactical secondary (free) — gain 1CP if it's your turn
+      discardSecondary: (id) => set((s) => {
+        const remaining = s.secondaries.filter(sec => sec.id !== id)
+        return { secondaries: remaining, cp: Math.min(12, s.cp + 1) }
+      }),
+
+      // New Orders (1CP) — discard one tactical secondary, draw from deck
+      newOrders: (id) => set((s) => {
+        if (s.cp < 1 || s.secondaryDeck.length === 0) return s
+        const [drawn, ...rest] = s.secondaryDeck
+        const remaining = s.secondaries.filter(sec => sec.id !== id)
+        return {
+          cp: s.cp - 1,
+          secondaries: [...remaining, drawn],
+          secondaryDeck: rest,
+        }
+      }),
+
+      // Replenish to 2 tactical secondaries at start of Command phase
+      replenishSecondaries: () => set((s) => {
+        if (s.secondaryMode !== 'tactical') return s
+        const needed = 2 - s.secondaries.length
+        if (needed <= 0 || s.secondaryDeck.length === 0) return s
+        const drawn = s.secondaryDeck.slice(0, needed)
+        const rest   = s.secondaryDeck.slice(needed)
+        return { secondaries: [...s.secondaries, ...drawn], secondaryDeck: rest }
+      }),
+
+      adjustPrimaryVP: (player, delta) => set((s) => ({
+        primaryVP: {
+          ...s.primaryVP,
+          [player]: Math.max(0, Math.min(50, s.primaryVP[player] + delta)),
+        },
+      })),
+
+      adjustSecondaryVP: (player, delta) => set((s) => ({
+        secondaryVP: {
+          ...s.secondaryVP,
+          [player]: Math.max(0, Math.min(40, s.secondaryVP[player] + delta)),
+        },
+      })),
+
+      toggleBattleReady: (player) => set((s) => ({
+        battleReady: { ...s.battleReady, [player]: !s.battleReady[player] },
+      })),
 
       // ── Setup actions ──────────────────────────────────────────────
       setFaction: (faction) => set({ faction }),
@@ -69,6 +130,9 @@ export const useBattleStore = create(
         cpLog: [],
         cpGainedRounds: [],
         crusadeBattle: false,
+        mission: null, secondaryMode: 'tactical', secondaries: [], secondaryDeck: [],
+        primaryVP: { you: 0, them: 0 }, secondaryVP: { you: 0, them: 0 },
+        battleReady: { you: false, them: false },
       }),
 
       setWarlord: (unitId) => set((s) => ({
@@ -178,6 +242,13 @@ export const useBattleStore = create(
         detachmentState: state.detachmentState,
         cpLog: state.cpLog,
         cpGainedRounds: state.cpGainedRounds,
+        mission: state.mission,
+        secondaryMode: state.secondaryMode,
+        secondaries: state.secondaries,
+        secondaryDeck: state.secondaryDeck,
+        primaryVP: state.primaryVP,
+        secondaryVP: state.secondaryVP,
+        battleReady: state.battleReady,
       }),
     }
   )

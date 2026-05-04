@@ -5,6 +5,7 @@ import HomeScreen from './screens/HomeScreen'
 import ArmyBuilderScreen from './screens/ArmyBuilderScreen'
 import BattleDemo from './components/BattleDemo'
 import DeployScreen from './screens/DeployScreen'
+import MissionSetupScreen from './screens/MissionSetupScreen'
 import CrusadeScreen from './screens/CrusadeScreen'
 import ListBuilderScreen from './screens/ListBuilderScreen'
 import UnitLookupOverlay from './components/UnitLookupOverlay'
@@ -26,7 +27,7 @@ const NAV_TABS = [
   { id: 'search',  label: 'Search',  icon: '🔍', isOverlay: true },
 ]
 
-const TAB_ORDER = ['home', 'battle', 'lists', 'crusade', 'armyBuilder', 'deploy']
+const TAB_ORDER = ['home', 'battle', 'lists', 'crusade', 'armyBuilder', 'missionSetup', 'deploy']
 function slideDir(from, to) {
   const fi = TAB_ORDER.indexOf(from)
   const ti = TAB_ORDER.indexOf(to)
@@ -80,6 +81,7 @@ export default function App() {
     switch (screen) {
       case 'home':         return <HomeScreen theme={theme} onNavigate={navigate} />
       case 'armyBuilder':  return <ArmyBuilderScreen theme={theme} onNavigate={navigate} />
+      case 'missionSetup': return <MissionSetupScreen theme={theme} onNavigate={navigate} />
       case 'deploy':       return <DeployScreen theme={theme} onNavigate={navigate} />
       case 'battle':       return <BattleDemo theme={theme} onNavigate={navigate}
                              onPhaseChange={isInRoom ? syncPhase : undefined}
@@ -90,8 +92,8 @@ export default function App() {
     }
   }
 
-  const showBottomNav = screen !== 'armyBuilder'
-  const activeTabId = screen === 'armyBuilder' || screen === 'calc' ? 'battle' : screen
+  const showBottomNav = screen !== 'armyBuilder' && screen !== 'missionSetup'
+  const activeTabId = screen === 'armyBuilder' || screen === 'missionSetup' || screen === 'calc' ? 'battle' : screen
   const navTabsDesktop = NAV_TABS.filter(t => !t.isOverlay)
 
   return (
