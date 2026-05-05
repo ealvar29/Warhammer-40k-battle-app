@@ -809,23 +809,24 @@ function PhaseContextRow({ units, phaseId, abilityCount, theme }) {
 
   if (phaseId === 'shooting') {
     const n = units.filter(u => u.weapons?.some(w => w.type === 'ranged')).length
-    if (n > 0) chips.push({ icon: '🎯', label: `${n} can shoot`, color: WEAPON_PHASE_COLORS.shooting })
+    if (n > 0) chips.push({ phase: 'shooting', label: `${n} can shoot`, color: WEAPON_PHASE_COLORS.shooting })
   }
   if (phaseId === 'fight') {
     const n = units.filter(u => u.weapons?.some(w => w.type === 'melee')).length
-    if (n > 0) chips.push({ icon: '⚔', label: `${n} can fight`, color: WEAPON_PHASE_COLORS.fight })
+    if (n > 0) chips.push({ phase: 'fight', label: `${n} can fight`, color: WEAPON_PHASE_COLORS.fight })
   }
   if (abilityCount > 0) {
-    chips.push({ icon: '✦', label: `${abilityCount} active ${abilityCount === 1 ? 'ability' : 'abilities'}`, color: theme.secondary })
+    chips.push({ phase: 'command', label: `${abilityCount} active ${abilityCount === 1 ? 'ability' : 'abilities'}`, color: theme.secondary })
   }
 
   if (chips.length === 0) return null
   return (
     <div className="flex gap-1.5 px-3 pt-2 pb-0.5 flex-wrap shrink-0">
       {chips.map(c => (
-        <span key={c.label} className="text-xs font-bold px-2 py-0.5 rounded-full"
+        <span key={c.label} className="flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full"
           style={{ background: `${c.color}15`, color: c.color, border: `1px solid ${c.color}40` }}>
-          {c.icon} {c.label}
+          <PhaseIcon phase={c.phase} size={11} color={c.color} />
+          {c.label}
         </span>
       ))}
     </div>

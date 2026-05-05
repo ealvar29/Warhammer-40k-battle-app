@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { GiCrossedSwords, GiShieldBash, GiLightningTrio } from 'react-icons/gi'
 
 // ── 10th ed wound roll table ──────────────────────────────────────────────────
 function woundThreshold(S, T) {
@@ -186,9 +187,9 @@ export default function MathHammerScreen({ theme }) {
 
   const avgAttacks = avgDice(A)
   const TABS = [
-    { id: 'weapon', label: 'Weapon', icon: '⚔️' },
-    { id: 'target', label: 'Target', icon: '🛡' },
-    { id: 'keywords', label: 'Keywords', icon: '⚡' },
+    { id: 'weapon',   label: 'Weapon',   Icon: GiCrossedSwords },
+    { id: 'target',   label: 'Target',   Icon: GiShieldBash },
+    { id: 'keywords', label: 'Keywords', Icon: GiLightningTrio },
   ]
 
   return (
@@ -247,7 +248,7 @@ export default function MathHammerScreen({ theme }) {
               border: `1px solid ${section === tab.id ? theme.border : 'transparent'}`,
             }}
           >
-            {tab.icon} {tab.label}
+            <tab.Icon size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /> {tab.label}
           </button>
         ))}
       </div>

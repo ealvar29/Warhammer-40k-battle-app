@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { PhaseIcon } from '../components/GameIcon'
+import { GiEagleEmblem, GiSkullCrossedBones, GiAlienBug, GiPistolGun, GiAxeSword, GiCrossedSwords } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import ImportListSheet from '../components/ImportListSheet'
@@ -14,7 +15,7 @@ const ALLEGIANCE_GROUPS = [
   {
     id: 'imperium',
     label: 'Imperium',
-    icon: '⚜️',
+    Icon: GiEagleEmblem,
     factionIds: [
       'spacewolves', 'spacemarines', 'darkangels', 'bloodangels', 'blacktemplars',
       'greyknights', 'deathwatch', 'adeptuscustodes', 'adeptasororitas',
@@ -24,7 +25,7 @@ const ALLEGIANCE_GROUPS = [
   {
     id: 'chaos',
     label: 'Chaos',
-    icon: '💀',
+    Icon: GiSkullCrossedBones,
     factionIds: [
       'chaosspacemarines', 'deathguard', 'emperorschildren', 'thousandsons',
       'worldeaters', 'chaosdaemons', 'chaosknights',
@@ -33,7 +34,7 @@ const ALLEGIANCE_GROUPS = [
   {
     id: 'xenos',
     label: 'Xenos',
-    icon: '👽',
+    Icon: GiAlienBug,
     factionIds: [
       'tyranids', 'genestealercults', 'necrons', 'orks',
       'aeldari', 'drukhari', 'tau', 'leaguesofvotann',
@@ -64,9 +65,9 @@ function hasMixedWeapons(unit) {
 }
 
 const ROLE_OPTIONS = [
-  { id: 'ranged', label: '🔫 Ranged' },
-  { id: 'mixed',  label: '⚔/🔫 Mixed' },
-  { id: 'melee',  label: '⚔ Melee' },
+  { id: 'ranged', label: 'Ranged', Icon: GiPistolGun },
+  { id: 'mixed',  label: 'Mixed',  Icon: GiCrossedSwords },
+  { id: 'melee',  label: 'Melee',  Icon: GiAxeSword },
 ]
 
 const categoryLabels = {
@@ -708,7 +709,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                     background: allegianceTab === g.id ? `${theme.secondary}15` : theme.surface,
                     borderRight: i < ALLEGIANCE_GROUPS.length - 1 ? `1px solid ${theme.border}` : 'none',
                   }}>
-                  <span className="text-xl">{g.icon}</span>
+                  <g.Icon size={22} color={allegianceTab === g.id ? theme.secondary : theme.textSecondary} />
                   <p className="text-xs font-black tracking-wide"
                     style={{ color: allegianceTab === g.id ? theme.secondary : theme.textSecondary }}>
                     {g.label}
@@ -954,7 +955,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                           border: `1px solid ${active ? section.accent : 'rgba(255,255,255,0.1)'}`,
                                           fontSize: 8,
                                         }}>
-                                        {opt.label}
+                                        <opt.Icon size={8} style={{ display: 'inline', verticalAlign: 'middle' }} />
+                                        {' '}{opt.label}
                                       </button>
                                     )
                                   })}

@@ -1,14 +1,15 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
+import { GiCrossedSwords, GiBullseye, GiWingedSword, GiFlagObjective, GiMonsterGrasp, GiScales } from 'react-icons/gi'
 
 const TAGS = [
-  { id: 'melee',      label: 'Melee Rush',     icon: '⚔️', hint: 'Charges everything — expect combat every turn' },
-  { id: 'gunline',    label: 'Gunline',         icon: '🎯', hint: 'Stays back and shoots — use cover on the approach' },
-  { id: 'fast',       label: 'Fast Movers',     icon: '💨', hint: 'Huge threat ranges — assume they can reach anything' },
-  { id: 'objectives', label: 'Objective Play',  icon: '🏴', hint: 'Scores points constantly — contest their home objectives' },
-  { id: 'monsters',   label: 'Monster Mash',    icon: '💪', hint: 'Big targets — bring anti-tank, fight one at a time' },
-  { id: 'balanced',   label: 'Balanced',        icon: '⚖️', hint: 'No obvious weakness — adapt each phase' },
+  { id: 'melee',      label: 'Melee Rush',     Icon: GiCrossedSwords,  hint: 'Charges everything — expect combat every turn' },
+  { id: 'gunline',    label: 'Gunline',         Icon: GiBullseye,       hint: 'Stays back and shoots — use cover on the approach' },
+  { id: 'fast',       label: 'Fast Movers',     Icon: GiWingedSword,    hint: 'Huge threat ranges — assume they can reach anything' },
+  { id: 'objectives', label: 'Objective Play',  Icon: GiFlagObjective,  hint: 'Scores points constantly — contest their home objectives' },
+  { id: 'monsters',   label: 'Monster Mash',    Icon: GiMonsterGrasp,   hint: 'Big targets — bring anti-tank, fight one at a time' },
+  { id: 'balanced',   label: 'Balanced',        Icon: GiScales,         hint: 'No obvious weakness — adapt each phase' },
 ]
 
 export default function OpponentProfile({ theme }) {
@@ -21,7 +22,7 @@ export default function OpponentProfile({ theme }) {
       style={{ background: theme.surface, borderColor: theme.border }}>
 
       <div className="flex items-center gap-2 mb-2.5">
-        <span className="text-sm">🎲</span>
+        <GiScales size={16} color={accent} />
         <div>
           <p className="text-xs font-black" style={{ color: theme.textPrimary }}>
             Opponent Playstyle
@@ -44,7 +45,7 @@ export default function OpponentProfile({ theme }) {
                 borderColor:  active ? accent : theme.border,
                 color:        active ? accent : theme.textSecondary,
               }}>
-              <span style={{ fontSize: 13 }}>{tag.icon}</span>
+              <tag.Icon size={13} color={active ? accent : theme.textSecondary} />
               {tag.label}
             </motion.button>
           )
@@ -55,9 +56,10 @@ export default function OpponentProfile({ theme }) {
       {opponentTags.length > 0 && (
         <div className="mt-2.5 space-y-1">
           {TAGS.filter(t => opponentTags.includes(t.id)).map(t => (
-            <p key={t.id} className="text-xs leading-snug"
+            <p key={t.id} className="text-xs leading-snug flex items-start gap-1.5"
               style={{ color: theme.textSecondary }}>
-              <span style={{ color: accent }}>{t.icon} {t.label}:</span> {t.hint}
+              <t.Icon size={12} color={accent} style={{ flexShrink: 0, marginTop: 2 }} />
+              <span><span style={{ color: accent, fontWeight: 700 }}>{t.label}:</span> {t.hint}</span>
             </p>
           ))}
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { themes } from './themes/index'
 import { NavIcon, PhaseIcon } from './components/GameIcon'
+import { GiLightningTrio } from 'react-icons/gi'
 import HomeScreen from './screens/HomeScreen'
 import ArmyBuilderScreen from './screens/ArmyBuilderScreen'
 import BattleDemo from './components/BattleDemo'
@@ -17,16 +18,14 @@ import { useBattleSync } from './hooks/useBattleSync'
 import { parseShareUrl } from './utils/armyShare'
 import { buildUnitsFromIds, findDetachment, FACTION_META } from './data/factionRegistry'
 
-const PHASE_ICON = { command: '📋', movement: '🏃', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '✦' }
-
 const theme = themes.spacewolves
 
 const NAV_TABS = [
-  { id: 'home',    label: 'Home',    icon: '🏠' },
-  { id: 'battle',  label: 'Battle',  icon: '⚔️' },
-  { id: 'lists',   label: 'Lists',   icon: '📋' },
-  { id: 'crusade', label: 'Crusade', icon: '📜' },
-  { id: 'search',  label: 'Search',  icon: '🔍', isOverlay: true },
+  { id: 'home',    label: 'Home'    },
+  { id: 'battle',  label: 'Battle'  },
+  { id: 'lists',   label: 'Lists'   },
+  { id: 'crusade', label: 'Crusade' },
+  { id: 'search',  label: 'Search',  isOverlay: true },
 ]
 
 const TAB_ORDER = ['home', 'battle', 'lists', 'crusade', 'armyBuilder', 'missionSetup', 'deploy', 'portraits']
@@ -140,9 +139,10 @@ export default function App() {
                   )}
                   <div className="flex items-center gap-2 mt-2">
                     {stratagemAlert.phase && (
-                      <span className="text-xs font-bold px-1.5 py-0.5 rounded"
+                      <span className="flex items-center gap-1 text-xs font-bold px-1.5 py-0.5 rounded"
                         style={{ background: '#ef444420', color: '#ef4444', fontSize: 8 }}>
-                        {PHASE_ICON[stratagemAlert.phase] || '✦'} {stratagemAlert.phase?.toUpperCase()}
+                        <PhaseIcon phase={stratagemAlert.phase} size={9} color="#ef4444" />
+                        {stratagemAlert.phase?.toUpperCase()}
                       </span>
                     )}
                     <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
@@ -173,7 +173,7 @@ export default function App() {
             style={{ border: '1px solid #f59e0b55', background: '#1a1200' }}
           >
             <div className="px-4 py-3 flex items-center gap-3">
-              <span className="text-xl shrink-0">⚡</span>
+              <GiLightningTrio size={22} color="#f59e0b" className="shrink-0" />
               <div className="flex-1">
                 <p className="text-xs font-black tracking-widest uppercase mb-0.5" style={{ color: '#f59e0b' }}>
                   Charge Declared
