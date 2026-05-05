@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { PhaseIcon } from '../components/GameIcon'
+import { PhaseIcon, FactionIcon } from '../components/GameIcon'
 import { GiEagleEmblem, GiSkullCrossedBones, GiAlienBug, GiPistolGun, GiAxeSword, GiCrossedSwords } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
@@ -135,14 +135,20 @@ function DetachmentCard({ d, selected, accent, theme, onClick }) {
 
         {/* Tags derived from stratagems + rule */}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            {tags.map(tag => (
-              <span key={tag}
-                className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-                style={{ background: `${accent}14`, color: accent, border: `1px solid ${accent}28` }}>
-                {tag}
-              </span>
-            ))}
+          <div className="mb-3">
+            <p className="text-[9px] font-black uppercase tracking-widest mb-1.5"
+              style={{ color: theme.textSecondary, opacity: 0.55 }}>
+              Playstyle focus
+            </p>
+            <div className="flex flex-wrap gap-1">
+              {tags.map(tag => (
+                <span key={tag}
+                  className="text-[9px] font-bold px-2 py-0.5 rounded-full"
+                  style={{ background: `${accent}14`, color: accent, border: `1px solid ${accent}28` }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
@@ -157,7 +163,8 @@ function DetachmentCard({ d, selected, accent, theme, onClick }) {
           </div>
           {desc && (
             <p className="text-xs leading-relaxed" style={{
-              color: theme.textSecondary,
+              color: theme.textPrimary,
+              opacity: 0.82,
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
@@ -282,7 +289,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
               <p className="font-black text-sm" style={{ color: theme.textPrimary }}>
                 {d.detachmentRule.name}
               </p>
-              <p className="text-xs leading-relaxed whitespace-pre-line" style={{ color: theme.textSecondary }}>
+              <p className="text-xs leading-relaxed whitespace-pre-line" style={{ color: theme.textPrimary, opacity: 0.85 }}>
                 {d.detachmentRule.description || d.detachmentRule.reminder}
               </p>
             </div>
@@ -501,7 +508,7 @@ function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCoun
             <p className="text-sm font-black leading-tight truncate" style={{ color: '#fff' }}>{f.name}</p>
             <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10, fontWeight: 600 }}>{unitCount} units</p>
           </div>
-          <span className="text-xl ml-1 shrink-0">{f.icon}</span>
+          <FactionIcon id={id} size={22} color={f.color} />
         </div>
       </div>
 
