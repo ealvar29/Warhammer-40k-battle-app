@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { PhaseIcon } from '../components/GameIcon'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import ImportListSheet from '../components/ImportListSheet'
@@ -215,9 +216,7 @@ const PHASE_LABELS = {
   command: 'Command Phase', movement: 'Movement Phase', shooting: 'Shooting Phase',
   charge: 'Charge Phase', fight: 'Fight Phase', any: 'Any Phase',
 }
-const PHASE_ICONS = {
-  command: '📋', movement: '🚶', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '🔄',
-}
+const PHASE_ICON_FALLBACK = { any: '↻' }
 
 function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
   const grouped = groupStratagemsByPhase(d.stratagems)
@@ -353,7 +352,10 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                     <div key={phase}>
                       {/* Phase divider header */}
                       <div className="flex items-center gap-2 mb-2">
-                        <span style={{ fontSize: 12 }}>{PHASE_ICONS[phase]}</span>
+                        {phase !== 'any'
+                          ? <PhaseIcon phase={phase} size={12} color={pc} />
+                          : <span style={{ fontSize: 12, color: pc }}>{PHASE_ICON_FALLBACK.any}</span>
+                        }
                         <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: pc }}>
                           {PHASE_LABELS[phase]}
                         </p>
@@ -558,6 +560,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const [showImport, setShowImport] = useState(false)
   const [allegianceTab, setAllegianceTab] = useState(() => getAllegianceFor(store.faction || 'spacewolves'))
   const [unitRoleOverrides, setUnitRoleOverrides] = useState({})
+  const [unitLoadouts, setUnitLoadouts] = useState({})
   const [infoSheetDetachment, setInfoSheetDetachment] = useState(null)
   const [showLegends, setShowLegends] = useState(() => localStorage.getItem('w40k-show-legends') === 'true')
 
@@ -602,16 +605,24 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
       if (!count) continue
       const u = unitList.find(u => u.id === unitId)
       if (!u) continue
-      const totalWounds = u.maxWounds ?? (u.models > 1 ? u.W * u.models : u.W)
+      const chosenLoadout = u.weaponLoadouts
+        ? (unitLoadouts[u.id] || u.defaultLoadout || u.weaponLoadouts[0].id)
+        : null
+      const loadoutData = chosenLoadout ? u.weaponLoadouts?.find(l => l.id === chosenLoadout) : null
+      const statOverrides = loadoutData?.statOverrides || {}
+      const effectiveW = statOverrides.W ?? u.W
+      const totalWounds = u.maxWounds ?? (u.models > 1 ? effectiveW * u.models : effectiveW)
       for (let i = 0; i < count; i++) {
         selectedUnitData.push({
           ...u,
+          ...statOverrides,
           id: count > 1 ? `${u.id}_${i + 1}` : u.id,
           type: u.type || u.category,
           maxWounds: totalWounds,
           currentWounds: totalWounds,
           unitKey: u.unitKey || u.id,
           phaseRole: u.weaponRole || unitRoleOverrides[u.id] || null,
+          activeLoadout: chosenLoadout,
         })
       }
     }
@@ -944,6 +955,28 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                           fontSize: 8,
                                         }}>
                                         {opt.label}
+                                      </button>
+                                    )
+                                  })}
+                                </div>
+                              )}
+
+                              {/* Loadout picker for units with wargear choices */}
+                              {selected && u.weaponLoadouts?.length > 0 && (
+                                <div className="flex gap-1 mt-1" onClick={e => e.stopPropagation()}>
+                                  {u.weaponLoadouts.map(opt => {
+                                    const active = (unitLoadouts[u.id] || u.defaultLoadout || u.weaponLoadouts[0].id) === opt.id
+                                    return (
+                                      <button key={opt.id}
+                                        onClick={() => setUnitLoadouts(prev => ({ ...prev, [u.id]: opt.id }))}
+                                        className="flex-1 py-0.5 rounded font-bold"
+                                        style={{
+                                          background: active ? section.accent : 'rgba(0,0,0,0.6)',
+                                          color: active ? '#000' : 'rgba(255,255,255,0.45)',
+                                          border: `1px solid ${active ? section.accent : 'rgba(255,255,255,0.1)'}`,
+                                          fontSize: 8,
+                                        }}>
+                                        {opt.short}
                                       </button>
                                     )
                                   })}

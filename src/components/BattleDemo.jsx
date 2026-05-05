@@ -33,6 +33,13 @@ function getDetachment(faction, detachmentId) {
 
 // ── Shared spring config ───────────────────────────────────────────────────────
 const SHEET_SPRING = { type: 'spring', stiffness: 340, damping: 32 }
+
+function getActiveWeapons(unit) {
+  if (!unit.weaponLoadouts || !unit.activeLoadout) return unit.weapons || []
+  const loadout = unit.weaponLoadouts.find(l => l.id === unit.activeLoadout)
+  if (!loadout?.weaponFilter) return unit.weapons || []
+  return (unit.weapons || []).filter(w => loadout.weaponFilter.includes(w.name))
+}
 const FADE_IN = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 8 } }
 
 // ── HP Bar ────────────────────────────────────────────────────────────────────
@@ -526,7 +533,7 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
           style={{ background: theme.surfaceHigh, color: theme.hpLow, border: `1px solid ${theme.border}` }}>
           − Wound
         </motion.button>
-        {unit.weapons?.length > 0 && (
+        {getActiveWeapons(unit).length > 0 && (
           <motion.button whileTap={{ scale: 0.95 }}
             onClick={() => setShowWeapons(!showWeapons)}
             className="px-3 rounded-xl py-2 text-xs font-bold"
@@ -550,61 +557,79 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
 
       {/* Weapon profiles expandable */}
       <AnimatePresence>
-        {showWeapons && unit.weapons?.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="mt-3 rounded-xl overflow-hidden border" style={{ borderColor: theme.border }}>
-              <table className="w-full" style={{ borderCollapse: 'collapse', tableLayout: 'auto' }}>
-                <thead>
-                  <tr style={{ background: theme.surfaceHigh, borderBottom: `1px solid ${theme.border}` }}>
-                    {[['WEAPON','left'],['RNG','center'],['A','center'],['S','center'],['AP','center'],['D','center'],['WS/BS','center']].map(([h, align]) => (
-                      <th key={h} className="px-2 py-1.5 font-bold whitespace-nowrap"
-                        style={{ color: theme.textSecondary, fontSize: 9, letterSpacing: '0.06em', textAlign: align }}>
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {unit.weapons.map((w, i) => (
-                    <React.Fragment key={i}>
-                      <tr
-                        style={{ borderBottom: i < unit.weapons.length - 1 || w.keywords?.length > 0 ? `1px solid ${theme.border}` : undefined, background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88`, cursor: onCalcWeapon ? 'pointer' : 'default' }}
-                        onClick={() => onCalcWeapon?.(w)}>
-                        <td className="px-2 py-2 text-xs font-bold" style={{ color: theme.textPrimary }}>
-                          <span className="flex items-center gap-1">
-                            <span>{w.name}</span>
-                            {onCalcWeapon && <span style={{ fontSize: 8, opacity: 0.4, flexShrink: 0 }}>🎲</span>}
-                          </span>
-                        </td>
-                        <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textSecondary }}>{w.range || '—'}</td>
-                        <td className="px-2 py-2 text-xs font-bold text-center whitespace-nowrap" style={{ color: theme.secondary }}>{w.A}</td>
-                        <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textPrimary }}>{w.S}</td>
-                        <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textPrimary }}>{w.AP}</td>
-                        <td className="px-2 py-2 text-xs font-bold text-center whitespace-nowrap" style={{ color: theme.secondary }}>{w.D}</td>
-                        <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textSecondary }}>{w.WS || w.BS || '—'}</td>
-                      </tr>
-                      {w.keywords?.length > 0 && (
-                        <tr style={{ background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88`, borderBottom: i < unit.weapons.length - 1 ? `1px solid ${theme.border}` : undefined }}>
-                          <td colSpan={7} className="px-2 pb-1.5">
-                            <div className="flex flex-wrap gap-1">
-                              {w.keywords.map(kw => <KeywordChip key={kw} keyword={kw} theme={theme} />)}
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </React.Fragment>
+        {showWeapons && getActiveWeapons(unit).length > 0 && (() => {
+          const activeWeapons = getActiveWeapons(unit)
+          return (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              {unit.activeLoadout && unit.weaponLoadouts && (
+                <div className="mt-2 flex gap-1">
+                  {unit.weaponLoadouts.map(l => (
+                    <span key={l.id}
+                      className="text-[9px] font-black px-1.5 py-0.5 rounded"
+                      style={{
+                        background: l.id === unit.activeLoadout ? `${theme.secondary}22` : 'transparent',
+                        color: l.id === unit.activeLoadout ? theme.secondary : theme.textSecondary,
+                        border: `1px solid ${l.id === unit.activeLoadout ? theme.secondary : theme.border}`,
+                      }}>
+                      {l.short}
+                    </span>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
-        )}
+                </div>
+              )}
+              <div className="mt-2 rounded-xl overflow-hidden border" style={{ borderColor: theme.border }}>
+                <table className="w-full" style={{ borderCollapse: 'collapse', tableLayout: 'auto' }}>
+                  <thead>
+                    <tr style={{ background: theme.surfaceHigh, borderBottom: `1px solid ${theme.border}` }}>
+                      {[['WEAPON','left'],['RNG','center'],['A','center'],['S','center'],['AP','center'],['D','center'],['WS/BS','center']].map(([h, align]) => (
+                        <th key={h} className="px-2 py-1.5 font-bold whitespace-nowrap"
+                          style={{ color: theme.textSecondary, fontSize: 9, letterSpacing: '0.06em', textAlign: align }}>
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activeWeapons.map((w, i) => (
+                      <React.Fragment key={i}>
+                        <tr
+                          style={{ borderBottom: i < activeWeapons.length - 1 || w.keywords?.length > 0 ? `1px solid ${theme.border}` : undefined, background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88`, cursor: onCalcWeapon ? 'pointer' : 'default' }}
+                          onClick={() => onCalcWeapon?.(w)}>
+                          <td className="px-2 py-2 text-xs font-bold" style={{ color: theme.textPrimary }}>
+                            <span className="flex items-center gap-1">
+                              <span>{w.name}</span>
+                              {onCalcWeapon && <span style={{ fontSize: 8, opacity: 0.4, flexShrink: 0 }}>🎲</span>}
+                            </span>
+                          </td>
+                          <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textSecondary }}>{w.range || '—'}</td>
+                          <td className="px-2 py-2 text-xs font-bold text-center whitespace-nowrap" style={{ color: theme.secondary }}>{w.A}</td>
+                          <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textPrimary }}>{w.S}</td>
+                          <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textPrimary }}>{w.AP}</td>
+                          <td className="px-2 py-2 text-xs font-bold text-center whitespace-nowrap" style={{ color: theme.secondary }}>{w.D}</td>
+                          <td className="px-2 py-2 text-xs text-center whitespace-nowrap" style={{ color: theme.textSecondary }}>{w.WS || w.BS || '—'}</td>
+                        </tr>
+                        {w.keywords?.length > 0 && (
+                          <tr style={{ background: i % 2 === 0 ? theme.unitBg : `${theme.surfaceHigh}88`, borderBottom: i < activeWeapons.length - 1 ? `1px solid ${theme.border}` : undefined }}>
+                            <td colSpan={7} className="px-2 pb-1.5">
+                              <div className="flex flex-wrap gap-1">
+                                {w.keywords.map(kw => <KeywordChip key={kw} keyword={kw} theme={theme} />)}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          )
+        })()}
       </AnimatePresence>
 
       {/* Ability chips */}

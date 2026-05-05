@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react'
+import { PhaseIcon } from '../components/GameIcon'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import { FACTION_META } from '../data/factionRegistry'
 import { unitLeaderMap, leaders as leaderMeta, leaderAbilities } from '../data/leaderData'
 import OpponentProfile from '../components/OpponentProfile'
 
-const PHASE_ICON  = { command: '📋', movement: '🏃', shooting: '🎯', charge: '⚡', fight: '⚔️', any: '✦' }
+const PHASE_ICON_FALLBACK = '✦'
 const PHASE_LABEL = { command: 'Command', movement: 'Move', shooting: 'Shoot', charge: 'Charge', fight: 'Fight', any: 'Any' }
 const baseId = (id) => id?.replace(/_\d+$/, '') ?? id
 
@@ -88,7 +89,10 @@ function AbilityCard({ ability, accent, theme }) {
     <div className="rounded-xl px-2.5 py-2"
       style={{ background: `${accent}0d`, border: `1px solid ${accent}1a` }}>
       <div className="flex items-center gap-1.5">
-        <span style={{ fontSize: 11 }}>{PHASE_ICON[ability.phase] || '✦'}</span>
+        {ability.phase && ability.phase !== 'any'
+          ? <PhaseIcon phase={ability.phase} size={11} color={accent} />
+          : <span style={{ fontSize: 11, color: accent }}>{PHASE_ICON_FALLBACK}</span>
+        }
         <p className="text-xs font-bold flex-1" style={{ color: accent }}>{ability.name}</p>
         <span className="font-bold uppercase rounded px-1.5 py-0.5 shrink-0"
           style={{ background: `${accent}18`, color: accent, fontSize: 7 }}>

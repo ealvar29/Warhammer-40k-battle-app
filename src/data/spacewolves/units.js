@@ -297,6 +297,11 @@ export const swUnits = {
       { name: 'Master-crafted power weapon', type: 'melee', A: 4, WS: '3+', S: 5, AP: -2, D: 2, keywords: [] },
       { name: 'Paired master-crafted power weapons', type: 'melee', A: 6, WS: '3+', S: 5, AP: -2, D: 2, keywords: [] },
     ],
+    weaponLoadouts: [
+      { id: 'single', label: 'Power Weapon', short: 'Single', weaponFilter: ['Heavy Bolt Pistol', 'Master-crafted power weapon'] },
+      { id: 'paired', label: 'Paired Weapons', short: 'Paired', weaponFilter: ['Heavy Bolt Pistol', 'Paired master-crafted power weapons'] },
+    ],
+    defaultLoadout: 'single',
     abilities: [
       { name: 'Let Loose the Wolves', phase: 'movement', description: 'At the start of the Declare Battle Formations step, split this unit into two units, one containing all of its HEADTAKERS models and one containing all of its HUNTING WOLVES models.' },
       { name: 'Headhunters', phase: 'fight', description: "At the start of the battle, select one unit from your opponent's army to be this unit's quarry. Weapons equipped by HEADTAKERS models in this unit have the [DEVASTATING WOUNDS] and [PRECISION] abilities while targeting its quarry." },
@@ -359,6 +364,11 @@ export const swUnits = {
       { name: 'Relic Greataxe', type: 'melee', A: 3, WS: '3+', S: 7, AP: -2, D: 3, keywords: [] },
       { name: 'Twin Lightning Claws', type: 'melee', A: 6, WS: '3+', S: 5, AP: -2, D: 1, keywords: ['TWIN-LINKED'] },
     ],
+    weaponLoadouts: [
+      { id: 'standard', label: 'Standard', short: 'Standard', weaponFilter: null, statOverrides: null },
+      { id: 'stormShield', label: 'Storm Shield', short: 'Shield', weaponFilter: null, statOverrides: { W: 4 } },
+    ],
+    defaultLoadout: 'standard',
     abilities: [
       { name: 'Deep Strike', phase: 'movement', description: 'During the Declare Battle Formations step, you can set up this unit in Reserves instead of on the battlefield. If you do, at the start of one of your Movement phases, you can set this unit up anywhere on the battlefield that is more than 9" horizontally away from all enemy models.' },
       { name: 'Rugged Resilience', phase: 'any', description: "Each time an attack targets this unit, if the Strength characteristic of that attack is greater than the Toughness characteristic of this unit, subtract 1 from the Wound roll." },

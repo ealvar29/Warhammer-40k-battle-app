@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { GiCrossedSwords, GiBullseye } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import { useCrusadeStore } from '../store/crusadeStore'
@@ -118,9 +119,8 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
           <motion.div
             animate={{ rotate: [0, -6, 6, 0] }}
             transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: 'easeInOut' }}
-            className="text-5xl"
           >
-            ⚔️
+            <GiCrossedSwords size={52} color={theme.secondary} />
           </motion.div>
           {/* Glow ring behind icon */}
           <motion.div
@@ -230,10 +230,10 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
                   style={{ background: `${theme.secondary}18`, border: `1px solid ${theme.secondary}44` }}
                 >
-                  🎯
+                  <GiBullseye size={24} color={theme.secondary} />
                 </motion.div>
               </div>
             </motion.button>
