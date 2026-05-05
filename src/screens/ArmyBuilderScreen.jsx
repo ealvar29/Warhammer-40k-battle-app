@@ -559,6 +559,13 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const [allegianceTab, setAllegianceTab] = useState(() => getAllegianceFor(store.faction || 'spacewolves'))
   const [unitRoleOverrides, setUnitRoleOverrides] = useState({})
   const [infoSheetDetachment, setInfoSheetDetachment] = useState(null)
+  const [showLegends, setShowLegends] = useState(() => localStorage.getItem('w40k-show-legends') === 'true')
+
+  const toggleShowLegends = () => setShowLegends(prev => {
+    const next = !prev
+    localStorage.setItem('w40k-show-legends', String(next))
+    return next
+  })
 
   const isSW = localFaction === 'spacewolves'
   const factionMeta = FACTION_META[localFaction] || { name: '', color: '#888' }
@@ -569,12 +576,22 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     ? [...swDetachmentList, ...smGenericDetachmentList]
     : Object.values(FACTION_DETACHMENTS[localFaction] || {})
 
+  function applyLegendsFilter(byCategory) {
+    if (showLegends) return byCategory
+    const out = {}
+    for (const [cat, units] of Object.entries(byCategory)) {
+      const filtered = units.filter(u => !u.legends)
+      if (filtered.length) out[cat] = filtered
+    }
+    return out
+  }
+
   const unitSections = isSW
     ? [
-        { label: 'Space Wolves', byCategory: swUnitsByCategory, accent: theme.secondary },
-        { label: 'Space Marines', byCategory: smGenericsByCategory, accent: theme.primary },
+        { label: 'Space Wolves', byCategory: applyLegendsFilter(swUnitsByCategory), accent: theme.secondary },
+        { label: 'Space Marines', byCategory: applyLegendsFilter(smGenericsByCategory), accent: theme.primary },
       ]
-    : [{ label: factionMeta.name, byCategory: getUnitsByCategory(unitList), accent: factionMeta.color }]
+    : [{ label: factionMeta.name, byCategory: applyLegendsFilter(getUnitsByCategory(unitList)), accent: factionMeta.color }]
 
   const toggleTag = (tag) =>
     setLocalOpponentTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
@@ -768,19 +785,36 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                 return sum + (u?.points || 0) * n
               }, 0)
               return (
-                <div className="flex items-center justify-between">
-                  <p className="text-xs" style={{ color: theme.textSecondary }}>
-                    Tap to add · use +/− for multiple squads.
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-full"
-                      style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
-                      {totalUnits} unit{totalUnits !== 1 ? 's' : ''}
-                    </span>
-                    <span className="text-xs font-black px-2.5 py-1 rounded-full"
-                      style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
-                      {totalPts} pts
-                    </span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs" style={{ color: theme.textSecondary }}>
+                      Tap to add · use +/− for multiple squads.
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                        style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
+                        {totalUnits} unit{totalUnits !== 1 ? 's' : ''}
+                      </span>
+                      <span className="text-xs font-black px-2.5 py-1 rounded-full"
+                        style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
+                        {totalPts} pts
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <button
+                      onClick={toggleShowLegends}
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold transition-all"
+                      style={{
+                        background: showLegends ? `${theme.secondary}20` : theme.surfaceHigh,
+                        color: showLegends ? theme.secondary : theme.textSecondary,
+                        border: `1px solid ${showLegends ? theme.secondary + '55' : theme.border}`,
+                      }}>
+                      <span style={{ fontSize: 9 }}>👻</span>
+                      <span style={{ fontSize: 9, letterSpacing: '0.06em' }}>
+                        LEGENDS {showLegends ? 'ON' : 'OFF'}
+                      </span>
+                    </button>
                   </div>
                 </div>
               )
