@@ -226,8 +226,77 @@ const PHASE_LABELS = {
 }
 const PHASE_ICON_FALLBACK = { any: '↻' }
 
-function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
+function StratagemsTabContent({ d, theme, accent }) {
   const grouped = groupStratagemsByPhase(d.stratagems)
+  if (!d.stratagems?.length) return (
+    <p className="text-xs text-center py-8" style={{ color: theme.textSecondary }}>No stratagems listed for this detachment.</p>
+  )
+  return (
+    <div className="space-y-5 pb-4">
+      {PHASE_ORDER.filter(phase => grouped[phase]).map(phase => {
+        const pc = phaseColor(phase, theme)
+        return (
+          <div key={phase}>
+            <div className="flex items-center gap-2 mb-2">
+              {phase !== 'any'
+                ? <PhaseIcon phase={phase} size={12} color={pc} />
+                : <span style={{ fontSize: 12, color: pc }}>{PHASE_ICON_FALLBACK.any}</span>
+              }
+              <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: pc }}>
+                {PHASE_LABELS[phase]}
+              </p>
+              <div className="h-px flex-1" style={{ background: `${pc}30` }} />
+              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                style={{ background: `${pc}18`, color: pc }}>
+                {grouped[phase].length}
+              </span>
+            </div>
+            <div className="space-y-2 pl-1">
+              {grouped[phase].map(s => (
+                <div key={s.id} className="rounded-xl overflow-hidden"
+                  style={{ border: `1px solid ${theme.border}`, background: theme.surface }}>
+                  <div className="h-0.5" style={{ background: `${pc}55` }} />
+                  <div className="px-3 py-2.5">
+                    <div className="flex items-start justify-between gap-2 mb-1.5">
+                      <p className="font-bold text-sm leading-tight" style={{ color: theme.textPrimary }}>{s.name}</p>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {s.trigger === 'reaction' && (
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
+                            style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.3)' }}>
+                            ↩ Reaction
+                          </span>
+                        )}
+                        <span className="text-xs font-black px-2 py-0.5 rounded-full"
+                          style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
+                          {s.cost}CP
+                        </span>
+                      </div>
+                    </div>
+                    {s.timing && (
+                      <p className="text-[10px] font-semibold mb-1.5 leading-snug" style={{ color: `${pc}cc` }}>
+                        {s.timing}
+                      </p>
+                    )}
+                    <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{s.effect}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
+  const [activeTab, setActiveTab] = useState('overview')
+
+  const tabs = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'stratagems', label: `Stratagems${d.stratagems?.length ? ` (${d.stratagems.length})` : ''}` },
+    { id: 'details', label: 'Full Rules' },
+  ]
 
   return (
     <motion.div
@@ -251,198 +320,213 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
           <div className="w-10 h-1 rounded-full" style={{ background: theme.border }} />
         </div>
 
-        {/* Accent gradient bar */}
+        {/* Accent bar */}
         <div className="h-1 mx-5 mt-2 rounded-full shrink-0"
           style={{ background: `linear-gradient(to right, ${accent}, ${accent}44)` }} />
 
-        {/* Scrollable body */}
-        <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-4 pb-2 space-y-5">
-
-          {/* Header */}
-          <div>
-            <p className="font-black text-2xl leading-tight" style={{ color: accent }}>{d.name}</p>
-            {d.subtitle && (
-              <p className="text-sm italic mt-1" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
-            )}
-          </div>
-
-          {/* Playstyle — highlighted new-player summary */}
-          {d.playstyle && (
-            <div className="px-4 py-3 rounded-2xl"
-              style={{ background: `${accent}0e`, border: `1px solid ${accent}22` }}>
-              <p className="text-[10px] font-black tracking-widest uppercase mb-1.5" style={{ color: accent }}>
-                🗺 How this detachment plays
-              </p>
-              <p className="text-sm leading-relaxed font-medium" style={{ color: theme.textPrimary }}>
-                {d.playstyle}
-              </p>
-            </div>
+        {/* Fixed header: name + tabs */}
+        <div className="px-5 pt-4 pb-0 shrink-0">
+          <p className="font-black text-2xl leading-tight" style={{ color: accent }}>{d.name}</p>
+          {d.subtitle && (
+            <p className="text-sm italic mt-0.5 mb-3" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
           )}
-
-          {/* Detachment Rule */}
-          <div>
-            <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
-              ⚡ Detachment Rule
-            </p>
-            <div className="px-4 py-3 rounded-2xl space-y-2"
-              style={{ background: `${accent}10`, border: `1px solid ${accent}2a` }}>
-              <p className="font-black text-sm" style={{ color: theme.textPrimary }}>
-                {d.detachmentRule.name}
-              </p>
-              <p className="text-xs leading-relaxed whitespace-pre-line" style={{ color: theme.textPrimary, opacity: 0.85 }}>
-                {d.detachmentRule.description || d.detachmentRule.reminder}
-              </p>
-            </div>
+          {/* Tab bar */}
+          <div className="flex gap-1 border-b pb-0" style={{ borderColor: theme.border }}>
+            {tabs.map(tab => {
+              const isActive = activeTab === tab.id
+              return (
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                  className="px-3 py-2 text-xs font-bold rounded-t-lg transition-all"
+                  style={{
+                    background: isActive ? `${accent}18` : 'transparent',
+                    color: isActive ? accent : theme.textSecondary,
+                    borderBottom: isActive ? `2px solid ${accent}` : '2px solid transparent',
+                  }}>
+                  {tab.label}
+                </button>
+              )
+            })}
           </div>
+        </div>
 
-          {/* Command Phase Action — pick one each round */}
-          {d.commandPhaseAction?.options?.length > 0 && (
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#c8a84c' }}>
-                  📋 Each Command Phase — Pick One
-                </p>
-                <div className="h-px flex-1" style={{ background: '#c8a84c28' }} />
-              </div>
-              <p className="text-xs mb-3" style={{ color: theme.textSecondary }}>
-                {d.commandPhaseAction.prompt}
-              </p>
-              <div className="space-y-2">
-                {d.commandPhaseAction.options.map(opt => (
-                  <div key={opt.id}
-                    className="px-3 py-3 rounded-2xl flex gap-3 items-start"
-                    style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
-                    <span className="text-xl shrink-0 mt-0.5">{opt.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>{opt.label}</p>
-                        {opt.shortEffect && (
-                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full shrink-0"
-                            style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
-                            {opt.shortEffect}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
-                        {opt.fullEffect}
+        {/* Scrollable tab content */}
+        <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-4">
+          <AnimatePresence mode="wait">
+
+            {/* ── OVERVIEW TAB ── */}
+            {activeTab === 'overview' && (
+              <motion.div key="overview"
+                initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 8 }} transition={{ duration: 0.15 }}
+                className="space-y-4 pb-4"
+              >
+                {/* Playstyle */}
+                {d.playstyle && (
+                  <div className="px-4 py-3 rounded-2xl"
+                    style={{ background: `${accent}0e`, border: `1px solid ${accent}22` }}>
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-1.5" style={{ color: accent }}>
+                      How this detachment plays
+                    </p>
+                    <p className="text-sm leading-relaxed font-medium" style={{ color: theme.textPrimary }}>
+                      {d.playstyle}
+                    </p>
+                  </div>
+                )}
+
+                {/* Command Phase picks — compact visual tiles */}
+                {d.commandPhaseAction?.options?.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <PhaseIcon phase="command" size={12} color={accent} />
+                      <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: accent }}>
+                        Each Command Phase — pick one
                       </p>
                     </div>
+                    <div className="space-y-1.5">
+                      {d.commandPhaseAction.options.map(opt => (
+                        <div key={opt.id}
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+                          style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
+                          <span className="text-lg shrink-0">{opt.icon}</span>
+                          <p className="font-bold text-sm flex-1" style={{ color: theme.textPrimary }}>{opt.label}</p>
+                          {opt.shortEffect && (
+                            <span className="text-[9px] font-black px-2 py-0.5 rounded-full shrink-0"
+                              style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
+                              {opt.shortEffect}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {d.commandPhaseAction.onceBuff && (
+                      <div className="mt-2 px-3 py-2 rounded-xl flex gap-2 items-center"
+                        style={{ background: `${accent}08`, border: `1px dashed ${accent}33` }}>
+                        <span className="text-sm shrink-0">⭐</span>
+                        <p className="text-xs font-bold" style={{ color: accent }}>
+                          {d.commandPhaseAction.onceBuff.label} — once per battle
+                        </p>
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
-              {d.commandPhaseAction.onceBuff && (
-                <div className="mt-2 px-3 py-2.5 rounded-2xl flex gap-2 items-start"
-                  style={{ background: `${accent}08`, border: `1px dashed ${accent}33` }}>
-                  <span className="text-base shrink-0">⭐</span>
-                  <div>
-                    <p className="font-bold text-xs" style={{ color: accent }}>
-                      {d.commandPhaseAction.onceBuff.label} — Once per battle
+                )}
+
+                {/* Quick stats row */}
+                <div className="flex gap-2 flex-wrap">
+                  {d.stratagems?.length > 0 && (
+                    <button onClick={() => setActiveTab('stratagems')}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
+                      style={{ background: theme.surface, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                      <span style={{ color: accent }}>📜</span>
+                      {d.stratagems.length} stratagems →
+                    </button>
+                  )}
+                  {d.enhancements?.length > 0 && (
+                    <button onClick={() => setActiveTab('details')}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
+                      style={{ background: theme.surface, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                      <span style={{ color: accent }}>⭐</span>
+                      {d.enhancements.length} enhancements →
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── STRATAGEMS TAB ── */}
+            {activeTab === 'stratagems' && (
+              <motion.div key="stratagems"
+                initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.15 }}
+              >
+                <StratagemsTabContent d={d} theme={theme} accent={accent} />
+              </motion.div>
+            )}
+
+            {/* ── DETAILS TAB ── */}
+            {activeTab === 'details' && (
+              <motion.div key="details"
+                initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }} transition={{ duration: 0.15 }}
+                className="space-y-5 pb-4"
+              >
+                {/* Full detachment rule */}
+                <div>
+                  <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                    Detachment Rule
+                  </p>
+                  <div className="px-4 py-3 rounded-2xl space-y-2"
+                    style={{ background: `${accent}10`, border: `1px solid ${accent}2a` }}>
+                    <p className="font-black text-sm" style={{ color: theme.textPrimary }}>
+                      {d.detachmentRule.name}
                     </p>
-                    <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary }}>
-                      {d.commandPhaseAction.onceBuff.description}
+                    <p className="text-xs leading-relaxed whitespace-pre-line" style={{ color: theme.textPrimary, opacity: 0.85 }}>
+                      {d.detachmentRule.description || d.detachmentRule.reminder}
                     </p>
                   </div>
                 </div>
-              )}
-            </div>
-          )}
 
-          {/* Stratagems grouped by phase */}
-          {d.stratagems?.length > 0 && (
-            <div>
-              <p className="text-[10px] font-black tracking-widest uppercase mb-3" style={{ color: accent }}>
-                📜 Stratagems ({d.stratagems.length})
-              </p>
-              <div className="space-y-5">
-                {PHASE_ORDER.filter(phase => grouped[phase]).map(phase => {
-                  const pc = phaseColor(phase, theme)
-                  return (
-                    <div key={phase}>
-                      {/* Phase divider header */}
-                      <div className="flex items-center gap-2 mb-2">
-                        {phase !== 'any'
-                          ? <PhaseIcon phase={phase} size={12} color={pc} />
-                          : <span style={{ fontSize: 12, color: pc }}>{PHASE_ICON_FALLBACK.any}</span>
-                        }
-                        <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: pc }}>
-                          {PHASE_LABELS[phase]}
-                        </p>
-                        <div className="h-px flex-1" style={{ background: `${pc}30` }} />
-                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
-                          style={{ background: `${pc}18`, color: pc }}>
-                          {grouped[phase].length}
-                        </span>
-                      </div>
-                      <div className="space-y-2 pl-1">
-                        {grouped[phase].map(s => (
-                          <div key={s.id} className="rounded-xl overflow-hidden"
-                            style={{ border: `1px solid ${theme.border}`, background: theme.surface }}>
-                            {/* Phase-tinted top pip */}
-                            <div className="h-0.5" style={{ background: `${pc}55` }} />
-                            <div className="px-3 py-2.5">
-                              <div className="flex items-start justify-between gap-2 mb-1.5">
-                                <p className="font-bold text-sm leading-tight" style={{ color: theme.textPrimary }}>
-                                  {s.name}
-                                </p>
-                                <div className="flex items-center gap-1.5 shrink-0">
-                                  {s.trigger === 'reaction' && (
-                                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
-                                      style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.3)' }}>
-                                      ↩ Reaction
-                                    </span>
-                                  )}
-                                  <span className="text-xs font-black px-2 py-0.5 rounded-full"
-                                    style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
-                                    {s.cost}CP
-                                  </span>
-                                </div>
-                              </div>
-                              {s.timing && (
-                                <p className="text-[10px] font-semibold mb-1.5 leading-snug" style={{ color: `${pc}cc` }}>
-                                  {s.timing}
-                                </p>
-                              )}
-                              <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
-                                {s.effect}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Enhancements */}
-          {d.enhancements?.length > 0 && (
-            <div>
-              <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
-                ⭐ Enhancements ({d.enhancements.length})
-              </p>
-              <div className="space-y-2">
-                {d.enhancements.map((enh, i) => (
-                  <div key={i} className="px-3 py-2.5 rounded-xl"
-                    style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
-                    <div className="flex items-start justify-between gap-2 mb-1">
-                      <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>{enh.name}</p>
-                      <span className="text-xs font-black shrink-0 px-2 py-0.5 rounded-full"
-                        style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                        {enh.cost}pts
-                      </span>
-                    </div>
-                    <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
-                      {enh.description}
+                {/* Full command phase options with effect text */}
+                {d.commandPhaseAction?.options?.length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                      Command Phase Options — Full Text
                     </p>
+                    <div className="space-y-2">
+                      {d.commandPhaseAction.options.map(opt => (
+                        <div key={opt.id} className="px-3 py-3 rounded-2xl flex gap-3 items-start"
+                          style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
+                          <span className="text-xl shrink-0 mt-0.5">{opt.icon}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-sm mb-1" style={{ color: theme.textPrimary }}>{opt.label}</p>
+                            <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{opt.fullEffect}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {d.commandPhaseAction.onceBuff && (
+                      <div className="mt-2 px-3 py-2.5 rounded-2xl flex gap-2 items-start"
+                        style={{ background: `${accent}08`, border: `1px dashed ${accent}33` }}>
+                        <span className="text-base shrink-0">⭐</span>
+                        <div>
+                          <p className="font-bold text-xs" style={{ color: accent }}>
+                            {d.commandPhaseAction.onceBuff.label} — Once per battle
+                          </p>
+                          <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary }}>
+                            {d.commandPhaseAction.onceBuff.description}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                )}
 
-          <div className="h-2" />
+                {/* Enhancements */}
+                {d.enhancements?.length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                      Enhancements ({d.enhancements.length})
+                    </p>
+                    <div className="space-y-2">
+                      {d.enhancements.map((enh, i) => (
+                        <div key={i} className="px-3 py-2.5 rounded-xl"
+                          style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>{enh.name}</p>
+                            <span className="text-xs font-black shrink-0 px-2 py-0.5 rounded-full"
+                              style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                              {enh.cost}pts
+                            </span>
+                          </div>
+                          <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{enh.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+          </AnimatePresence>
         </div>
 
         {/* CTA footer */}
