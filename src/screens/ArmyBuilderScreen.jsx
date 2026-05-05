@@ -601,6 +601,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     setLocalOpponentTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])
 
   const startBattle = () => {
+    const detData = FACTION_DETACHMENTS[localFaction]?.[localDetachment]
+    const staticMods = detData?.staticUnitMods || []
+
     const selectedUnitData = []
     for (const [unitId, count] of Object.entries(unitCounts)) {
       if (!count) continue
@@ -610,7 +613,20 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         ? (unitLoadouts[u.id] || u.defaultLoadout || u.weaponLoadouts[0].id)
         : null
       const loadoutData = chosenLoadout ? u.weaponLoadouts?.find(l => l.id === chosenLoadout) : null
-      const statOverrides = loadoutData?.statOverrides || {}
+      const statOverrides = { ...(loadoutData?.statOverrides || {}) }
+
+      // Apply static detachment mods (e.g. Champions of Fenris +1 OC for TERMINATORs)
+      const modSources = []
+      for (const mod of staticMods) {
+        const allKws = [...(u.keywords || []), ...(u.factionKeywords || [])]
+        const passes = !mod.keywordFilter || mod.keywordFilter.every(kw => allKws.includes(kw))
+        if (!passes) continue
+        for (const [stat, delta] of Object.entries(mod.statMods)) {
+          statOverrides[stat] = (statOverrides[stat] ?? u[stat] ?? 0) + delta
+          modSources.push({ stat, delta, source: mod.source, condition: mod.condition, why: mod.why })
+        }
+      }
+
       const effectiveW = statOverrides.W ?? u.W
       const totalWounds = u.maxWounds ?? (u.models > 1 ? effectiveW * u.models : effectiveW)
       for (let i = 0; i < count; i++) {
@@ -624,6 +640,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           unitKey: u.unitKey || u.id,
           phaseRole: u.weaponRole || unitRoleOverrides[u.id] || null,
           activeLoadout: chosenLoadout,
+          modSources: modSources.length > 0 ? modSources : undefined,
         })
       }
     }

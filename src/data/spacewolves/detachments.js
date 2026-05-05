@@ -203,6 +203,15 @@ export const swDetachments = {
     subtitle: "The hand-picked warriors of the Great Wolf, fighting as though Logan Grimnar watches.",
     playstyle: "Counter-charge specialists — INFANTRY and WALKERs strike back at the end of your opponent's Charge phase. TERMINATORs hold objectives.",
     chapterRestriction: true,
+    staticUnitMods: [
+      {
+        keywordFilter: ['TERMINATOR'],
+        statMods: { OC: 1 },
+        source: 'Champions of Fenris',
+        condition: 'while not Battle-shocked',
+        why: "Champions of Fenris: +1 OC for TERMINATOR units while they are not Battle-shocked",
+      },
+    ],
     detachmentRule: {
       name: 'The Great Wolf Watches',
       description: "At the end of your opponent's Charge phase, each ADEPTUS ASTARTES INFANTRY and ADEPTUS ASTARTES WALKER unit from your army that is within 3\" of one or more enemy units and would be eligible to declare a charge against those units can declare a charge against them, resolved as if it were your Charge phase. If successful, your unit does not receive any Charge bonus this turn.\nWhile ADEPTUS ASTARTES TERMINATOR units from your army are not Battle-shocked, add 1 to the Objective Control characteristic of models in those units.\nRestriction: Your army cannot include ADEPTUS ASTARTES units from any Chapter other than Space Wolves.",
@@ -280,6 +289,13 @@ export const swDetachments = {
           icon: '🐾',
           shortEffect: 'Re-roll Advance & Charge',
           fullEffect: 'Re-roll Advance rolls and Charge rolls for all ADEPTUS ASTARTES units this battle round.',
+          unitEffects: {
+            phases: ['movement', 'charge'],
+            factionKeywords: ['ADEPTUS ASTARTES'],
+            badge: 'Re-roll Advance & Charge',
+            badgeColor: '#34d399',
+            why: "Encircling Jaws (Hunting Pack) — active until your next Command phase",
+          },
         },
         {
           id: 'huntersEye',
@@ -287,6 +303,13 @@ export const swDetachments = {
           icon: '🎯',
           shortEffect: '+1 Hit (ranged)',
           fullEffect: 'Each time a model in an ADEPTUS ASTARTES unit makes a ranged attack, add 1 to the Hit roll.',
+          unitEffects: {
+            phases: ['shooting'],
+            factionKeywords: ['ADEPTUS ASTARTES'],
+            badge: '+1 to Hit',
+            badgeColor: '#60a5fa',
+            why: "Hunter's Eye (Hunting Pack) — +1 to all ranged Hit rolls until your next Command phase",
+          },
         },
         {
           id: 'ferocityStrike',
@@ -294,6 +317,13 @@ export const swDetachments = {
           icon: '⚔️',
           shortEffect: 'Lethal/Sustained (melee)',
           fullEffect: 'When selected to fight, choose LETHAL HITS or SUSTAINED HITS 1 — melee weapons have that ability until end of phase.',
+          unitEffects: {
+            phases: ['fight'],
+            factionKeywords: ['ADEPTUS ASTARTES'],
+            badge: 'Lethal / Sustained Hits',
+            badgeColor: '#f87171',
+            why: "Ferocious Strike (Hunting Pack) — choose Lethal Hits or Sustained Hits 1 for melee weapons this Fight phase",
+          },
         },
       ],
       onceBuff: {

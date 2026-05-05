@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PhaseIcon, GameIcon } from './GameIcon'
+import { GiLightningTrio } from 'react-icons/gi'
 import { PHASES, demoStratagems, demoUnits } from '../data/demoData'
 import { leaders, unitLeaderMap } from '../data/leaderData'
 import { getLeaderAbilities } from '../data/factionRegistry'
@@ -60,11 +61,17 @@ function HpBar({ current, max, theme }) {
 }
 
 // ── Stat Pill ─────────────────────────────────────────────────────────────────
-function StatPill({ label, value, theme }) {
+function StatPill({ label, value, mod, theme }) {
   return (
     <div className="flex flex-col items-center min-w-[32px]">
-      <span className="text-xs font-black leading-tight" style={{ color: theme.textPrimary }}>{value}</span>
-      <span style={{ color: theme.textSecondary, fontSize: 9, fontWeight: 700, letterSpacing: '0.05em' }}>{label}</span>
+      <div className="flex items-baseline gap-px">
+        <span className="text-xs font-black leading-tight"
+          style={{ color: mod ? theme.secondary : theme.textPrimary }}>{value}</span>
+        {mod && (
+          <span style={{ fontSize: 7, fontWeight: 900, color: theme.secondary, lineHeight: 1 }}>+{mod.delta}</span>
+        )}
+      </div>
+      <span style={{ color: mod ? theme.secondary : theme.textSecondary, fontSize: 9, fontWeight: 700, letterSpacing: '0.05em' }}>{label}</span>
     </div>
   )
 }
@@ -426,7 +433,7 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
 }
 
 // ── Unit Card ─────────────────────────────────────────────────────────────────
-function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, theme, motionProps, onMatchup, onCalcWeapon }) {
+function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, activePickEffect, theme, motionProps, onMatchup, onCalcWeapon }) {
   const wounds = unitState?.currentWounds ?? unit.currentWounds ?? unit.maxWounds
   const pct = wounds / unit.maxWounds
   const statusColor = pct > 0.6 ? theme.hpFull : pct > 0.3 ? theme.hpMid : theme.hpLow
@@ -435,11 +442,22 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
   const woundFlash = wounds < prevWoundsRef.current
   prevWoundsRef.current = wounds
 
+  // Compute active Hunting Pack / detachment pick badge for this unit + phase
+  const pickBadge = useMemo(() => {
+    if (!activePickEffect) return null
+    if (!activePickEffect.phases.includes(activePhase)) return null
+    if (activePickEffect.factionKeywords) {
+      const allKws = [...(unit.keywords || []), ...(unit.factionKeywords || [])]
+      if (!activePickEffect.factionKeywords.some(kw => allKws.includes(kw))) return null
+    }
+    return activePickEffect
+  }, [activePickEffect, activePhase, unit])
+
   const stats = [
     unit.M && { label: 'M', value: unit.M },
     unit.T && { label: 'T', value: unit.T },
     unit.Sv && { label: 'SV', value: unit.Sv },
-    unit.OC != null && { label: 'OC', value: unit.OC },
+    unit.OC != null && { label: 'OC', value: unit.OC, mod: unit.modSources?.find(m => m.stat === 'OC') },
     unit.InvSv && { label: 'INV', value: unit.InvSv },
   ].filter(Boolean)
 
@@ -512,10 +530,46 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
 
       {/* Stat bar */}
       {stats.length > 0 && (
-        <div className="flex gap-3 mb-2 px-1">
-          {stats.map(s => <StatPill key={s.label} label={s.label} value={s.value} theme={theme} />)}
+        <div className="flex gap-3 mb-1 px-1">
+          {stats.map(s => <StatPill key={s.label} label={s.label} value={s.value} mod={s.mod} theme={theme} />)}
         </div>
       )}
+
+      {/* Static mod source line (e.g. Champions of Fenris +1 OC) */}
+      {unit.modSources?.length > 0 && (
+        <p className="text-xs px-1 mb-1.5 leading-snug" style={{ color: theme.secondary, fontSize: 9, opacity: 0.85 }}>
+          {unit.modSources.map(m => `${m.source}: +${m.delta} ${m.stat}${m.condition ? ` (${m.condition})` : ''}`).join(' · ')}
+        </p>
+      )}
+
+      {/* Active Hunting Pack / detachment pick badge */}
+      <AnimatePresence>
+        {pickBadge && (
+          <motion.div
+            key={pickBadge.badge}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden mb-2"
+          >
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl"
+              style={{ background: `${pickBadge.badgeColor}18`, border: `1px solid ${pickBadge.badgeColor}40` }}>
+              <GiLightningTrio size={10} color={pickBadge.badgeColor} style={{ flexShrink: 0 }} />
+              <span className="font-black" style={{ color: pickBadge.badgeColor, fontSize: 10 }}>
+                {pickBadge.badge}
+              </span>
+              <span className="ml-auto leading-tight" style={{ color: pickBadge.badgeColor, fontSize: 8, opacity: 0.7 }}>
+                Active Pack
+              </span>
+            </div>
+            {pickBadge.why && (
+              <p className="text-xs mt-0.5 px-1 leading-snug" style={{ color: theme.textSecondary, fontSize: 9 }}>
+                {pickBadge.why}
+              </p>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <HpBar current={wounds} max={unit.maxWounds} theme={theme} />
 
@@ -895,6 +949,15 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     return { ...opt.mathBonus, label: opt.mathBonusLabel, icon: opt.icon }
   })()
 
+  // Active Hunting Pack / pick_one effect to pass into unit cards
+  const activePickEffect = useMemo(() => {
+    if (!detachmentState?.activeSelection) return null
+    const action = detachment?.commandPhaseAction
+    if (!action || action.type !== 'pick_one') return null
+    const opt = action.options?.find(o => o.id === detachmentState.activeSelection)
+    return opt?.unitEffects || null
+  }, [detachment, detachmentState])
+
   const reactionCount = allStratagems.filter(s => s.phase === activePhase.id && s.trigger === 'reaction').length
 
   const phaseAbilityCount = units.reduce((sum, u) =>
@@ -1174,6 +1237,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           onToggleWarlord={setWarlord}
           isWarlord={warlordUnitId === u.id}
           activePhase={activePhase.id}
+          activePickEffect={activePickEffect}
           theme={theme}
           onMatchup={opponentArmy?.units?.length > 0 ? () => setMatchupUnit(u) : undefined}
           onCalcWeapon={setMathHammerWeapon}
