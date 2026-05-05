@@ -549,65 +549,84 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
 function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCount }) {
   const [imgLoaded, setImgLoaded] = useState(false)
   return (
-    <div
+    <motion.div
       onClick={onSelect}
-      className="rounded-2xl overflow-hidden text-left transition-all relative cursor-pointer min-h-[160px] md:min-h-[280px] flex flex-col justify-end"
+      className="relative rounded-xl overflow-hidden cursor-pointer"
       style={{
-        border: `2px solid ${selected ? f.color : 'transparent'}`,
-        boxShadow: selected ? `0 0 20px ${f.color}55` : 'none',
-      }}>
+        height: 100,
+        border: `2px solid ${selected ? f.color : theme.border}`,
+        boxShadow: selected ? `0 0 24px ${f.color}50, inset 0 0 0 1px ${f.color}30` : 'none',
+        transition: 'border-color 0.2s, box-shadow 0.2s',
+      }}
+      whileTap={{ scale: 0.98 }}
+    >
+      {/* Gradient base */}
+      <div className="absolute inset-0" style={{ backgroundImage: f.gradient, backgroundSize: '100% 100%' }} />
 
-      {/* Gradient base — renders instantly */}
-      <div className="absolute inset-0"
-        style={{ backgroundImage: f.gradient, backgroundSize: '100% 100%' }} />
-
-      {/* Art layer — fades in once loaded */}
+      {/* Art — fades in once loaded */}
       {f.artUrl && (
         <>
           <img src={f.artUrl} alt="" aria-hidden="true"
             style={{ position: 'absolute', width: 0, height: 0, opacity: 0 }}
             onLoad={() => setImgLoaded(true)} />
-          <div className="absolute inset-0"
-            style={{
-              backgroundImage: `url(${f.artUrl})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center center',
-              opacity: imgLoaded ? 1 : 0,
-              transition: 'opacity 0.45s ease',
-            }} />
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url(${f.artUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: f.artPosition || 'center 30%',
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.45s ease',
+          }} />
         </>
       )}
 
-      {/* Dark gradient overlay */}
-      <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.08) 100%)' }} />
+      {/* Left-to-right scrim so text is always readable */}
+      <div className="absolute inset-0" style={{
+        background: 'linear-gradient(90deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 65%, rgba(0,0,0,0.0) 100%)',
+      }} />
 
-      {selected && (
-        <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center z-10"
-          style={{ background: f.color }}>
-          <span style={{ color: '#000', fontSize: 9, fontWeight: 900 }}>✓</span>
-        </div>
-      )}
+      {/* Faction color accent bar on left edge */}
+      <div className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: f.color }} />
 
-      <div className="relative z-10 px-3 pb-2.5 pt-6">
-        <div className="flex items-end justify-between mb-2">
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-black leading-tight truncate" style={{ color: '#fff' }}>{f.name}</p>
-            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10, fontWeight: 600 }}>{unitCount} units</p>
-          </div>
+      {/* Content row */}
+      <div className="absolute inset-0 flex items-center px-4 gap-3">
+        {/* Icon */}
+        <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+          style={{ background: `${f.color}22`, border: `1px solid ${f.color}40` }}>
           <FactionIcon id={id} size={22} color={f.color} />
         </div>
-      </div>
 
-      {selected && (
-        <button
-          onClick={e => { e.stopPropagation(); onContinue() }}
-          className="relative z-10 w-full py-2.5 font-black text-sm tracking-wide"
-          style={{ background: f.color, color: '#fff' }}>
-          Continue with {f.name} →
-        </button>
-      )}
-    </div>
+        {/* Name + count */}
+        <div className="flex-1 min-w-0">
+          <p className="font-black leading-tight text-white" style={{ fontSize: 14 }}>{f.name}</p>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 10, fontWeight: 600, marginTop: 1 }}>
+            {unitCount} units
+          </p>
+        </div>
+
+        {/* Right side: selected badge or arrow hint */}
+        <AnimatePresence mode="wait">
+          {selected ? (
+            <motion.div key="selected-actions" className="flex items-center gap-2 shrink-0"
+              initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 8 }}
+              transition={{ duration: 0.15 }}>
+              <button
+                onClick={e => { e.stopPropagation(); onContinue() }}
+                className="px-3 py-1.5 rounded-lg font-black text-xs"
+                style={{ background: f.color, color: '#000', whiteSpace: 'nowrap' }}>
+                Continue →
+              </button>
+              <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                style={{ background: f.color }}>
+                <span style={{ color: '#000', fontSize: 9, fontWeight: 900, lineHeight: 1 }}>✓</span>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.span key="arrow" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              style={{ color: 'rgba(255,255,255,0.2)', fontSize: 18, lineHeight: 1 }}>›</motion.span>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
   )
 }
 
@@ -833,8 +852,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               ))}
             </div>
 
-            {/* Faction grid — gacha-style portrait cards */}
-            <div className="grid grid-cols-2 gap-2">
+            {/* Faction roster — landscape band cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {ALLEGIANCE_GROUPS.find(g => g.id === allegianceTab)?.factionIds.map(id => {
                 const f = FACTION_META[id]
                 if (!f) return null
