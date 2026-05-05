@@ -331,16 +331,16 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
             <p className="text-sm italic mt-0.5 mb-3" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
           )}
           {/* Tab bar */}
-          <div className="flex gap-1 border-b pb-0" style={{ borderColor: theme.border }}>
+          <div className="flex gap-1.5 mt-3 p-1 rounded-2xl" style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
             {tabs.map(tab => {
               const isActive = activeTab === tab.id
               return (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                  className="px-3 py-2 text-xs font-bold rounded-t-lg transition-all"
+                  className="flex-1 py-2 text-xs font-black rounded-xl transition-all"
                   style={{
-                    background: isActive ? `${accent}18` : 'transparent',
-                    color: isActive ? accent : theme.textSecondary,
-                    borderBottom: isActive ? `2px solid ${accent}` : '2px solid transparent',
+                    background: isActive ? accent : 'transparent',
+                    color: isActive ? '#000' : theme.textSecondary,
+                    boxShadow: isActive ? `0 1px 6px ${accent}44` : 'none',
                   }}>
                   {tab.label}
                 </button>

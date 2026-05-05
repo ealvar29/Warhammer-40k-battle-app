@@ -23,6 +23,13 @@ export const tyranidDetachments = {
           fullEffect: 'Each time a model in a friendly TYRANIDS unit makes a melee attack that targets an INFANTRY or SWARM unit, that attack has the [SUSTAINED HITS 1] ability.',
           mathBonus: { sustainedHits: 1 },
           mathBonusLabel: 'Sustained Hits 1 (vs INFANTRY/SWARM)',
+          unitEffects: {
+            phases: ['fight'],
+            factionKeywords: ['TYRANIDS'],
+            badge: 'Sustained Hits 1',
+            badgeColor: '#34d399',
+            why: 'vs INFANTRY/SWARM — melee attacks score an extra hit on a 5+',
+          },
         },
         {
           id: 'hyperAggression',
@@ -32,6 +39,13 @@ export const tyranidDetachments = {
           fullEffect: 'Each time a model in a friendly TYRANIDS unit makes a melee attack that targets a MONSTER or VEHICLE unit, that attack has the [LETHAL HITS] ability.',
           mathBonus: { lethalHits: true },
           mathBonusLabel: 'Lethal Hits (vs MONSTER/VEHICLE)',
+          unitEffects: {
+            phases: ['fight'],
+            factionKeywords: ['TYRANIDS'],
+            badge: 'Lethal Hits',
+            badgeColor: '#f87171',
+            why: 'vs MONSTER/VEHICLE — wound rolls of 6 auto-wound, no save',
+          },
         },
         {
           id: 'hivePredators',
@@ -41,6 +55,13 @@ export const tyranidDetachments = {
           fullEffect: 'Each time a model in a friendly TYRANIDS unit makes a melee attack that targets a CHARACTER unit, that attack has the [PRECISION] ability.',
           mathBonus: null,
           mathBonusLabel: 'Precision (vs CHARACTER — no MathHammer effect)',
+          unitEffects: {
+            phases: ['fight'],
+            factionKeywords: ['TYRANIDS'],
+            badge: 'Precision',
+            badgeColor: '#c084fc',
+            why: 'vs CHARACTER — attacks can snipe the leader through the bodyguard',
+          },
         },
       ],
     },
