@@ -286,6 +286,38 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
           </div>
         </motion.div>
 
+        {/* Manage */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.22, duration: 0.3 }}
+          className="mt-4"
+        >
+          <p className="text-xs font-black tracking-widest uppercase px-1 mb-2" style={{ color: theme.textSecondary }}>
+            Manage
+          </p>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={() => onNavigate?.('portraits')}
+            className="w-full rounded-2xl border p-4 text-left flex items-center gap-4 relative overflow-hidden"
+            style={{ background: theme.surface, borderColor: `${theme.secondary}33` }}
+          >
+            <div className="absolute top-0 right-0 w-28 h-28 rounded-full -translate-y-8 translate-x-8 pointer-events-none"
+              style={{ background: theme.secondary, opacity: 0.06 }} />
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+              style={{ background: `${theme.secondary}18`, border: `1px solid ${theme.secondary}30` }}>
+              🖼
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-black" style={{ color: theme.textPrimary }}>Portrait Manager</p>
+              <p className="text-xs mt-0.5 font-medium" style={{ color: theme.textSecondary }}>
+                Add unit portraits from Warhammer Community — one by one, at your own pace
+              </p>
+              <p className="text-xs mt-1 font-bold" style={{ color: theme.secondary }}>Open →</p>
+            </div>
+          </motion.button>
+        </motion.div>
+
         <div className="h-2" />
       </div>
 

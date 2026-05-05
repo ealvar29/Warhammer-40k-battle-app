@@ -8,6 +8,7 @@ import DeployScreen from './screens/DeployScreen'
 import MissionSetupScreen from './screens/MissionSetupScreen'
 import CrusadeScreen from './screens/CrusadeScreen'
 import ListBuilderScreen from './screens/ListBuilderScreen'
+import PortraitManagerScreen from './screens/PortraitManagerScreen'
 import UnitLookupOverlay from './components/UnitLookupOverlay'
 import FactionAmbience from './components/FactionAmbience'
 import { useBattleStore } from './store/battleStore'
@@ -27,7 +28,7 @@ const NAV_TABS = [
   { id: 'search',  label: 'Search',  icon: '🔍', isOverlay: true },
 ]
 
-const TAB_ORDER = ['home', 'battle', 'lists', 'crusade', 'armyBuilder', 'missionSetup', 'deploy']
+const TAB_ORDER = ['home', 'battle', 'lists', 'crusade', 'armyBuilder', 'missionSetup', 'deploy', 'portraits']
 function slideDir(from, to) {
   const fi = TAB_ORDER.indexOf(from)
   const ti = TAB_ORDER.indexOf(to)
@@ -88,11 +89,12 @@ export default function App() {
                              onStratagemUse={isInRoom ? syncStratagem : undefined} />
       case 'lists':        return <ListBuilderScreen theme={theme} />
       case 'crusade':      return <CrusadeScreen theme={theme} />
+      case 'portraits':    return <PortraitManagerScreen theme={theme} onNavigate={navigate} />
       default:             return <HomeScreen theme={theme} onNavigate={navigate} />
     }
   }
 
-  const showBottomNav = screen !== 'armyBuilder' && screen !== 'missionSetup'
+  const showBottomNav = screen !== 'armyBuilder' && screen !== 'missionSetup' && screen !== 'portraits'
   const activeTabId = screen === 'armyBuilder' || screen === 'missionSetup' || screen === 'calc' ? 'battle' : screen
   const navTabsDesktop = NAV_TABS.filter(t => !t.isOverlay)
 
