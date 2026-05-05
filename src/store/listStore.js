@@ -5,6 +5,9 @@ export const useListStore = create(
   persist(
     (set, get) => ({
       savedLists: [], // [{ id, name, faction, targetPts, units: [{unitId, name, count, pts}] }]
+      selectedFaction: null, // tracks the faction the user is currently building for
+
+      setSelectedFaction: (faction) => set({ selectedFaction: faction }),
 
       saveList: (list) => set(s => {
         const existing = s.savedLists.findIndex(l => l.id === list.id)

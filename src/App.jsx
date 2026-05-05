@@ -13,12 +13,28 @@ import ListBuilderScreen from './screens/ListBuilderScreen'
 import PortraitManagerScreen from './screens/PortraitManagerScreen'
 import UnitLookupOverlay from './components/UnitLookupOverlay'
 import FactionAmbience from './components/FactionAmbience'
+import FactionFX from './components/FactionFX'
 import { useBattleStore } from './store/battleStore'
+import { useListStore } from './store/listStore'
 import { useBattleSync } from './hooks/useBattleSync'
 import { parseShareUrl } from './utils/armyShare'
 import { buildUnitsFromIds, findDetachment, FACTION_META } from './data/factionRegistry'
 
-const theme = themes.spacewolves
+const FACTION_THEME_MAP = {
+  spacewolves:       'spacewolves',
+  tyranids:          'hivemind',
+  chaosspacemarines: 'grimdark',
+  deathguard:        'grimdark',
+  worldeaters:       'grimdark',
+  thousandsons:      'grimdark',
+  emperorschildren:  'grimdark',
+  darkangels:        'grimdark',
+  spacemarines:      'imperialGold',
+  admech:            'imperialGold',
+  tau:               'tacticalhud',
+  necrons:           'tacticalhud',
+  aeldari:           'grimdark',
+}
 
 const NAV_TABS = [
   { id: 'home',    label: 'Home'    },
@@ -40,10 +56,14 @@ export default function App() {
   const [prevScreen, setPrevScreen] = useState('home')
   const [pendingImport, setPendingImport] = useState(null)
   const [showLookup, setShowLookup] = useState(false) // decoded army payload
-  const battleActive   = useBattleStore(s => s.battleActive)
-  const faction        = useBattleStore(s => s.faction)
-  const cp             = useBattleStore(s => s.cp)
+  const battleActive    = useBattleStore(s => s.battleActive)
+  const faction         = useBattleStore(s => s.faction)
+  const cp              = useBattleStore(s => s.cp)
   const setOpponentArmy = useBattleStore(s => s.setOpponentArmy)
+  const listFaction     = useListStore(s => s.selectedFaction)
+
+  const activeFaction = faction || listFaction
+  const theme = themes[FACTION_THEME_MAP[activeFaction]] || themes.grimdark
 
   // ── SignalR multiplayer sync ─────────────────────────────────────────────
   const { isInRoom, syncCp, syncPhase, syncStratagem, stratagemAlert, chargeAlert, clearStratagemAlert, clearChargeAlert } = useBattleSync()
@@ -103,7 +123,10 @@ export default function App() {
     <div className="flex h-screen overflow-hidden relative" style={{ background: theme.bg }}>
 
       {/* ── Faction ambient particles ── */}
-      <FactionAmbience factionId={faction} />
+      <FactionAmbience factionId={activeFaction} />
+
+      {/* ── Faction dramatic FX (lightning, pulses, etc.) ── */}
+      <FactionFX factionId={activeFaction} />
 
       {/* ── Stratagem alert toast (opponent used a stratagem) ── */}
       <AnimatePresence>

@@ -3,6 +3,7 @@ import { PhaseIcon, FactionIcon } from '../components/GameIcon'
 import { GiEagleEmblem, GiSkullCrossedBones, GiAlienBug, GiPistolGun, GiAxeSword, GiCrossedSwords } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
+import { useListStore } from '../store/listStore'
 import ImportListSheet from '../components/ImportListSheet'
 import { swUnitsByCategory } from '../data/spacewolves/units'
 import { smGenericsByCategory } from '../data/spacewolves/generics'
@@ -336,11 +337,13 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
               const isActive = activeTab === tab.id
               return (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                  className="flex-1 py-2 text-xs font-black rounded-xl transition-all"
+                  className="flex-1 py-2.5 text-xs font-black rounded-xl transition-all"
                   style={{
-                    background: isActive ? accent : 'transparent',
-                    color: isActive ? '#000' : theme.textSecondary,
-                    boxShadow: isActive ? `0 1px 6px ${accent}44` : 'none',
+                    background: isActive ? accent : `${accent}12`,
+                    color: isActive ? '#000' : accent,
+                    boxShadow: isActive ? `0 2px 10px ${accent}55` : 'none',
+                    border: `1px solid ${isActive ? 'transparent' : `${accent}30`}`,
+                    letterSpacing: isActive ? '0.03em' : '0',
                   }}>
                   {tab.label}
                 </button>
@@ -610,6 +613,7 @@ function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCoun
 
 export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const store = useBattleStore()
+  const setSelectedFaction = useListStore(s => s.setSelectedFaction)
   const [step, setStep] = useState('faction') // faction → detachment → units → opponent → ready
   const [localFaction, setLocalFaction] = useState(store.faction || 'spacewolves')
   const [localDetachment, setLocalDetachment] = useState(store.detachmentId || null)
@@ -841,7 +845,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                     id={id}
                     selected={localFaction === id}
                     theme={theme}
-                    onSelect={() => { setLocalFaction(id); setLocalDetachment(null); setUnitCounts({}); store.setFaction(id) }}
+                    onSelect={() => { setLocalFaction(id); setLocalDetachment(null); setUnitCounts({}); store.setFaction(id); setSelectedFaction(id) }}
                     onContinue={() => setStep('detachment')}
                     unitCount={(FACTION_UNITS[id] || []).length}
                   />
