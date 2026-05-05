@@ -2,7 +2,8 @@ import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FACTION_UNITS, FACTION_META } from '../data/factionRegistry'
 import { KEYWORD_GUIDE, lookupKeyword } from '../data/keywordGuide'
-import { FactionIcon } from './GameIcon'
+import { FactionIcon, KeywordIcon } from './GameIcon'
+import { GiChestArmor, GiMagicSwirl, GiCrossedSwords, GiOpenBook } from 'react-icons/gi'
 
 // ── Static indexes built once at module load ──────────────────────────────────
 
@@ -194,7 +195,7 @@ function WeaponsTable({ weapons, type, color }) {
             className="overflow-hidden">
             <div className="m-3 rounded-xl border p-3" style={{ background: `${color}0d`, borderColor: `${color}44` }}>
               <div className="flex items-start gap-2.5">
-                <span className="text-xl shrink-0">{activeKwData.icon}</span>
+                <KeywordIcon keyword={activeKw} size={20} color={color} className="shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2 mb-1 flex-wrap">
                     <p className="text-xs font-black" style={{ color }}>{activeKw}</p>
@@ -465,7 +466,7 @@ function RuleCard({ entry, theme }) {
       style={{ background: theme.surface, borderColor: expanded ? phaseColor : theme.border }}>
 
       <div className="px-3 py-2.5 flex items-center gap-2.5">
-        <span className="text-xl shrink-0">{entry.icon}</span>
+        <KeywordIcon keyword={entry.key} size={20} color={phaseColor} className="shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-black leading-tight" style={{ color: '#fff' }}>{entry.name}</p>
           <p className="text-xs mt-0.5 font-semibold" style={{ color: phaseColor }}>{entry.summary}</p>
@@ -584,10 +585,10 @@ export default function UnitLookupOverlay({ theme, onClose }) {
   }
 
   const MODES = [
-    { id: 'units',     icon: '🛡',  label: 'Units',     count: query ? unitResults.length    : null },
-    { id: 'abilities', icon: '✦',   label: 'Abilities', count: query ? abilityResults.length : null },
-    { id: 'weapons',   icon: '⚔️',  label: 'Weapons',   count: query ? weaponResults.length  : null },
-    { id: 'rules',     icon: '📚',  label: 'Rules',     count: rulesResults.length },
+    { id: 'units',     Icon: GiChestArmor,   label: 'Units',     count: query ? unitResults.length    : null },
+    { id: 'abilities', Icon: GiMagicSwirl,   label: 'Abilities', count: query ? abilityResults.length : null },
+    { id: 'weapons',   Icon: GiCrossedSwords, label: 'Weapons',  count: query ? weaponResults.length  : null },
+    { id: 'rules',     Icon: GiOpenBook,     label: 'Rules',     count: rulesResults.length },
   ]
 
   const weaponRuleHints = ['Lance', 'Melta', 'Torrent', 'Heavy', 'Blast', 'Lethal Hits', 'Hazardous']
@@ -600,7 +601,7 @@ export default function UnitLookupOverlay({ theme, onClose }) {
         {/* Title row */}
         <div className="flex items-center justify-between mb-2.5">
           <div className="flex items-center gap-2">
-            <span style={{ fontSize: 16 }}>📖</span>
+            <GiOpenBook size={16} color={theme.secondary} />
             <p className="text-sm font-black" style={{ color: theme.textPrimary }}>Codex Lookup</p>
           </div>
           <button onClick={onClose}
@@ -647,7 +648,7 @@ export default function UnitLookupOverlay({ theme, onClose }) {
                 background: mode === tab.id ? theme.secondary : 'transparent',
                 color: mode === tab.id ? theme.bg : theme.textSecondary,
               }}>
-              <span>{tab.icon}</span>
+              <tab.Icon size={12} />
               <span className="hidden xs:inline">{tab.label}</span>
               {tab.count !== null && (
                 <span className="rounded-full px-1 py-0.5 font-black leading-none"

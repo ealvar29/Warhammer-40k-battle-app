@@ -42,6 +42,33 @@ import {
   GiBinoculars,        // Deathwatch
   GiMedievalGate,      // Imperial Knights
   GiImplosion,         // Chaos Knights
+  // Keyword trait icons
+  GiSprint,            // assault — advance and fire
+  GiMachineGun,        // heavy — stationary bonus
+  GiMachineGunMagazine, // rapid fire — burst at range
+  GiGrenade,           // blast — area damage
+  GiFlamethrower,      // torrent — auto-hit spray
+  GiBurningEmbers,     // melta — heat damage bonus
+  GiDoubleShot,        // twin-linked — re-roll wounds
+  GiSkullCrack,        // lethal hits — critical auto-wound
+  GiSparkles,          // sustained hits — extra hits on 6
+  GiSkullBolt,         // devastating wounds — mortal wounds on 6
+  GiHazardSign,        // hazardous — self-damage risk
+  GiArtilleryShell,    // indirect fire — arc fire
+  GiEyeTarget,         // precision — snipe the leader
+  GiHammerBreak,       // ignores cover — no cover saves
+  GiPistolGun,         // pistol — shoot in melee
+  GiArrowScope,        // anti — targeted vs keyword
+  GiAmmoBox,           // one shot — limited ammo
+  GiKatana,            // lance — bonus after charge
+  GiFeatheredWing,     // fly — move over terrain
+  GiParachute,         // deep strike — deploy from reserves
+  GiRunningNinja,      // scouts — advance move pre-game
+  GiHoodedFigure,      // lone operative — hard to snipe
+  GiGhost,             // stealth — -1 to hit from range
+  GiCrown,             // leader — attaches to unit
+  GiHealingShield,     // feel no pain — ignore wounds
+  GiMagicSwirl,        // psychic — psychic abilities
   // Misc icons
   GiShield,
   GiChestArmor,
@@ -129,6 +156,51 @@ export function FactionIcon({ id, size = 18, color, style, className }) {
 
 export function GameIcon({ name, size = 18, color, style, className }) {
   const Icon = ICON_MAP[name]
+  if (!Icon) return null
+  return <Icon size={size} color={color} style={style} className={className} />
+}
+
+// ── Keyword icon map ──────────────────────────────────────────────────────────
+export const KEYWORD_ICON_MAP = {
+  // Weapon traits
+  'assault':            GiSprint,
+  'heavy':              GiMachineGun,
+  'rapid fire':         GiMachineGunMagazine,
+  'blast':              GiGrenade,
+  'torrent':            GiFlamethrower,
+  'melta':              GiBurningEmbers,
+  'twin-linked':        GiDoubleShot,
+  'lethal hits':        GiSkullCrack,
+  'sustained hits':     GiSparkles,
+  'devastating wounds': GiSkullBolt,
+  'hazardous':          GiHazardSign,
+  'indirect fire':      GiArtilleryShell,
+  'precision':          GiEyeTarget,
+  'ignores cover':      GiHammerBreak,
+  'pistol':             GiPistolGun,
+  'anti':               GiArrowScope,
+  'one shot':           GiAmmoBox,
+  'lance':              GiKatana,
+  // Unit traits
+  'fly':                GiFeatheredWing,
+  'deep strike':        GiParachute,
+  'scouts':             GiRunningNinja,
+  'lone operative':     GiHoodedFigure,
+  'stealth':            GiGhost,
+  'leader':             GiCrown,
+  'feel no pain':       GiHealingShield,
+  'psychic':            GiMagicSwirl,
+}
+
+export function KeywordIcon({ keyword, size = 18, color, style, className }) {
+  if (!keyword) return null
+  const lower = String(keyword).trim().toLowerCase()
+  let Icon = KEYWORD_ICON_MAP[lower]
+  if (!Icon) {
+    for (const [key, icon] of Object.entries(KEYWORD_ICON_MAP)) {
+      if (lower.startsWith(key)) { Icon = icon; break }
+    }
+  }
   if (!Icon) return null
   return <Icon size={size} color={color} style={style} className={className} />
 }
