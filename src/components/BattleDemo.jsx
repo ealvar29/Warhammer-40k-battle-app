@@ -41,6 +41,35 @@ function getActiveWeapons(unit) {
   if (!loadout?.weaponFilter) return unit.weapons || []
   return (unit.weapons || []).filter(w => loadout.weaponFilter.includes(w.name))
 }
+
+// ── Phase relevance — drives contextual hints and suppress dimming ─────────────
+function getPhaseRelevance(unit, phaseId) {
+  const weapons = getActiveWeapons(unit)
+  const hasRanged = weapons.some(w => w.type === 'ranged')
+  const hasMelee  = weapons.some(w => w.type === 'melee')
+  const phaseAbilities = (unit.abilities || []).filter(
+    a => typeof a === 'object' && a.phase === phaseId
+  )
+
+  if (phaseId === 'shooting') {
+    if (!hasRanged && hasMelee) return { level: 'suppress', hint: 'No ranged weapons — save for Fight phase' }
+    return { level: hasRanged ? 'relevant' : 'neutral', hint: null }
+  }
+  if (phaseId === 'fight') {
+    if (!hasMelee && hasRanged) return { level: 'suppress', hint: 'No melee weapons — hold position' }
+    return { level: hasMelee ? 'relevant' : 'neutral', hint: null }
+  }
+  if (phaseId === 'charge') {
+    if (!hasMelee) return { level: 'suppress', hint: 'Ranged unit — stay back' }
+    return { level: 'relevant', hint: null }
+  }
+  if (phaseId === 'command' || phaseId === 'movement') {
+    if (phaseAbilities.length > 0)
+      return { level: 'relevant', hint: `${phaseAbilities[0].name} — use this now` }
+    return { level: 'neutral', hint: null }
+  }
+  return { level: 'neutral', hint: null }
+}
 const FADE_IN = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 8 } }
 
 // ── HP Bar ────────────────────────────────────────────────────────────────────
@@ -433,7 +462,7 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
 }
 
 // ── Unit Card ─────────────────────────────────────────────────────────────────
-function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, activePickEffect, theme, motionProps, onMatchup, onCalcWeapon }) {
+function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, activePickEffect, phaseRelevance, theme, motionProps, onMatchup, onCalcWeapon }) {
   const wounds = unitState?.currentWounds ?? unit.currentWounds ?? unit.maxWounds
   const pct = wounds / unit.maxWounds
   const statusColor = pct > 0.6 ? theme.hpFull : pct > 0.3 ? theme.hpMid : theme.hpLow
@@ -461,9 +490,15 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
     unit.InvSv && { label: 'INV', value: unit.InvSv },
   ].filter(Boolean)
 
+  const isSuppressed = phaseRelevance?.level === 'suppress'
+
   return (
     <motion.div
       {...motionProps}
+      animate={{
+        ...(typeof motionProps?.animate === 'object' ? motionProps.animate : { opacity: 1, y: 0 }),
+        opacity: isSuppressed ? 0.4 : 1,
+      }}
       layout
       className="rounded-2xl border p-4"
       style={{
@@ -495,6 +530,26 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
             </AnimatePresence>
           </div>
           <p className="text-xs mt-0.5 font-medium uppercase tracking-wider" style={{ color: theme.textSecondary }}>{unit.type}</p>
+          <AnimatePresence>
+            {phaseRelevance?.hint && (
+              <motion.span
+                key={phaseRelevance.hint}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.85 }}
+                transition={{ duration: 0.18 }}
+                className="inline-flex mt-1 text-xs px-2 py-0.5 rounded-full font-bold"
+                style={{
+                  background: isSuppressed ? `${theme.hpLow}18` : `${theme.secondary}18`,
+                  color: isSuppressed ? theme.hpLow : theme.secondary,
+                  border: `1px solid ${isSuppressed ? theme.hpLow + '35' : theme.secondary + '35'}`,
+                  fontSize: 9,
+                }}
+              >
+                {isSuppressed ? '◆ ' : '✦ '}{phaseRelevance.hint}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {unit.isLeader && (
@@ -1238,6 +1293,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           isWarlord={warlordUnitId === u.id}
           activePhase={activePhase.id}
           activePickEffect={activePickEffect}
+          phaseRelevance={getPhaseRelevance(u, activePhase.id)}
           theme={theme}
           onMatchup={opponentArmy?.units?.length > 0 ? () => setMatchupUnit(u) : undefined}
           onCalcWeapon={setMathHammerWeapon}
