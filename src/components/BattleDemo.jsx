@@ -13,7 +13,8 @@ import MatchupSheet from './MatchupSheet'
 import ImportListSheet from './ImportListSheet'
 import PhaseAbilityPanel from './PhaseAbilityPanel'
 import DetachmentRulePanel from './DetachmentRulePanel'
-import TipCard from './TipCard'
+import PhaseGuideCard from './PhaseGuideCard'
+
 import { PHASE_EFFECTS } from '../data/phaseEffects'
 import MathHammerSheet from './MathHammerSheet'
 import KeywordChip from './KeywordChip'
@@ -766,55 +767,13 @@ function BattleProfileModal({ opponentTags, onToggleTag, onClose, theme }) {
   )
 }
 
-// ── Phase Hints ───────────────────────────────────────────────────────────────
-const PHASE_HINTS = {
-  command:  'Gain 1 CP · Issue orders · Use command abilities',
-  movement: 'Move · Advance · Fall back · Reinforcements arrive',
-  shooting: 'Shoot ranged weapons · Use shooting stratagems',
-  charge:   'Declare charges · Heroic interventions',
-  fight:    'Pile in · Fight with melee weapons · No Retreat',
-}
-
-const PHASE_TIPS = {
-  command:  'The Command Phase is your most powerful window — spend CP on Stratagems before anything moves. Check your detachment rule here too; many only trigger in this phase.',
-  movement: 'Units that Advance can\'t shoot (unless a rule says otherwise). Falling Back lets you escape combat but you can\'t shoot or charge afterward.',
-  shooting: 'Declare all targets before rolling any dice. If a unit targets multiple enemies, resolve each target one at a time, fully, before moving to the next.',
-  charge:   'Charge rolls are 2D6 — you need to beat the distance to your target. If you fail, the unit stays put. Only declare a charge if you\'re within 12".',
-  fight:    'Units must fight in the order they were charged (the chargers go first). Models pile in up to 3" before attacking — use this to bring more weapons into range.',
-}
-
-// ── Phase Action Bar (your turn + opponent's turn) ────────────────────────────
-function PhaseActionBar({ isYourTurn, stratCount, reactionCount, theme }) {
-  const count = isYourTurn ? stratCount : reactionCount
-  if (count === 0) return null
-  const color = isYourTurn ? theme.secondary : theme.hpLow
-  const icon = isYourTurn ? '⚔' : '⚡'
-  const label = isYourTurn
-    ? `${count} ${count === 1 ? 'Stratagem' : 'Stratagems'} Available`
-    : `${count} Reaction ${count === 1 ? 'Stratagem' : 'Stratagems'} Available`
-  return (
-    <motion.div
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
-      transition={{ duration: 0.2 }}
-      className="mx-3 mt-2 overflow-hidden shrink-0"
-    >
-      <motion.div
-        animate={isYourTurn ? {} : { opacity: [1, 0.55, 1] }}
-        transition={isYourTurn ? {} : { repeat: Infinity, duration: 1.4 }}
-        className="rounded-xl px-3 py-2 flex items-center gap-2"
-        style={{ background: `${color}15`, border: `1px solid ${color}44` }}
-      >
-        <span style={{ fontSize: 14 }}>{icon}</span>
-        <p className="text-xs font-bold flex-1" style={{ color }}>{label}</p>
-        <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-          style={{ background: `${color}22`, color, border: `1px solid ${color}44` }}>
-          {count}
-        </span>
-      </motion.div>
-    </motion.div>
-  )
+// ── Phase accent colours (shared) ─────────────────────────────────────────────
+const PHASE_ACCENT_MAP = {
+  command:  '#c9a84c',
+  movement: '#22c55e',
+  shooting: '#60a5fa',
+  charge:   '#f97316',
+  fight:    '#ef4444',
 }
 
 // ── Phase Context Row (weapon + ability counts for the units area) ─────────────
@@ -864,6 +823,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
 
   const [activePhaseIdx, setActivePhaseIdx] = useState(0)
   const [isYourTurn, setIsYourTurn] = useState(true)
+  const [activeTab, setActiveTab] = useState('guide') // 'guide' | 'stratagems' | 'units'
   const [sourceFilter, setSourceFilter] = useState('all')
   const [showProfile, setShowProfile] = useState(false)
   const [showDebrief, setShowDebrief] = useState(false)
@@ -970,6 +930,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
 
   useEffect(() => {
     setActiveStratIds(new Set())
+    setActiveTab('guide')
   }, [activePhaseIdx, isYourTurn])
 
   const sourceOptions = [
@@ -977,6 +938,264 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     { id: 'detachment', label: 'Detachment' },
     { id: 'core', label: 'Core' },
   ]
+
+  const phaseAccent = PHASE_ACCENT_MAP[activePhase.id] || theme.secondary
+
+  // CP effects node — passed into PhaseGuideCard + shown in desktop left col
+  const cpEffectsNode = (() => {
+    const commandGains      = activePhaseEffects.filter(e => e.phase === 'command' && e.type === 'cpGain')
+    const commandConditional = activePhaseEffects.filter(e => e.phase === 'command' && (e.type === 'cpConditional' || e.type === 'cpFree'))
+    const fightKills        = activePhaseEffects.filter(e => e.phase === 'fight' && e.type === 'cpKill')
+
+    if (activePhase.id === 'command' && isYourTurn && (commandGains.length > 0 || commandConditional.length > 0)) {
+      const totalAutoGain = 1 + commandGains.reduce((s, e) => s + (e.amount || 1), 0)
+      const alreadyGained = cpGainedRounds.includes(currentRound)
+      const sources = [
+        { label: 'Standard Command Phase', amount: 1 },
+        ...commandGains.map(e => ({ label: `${e.unitName} — ${e.abilityName}`, amount: e.amount || 1 })),
+      ]
+      const handleGainAll = () => {
+        if (alreadyGained) return
+        sources.forEach(src => logCpGain(src.amount, src.label, 'command', currentRound))
+        markCpGainedForRound(currentRound)
+      }
+      return (
+        <div className="rounded-xl px-3 py-2.5 space-y-2"
+          style={{ background: `${phaseAccent}0d`, border: `1px solid ${phaseAccent}25` }}>
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold" style={{ color: phaseAccent }}>CP this Command Phase</p>
+            {!alreadyGained ? (
+              <button onClick={handleGainAll} className="text-xs px-2.5 py-1 rounded-lg font-black"
+                style={{ background: phaseAccent, color: theme.bg }}>
+                +{totalAutoGain} Gain All
+              </button>
+            ) : (
+              <span className="text-xs font-bold px-2 py-0.5 rounded-lg"
+                style={{ background: `${phaseAccent}18`, color: phaseAccent }}>✓ Gained</span>
+            )}
+          </div>
+          {sources.map((src, i) => (
+            <div key={i} className="flex items-center justify-between">
+              <p className="text-xs" style={{ color: theme.textSecondary }}>+{src.amount} {src.label}</p>
+            </div>
+          ))}
+          {commandConditional.length > 0 && (
+            <div className="pt-1.5" style={{ borderTop: `1px solid ${theme.border}` }}>
+              {commandConditional.map(e => (
+                <div key={e.unitId} className="mb-1">
+                  <p className="text-xs font-bold" style={{ color: e.type === 'cpFree' ? theme.cpColor : phaseAccent }}>
+                    {e.unitName} — {e.abilityName}
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{e.note}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )
+    }
+
+    if (activePhase.id === 'fight' && fightKills.length > 0) {
+      return (
+        <div className="rounded-xl px-3 py-2.5 space-y-2"
+          style={{ background: `${phaseAccent}0d`, border: `1px solid ${phaseAccent}25` }}>
+          <p className="text-xs font-bold" style={{ color: phaseAccent }}>CP on kill</p>
+          {fightKills.map(e => (
+            <div key={e.unitId}>
+              <p className="text-xs font-bold" style={{ color: theme.textPrimary }}>{e.unitName} — {e.abilityName}</p>
+              <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{e.note}</p>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    return null
+  })()
+
+  // Shared content blocks — referenced by both mobile tabs and desktop columns
+  const cpLogPanel = (
+    <AnimatePresence>
+      {showCpLog && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.2 }}
+          className="overflow-hidden mx-3 mt-2 rounded-2xl border shrink-0"
+          style={{ background: theme.surface, borderColor: theme.border }}>
+          <div className="px-3 py-2 flex items-center justify-between"
+            style={{ borderBottom: `1px solid ${theme.border}`, background: theme.surfaceHigh }}>
+            <p className="text-xs font-black tracking-widest uppercase" style={{ color: theme.textSecondary }}>CP History</p>
+            <button onClick={() => setShowCpLog(false)} className="text-xs" style={{ color: theme.textSecondary }}>✕</button>
+          </div>
+          {cpLog.length === 0 ? (
+            <p className="px-3 py-3 text-xs text-center" style={{ color: theme.textSecondary }}>No CP changes yet</p>
+          ) : (
+            <div className="max-h-48 overflow-y-auto divide-y" style={{ borderColor: theme.border }}>
+              {cpLog.map(entry => (
+                <div key={entry.id} className="px-3 py-2 flex items-center gap-2">
+                  <span className="text-sm shrink-0" style={{ color: entry.type === 'gain' ? '#22c55e' : theme.hpLow }}>
+                    {entry.type === 'gain' ? '+' : '−'}{entry.amount}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs leading-tight truncate" style={{ color: theme.textPrimary }}>{entry.reason}</p>
+                    <p className="text-xs" style={{ color: theme.textSecondary }}>
+                      Round {entry.round} · {entry.phase} · {entry.cpBefore} → {entry.cpAfter} CP
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
+  const vpStripMobile = (
+    <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowVp(true)}
+      className="mx-3 mt-2.5 rounded-2xl border flex items-center shrink-0 overflow-hidden"
+      style={{ background: theme.surface, borderColor: theme.border }}>
+      <div className="flex-1 py-2.5 text-center">
+        <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>You</p>
+        <motion.p key={totalYouVp} initial={{ scale: 1.25 }} animate={{ scale: 1 }}
+          className="text-xl font-black leading-none mt-0.5" style={{ color: theme.hpFull }}>{totalYouVp}</motion.p>
+      </div>
+      <div className="py-2.5 px-4 border-x text-center" style={{ borderColor: theme.border }}>
+        <p className="text-xs" style={{ color: theme.textSecondary }}>Round</p>
+        <p className="text-lg font-black leading-none mt-0.5" style={{ color: theme.textPrimary }}>{currentRound}/5</p>
+      </div>
+      <div className="flex-1 py-2.5 text-center">
+        <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>Them</p>
+        <motion.p key={totalThemVp} initial={{ scale: 1.25 }} animate={{ scale: 1 }}
+          className="text-xl font-black leading-none mt-0.5" style={{ color: theme.hpLow }}>{totalThemVp}</motion.p>
+      </div>
+    </motion.button>
+  )
+
+  const stratagemFilterBar = (
+    <div className="flex gap-2 px-3 mt-2.5 shrink-0 flex-wrap">
+      {sourceOptions.map(opt => (
+        <button key={opt.id} onClick={() => setSourceFilter(opt.id)}
+          className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
+          style={{
+            background: sourceFilter === opt.id ? theme.surfaceHigh : 'transparent',
+            color: sourceFilter === opt.id ? theme.textPrimary : theme.textSecondary,
+            border: `1px solid ${sourceFilter === opt.id ? theme.border : 'transparent'}`,
+          }}>
+          {opt.label}
+        </button>
+      ))}
+      {opponentTags.length > 0 && phaseSuggestedCount > 0 && (
+        <button
+          onClick={() => setSourceFilter(f => f === 'suggested' ? 'all' : 'suggested')}
+          className="ml-auto px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
+          style={{
+            background: sourceFilter === 'suggested' ? `${theme.secondary}22` : `${theme.secondary}10`,
+            color: theme.secondary,
+            border: `1px solid ${sourceFilter === 'suggested' ? theme.secondary : theme.secondary + '44'}`,
+          }}>
+          💡 {phaseSuggestedCount} suggested
+        </button>
+      )}
+    </div>
+  )
+
+  const stratagemList = (
+    <div className="px-3 pb-2 mt-2 space-y-2">
+      {visibleStratagems.length === 0 ? (
+        <motion.div {...FADE_IN} className="rounded-2xl border p-5 text-center"
+          style={{ background: theme.stratBg, borderColor: theme.stratBorder }}>
+          <p className="text-sm font-medium" style={{ color: theme.textSecondary }}>
+            {isYourTurn ? 'No stratagems for this phase.' : 'No reaction stratagems this phase.'}
+          </p>
+        </motion.div>
+      ) : (
+        visibleStratagems.map((s, i) => (
+          <StratCard key={s.id} strat={s} theme={theme}
+            highlighted={suggestedIds.has(s.id)}
+            highlightReason={suggestionMap[s.id]}
+            cp={cp}
+            onActivate={handleActivateStrat}
+            activeStratIds={activeStratIds}
+            motionProps={{
+              initial: { opacity: 0, y: 10 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: i * 0.04, duration: 0.22 },
+            }}
+          />
+        ))
+      )}
+    </div>
+  )
+
+  const unitsList = (
+    <div className="px-3 mt-2 space-y-2 pb-2">
+      <PhaseContextRow units={units} phaseId={activePhase.id} abilityCount={phaseAbilityCount} theme={theme} />
+      <p className="text-xs font-bold tracking-widest uppercase px-1 pt-1" style={{ color: theme.textSecondary }}>
+        Your Units
+      </p>
+      {units.map((u, i) => (
+        <UnitCard key={u.id} unit={u}
+          unitState={unitStates[u.id]}
+          attachedLeaderId={unitStates[u.id]?.attachedLeaderId ?? null}
+          onAttach={(uid, lid) => attachLeader(uid, lid)}
+          onDetach={(uid) => detachLeader(uid)}
+          onWound={(id, cur) => setWounds(id, cur - 1)}
+          onHeal={(id, cur) => setWounds(id, cur + 1)}
+          onToggleWarlord={setWarlord}
+          isWarlord={warlordUnitId === u.id}
+          activePhase={activePhase.id}
+          theme={theme}
+          onMatchup={opponentArmy?.units?.length > 0 ? () => setMatchupUnit(u) : undefined}
+          onCalcWeapon={setMathHammerWeapon}
+          motionProps={{
+            initial: { opacity: 0, y: 12 },
+            animate: { opacity: 1, y: 0 },
+            transition: { delay: i * 0.05, duration: 0.22 },
+          }}
+        />
+      ))}
+      {opponentArmy?.units?.length > 0 ? (
+        <>
+          <div className="flex items-center gap-2 pt-2">
+            <div className="h-px flex-1" style={{ background: `${theme.hpLow}44` }} />
+            <p className="text-xs font-bold tracking-widest uppercase px-2" style={{ color: theme.hpLow }}>Opponent Army</p>
+            <div className="h-px flex-1" style={{ background: `${theme.hpLow}44` }} />
+            <button onClick={clearOpponentArmy}
+              className="text-xs px-1.5 py-0.5 rounded-lg font-bold"
+              style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>✕</button>
+          </div>
+          {opponentArmy.units.map((u, i) => (
+            <OpponentUnitCard key={u.id} unit={u} theme={theme}
+              onMatchup={() => setMatchupUnit({ ...units[0], _asDefender: true, _opponentUnit: u })}
+              motionProps={{
+                initial: { opacity: 0, y: 12 },
+                animate: { opacity: 1, y: 0 },
+                transition: { delay: i * 0.04, duration: 0.22 },
+              }}
+            />
+          ))}
+        </>
+      ) : (
+        <div className="space-y-2 mt-1">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowShare(true)}
+            className="w-full rounded-2xl border p-3.5 text-center"
+            style={{ background: theme.stratBg, borderColor: theme.stratBorder, borderStyle: 'dashed' }}>
+            <p className="text-sm font-bold" style={{ color: theme.textSecondary }}>🔗 Link Opponent's Army</p>
+            <p className="text-xs mt-0.5" style={{ color: theme.textSecondary, opacity: 0.7 }}>Share your link — they send one back</p>
+          </motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowImport(true)}
+            className="w-full rounded-2xl border p-3.5 text-center"
+            style={{ background: theme.stratBg, borderColor: theme.stratBorder, borderStyle: 'dashed' }}>
+            <p className="text-sm font-bold" style={{ color: theme.textSecondary }}>📋 Paste Opponent's List</p>
+            <p className="text-xs mt-0.5" style={{ color: theme.textSecondary, opacity: 0.7 }}>Import from New Recruit, BattleScribe, etc.</p>
+          </motion.button>
+        </div>
+      )}
+    </div>
+  )
 
   return (
     <div className="flex flex-col h-full overflow-hidden relative" style={{ background: theme.bg, fontFamily: theme.font }}>
@@ -1067,410 +1286,165 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
         </div>
       </div>
 
-      {/* ── Responsive layout: single-col on mobile, 2-col on desktop ── */}
-      <div className="flex-1 overflow-y-auto md:overflow-hidden md:flex md:flex-row">
+      {/* ── Responsive layout ── */}
+      <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
 
-        {/* ── Left column: VP (mobile) + Phase banner + Filters + Stratagems ── */}
-        <div className="md:flex-1 md:flex md:flex-col md:overflow-hidden md:border-r" style={{ borderColor: theme.border }}>
+        {/* ══ MOBILE VIEW (hidden on md+) ══════════════════════════════════════ */}
+        <div className="flex-1 flex flex-col overflow-hidden md:hidden">
 
-          {/* CP Log panel */}
-          <AnimatePresence>
-            {showCpLog && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden mx-3 mt-2 rounded-2xl border shrink-0"
-                style={{ background: theme.surface, borderColor: theme.border }}>
-                <div className="px-3 py-2 flex items-center justify-between"
-                  style={{ borderBottom: `1px solid ${theme.border}`, background: theme.surfaceHigh }}>
-                  <p className="text-xs font-black tracking-widest uppercase" style={{ color: theme.textSecondary }}>CP History</p>
-                  <button onClick={() => setShowCpLog(false)} className="text-xs" style={{ color: theme.textSecondary }}>✕</button>
-                </div>
-                {cpLog.length === 0 ? (
-                  <p className="px-3 py-3 text-xs text-center" style={{ color: theme.textSecondary }}>No CP changes yet</p>
-                ) : (
-                  <div className="max-h-48 overflow-y-auto divide-y" style={{ '--tw-divide-opacity': 1, borderColor: theme.border }}>
-                    {cpLog.map(entry => (
-                      <div key={entry.id} className="px-3 py-2 flex items-center gap-2">
-                        <span className="text-sm shrink-0" style={{ color: entry.type === 'gain' ? '#22c55e' : theme.hpLow }}>
-                          {entry.type === 'gain' ? '+' : '−'}{entry.amount}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs leading-tight truncate" style={{ color: theme.textPrimary }}>{entry.reason}</p>
-                          <p className="text-xs" style={{ color: theme.textSecondary }}>
-                            Round {entry.round} · {entry.phase} · {entry.cpBefore} → {entry.cpAfter} CP
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+          {/* CP Log */}
+          {cpLogPanel}
+
+          {/* VP strip */}
+          {vpStripMobile}
+
+          {/* Tab bar */}
+          <div className="flex border-b mt-2 shrink-0" style={{ borderColor: theme.border, background: theme.surface }}>
+            {[
+              { id: 'guide',      label: 'Guide',      icon: activePhase.icon, badge: 0 },
+              { id: 'stratagems', label: 'Stratagems', icon: '⚡', badge: visibleStratagems.length },
+              { id: 'units',      label: 'Units',      icon: '🎖', badge: units.length },
+            ].map(tab => {
+              const isTabActive = activeTab === tab.id
+              return (
+                <motion.button key={tab.id} whileTap={{ scale: 0.96 }}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="flex-1 flex flex-col items-center py-2.5 gap-0.5 relative transition-all"
+                  style={{
+                    borderBottom: isTabActive ? `2px solid ${phaseAccent}` : '2px solid transparent',
+                    background: isTabActive ? `${phaseAccent}0a` : 'transparent',
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    <span style={{ fontSize: 15 }}>{tab.icon}</span>
+                    {tab.badge > 0 && (
+                      <span className="font-black px-1.5 py-0.5 rounded-full leading-none"
+                        style={{
+                          background: isTabActive ? phaseAccent : theme.surfaceHigh,
+                          color: isTabActive ? theme.bg : theme.textSecondary,
+                          fontSize: 9,
+                        }}>
+                        {tab.badge}
+                      </span>
+                    )}
                   </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* VP strip — mobile position (hidden on desktop) */}
-          <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowVp(true)}
-            className="md:hidden mx-3 mt-2.5 rounded-2xl border flex items-center shrink-0 overflow-hidden"
-            style={{ background: theme.surface, borderColor: theme.border }}>
-            <div className="flex-1 py-2.5 text-center">
-              <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>You</p>
-              <motion.p key={totalYouVp} initial={{ scale: 1.25 }} animate={{ scale: 1 }}
-                className="text-xl font-black leading-none mt-0.5" style={{ color: theme.hpFull }}>{totalYouVp}</motion.p>
-            </div>
-            <div className="py-2.5 px-4 border-x text-center" style={{ borderColor: theme.border }}>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Round</p>
-              <p className="text-lg font-black leading-none mt-0.5" style={{ color: theme.textPrimary }}>{currentRound}/5</p>
-            </div>
-            <div className="flex-1 py-2.5 text-center">
-              <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>Them</p>
-              <motion.p key={totalThemVp} initial={{ scale: 1.25 }} animate={{ scale: 1 }}
-                className="text-xl font-black leading-none mt-0.5" style={{ color: theme.hpLow }}>{totalThemVp}</motion.p>
-            </div>
-          </motion.button>
-
-          {/* Phase banner */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${activePhaseIdx}-${isYourTurn}`}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 4 }}
-              transition={{ duration: 0.22 }}
-              className="mx-3 mt-3 rounded-2xl p-4 border relative overflow-hidden shrink-0"
-              style={{
-                background: theme.phaseBg,
-                borderColor: isYourTurn ? theme.phaseBorder : theme.hpLow,
-                boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-              }}
-            >
-              <div className="absolute top-0 left-6 right-6 h-px"
-                style={{ background: `linear-gradient(90deg, transparent, ${isYourTurn ? theme.secondary : theme.hpLow}, transparent)` }} />
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0"
-                  style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
-                  {activePhase.icon}
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-bold tracking-widest uppercase mb-0.5"
-                    style={{ color: isYourTurn ? theme.secondary : theme.hpLow }}>
-                    {isYourTurn ? 'Your Turn' : "Opponent's Turn"}
-                  </p>
-                  <h1 className="text-lg font-black tracking-tight" style={{ color: theme.phaseText, lineHeight: 1.1 }}>
-                    {activePhase.label} Phase
-                  </h1>
-                  <p className="text-xs mt-0.5 leading-snug" style={{ color: theme.textSecondary, opacity: 0.7 }}>
-                    {PHASE_HINTS[activePhase.id]}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-2xl font-black" style={{ color: theme.textPrimary }}>{visibleStratagems.length}</p>
-                  <p className="text-xs" style={{ color: theme.textSecondary }}>Available</p>
-                </div>
-              </div>
-              {PHASE_TIPS[activePhase.id] && (
-                <div className="mt-2">
-                  <TipCard id={`tip_battle_${activePhase.id}`} body={PHASE_TIPS[activePhase.id]} theme={theme} />
-                </div>
-              )}
-
-              {/* CP / phase effects — contextual per phase, data-driven */}
-              {(() => {
-                const commandGains = activePhaseEffects.filter(e => e.phase === 'command' && e.type === 'cpGain')
-                const commandConditional = activePhaseEffects.filter(e => e.phase === 'command' && (e.type === 'cpConditional' || e.type === 'cpFree'))
-                const fightKills = activePhaseEffects.filter(e => e.phase === 'fight' && e.type === 'cpKill')
-
-                if (activePhase.id === 'command' && isYourTurn && (commandGains.length > 0 || commandConditional.length > 0)) {
-                  const totalAutoGain = 1 + commandGains.reduce((s, e) => s + (e.amount || 1), 0)
-                  const alreadyGained = cpGainedRounds.includes(currentRound)
-                  const sources = [
-                    { label: 'Standard Command Phase', amount: 1 },
-                    ...commandGains.map(e => ({ label: `${e.unitName} — ${e.abilityName}`, amount: e.amount || 1 })),
-                  ]
-
-                  const handleGainAll = () => {
-                    if (alreadyGained) return
-                    sources.forEach(src => {
-                      logCpGain(src.amount, src.label, 'command', currentRound)
-                    })
-                    markCpGainedForRound(currentRound)
-                  }
-
-                  return (
-                    <div className="mt-2 rounded-xl px-3 py-2.5 space-y-2"
-                      style={{ background: `${theme.secondary}0d`, border: `1px solid ${theme.secondary}25` }}>
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-bold" style={{ color: theme.secondary }}>CP this Command Phase</p>
-                        {!alreadyGained ? (
-                          <button
-                            onClick={handleGainAll}
-                            className="text-xs px-2.5 py-1 rounded-lg font-black"
-                            style={{ background: theme.secondary, color: theme.bg }}>
-                            +{totalAutoGain} Gain All
-                          </button>
-                        ) : (
-                          <span className="text-xs font-bold px-2 py-0.5 rounded-lg"
-                            style={{ background: `${theme.secondary}18`, color: theme.secondary }}>
-                            ✓ Gained
-                          </span>
-                        )}
-                      </div>
-
-                      {sources.map((src, i) => (
-                        <div key={i} className="flex items-center justify-between">
-                          <p className="text-xs" style={{ color: theme.textSecondary }}>+{src.amount} {src.label}</p>
-                        </div>
-                      ))}
-
-                      {commandConditional.length > 0 && (
-                        <div className="pt-1.5" style={{ borderTop: `1px solid ${theme.border}` }}>
-                          {commandConditional.map(e => (
-                            <div key={e.unitId} className="mb-1">
-                              <p className="text-xs font-bold" style={{ color: e.type === 'cpFree' ? theme.cpColor : theme.secondary }}>
-                                {e.unitName} — {e.abilityName}
-                              </p>
-                              <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{e.note}</p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )
-                }
-
-                if (activePhase.id === 'fight' && fightKills.length > 0) {
-                  return (
-                    <div className="mt-2 rounded-xl px-3 py-2.5 space-y-2"
-                      style={{ background: `${theme.secondary}0d`, border: `1px solid ${theme.secondary}25` }}>
-                      <p className="text-xs font-bold" style={{ color: theme.secondary }}>CP on kill</p>
-                      {fightKills.map(e => (
-                        <div key={e.unitId}>
-                          <p className="text-xs font-bold" style={{ color: theme.textPrimary }}>{e.unitName} — {e.abilityName}</p>
-                          <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{e.note}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )
-                }
-
-                return null
-              })()}
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Phase action bar — stratagems on your turn, reactions on theirs */}
-          <AnimatePresence mode="wait">
-            <PhaseActionBar
-              key={`${isYourTurn}-${activePhase.id}`}
-              isYourTurn={isYourTurn}
-              stratCount={visibleStratagems.length}
-              reactionCount={reactionCount}
-              theme={theme}
-            />
-          </AnimatePresence>
-
-          {/* Source filter tabs */}
-          <div className="flex gap-2 px-3 mt-2.5 shrink-0">
-            {sourceOptions.map(opt => (
-              <button key={opt.id} onClick={() => setSourceFilter(opt.id)}
-                className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
-                style={{
-                  background: sourceFilter === opt.id ? theme.surfaceHigh : 'transparent',
-                  color: sourceFilter === opt.id ? theme.textPrimary : theme.textSecondary,
-                  border: `1px solid ${sourceFilter === opt.id ? theme.border : 'transparent'}`,
-                }}>
-                {opt.label}
-              </button>
-            ))}
-            {opponentTags.length > 0 && phaseSuggestedCount > 0 && (
-              <button
-                onClick={() => setSourceFilter(f => f === 'suggested' ? 'all' : 'suggested')}
-                className="ml-auto px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
-                style={{
-                  background: sourceFilter === 'suggested' ? `${theme.secondary}22` : `${theme.secondary}10`,
-                  color: theme.secondary,
-                  border: `1px solid ${sourceFilter === 'suggested' ? theme.secondary : theme.secondary + '44'}`,
-                }}>
-                💡 {phaseSuggestedCount} suggested
-              </button>
-            )}
+                  <span className="text-xs font-bold tracking-wide"
+                    style={{ color: isTabActive ? phaseAccent : theme.textSecondary }}>
+                    {tab.label}
+                  </span>
+                </motion.button>
+              )
+            })}
           </div>
 
-          {/* Stratagems */}
-          <div className="md:flex-1 md:overflow-y-auto px-3 pb-2 mt-2 space-y-2">
-            {visibleStratagems.length === 0 ? (
-              <motion.div {...FADE_IN} className="rounded-2xl border p-5 text-center"
-                style={{ background: theme.stratBg, borderColor: theme.stratBorder }}>
-                <p className="text-sm font-medium" style={{ color: theme.textSecondary }}>
-                  {isYourTurn ? 'No stratagems for this phase.' : 'No reaction stratagems this phase.'}
-                </p>
-              </motion.div>
-            ) : (
-              visibleStratagems.map((s, i) => (
-                <StratCard key={s.id} strat={s} theme={theme}
-                  highlighted={suggestedIds.has(s.id)}
-                  highlightReason={suggestionMap[s.id]}
-                  cp={cp}
-                  onActivate={handleActivateStrat}
-                  activeStratIds={activeStratIds}
-                  motionProps={{
-                    initial: { opacity: 0, y: 10 },
-                    animate: { opacity: 1, y: 0 },
-                    transition: { delay: i * 0.04, duration: 0.22 },
-                  }}
-                />
-              ))
-            )}
+          {/* Tab content */}
+          <div className="flex-1 overflow-y-auto">
+            <AnimatePresence mode="wait">
+              {activeTab === 'guide' && (
+                <motion.div key="tab-guide"
+                  initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.18 }}
+                  className="pb-6"
+                >
+                  <PhaseGuideCard activePhase={activePhase} isYourTurn={isYourTurn} theme={theme} />
+                  {cpEffectsNode && <div className="px-3 mt-2">{cpEffectsNode}</div>}
+                  <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} />
+                  <DetachmentRulePanel
+                    detachment={detachment} activePhase={activePhase} theme={theme}
+                    onceBuffAvailable={units.some(u => u.id === 'loganGrimnar')}
+                  />
+                </motion.div>
+              )}
+
+              {activeTab === 'stratagems' && (
+                <motion.div key="tab-strats"
+                  initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -12 }} transition={{ duration: 0.18 }}
+                  className="pb-6"
+                >
+                  {stratagemFilterBar}
+                  {stratagemList}
+                </motion.div>
+              )}
+
+              {activeTab === 'units' && (
+                <motion.div key="tab-units"
+                  initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -12 }} transition={{ duration: 0.18 }}
+                  className="pb-6"
+                >
+                  {unitsList}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
-        {/* ── Right column: VP (desktop) + Units ── */}
-        <div className="md:flex-1 md:flex md:flex-col md:overflow-hidden">
+        {/* ══ DESKTOP VIEW (hidden on mobile) ══════════════════════════════════ */}
+        <div className="hidden md:flex md:flex-1 md:overflow-hidden">
 
-          {/* VP strip — desktop position (hidden on mobile) */}
-          <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowVp(true)}
-            className="hidden md:flex mx-3 mt-2.5 rounded-2xl border items-center shrink-0 overflow-hidden"
-            style={{ background: theme.surface, borderColor: theme.border }}>
-            <div className="flex-1 py-2.5 text-center">
-              <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>You</p>
-              <motion.p key={`d-${totalYouVp}`} initial={{ scale: 1.25 }} animate={{ scale: 1 }}
-                className="text-xl font-black leading-none mt-0.5" style={{ color: theme.hpFull }}>{totalYouVp}</motion.p>
+          {/* Left col: Guide + Stratagems */}
+          <div className="flex-1 flex flex-col overflow-hidden border-r" style={{ borderColor: theme.border }}>
+            {cpLogPanel}
+            <div className="shrink-0">
+              <PhaseGuideCard activePhase={activePhase} isYourTurn={isYourTurn} theme={theme} />
+              {cpEffectsNode && <div className="px-3 mt-2">{cpEffectsNode}</div>}
             </div>
-            <div className="py-2.5 px-4 border-x text-center" style={{ borderColor: theme.border }}>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>Round</p>
-              <p className="text-lg font-black leading-none mt-0.5" style={{ color: theme.textPrimary }}>{currentRound}/5</p>
+            <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} />
+            {stratagemFilterBar}
+            <div className="flex-1 overflow-y-auto">
+              {stratagemList}
             </div>
-            <div className="flex-1 py-2.5 text-center">
-              <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>Them</p>
-              <motion.p key={`d-${totalThemVp}`} initial={{ scale: 1.25 }} animate={{ scale: 1 }}
-                className="text-xl font-black leading-none mt-0.5" style={{ color: theme.hpLow }}>{totalThemVp}</motion.p>
-            </div>
-          </motion.button>
+          </div>
 
-          {/* Units + panels — single scrollable column so panels scroll away naturally */}
-          <div className="md:flex-1 md:overflow-y-auto pb-2">
-
-            {/* Detachment rule panel */}
+          {/* Right col: VP + Detachment + Units */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowVp(true)}
+              className="mx-3 mt-2.5 rounded-2xl border flex items-center shrink-0 overflow-hidden"
+              style={{ background: theme.surface, borderColor: theme.border }}>
+              <div className="flex-1 py-2.5 text-center">
+                <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>You</p>
+                <motion.p key={`d-${totalYouVp}`} initial={{ scale: 1.25 }} animate={{ scale: 1 }}
+                  className="text-xl font-black leading-none mt-0.5" style={{ color: theme.hpFull }}>{totalYouVp}</motion.p>
+              </div>
+              <div className="py-2.5 px-4 border-x text-center" style={{ borderColor: theme.border }}>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>Round</p>
+                <p className="text-lg font-black leading-none mt-0.5" style={{ color: theme.textPrimary }}>{currentRound}/5</p>
+              </div>
+              <div className="flex-1 py-2.5 text-center">
+                <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>Them</p>
+                <motion.p key={`d-${totalThemVp}`} initial={{ scale: 1.25 }} animate={{ scale: 1 }}
+                  className="text-xl font-black leading-none mt-0.5" style={{ color: theme.hpLow }}>{totalThemVp}</motion.p>
+              </div>
+            </motion.button>
             <DetachmentRulePanel
-              detachment={detachment}
-              activePhase={activePhase}
-              theme={theme}
+              detachment={detachment} activePhase={activePhase} theme={theme}
               onceBuffAvailable={units.some(u => u.id === 'loganGrimnar')}
             />
-
-            {/* Phase ability panel */}
-            <PhaseAbilityPanel
-              units={augmentedUnits}
-              activePhase={activePhase}
-              theme={theme}
-            />
-
-            <div className="px-3 mt-2 space-y-2">
-            {/* Phase context chips — weapon + ability counts */}
-            <PhaseContextRow
-              units={units}
-              phaseId={activePhase.id}
-              abilityCount={phaseAbilityCount}
-              theme={theme}
-            />
-
-            {/* Your units — always shown so you can track wounds */}
-            <p className="text-xs font-bold tracking-widest uppercase px-1 pt-1" style={{ color: theme.textSecondary }}>
-              Your Units
-            </p>
-            {units.map((u, i) => (
-              <UnitCard key={u.id} unit={u}
-                unitState={unitStates[u.id]}
-                attachedLeaderId={unitStates[u.id]?.attachedLeaderId ?? null}
-                onAttach={(uid, lid) => attachLeader(uid, lid)}
-                onDetach={(uid) => detachLeader(uid)}
-                onWound={(id, cur) => setWounds(id, cur - 1)}
-                onHeal={(id, cur) => setWounds(id, cur + 1)}
-                onToggleWarlord={setWarlord}
-                isWarlord={warlordUnitId === u.id}
-                activePhase={activePhase.id}
-                theme={theme}
-                onMatchup={opponentArmy?.units?.length > 0 ? () => setMatchupUnit(u) : undefined}
-                onCalcWeapon={setMathHammerWeapon}
-                motionProps={{
-                  initial: { opacity: 0, y: 12 },
-                  animate: { opacity: 1, y: 0 },
-                  transition: { delay: i * 0.05, duration: 0.22 },
-                }}
-              />
-            ))}
-
-            {/* Opponent army section */}
-            {opponentArmy?.units?.length > 0 ? (
-              <>
-                <div className="flex items-center gap-2 pt-2">
-                  <div className="h-px flex-1" style={{ background: `${theme.hpLow}44` }} />
-                  <p className="text-xs font-bold tracking-widest uppercase px-2" style={{ color: theme.hpLow }}>
-                    Opponent Army
-                  </p>
-                  <div className="h-px flex-1" style={{ background: `${theme.hpLow}44` }} />
-                  <button onClick={clearOpponentArmy}
-                    className="text-xs px-1.5 py-0.5 rounded-lg font-bold"
-                    style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                    ✕
-                  </button>
-                </div>
-                {opponentArmy.units.map((u, i) => (
-                  <OpponentUnitCard key={u.id} unit={u} theme={theme}
-                    onMatchup={() => setMatchupUnit({ ...units[0], _asDefender: true, _opponentUnit: u })}
-                    motionProps={{
-                      initial: { opacity: 0, y: 12 },
-                      animate: { opacity: 1, y: 0 },
-                      transition: { delay: i * 0.04, duration: 0.22 },
-                    }}
-                  />
-                ))}
-              </>
-            ) : (
-              <div className="space-y-2 mt-1">
-                <motion.button whileTap={{ scale: 0.97 }}
-                  onClick={() => setShowShare(true)}
-                  className="w-full rounded-2xl border p-3.5 text-center"
-                  style={{ background: theme.stratBg, borderColor: theme.stratBorder, borderStyle: 'dashed' }}>
-                  <p className="text-sm font-bold" style={{ color: theme.textSecondary }}>🔗 Link Opponent's Army</p>
-                  <p className="text-xs mt-0.5" style={{ color: theme.textSecondary, opacity: 0.7 }}>
-                    Share your link — they send one back
-                  </p>
-                </motion.button>
-                <motion.button whileTap={{ scale: 0.97 }}
-                  onClick={() => setShowImport(true)}
-                  className="w-full rounded-2xl border p-3.5 text-center"
-                  style={{ background: theme.stratBg, borderColor: theme.stratBorder, borderStyle: 'dashed' }}>
-                  <p className="text-sm font-bold" style={{ color: theme.textSecondary }}>📋 Paste Opponent's List</p>
-                  <p className="text-xs mt-0.5" style={{ color: theme.textSecondary, opacity: 0.7 }}>
-                    Import from New Recruit, BattleScribe, etc.
-                  </p>
-                </motion.button>
-              </div>
-            )}
-            </div>{/* end px-3 content */}
-          </div>{/* end single scroll column */}
+            <div className="flex-1 overflow-y-auto">
+              {unitsList}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ── Phase nav ── */}
-      <div className="border-t grid grid-cols-5 shrink-0 relative" style={{ background: theme.navBg, borderColor: theme.border }}>
+      {/* ── Phase nav — phase-colored active state ── */}
+      <div className="border-t grid grid-cols-5 shrink-0" style={{ background: theme.navBg, borderColor: theme.border }}>
         {PHASES.map((phase, i) => {
           const isActive = i === activePhaseIdx
-          const isDone = i < activePhaseIdx
+          const isDone   = i < activePhaseIdx
+          const accent   = PHASE_ACCENT_MAP[phase.id] || theme.secondary
           return (
             <motion.button key={phase.id} onClick={() => { setActivePhaseIdx(i); onPhaseChange?.(i) }}
               whileTap={{ scale: 0.92 }}
               className="flex flex-col items-center justify-center py-3 gap-1 relative"
               style={{
-                background: isActive ? theme.surfaceHigh : 'transparent',
-                borderTop: isActive ? `2px solid ${theme.secondary}` : '2px solid transparent',
+                background: isActive ? `${accent}14` : 'transparent',
+                borderTop: isActive ? `2px solid ${accent}` : '2px solid transparent',
               }}>
               <span className="text-sm">{phase.icon}</span>
               <span className="text-xs font-bold tracking-wide"
-                style={{ color: isActive ? theme.textPrimary : theme.textSecondary, opacity: isDone ? 0.4 : 1 }}>
+                style={{ color: isActive ? accent : theme.textSecondary, opacity: isDone ? 0.4 : 1 }}>
                 {phase.short}
               </span>
             </motion.button>
