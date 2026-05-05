@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { parseImportedList, resolveImportedUnits } from '../utils/listImport'
 import { FACTION_META } from '../data/factionRegistry'
+import { FactionIcon } from './GameIcon'
 
 const SHEET_SPRING = { type: 'spring', stiffness: 340, damping: 32 }
 
@@ -65,7 +66,7 @@ export default function ImportListSheet({ onLoadAsMyArmy, onLoadAsOpponent, onCl
               </p>
               {step === 'preview' && factionMeta && (
                 <p className="text-sm font-black mt-0.5" style={{ color: theme.textPrimary }}>
-                  {factionMeta.icon} {factionMeta.name}
+                  <FactionIcon id={parsed.faction} size={14} color={factionMeta.color} /> {factionMeta.name}
                   {parsed.detachmentRaw && (
                     <span className="text-xs font-normal ml-2" style={{ color: theme.textSecondary }}>
                       — {parsed.detachmentRaw}

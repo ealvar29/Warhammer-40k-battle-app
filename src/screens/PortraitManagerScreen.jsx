@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FACTION_UNITS, FACTION_META } from '../data/factionRegistry'
+import { FactionIcon } from '../components/GameIcon'
 import { usePortraitStore } from '../store/portraitStore'
 
 const SHEET_SPRING = { type: 'spring', stiffness: 340, damping: 32 }
@@ -314,7 +315,7 @@ export default function PortraitManagerScreen({ theme, onNavigate }) {
                   border: `1px solid ${isActive ? theme.secondary : 'transparent'}`,
                   minWidth: 64,
                 }}>
-                <span style={{ fontSize: 18 }}>{meta.icon ?? '⚔️'}</span>
+                <FactionIcon id={fk} size={18} color={isActive ? theme.secondary : theme.textSecondary} />
                 <span className="text-xs font-bold leading-tight text-center"
                   style={{ color: isActive ? theme.secondary : theme.textSecondary, fontSize: 9, maxWidth: 56 }}>
                   {meta.name ?? fk}

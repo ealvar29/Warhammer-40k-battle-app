@@ -125,8 +125,8 @@ export default function App() {
       {/* ── Faction ambient particles ── */}
       <FactionAmbience factionId={activeFaction} />
 
-      {/* ── Faction dramatic FX (lightning, pulses) — only after battle starts ── */}
-      <FactionFX factionId={battleActive ? activeFaction : null} />
+      {/* ── Faction dramatic FX — only fires during active battle on the battle screen ── */}
+      <FactionFX factionId={battleActive && screen === 'battle' ? activeFaction : null} />
 
       {/* ── Stratagem alert toast (opponent used a stratagem) ── */}
       <AnimatePresence>

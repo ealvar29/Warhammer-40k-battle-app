@@ -231,16 +231,16 @@ export const FACTION_PARTICLES = {
 
   // ── XENOS ───────────────────────────────────────────────────────────────────
 
-  // Tyranids — bio-luminescent spores, slow alien drift
+  // Tyranids — faint bio-luminescent spores, barely-there drift
   tyranids: cfg({
-    number: { value: 32 },
+    number: { value: 20 },
     color: { value: ['#7c3aed', '#6d28d9', '#65a30d', '#84cc16', '#4c1d95'] },
     shape: { type: 'circle' },
-    opacity: { value: { min: 0.2, max: 0.5 } },
-    size: { value: { min: 1.5, max: 5 } },
+    opacity: { value: { min: 0.08, max: 0.22 } },
+    size: { value: { min: 1, max: 2.8 } },
     move: {
       enable: true, direction: 'none', random: true,
-      speed: { min: 0.15, max: 0.55 }, outModes: { default: 'out' },
+      speed: { min: 0.1, max: 0.35 }, outModes: { default: 'out' },
     },
   }),
 

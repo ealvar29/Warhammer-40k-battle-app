@@ -7,6 +7,7 @@ import { battleScars } from '../data/crusade/battleScars'
 import { agendas as ALL_AGENDAS } from '../data/crusade/agendas'
 import { rpActions as RP_ACTIONS } from '../data/crusade/rpActions'
 import { FACTION_META, FACTION_DETACHMENTS } from '../data/factionRegistry'
+import { FactionIcon } from '../components/GameIcon'
 
 // ── Rank milestone thresholds — used to detect level-ups ──────────────────
 const RANK_MILESTONES = RANKS.map(r => r.xpMin)
@@ -289,7 +290,7 @@ function CreateRosterSheet({ onClose, onCreate, theme }) {
                 <button key={id} onClick={() => { setFaction(id); setDetachmentId(null) }}
                   className="rounded-2xl border-2 p-2.5 flex flex-col items-center text-center transition-all"
                   style={{ background: sel ? `${f.color}18` : theme.surfaceHigh, borderColor: sel ? f.color : theme.border }}>
-                  <span className="text-2xl mb-1">{f.icon}</span>
+                  <FactionIcon id={id} size={22} color={sel ? f.color : theme.textSecondary} />
                   <p className="text-xs font-bold leading-tight" style={{ color: sel ? f.color : theme.textPrimary, fontSize: 10 }}>{f.name}</p>
                 </button>
               )
@@ -355,7 +356,7 @@ function OverviewTab({ order, onAddBattle, onSpendRP, theme }) {
       {factionMeta && (
         <div className="rounded-2xl p-4 flex items-center gap-3"
           style={{ background: `${factionMeta.color}14`, border: `1px solid ${factionMeta.color}35` }}>
-          <span className="text-3xl">{factionMeta.icon}</span>
+          <FactionIcon id={faction} size={30} color={factionMeta.color} />
           <div className="flex-1 min-w-0">
             <p className="font-black text-sm truncate" style={{ color: factionMeta.color }}>{order.name}</p>
             <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>

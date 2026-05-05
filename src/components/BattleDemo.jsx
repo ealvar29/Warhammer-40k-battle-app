@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PhaseIcon, GameIcon } from './GameIcon'
+import { FactionEdge } from './FactionAccent'
 import { GiLightningTrio } from 'react-icons/gi'
 import { PHASES, demoStratagems, demoUnits } from '../data/demoData'
 import { leaders, unitLeaderMap } from '../data/leaderData'
@@ -1278,6 +1279,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   const unitsList = (
     <div className="px-3 mt-2 space-y-2 pb-2">
       <PhaseContextRow units={units} phaseId={activePhase.id} abilityCount={phaseAbilityCount} theme={theme} />
+      <FactionEdge theme={theme} />
       <p className="text-xs font-bold tracking-widest uppercase px-1 pt-1" style={{ color: theme.textSecondary }}>
         Your Units
       </p>

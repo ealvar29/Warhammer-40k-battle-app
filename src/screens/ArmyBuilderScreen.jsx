@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { PhaseIcon, FactionIcon } from '../components/GameIcon'
+import { FactionEdge, themeClip } from '../components/FactionAccent'
 import { GiEagleEmblem, GiSkullCrossedBones, GiAlienBug, GiPistolGun, GiAxeSword, GiCrossedSwords } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
@@ -352,6 +353,9 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
           </div>
         </div>
 
+        {/* Faction-themed edge between tabs and content */}
+        <FactionEdge theme={theme} />
+
         {/* Scrollable tab content */}
         <div className="flex-1 overflow-y-auto overscroll-contain px-5 pt-4">
           <AnimatePresence mode="wait">
@@ -532,12 +536,19 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
           </AnimatePresence>
         </div>
 
+        {/* Faction edge above footer */}
+        <FactionEdge theme={theme} flip />
+
         {/* CTA footer */}
-        <div className="px-5 pb-6 pt-3 shrink-0 border-t" style={{ borderColor: theme.border, background: theme.surface }}>
+        <div className="px-5 pb-6 pt-3 shrink-0" style={{ background: theme.surface }}>
           <button
             onClick={() => onChoose(d.id)}
-            className="w-full py-3.5 rounded-2xl font-black text-sm tracking-wide"
-            style={{ background: accent, color: '#000' }}>
+            className="w-full py-3.5 font-black text-sm tracking-wide"
+            style={{
+              background: accent, color: '#000',
+              clipPath: themeClip(theme, 12) || undefined,
+              borderRadius: themeClip(theme) ? 0 : 16,
+            }}>
             Choose {d.name} →
           </button>
         </div>
