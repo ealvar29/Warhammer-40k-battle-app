@@ -4,6 +4,8 @@ import { FACTION_UNITS, FACTION_META } from '../data/factionRegistry'
 import { useListStore } from '../store/listStore'
 import { unitLeaderMap } from '../data/leaderData'
 import { getLeaderAbilities } from '../data/factionRegistry'
+import { GiEagleEmblem, GiSkullCrossedBones, GiAlienBug } from 'react-icons/gi'
+import { FactionIcon } from '../components/GameIcon'
 
 const CATEGORY_LABELS = {
   epicHero: 'Epic Heroes',
@@ -119,7 +121,7 @@ const ALLEGIANCE_GROUPS = [
   {
     id: 'imperium',
     label: 'Imperium',
-    icon: '⚜️',
+    Icon: GiEagleEmblem,
     factionIds: [
       'spacewolves', 'spacemarines', 'darkangels', 'bloodangels', 'blacktemplars',
       'greyknights', 'deathwatch', 'adeptuscustodes', 'adeptasororitas',
@@ -129,7 +131,7 @@ const ALLEGIANCE_GROUPS = [
   {
     id: 'chaos',
     label: 'Chaos',
-    icon: '💀',
+    Icon: GiSkullCrossedBones,
     factionIds: [
       'chaosspacemarines', 'deathguard', 'emperorschildren', 'thousandsons',
       'worldeaters', 'chaosdaemons', 'chaosknights',
@@ -138,7 +140,7 @@ const ALLEGIANCE_GROUPS = [
   {
     id: 'xenos',
     label: 'Xenos',
-    icon: '👽',
+    Icon: GiAlienBug,
     factionIds: [
       'tyranids', 'genestealercults', 'necrons', 'orks',
       'aeldari', 'drukhari', 'tau', 'leaguesofvotann',
@@ -324,7 +326,7 @@ export default function ListBuilderScreen({ theme }) {
         <button onClick={() => setShowFactions(true)}
           className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold"
           style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }}>
-          <span>{factionMeta.icon}</span>
+          <FactionIcon id={faction} size={14} color={factionMeta.color} />
           <span className="truncate max-w-24">{factionMeta.name}</span>
           <span style={{ color: theme.textSecondary, fontSize: 9 }}>▾</span>
         </button>
@@ -683,7 +685,7 @@ export default function ListBuilderScreen({ theme }) {
                         borderRight: i < ALLEGIANCE_GROUPS.length - 1 ? `1px solid ${theme.border}` : 'none',
                         borderBottom: allegianceTab === g.id ? `2px solid ${theme.secondary}` : '2px solid transparent',
                       }}>
-                      <span className="text-lg">{g.icon}</span>
+                      <g.Icon size={18} color={allegianceTab === g.id ? undefined : '#5a6675'} />
                       <p className="text-xs font-black tracking-wide"
                         style={{ color: allegianceTab === g.id ? theme.secondary : theme.textSecondary }}>
                         {g.label}
@@ -732,7 +734,7 @@ export default function ListBuilderScreen({ theme }) {
                             <p className="text-sm font-black leading-tight truncate flex-1" style={{ color: '#fff' }}>
                               {f.name}
                             </p>
-                            <span className="text-xl ml-1 shrink-0">{f.icon}</span>
+                            <FactionIcon id={id} size={20} color="#fff" />
                           </div>
                         </div>
                       </button>
@@ -772,7 +774,7 @@ export default function ListBuilderScreen({ theme }) {
                   return (
                     <div key={l.id} className="rounded-2xl border px-3 py-2.5 flex items-center gap-3"
                       style={{ background: theme.surfaceHigh, borderColor: l.id === activeListId ? `${theme.secondary}55` : theme.border }}>
-                      <span className="text-xl shrink-0">{meta.icon}</span>
+                      <FactionIcon id={l.faction} size={20} color={meta.color} />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold truncate" style={{ color: theme.textPrimary }}>{l.name}</p>
                         <p className="text-xs" style={{ color: theme.textSecondary }}>
@@ -824,7 +826,7 @@ export default function ListBuilderScreen({ theme }) {
               <div className="rounded-xl px-3 py-2 mb-4"
                 style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
                 <p className="text-xs" style={{ color: theme.textSecondary }}>
-                  {factionMeta.icon} {factionMeta.name} · {totalPts} / {targetPts} pts · {listEntries.reduce((s,e) => s+e.count,0)} units
+                  <span className="inline-flex items-center gap-1"><FactionIcon id={faction} size={11} color={factionMeta.color} /> {factionMeta.name} · {totalPts} / {targetPts} pts · {listEntries.reduce((s,e) => s+e.count,0)} units</span>
                 </p>
               </div>
               <button onClick={handleSave} disabled={!listName.trim()}

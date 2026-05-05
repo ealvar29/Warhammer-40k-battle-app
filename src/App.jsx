@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { themes } from './themes/index'
-import { NavIcon, PhaseIcon } from './components/GameIcon'
+import { NavIcon, PhaseIcon, FactionIcon } from './components/GameIcon'
 import { GiLightningTrio } from 'react-icons/gi'
 import HomeScreen from './screens/HomeScreen'
 import ArmyBuilderScreen from './screens/ArmyBuilderScreen'
@@ -215,9 +215,9 @@ export default function App() {
               >
                 <div className="w-10 h-1 rounded-full mx-auto mb-5" style={{ background: theme.border }} />
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
                     style={{ background: `${meta.color}18`, border: `1px solid ${meta.color}44` }}>
-                    {meta.icon}
+                    <FactionIcon id={pendingImport.faction} size={26} color={meta.color} />
                   </div>
                   <div>
                     <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>

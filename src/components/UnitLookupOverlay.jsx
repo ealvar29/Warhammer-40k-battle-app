@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FACTION_UNITS, FACTION_META } from '../data/factionRegistry'
 import { KEYWORD_GUIDE, lookupKeyword } from '../data/keywordGuide'
+import { FactionIcon } from './GameIcon'
 
 // ── Static indexes built once at module load ──────────────────────────────────
 
@@ -266,9 +267,9 @@ function UnitDetail({ unit, theme, onBack, highlightAbility }) {
             {/* Header */}
             <div className="px-4 py-3 flex items-center gap-3"
               style={{ background: `linear-gradient(135deg, ${color}33 0%, ${color}11 100%)`, borderBottom: `1px solid ${color}55` }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-2xl shrink-0"
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                 style={{ background: `${color}22`, border: `1px solid ${color}44` }}>
-                {meta.icon}
+                <FactionIcon id={unit.factionId} size={22} color={color} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-black text-lg leading-tight truncate" style={{ color: '#fff' }}>{unit.name}</p>
@@ -391,7 +392,7 @@ function AbilityCard({ ability, theme, onSelectUnit }) {
       )}
 
       <div className="px-3 py-2 flex items-center gap-1.5 border-t" style={{ borderColor: theme.border, background: theme.surfaceHigh }}>
-        <span style={{ fontSize: 13 }}>{meta.icon}</span>
+        <FactionIcon id={ability.factionId} size={13} color={meta.color} />
         <p className="text-xs font-bold truncate flex-1" style={{ color: meta.color }}>{ability.unitName}</p>
         <span className="text-xs shrink-0" style={{ color: theme.textSecondary, opacity: 0.5 }}>
           {meta.name} · tap for datasheet →
@@ -442,7 +443,7 @@ function WeaponCard({ weapon, theme, onSelectUnit }) {
       )}
 
       <div className="px-3 py-2 flex items-center gap-1.5 border-t" style={{ borderColor: theme.border, background: theme.surfaceHigh }}>
-        <span style={{ fontSize: 13 }}>{meta.icon}</span>
+        <FactionIcon id={weapon.factionId} size={13} color={color} />
         <p className="text-xs font-bold truncate flex-1" style={{ color }}>{weapon.unitName}</p>
         <span className="text-xs shrink-0" style={{ color: theme.textSecondary, opacity: 0.5 }}>
           {meta.name} · tap for datasheet →
@@ -819,9 +820,9 @@ export default function UnitLookupOverlay({ theme, onClose }) {
                     <button key={unit.id} onClick={() => setSelected({ unit, highlightAbility: null })}
                       className="w-full rounded-2xl border px-3 py-2.5 flex items-center gap-3 text-left"
                       style={{ background: theme.surface, borderColor: theme.border }}>
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0"
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
                         style={{ background: `${meta.color}18`, border: `1px solid ${meta.color}22` }}>
-                        {meta.icon}
+                        <FactionIcon id={unit.factionId} size={18} color={meta.color} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold truncate" style={{ color: theme.textPrimary }}>{unit.name}</p>
