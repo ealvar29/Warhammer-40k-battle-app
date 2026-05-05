@@ -21,19 +21,22 @@ import { parseShareUrl } from './utils/armyShare'
 import { buildUnitsFromIds, findDetachment, FACTION_META } from './data/factionRegistry'
 
 const FACTION_THEME_MAP = {
+  // Imperium
   spacewolves:       'spacewolves',
-  tyranids:          'hivemind',
+  spacemarines:      'ultramarines',
+  darkangels:        'darkangels',
+  admech:            'imperialGold',
+  // Chaos
   chaosspacemarines: 'grimdark',
   deathguard:        'grimdark',
   worldeaters:       'grimdark',
   thousandsons:      'grimdark',
   emperorschildren:  'grimdark',
-  darkangels:        'grimdark',
-  spacemarines:      'imperialGold',
-  admech:            'imperialGold',
-  tau:               'tacticalhud',
-  necrons:           'tacticalhud',
-  aeldari:           'grimdark',
+  // Xenos
+  tyranids:          'hivemind',
+  aeldari:           'aeldari',
+  necrons:           'necrons',
+  tau:               'tau',
 }
 
 const NAV_TABS = [

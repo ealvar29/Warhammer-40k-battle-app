@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { GiCrossedSwords, GiBullseye } from 'react-icons/gi'
+import { GiCrossedSwords, GiBullseye, GiScrollUnfurled, GiOpenBook, GiPortrait } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
+import { useListStore } from '../store/listStore'
 import { useCrusadeStore } from '../store/crusadeStore'
 import MultiplayerSetup from '../components/MultiplayerSetup'
+import { FactionIcon, PhaseIcon } from '../components/GameIcon'
 import { generateArmyListText, copyToClipboard } from '../utils/listExport'
 import { FACTION_META, FACTION_DETACHMENTS } from '../data/factionRegistry'
 import { swDetachmentList } from '../data/spacewolves/detachments'
@@ -22,11 +24,11 @@ const CORE_STRATAGEMS = [
 ]
 
 const PHASE_SUMMARY = [
-  { id: 'command',  icon: '⚜️', label: 'Command',  steps: ['Gain +1 CP', 'Resolve Battleshock for shaken units', 'Use Command phase stratagems'] },
-  { id: 'movement', icon: '🏃', label: 'Movement',  steps: ['Move all eligible units', 'Advance: add D6" but no shooting this turn', 'Fall Back: disengage, but no shooting/charging', 'Arrive units from Strategic Reserves (9"+ away)'] },
-  { id: 'shooting', icon: '🎯', label: 'Shooting',  steps: ['Select eligible units (not Advanced/Fell Back, not in Engagement Range)', 'Pick targets within range and line of sight', 'Roll hits → wounds → saves', 'Damage applies per model — no spill-over (except Devastating Wounds)'] },
-  { id: 'charge',   icon: '⚔️', label: 'Charge',   steps: ['Declare charge against units within 12"', 'Roll 2D6 — must equal or exceed the distance', 'Charging units get +1 to hit in Fight phase', 'Opponent may Fire Overwatch (1 CP) or Heroic Intervention (1 CP)'] },
-  { id: 'fight',    icon: '💀', label: 'Fight',    steps: ['Charging units fight first', 'Then players alternate selecting units', 'Models in Engagement Range (1" / 5" vertically) can fight', 'Destroyed models fight before removal if they charged'] },
+  { id: 'command',  label: 'Command',  steps: ['Gain +1 CP', 'Resolve Battleshock for shaken units', 'Use Command phase stratagems'] },
+  { id: 'movement', label: 'Movement',  steps: ['Move all eligible units', 'Advance: add D6" but no shooting this turn', 'Fall Back: disengage, but no shooting/charging', 'Arrive units from Strategic Reserves (9"+ away)'] },
+  { id: 'shooting', label: 'Shooting',  steps: ['Select eligible units (not Advanced/Fell Back, not in Engagement Range)', 'Pick targets within range and line of sight', 'Roll hits → wounds → saves', 'Damage applies per model — no spill-over (except Devastating Wounds)'] },
+  { id: 'charge',   label: 'Charge',   steps: ['Declare charge against units within 12"', 'Roll 2D6 — must equal or exceed the distance', 'Charging units get +1 to hit in Fight phase', 'Opponent may Fire Overwatch (1 CP) or Heroic Intervention (1 CP)'] },
+  { id: 'fight',    label: 'Fight',    steps: ['Charging units fight first', 'Then players alternate selecting units', 'Models in Engagement Range (1" / 5" vertically) can fight', 'Destroyed models fight before removal if they charged'] },
 ]
 
 const SHEET_SPRING = { type: 'spring', stiffness: 340, damping: 32 }
@@ -78,6 +80,9 @@ function resolveDetachmentName(factionId, detachmentId) {
 
 export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
   const { battleActive, faction, detachmentId, selectedUnits, turn, isYourTurn } = useBattleStore()
+  const listFaction = useListStore(s => s.selectedFaction)
+  const activeFaction = faction || listFaction
+  const factionMeta = activeFaction ? FACTION_META[activeFaction] : null
   const { orders, activeOrderId } = useCrusadeStore()
   const activeOrder = orders.find(o => o.id === activeOrderId)
   const [quickRef, setQuickRef] = useState(null)
@@ -94,8 +99,8 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
   }
 
   const cards = [
-    { key: 'stratagems', label: 'Core Stratagems', icon: '📋', desc: '10th Ed universal', color: theme.secondary },
-    { key: 'phases',     label: 'Phase Summary',   icon: '⏱',  desc: 'Turn structure',   color: theme.hpFull },
+    { key: 'stratagems', label: 'Core Stratagems', Icon: GiScrollUnfurled, desc: '10th Ed universal', color: theme.secondary },
+    { key: 'phases',     label: 'Phase Summary',   Icon: GiOpenBook,       desc: 'Turn structure',    color: theme.hpFull },
   ]
 
   return (
@@ -105,24 +110,43 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
       <div className="relative flex flex-col items-center justify-center px-6 pt-10 pb-8 md:pt-6 md:pb-5 text-center overflow-hidden"
         style={{ minHeight: '40vh' }}>
 
-        {/* Radial warm glow — mimics the dramatic centre lighting on the box art */}
+        {/* Faction art — very subtle backdrop, swaps when faction changes */}
+        <AnimatePresence>
+          {factionMeta?.artUrl && (
+            <motion.div key={activeFaction} className="absolute inset-0 pointer-events-none"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.8 }}
+              style={{
+                backgroundImage: `url(${factionMeta.artUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: factionMeta.artPosition || 'center 30%',
+                opacity: 0.1,
+              }}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Radial warm glow */}
         <div className="absolute inset-0 pointer-events-none"
           style={{ background: `radial-gradient(ellipse 80% 60% at 50% 45%, ${theme.secondary}1a 0%, transparent 70%)` }} />
 
-        {/* Animated icon */}
+        {/* Hero icon — faction-specific when selected, generic crossed swords otherwise */}
         <motion.div
+          key={activeFaction || 'generic'}
           initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          transition={{ duration: 0.45, ease: 'easeOut' }}
           className="mb-5 relative"
         >
           <motion.div
-            animate={{ rotate: [0, -6, 6, 0] }}
+            animate={{ rotate: factionMeta ? [0, -4, 4, 0] : [0, -6, 6, 0] }}
             transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: 'easeInOut' }}
           >
-            <GiCrossedSwords size={52} color={theme.secondary} />
+            {factionMeta
+              ? <FactionIcon id={activeFaction} size={52} color={theme.secondary} />
+              : <GiCrossedSwords size={52} color={theme.secondary} />
+            }
           </motion.div>
-          {/* Glow ring behind icon */}
           <motion.div
             animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.9, 1.1, 0.9] }}
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
@@ -131,18 +155,19 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
           />
         </motion.div>
 
-        {/* WARHAMMER 40,000 — small eyebrow */}
+        {/* Faction name eyebrow when selected, otherwise app header */}
         <motion.p
+          key={`eyebrow-${activeFaction}`}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}
           className="text-xs font-black tracking-[0.3em] uppercase mb-2"
           style={{ color: theme.secondary }}
         >
-          Warhammer 40,000
+          {factionMeta ? factionMeta.name : 'Warhammer 40,000'}
         </motion.p>
 
-        {/* BATTLE COMPANION — hero title with gradient */}
+        {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -169,15 +194,16 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
           <Divider color={theme.secondary} />
         </motion.div>
 
-        {/* The tagline */}
+        {/* Tagline — faction battle cry when selected, generic otherwise */}
         <motion.p
+          key={`tagline-${activeFaction}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.38, duration: 0.5 }}
           className="text-xs italic leading-relaxed max-w-xs"
           style={{ color: theme.textSecondary, opacity: 0.75 }}
         >
-          "In the grim darkness of the far future, there is only war."
+          {factionMeta ? `"${theme.tagline}"` : '"In the grim darkness of the far future, there is only war."'}
         </motion.p>
 
         <motion.p
@@ -303,7 +329,7 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
               >
                 <div className="absolute top-0 right-0 w-20 h-20 rounded-full -translate-y-6 translate-x-6 pointer-events-none"
                   style={{ background: item.color, opacity: 0.08 }} />
-                <div className="text-xl mb-2">{item.icon}</div>
+                <div className="mb-2"><item.Icon size={22} color={item.color} /></div>
                 <p className="text-xs font-bold leading-tight" style={{ color: theme.textPrimary }}>{item.label}</p>
                 <p className="text-xs mt-1 font-medium" style={{ color: item.color }}>Tap to view →</p>
               </motion.button>
@@ -329,9 +355,9 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
           >
             <div className="absolute top-0 right-0 w-28 h-28 rounded-full -translate-y-8 translate-x-8 pointer-events-none"
               style={{ background: theme.secondary, opacity: 0.06 }} />
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
               style={{ background: `${theme.secondary}18`, border: `1px solid ${theme.secondary}30` }}>
-              🖼
+              <GiPortrait size={26} color={theme.secondary} />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-black" style={{ color: theme.textPrimary }}>Portrait Manager</p>
@@ -451,9 +477,9 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
                     className="rounded-2xl border p-4"
                     style={{ background: theme.unitBg, borderColor: theme.border }}>
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center"
                         style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
-                        {phase.icon}
+                        <PhaseIcon phase={phase.id} size={18} color={theme.secondary} />
                       </div>
                       <div>
                         <p className="text-xs" style={{ color: theme.textSecondary }}>Phase {i + 1}</p>
