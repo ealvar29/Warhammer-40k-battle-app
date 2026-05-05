@@ -74,6 +74,7 @@ export default function App() {
   const navigate = (to) => {
     setPrevScreen(screen)
     setScreen(to)
+    setShowLookup(false)
   }
 
   const dir = slideDir(prevScreen, screen)
@@ -366,6 +367,8 @@ export default function App() {
               gridTemplateColumns: `repeat(${NAV_TABS.length}, 1fr)`,
               background: theme.navBg,
               borderColor: theme.border,
+              position: 'relative',
+              zIndex: 80,
             }}
           >
             {NAV_TABS.map(tab => {
