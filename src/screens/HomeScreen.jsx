@@ -3,6 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import { useCrusadeStore } from '../store/crusadeStore'
 import MultiplayerSetup from '../components/MultiplayerSetup'
+import { generateArmyListText, copyToClipboard } from '../utils/listExport'
+import { FACTION_META, FACTION_DETACHMENTS } from '../data/factionRegistry'
+import { swDetachmentList } from '../data/spacewolves/detachments'
+import { smGenericDetachmentList } from '../data/spacewolves/genericDetachments'
 
 const CORE_STRATAGEMS = [
   { name: 'Command Re-roll', cost: 1, phase: 'Any', effect: 'Re-roll one dice roll made for a unit in your army.' },
@@ -61,11 +65,32 @@ function Divider({ color }) {
   )
 }
 
+function resolveDetachmentName(factionId, detachmentId) {
+  const swDet = swDetachmentList.find(d => d.id === detachmentId)
+  if (swDet) return swDet.name
+  const smDet = smGenericDetachmentList.find(d => d.id === detachmentId)
+  if (smDet) return smDet.name
+  const fDet = FACTION_DETACHMENTS[factionId]?.[detachmentId]
+  if (fDet) return fDet.name
+  return detachmentId || 'Custom Detachment'
+}
+
 export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
-  const { battleActive, faction, turn, isYourTurn } = useBattleStore()
+  const { battleActive, faction, detachmentId, selectedUnits, turn, isYourTurn } = useBattleStore()
   const { orders, activeOrderId } = useCrusadeStore()
   const activeOrder = orders.find(o => o.id === activeOrderId)
   const [quickRef, setQuickRef] = useState(null)
+  const [listCopied, setListCopied] = useState(false)
+
+  async function handleCopyList() {
+    const detachmentName = resolveDetachmentName(faction, detachmentId)
+    const text = generateArmyListText({ factionId: faction, detachmentName, selectedUnits })
+    const ok = await copyToClipboard(text)
+    if (ok) {
+      setListCopied(true)
+      setTimeout(() => setListCopied(false), 2500)
+    }
+  }
 
   const cards = [
     { key: 'stratagems', label: 'Core Stratagems', icon: '📋', desc: '10th Ed universal', color: theme.secondary },
@@ -316,6 +341,39 @@ export default function HomeScreen({ theme, onNavigate, onStartMultiplayer }) {
               <p className="text-xs mt-1 font-bold" style={{ color: theme.secondary }}>Open →</p>
             </div>
           </motion.button>
+
+          {/* Export army list — only visible when an army is loaded */}
+          {battleActive && selectedUnits?.length > 0 && (
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={handleCopyList}
+              className="w-full rounded-2xl border p-4 text-left flex items-center gap-4 relative overflow-hidden mt-2"
+              style={{
+                background: theme.surface,
+                borderColor: listCopied ? `${theme.secondary}66` : theme.border,
+              }}
+            >
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0"
+                style={{ background: `${theme.secondary}14`, border: `1px solid ${theme.secondary}28` }}>
+                {listCopied ? '✓' : '📋'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-black" style={{ color: listCopied ? theme.secondary : theme.textPrimary }}>
+                  {listCopied ? 'Copied to clipboard!' : 'Copy Army List'}
+                </p>
+                <p className="text-xs mt-0.5 font-medium" style={{ color: theme.textSecondary }}>
+                  {listCopied
+                    ? 'Paste it on Discord, Reddit, or share with your opponent'
+                    : 'Export your active army in BattleScribe format — shareable anywhere'}
+                </p>
+                {!listCopied && (
+                  <p className="text-xs mt-1 font-bold" style={{ color: theme.secondary }}>
+                    {selectedUnits.length} units · {resolveDetachmentName(faction, detachmentId)}
+                  </p>
+                )}
+              </div>
+            </motion.button>
+          )}
         </motion.div>
 
         <div className="h-2" />

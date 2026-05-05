@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { themes } from './themes/index'
+import { NavIcon, PhaseIcon } from './components/GameIcon'
 import HomeScreen from './screens/HomeScreen'
 import ArmyBuilderScreen from './screens/ArmyBuilderScreen'
 import BattleDemo from './components/BattleDemo'
@@ -300,7 +301,8 @@ export default function App() {
                   borderLeft: isActive ? `3px solid ${theme.secondary}` : '3px solid transparent',
                 }}
               >
-                <span className="text-base leading-none">{tab.icon}</span>
+                <NavIcon id={tab.id} size={18}
+                  color={isActive ? theme.secondary : theme.textSecondary} />
                 <span className="text-sm font-bold" style={{ color: isActive ? theme.textPrimary : theme.textSecondary }}>
                   {tab.label}
                 </span>
@@ -324,7 +326,7 @@ export default function App() {
             whileTap={{ scale: 0.97 }}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl"
             style={{ background: 'transparent', border: `1px solid ${theme.border}` }}>
-            <span className="text-base leading-none">🔍</span>
+            <NavIcon id="search" size={17} color={theme.textSecondary} />
             <span className="text-sm font-bold" style={{ color: theme.textSecondary }}>Unit Lookup</span>
           </motion.button>
         </div>
@@ -386,11 +388,12 @@ export default function App() {
                   }}
                 >
                   <motion.span
-                    className="text-base leading-none"
+                    className="leading-none flex items-center justify-center"
                     animate={isActive ? { scale: [1, 1.2, 1] } : { scale: 1 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {tab.icon}
+                    <NavIcon id={tab.id} size={20}
+                      color={isActive ? theme.secondary : theme.textSecondary} />
                   </motion.span>
                   <span className="text-xs font-bold tracking-wide"
                     style={{ color: isActive ? theme.textPrimary : theme.textSecondary }}>

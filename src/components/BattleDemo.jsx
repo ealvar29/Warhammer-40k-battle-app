@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { PhaseIcon, GameIcon } from './GameIcon'
 import { PHASES, demoStratagems, demoUnits } from '../data/demoData'
 import { leaders, unitLeaderMap } from '../data/leaderData'
 import { getLeaderAbilities } from '../data/factionRegistry'
@@ -1301,11 +1302,12 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           {/* Tab bar */}
           <div className="flex border-b mt-2 shrink-0" style={{ borderColor: theme.border, background: theme.surface }}>
             {[
-              { id: 'guide',      label: 'Guide',      icon: activePhase.icon, badge: 0 },
-              { id: 'stratagems', label: 'Stratagems', icon: '⚡', badge: visibleStratagems.length },
-              { id: 'units',      label: 'Units',      icon: '🎖', badge: units.length },
+              { id: 'guide',      label: 'Guide',      phaseId: activePhase.id, badge: 0 },
+              { id: 'stratagems', label: 'Stratagems', iconName: 'lightning',   badge: visibleStratagems.length },
+              { id: 'units',      label: 'Units',      iconName: 'armor',       badge: units.length },
             ].map(tab => {
               const isTabActive = activeTab === tab.id
+              const tabColor = isTabActive ? phaseAccent : theme.textSecondary
               return (
                 <motion.button key={tab.id} whileTap={{ scale: 0.96 }}
                   onClick={() => setActiveTab(tab.id)}
@@ -1316,7 +1318,10 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                   }}
                 >
                   <div className="flex items-center gap-1">
-                    <span style={{ fontSize: 15 }}>{tab.icon}</span>
+                    {tab.phaseId
+                      ? <PhaseIcon phase={tab.phaseId} size={15} color={tabColor} />
+                      : <GameIcon name={tab.iconName} size={15} color={tabColor} />
+                    }
                     {tab.badge > 0 && (
                       <span className="font-black px-1.5 py-0.5 rounded-full leading-none"
                         style={{
@@ -1442,9 +1447,11 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                 background: isActive ? `${accent}14` : 'transparent',
                 borderTop: isActive ? `2px solid ${accent}` : '2px solid transparent',
               }}>
-              <span className="text-sm">{phase.icon}</span>
+              <PhaseIcon phase={phase.id} size={18}
+                color={isActive ? accent : theme.textSecondary}
+                style={{ opacity: isDone ? 0.35 : 1 }} />
               <span className="text-xs font-bold tracking-wide"
-                style={{ color: isActive ? accent : theme.textSecondary, opacity: isDone ? 0.4 : 1 }}>
+                style={{ color: isActive ? accent : theme.textSecondary, opacity: isDone ? 0.35 : 1 }}>
                 {phase.short}
               </span>
             </motion.button>
