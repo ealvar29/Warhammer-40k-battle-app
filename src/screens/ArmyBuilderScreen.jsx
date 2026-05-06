@@ -270,7 +270,7 @@ function StratagemsTabContent({ d, theme, accent }) {
                           </span>
                         )}
                         <span className="text-xs font-black px-2 py-0.5 rounded-full"
-                          style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
+                          style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.35)' }}>
                           {s.cost}CP
                         </span>
                       </div>
@@ -462,11 +462,11 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
               >
                 {/* Full detachment rule */}
                 <div>
-                  <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                  <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: '#2dd4bf' }}>
                     Detachment Rule
                   </p>
                   <div className="px-4 py-3 rounded-2xl space-y-2"
-                    style={{ background: `${accent}10`, border: `1px solid ${accent}2a` }}>
+                    style={{ background: 'rgba(45,212,191,0.06)', border: '1px solid rgba(45,212,191,0.18)' }}>
                     <p className="font-black text-sm" style={{ color: theme.textPrimary }}>
                       {d.detachmentRule.name}
                     </p>
@@ -479,27 +479,30 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                 {/* Full command phase options with effect text */}
                 {d.commandPhaseAction?.options?.length > 0 && (
                   <div>
-                    <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: '#fbbf24' }}>
                       Command Phase Options — Full Text
                     </p>
                     <div className="space-y-2">
-                      {d.commandPhaseAction.options.map(opt => (
-                        <div key={opt.id} className="px-3 py-3 rounded-2xl flex gap-3 items-start"
-                          style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
-                          <span className="text-xl shrink-0 mt-0.5">{opt.icon}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-sm mb-1" style={{ color: theme.textPrimary }}>{opt.label}</p>
-                            <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{opt.fullEffect}</p>
+                      {d.commandPhaseAction.options.map(opt => {
+                        const optColor = opt.unitEffects?.badgeColor || accent
+                        return (
+                          <div key={opt.id} className="px-3 py-3 rounded-2xl flex gap-3 items-start"
+                            style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
+                            <PickOneIcon icon={opt.icon} size={22} color={optColor} className="shrink-0 mt-0.5" />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-bold text-sm mb-1" style={{ color: optColor }}>{opt.label}</p>
+                              <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{opt.fullEffect}</p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                     {d.commandPhaseAction.onceBuff && (
                       <div className="mt-2 px-3 py-2.5 rounded-2xl flex gap-2 items-start"
-                        style={{ background: `${accent}08`, border: `1px dashed ${accent}33` }}>
-                        <span className="text-base shrink-0">⭐</span>
+                        style={{ background: 'rgba(251,191,36,0.06)', border: '1px dashed rgba(251,191,36,0.3)' }}>
+                        <PickOneIcon icon="⭐" size={16} color="#fbbf24" className="shrink-0 mt-0.5" />
                         <div>
-                          <p className="font-bold text-xs" style={{ color: accent }}>
+                          <p className="font-bold text-xs" style={{ color: '#fbbf24' }}>
                             {d.commandPhaseAction.onceBuff.label} — Once per battle
                           </p>
                           <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary }}>
@@ -514,7 +517,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                 {/* Enhancements */}
                 {d.enhancements?.length > 0 && (
                   <div>
-                    <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: accent }}>
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: '#fbbf24' }}>
                       Enhancements ({d.enhancements.length})
                     </p>
                     <div className="space-y-2">
@@ -524,7 +527,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                           <div className="flex items-start justify-between gap-2 mb-1">
                             <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>{enh.name}</p>
                             <span className="text-xs font-black shrink-0 px-2 py-0.5 rounded-full"
-                              style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                              style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}>
                               {enh.cost}pts
                             </span>
                           </div>
