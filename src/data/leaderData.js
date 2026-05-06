@@ -557,9 +557,9 @@ export const leaderAbilities = {
     abilities: [
       {
         name: 'High King of Fenris',
-        phase: 'command',
-        description: 'While this model is leading a unit, friendly SPACE WOLVES CORE units within 6" of this unit can re-roll Hit rolls.',
-        reminder: 'Re-roll all hit rolls for SW CORE units within 6".',
+        phase: 'movement',
+        description: 'Once per battle round, in your Movement phase, you can select one friendly SPACE WOLVES unit that is in Reserves. If you do, until the end of the phase, for the purpose of setting up that unit on the battlefield, treat the current battle round number as being one higher than it actually is.',
+        reminder: 'Once per round — one SW unit in Reserves arrives 1 round earlier than normal.',
       },
     ],
   },
@@ -570,9 +570,9 @@ export const leaderAbilities = {
     abilities: [
       {
         name: 'High King of Fenris',
-        phase: 'command',
-        description: 'While this model is leading a unit, friendly SPACE WOLVES CORE units within 6" of this unit can re-roll Hit rolls.',
-        reminder: 'Re-roll all hit rolls for SW CORE units within 6".',
+        phase: 'movement',
+        description: 'Once per battle round, in your Movement phase, you can select one friendly SPACE WOLVES unit that is in Reserves. If you do, until the end of the phase, for the purpose of setting up that unit on the battlefield, treat the current battle round number as being one higher than it actually is.',
+        reminder: 'Once per round — one SW unit in Reserves arrives 1 round earlier than normal.',
       },
     ],
   },
