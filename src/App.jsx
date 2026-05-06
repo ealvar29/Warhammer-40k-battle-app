@@ -363,6 +363,9 @@ export default function App() {
           <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary, opacity: 0.6 }}>
             Unofficial fan app. Not affiliated with Games Workshop.
           </p>
+          <p className="text-xs mt-1 font-mono" style={{ color: theme.textSecondary, opacity: 0.35 }}>
+            v{__APP_VERSION__} · {__BUILD_DATE__}
+          </p>
         </div>
       </aside>
 
@@ -387,8 +390,9 @@ export default function App() {
 
         {/* ── Mobile bottom nav ── */}
         {showBottomNav && (
+          <div className="md:hidden shrink-0">
           <div
-            className="md:hidden grid border-t shrink-0"
+            className="grid border-t"
             style={{
               gridTemplateColumns: `repeat(${NAV_TABS.length}, 1fr)`,
               background: theme.navBg,
@@ -439,6 +443,12 @@ export default function App() {
                 </motion.button>
               )
             })}
+          </div>
+          <div className="text-center pb-1" style={{ background: theme.navBg }}>
+            <span className="font-mono" style={{ color: theme.textSecondary, opacity: 0.3, fontSize: 9 }}>
+              v{__APP_VERSION__} · {__BUILD_DATE__}
+            </span>
+          </div>
           </div>
         )}
       </div>
