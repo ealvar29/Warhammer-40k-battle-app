@@ -1,5 +1,7 @@
-// Interactive layout prototype — compare Concept A / B / C for the battle phase screen.
-// Eduardo uses this to pick a direction before we implement the winner.
+// Battle screen redesign prototype — "Card Mode"
+// Trading-card layout: leader + unit shown as linked pairs in a horizontal scroll.
+// Top: slim phase command bar. Middle: the cards. Bottom: phase nav.
+// Eduardo approves this, then we rebuild BattleDemo to match.
 
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -11,66 +13,98 @@ const ACCENT = {
   charge: '#f97316', fight: '#ef4444',
 }
 
-// Self-contained demo units — no store imports needed
-const PROTO_UNITS = [
+// Real art URLs pulled from units.js so the prototype looks like the real thing
+const PAIRS = [
   {
-    id: 'ragnar', name: 'Ragnar Blackmane', role: 'Epic Hero',
-    M: '6"', T: 4, Sv: '3+', OC: 1, W: 5, maxW: 5,
-    rangedA: 1, meleeA: 6, isLeader: true,
-    commandAbility: null,
-    movementAbility: null,
-    shootingAbility: 'Bolt Pistol — 1 attack, 12" range, S4 AP0',
-    chargeAbility: 'Battle-lust — adds 3" to charge move, advance & charge eligible',
-    fightAbility: 'Wolf-kin — this unit fights first after charging',
-    weapons: [
-      { name: 'Frostfang', type: 'melee', A: 6, S: 6, AP: -3, D: 2, skill: '2+' },
-      { name: 'Bolt Pistol', type: 'ranged', A: 1, range: '12"', S: 4, AP: 0, D: 1, skill: '3+' },
-    ],
+    id: 'pair-ragnar',
+    leader: {
+      id: 'ragnar', name: 'Ragnar Blackmane', role: 'Epic Hero',
+      M: '6"', T: 4, Sv: '3+', OC: 1, W: 5, maxW: 5,
+      rangedA: 1, meleeA: 6,
+      artUrl: 'https://assets.warhammer-community.com/articles/521ce86b-b8b1-4599-bfe8-38167ea01f65/idaz7xmwcxfwoehr.jpg',
+      artPosition: 'center top',
+      commandAbility: null,
+      movementAbility: null,
+      shootingAbility: 'Bolt Pistol — 1 attack, 12", S4 AP0',
+      chargeAbility: 'Battle-lust — +3" to charge, advance & charge eligible',
+      fightAbility: 'Wolf-kin — fights first after charging this turn',
+    },
+    unit: {
+      id: 'bloodclaws', name: 'Blood Claws', role: 'Infantry · 10 models',
+      M: '6"', T: 4, Sv: '3+', OC: 2, W: 10, maxW: 10,
+      rangedA: 1, meleeA: 3,
+      artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101434_SpaceWolvesBloodClaws1.jpg?fm=webp&w=892&h=920',
+      artPosition: 'center center',
+      commandAbility: null,
+      movementAbility: 'Push forward — advance toward the enemy to close the gap',
+      shootingAbility: 'Bolt Pistols — 1 attack each, 12" range, S4 AP0',
+      chargeAbility: null,
+      fightAbility: 'Savage Fighter — +1 Attack on all melee weapons when charged this turn',
+    },
   },
   {
-    id: 'logan', name: 'Logan Grimnar', role: 'Legendary Hero',
-    M: '6"', T: 4, Sv: '2+', OC: 1, W: 6, maxW: 6,
-    rangedA: 0, meleeA: 5, isLeader: true,
-    commandAbility: 'High King of Fenris — gain 1 CP at the start of your Command phase',
-    movementAbility: null,
-    shootingAbility: null,
-    chargeAbility: null,
-    fightAbility: 'Guile of the Wolf (Aura) — re-roll all hit rolls for friendly units within 6"',
-    weapons: [
-      { name: 'Axe Morkai', type: 'melee', A: 5, S: 8, AP: -2, D: 3, skill: '2+' },
-    ],
+    id: 'pair-logan',
+    leader: {
+      id: 'loganGrimnar', name: 'Logan Grimnar', role: 'Legendary Hero',
+      M: '6"', T: 4, Sv: '2+', OC: 1, W: 6, maxW: 6,
+      rangedA: 0, meleeA: 5,
+      artUrl: 'https://assets.warhammer-community.com/grotmas10-dec10-image1_wide-opfvgxejgg.jpg',
+      artPosition: 'center center',
+      commandAbility: 'High King of Fenris — gain 1 CP at start of your Command phase',
+      movementAbility: null,
+      shootingAbility: null,
+      chargeAbility: null,
+      fightAbility: 'Guile of the Wolf — re-roll hit rolls for SW units within 6"',
+    },
+    unit: null, // Logan leads solo (no attached squad in this demo)
   },
   {
-    id: 'bloodclaws', name: 'Blood Claws', role: 'Infantry · 10 models',
-    M: '6"', T: 4, Sv: '3+', OC: 2, W: 10, maxW: 10,
-    rangedA: 1, meleeA: 3, isLeader: false,
-    commandAbility: null,
-    movementAbility: 'Advance — push toward the enemy, add D6" to move',
-    shootingAbility: 'Bolt Pistols — 1 attack each, 12" range, S4 AP0',
-    chargeAbility: null,
-    fightAbility: 'Savage Fighter — +1 Attack on melee weapons if this unit charged this turn',
-    weapons: [
-      { name: 'Chainsword', type: 'melee', A: 3, S: 4, AP: -1, D: 1, skill: '3+' },
-      { name: 'Bolt Pistol', type: 'ranged', A: 1, range: '12"', S: 4, AP: 0, D: 1, skill: '3+' },
-    ],
+    id: 'pair-wolfpriest',
+    leader: {
+      id: 'wolfPriest', name: 'Wolf Priest', role: 'Character',
+      M: '6"', T: 4, Sv: '3+', OC: 1, W: 4, maxW: 4,
+      rangedA: 1, meleeA: 3,
+      artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101435_SpaceWolvesWolfPriest1.jpg?fm=webp&w=892&h=920',
+      artPosition: 'center center',
+      commandAbility: null,
+      movementAbility: null,
+      shootingAbility: null,
+      chargeAbility: null,
+      fightAbility: 'Healing Balms — once per battle, restore D3 lost wounds to this unit',
+    },
+    unit: {
+      id: 'greyHunters', name: 'Grey Hunters', role: 'Battleline · 10 models',
+      M: '6"', T: 4, Sv: '3+', OC: 2, W: 10, maxW: 10,
+      rangedA: 2, meleeA: 2,
+      artUrl: 'https://www.warhammer.com/app/resources/catalog/product/920x950/99120101433_SpaceWolvesGreyHuntersSquad1.jpg?fm=webp&w=892&h=920',
+      artPosition: 'center center',
+      commandAbility: null,
+      movementAbility: null,
+      shootingAbility: 'Bolt Rifles — 2 attacks, 24", Rapid Fire, S4 AP-1',
+      chargeAbility: null,
+      fightAbility: null,
+    },
   },
   {
-    id: 'terminators', name: 'Wolf Guard Terminators', role: 'Infantry · 5 models',
-    M: '5"', T: 5, Sv: '2+', OC: 2, W: 5, maxW: 5,
-    rangedA: 2, meleeA: 4, isLeader: false,
-    commandAbility: null,
-    movementAbility: null,
-    shootingAbility: 'Storm Bolters — 2 attacks each, rapid fire, S4 AP0',
-    chargeAbility: null,
-    fightAbility: 'Rugged Resilience — 6+ Feel No Pain save in Fight phase',
-    weapons: [
-      { name: 'Storm Bolter', type: 'ranged', A: 2, range: '24"', S: 4, AP: 0, D: 1, skill: '3+' },
-      { name: 'Power Fist', type: 'melee', A: 4, S: 8, AP: -2, D: 2, skill: '4+' },
-    ],
+    id: 'pair-terminators',
+    leader: null,
+    unit: {
+      id: 'wolfGuardTerminators', name: 'Wolf Guard Terminators', role: 'Infantry · 5 models',
+      M: '5"', T: 5, Sv: '2+', OC: 2, W: 5, maxW: 5,
+      rangedA: 2, meleeA: 4,
+      artUrl: 'https://assets.warhammer-community.com/carousel1-21drmyig74.png',
+      artPosition: 'center center',
+      commandAbility: null,
+      movementAbility: null,
+      shootingAbility: 'Storm Bolters — 2 attacks, Rapid Fire, S4 AP0',
+      chargeAbility: null,
+      fightAbility: 'Rugged Resilience — 6+ Feel No Pain save in Fight phase',
+    },
   },
 ]
 
 function getPhaseAbility(unit, phaseId) {
+  if (!unit) return null
   if (phaseId === 'command')  return unit.commandAbility
   if (phaseId === 'movement') return unit.movementAbility
   if (phaseId === 'shooting') return unit.shootingAbility
@@ -79,107 +113,336 @@ function getPhaseAbility(unit, phaseId) {
   return null
 }
 
-function isActiveThisPhase(unit, phaseId) {
-  if (phaseId === 'shooting') return unit.rangedA > 0
-  if (phaseId === 'charge' || phaseId === 'fight') return unit.meleeA > 0
-  return true
-}
-
 function getAttacks(unit, phaseId) {
-  if (phaseId === 'shooting') return unit.rangedA
-  if (phaseId === 'fight' || phaseId === 'charge') return unit.meleeA
+  if (!unit) return null
+  if (phaseId === 'shooting') return unit.rangedA > 0 ? unit.rangedA : null
+  if (phaseId === 'fight' || phaseId === 'charge') return unit.meleeA > 0 ? unit.meleeA : null
   return null
 }
 
-// ── Shared micro-components ───────────────────────────────────────────────────
-
-function HpBar({ pct, theme }) {
-  const color = pct > 0.6 ? '#22c55e' : pct > 0.3 ? '#f59e0b' : '#ef4444'
-  return (
-    <div className="w-full rounded-full h-1 overflow-hidden mt-1.5 mb-0.5" style={{ background: theme.border }}>
-      <div className="h-full rounded-full" style={{ width: `${pct * 100}%`, background: color }} />
-    </div>
-  )
+function isActive(unit, phaseId) {
+  if (!unit) return false
+  if (phaseId === 'shooting') return unit.rangedA > 0
+  if (phaseId === 'fight' || phaseId === 'charge') return unit.meleeA > 0
+  return true
 }
 
-function StatRow({ unit, phaseId, accent, theme }) {
-  const stats = [
-    { l: 'M',  v: unit.M,  pulse: phaseId === 'movement' },
-    { l: 'T',  v: unit.T,  pulse: false },
-    { l: 'SV', v: unit.Sv, pulse: false },
-    { l: 'OC', v: unit.OC, pulse: false },
-  ]
+// Phase command bar tips — tailored to the actual demo army
+const SMART_TIPS = {
+  command:  'Logan: High King of Fenris → gain 1 CP now · then pick your Hunting Pack',
+  movement: 'Ragnar + Blood Claws: advance 6" + D6 · Terminators hold the line at 5"',
+  shooting: 'Grey Hunters: Rapid Fire at 12" = 4 attacks each · Blood Claws Bolt Pistols at 12"',
+  charge:   'Ragnar: Battle-lust adds 3" free · Blood Claws follow his charge in',
+  fight:    'Ragnar fights first (Wolf-kin) · Logan\'s Guile of the Wolf re-rolls hits within 6"',
+}
+
+const PHASE_STEPS = {
+  command:  ['Gain 1 CP', 'Logan +1 CP (Aura)', 'Pick Hunting Pack', 'Use Abilities'],
+  movement: ['Move all units', 'Ragnar → advance', 'Blood Claws → advance', 'Hold Terminators'],
+  shooting: ['Pick target', 'Roll to Hit', 'Roll to Wound', 'Opponent saves'],
+  charge:   ['Declare charges', 'Roll 2D6', 'Ragnar +3" free', 'Pile in on success'],
+  fight:    ['Ragnar first', 'Logan aura active', 'Roll to Hit', 'Roll to Wound'],
+}
+
+// ── Single battle card ────────────────────────────────────────────────────────
+
+function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, cardHeight }) {
+  const [expanded, setExpanded] = useState(false)
+  if (!unit) return null
+
+  const active     = isActive(unit, phaseId)
+  const attacks    = getAttacks(unit, phaseId)
+  const ability    = getPhaseAbility(unit, phaseId)
+  const showAttack = attacks !== null && active && !isDone
+  const pulseMov   = phaseId === 'movement' && active && !isDone
+
+  const cardWidth  = isLeader ? 152 : 172
+  const borderCol  = isDone
+    ? `${theme.border}88`
+    : !active ? theme.border
+    : ability  ? `${accent}70`
+    : `${accent}45`
+
   return (
-    <div className="flex gap-3 my-1.5">
-      {stats.map(s => (
-        <div key={s.l} className="flex flex-col items-center min-w-[30px]">
-          <motion.span className="font-black leading-none"
-            style={{ fontSize: 13, color: s.pulse ? accent : theme.textPrimary }}
-            animate={s.pulse ? { opacity: [1, 0.25, 1] } : { opacity: 1 }}
-            transition={s.pulse ? { repeat: Infinity, duration: 1.0 } : {}}>
-            {s.v}
-          </motion.span>
-          <motion.span style={{ fontSize: 8, fontWeight: 800, letterSpacing: '0.06em', color: s.pulse ? accent : theme.textSecondary }}
-            animate={s.pulse ? { opacity: [1, 0.25, 1] } : { opacity: 1 }}
-            transition={s.pulse ? { repeat: Infinity, duration: 1.0 } : {}}>
-            {s.l}
-          </motion.span>
+    <div
+      className="relative rounded-2xl overflow-hidden shrink-0 flex flex-col"
+      style={{
+        width: cardWidth,
+        height: cardHeight,
+        border: `1.5px solid ${borderCol}`,
+        opacity: isDone ? 0.45 : !active ? 0.32 : 1,
+        boxShadow: active && !isDone && ability
+          ? `0 0 20px ${accent}30, 0 4px 16px rgba(0,0,0,0.5)`
+          : '0 4px 16px rgba(0,0,0,0.4)',
+        transition: 'opacity 0.3s, box-shadow 0.3s',
+      }}
+    >
+      {/* Portrait */}
+      <div className="absolute inset-0" style={{
+        backgroundImage:    `url(${unit.artUrl})`,
+        backgroundSize:     'cover',
+        backgroundPosition: unit.artPosition || 'center center',
+      }} />
+
+      {/* Gradient — heavy at bottom for legibility */}
+      <div className="absolute inset-0" style={{
+        background: `linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.08) 0%,
+          rgba(0,0,0,0.10) 30%,
+          rgba(0,0,0,0.72) 58%,
+          rgba(0,0,0,0.96) 100%
+        )`,
+      }} />
+
+      {/* ── Top overlays ── */}
+      <div className="absolute top-2 left-2 right-2 flex items-start justify-between z-10">
+        {/* HP badge */}
+        <div className="flex flex-col items-start gap-1">
+          <span className="text-[10px] font-black px-2 py-0.5 rounded-full"
+            style={{ background: 'rgba(0,0,0,0.65)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.45)', backdropFilter: 'blur(4px)' }}>
+            {unit.W}/{unit.maxW}
+          </span>
+          {isLeader && (
+            <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase"
+              style={{ background: `${accent}cc`, color: '#000' }}>
+              Leader
+            </span>
+          )}
         </div>
-      ))}
+
+        {/* Done toggle */}
+        <motion.button
+          whileTap={{ scale: 0.85 }}
+          onClick={e => { e.stopPropagation(); onDone() }}
+          className="text-[10px] font-black px-2 py-0.5 rounded-full"
+          style={{
+            background: isDone ? 'rgba(34,197,94,0.45)' : 'rgba(0,0,0,0.55)',
+            color:      isDone ? '#4ade80' : 'rgba(255,255,255,0.65)',
+            border:     `1px solid ${isDone ? 'rgba(34,197,94,0.6)' : 'rgba(255,255,255,0.2)'}`,
+            backdropFilter: 'blur(4px)',
+          }}
+        >
+          {isDone ? '✓ Done' : '○'}
+        </motion.button>
+      </div>
+
+      {/* ── Phase attack tile (mid-card, right edge) ── */}
+      {showAttack && (
+        <div className="absolute z-10" style={{ top: '36%', right: 10 }}>
+          <motion.div
+            className="flex flex-col items-center rounded-xl px-2 py-1.5"
+            style={{
+              background: `${accent}e0`,
+              border:     `1.5px solid ${accent}`,
+              backdropFilter: 'blur(6px)',
+              boxShadow:  `0 0 12px ${accent}80`,
+            }}
+            animate={{ opacity: [1, 0.45, 1] }}
+            transition={{ repeat: Infinity, duration: 1.0 }}
+          >
+            <span className="font-black leading-none" style={{ fontSize: 22, color: '#000' }}>{attacks}</span>
+            <span style={{ fontSize: 7, fontWeight: 900, color: '#000', letterSpacing: '0.08em' }}>ATK</span>
+          </motion.div>
+        </div>
+      )}
+
+      {/* ── Bottom content ── */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 px-3 pb-3 pt-2">
+
+        {/* Name + role */}
+        <p className="font-black leading-tight text-white" style={{ fontSize: 12 }}>{unit.name}</p>
+        <p className="font-bold uppercase tracking-wide mt-0.5" style={{ fontSize: 8, color: `${accent}dd` }}>
+          {unit.role}
+        </p>
+
+        {/* Stats row */}
+        <div className="flex gap-2.5 mt-1.5">
+          {[['M', unit.M, pulseMov], ['T', unit.T, false], ['SV', unit.Sv, false]].map(([l, v, pulse]) => (
+            <div key={l} className="flex flex-col items-center">
+              <motion.span
+                className="font-black leading-none"
+                style={{ fontSize: 11, color: pulse ? accent : 'white' }}
+                animate={pulse ? { opacity: [1, 0.25, 1] } : { opacity: 1 }}
+                transition={pulse ? { repeat: Infinity, duration: 1.0 } : {}}>
+                {v}
+              </motion.span>
+              <span style={{ fontSize: 7, fontWeight: 800, color: pulse ? `${accent}cc` : 'rgba(255,255,255,0.55)', letterSpacing: '0.04em' }}>{l}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Phase ability — inline glowing badge */}
+        {ability && active && !isDone && (
+          <div className="mt-1.5 rounded-lg px-2 py-1" style={{ background: `${accent}28`, border: `1px solid ${accent}55` }}>
+            <p style={{ fontSize: 9, color: accent, lineHeight: 1.35 }}>⚡ {ability}</p>
+          </div>
+        )}
+
+        {/* HP bar */}
+        <div className="mt-2 w-full rounded-full overflow-hidden" style={{ height: 3, background: 'rgba(255,255,255,0.18)' }}>
+          <motion.div className="h-full rounded-full"
+            style={{ background: unit.W / unit.maxW > 0.5 ? '#22c55e' : unit.W / unit.maxW > 0.25 ? '#f59e0b' : '#ef4444' }}
+            initial={false} animate={{ width: `${(unit.W / unit.maxW) * 100}%` }} />
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex gap-1 mt-2">
+          <button className="flex-1 py-1.5 rounded-lg font-black text-center"
+            style={{ fontSize: 11, background: 'rgba(34,197,94,0.22)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.4)' }}>
+            +
+          </button>
+          <button className="flex-1 py-1.5 rounded-lg font-black text-center"
+            style={{ fontSize: 11, background: 'rgba(239,68,68,0.22)', color: '#f87171', border: '1px solid rgba(239,68,68,0.4)' }}>
+            −
+          </button>
+          <button className="flex-1 py-1.5 rounded-lg font-black text-center"
+            style={{ fontSize: 11, background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.18)' }}>
+            ⚔
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
 
-function AbilityBadge({ text, accent }) {
+// ── Leader + unit pair group ──────────────────────────────────────────────────
+
+function PairGroup({ pair, phaseId, accent, theme, doneIds, toggleDone, cardHeight }) {
+  const { leader, unit } = pair
+  const hasBoth = leader && unit
+
   return (
-    <div className="mt-1.5 flex items-start gap-1.5 rounded-lg px-2 py-1.5"
-      style={{ background: `${accent}14`, border: `1px solid ${accent}40` }}>
-      <motion.span style={{ color: accent, fontSize: 10, flexShrink: 0, lineHeight: 1.4 }}
-        animate={{ opacity: [1, 0.3, 1] }} transition={{ repeat: Infinity, duration: 1.2 }}>
-        ⚡
-      </motion.span>
-      <p className="text-xs leading-snug" style={{ color: accent }}>{text}</p>
+    <div className="flex items-stretch shrink-0 gap-0">
+      {/* Leader card */}
+      {leader && (
+        <BattleCard
+          unit={leader} phaseId={phaseId} accent={accent} theme={theme}
+          isDone={doneIds.has(leader.id)} onDone={() => toggleDone(leader.id)}
+          isLeader={true} cardHeight={cardHeight}
+        />
+      )}
+
+      {/* Connector between leader and unit */}
+      {hasBoth && (
+        <div className="flex flex-col items-center justify-center w-4 shrink-0 gap-0 self-stretch">
+          <div className="flex-1 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${accent}60, ${accent}60, transparent)` }} />
+          <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+            style={{ background: `${accent}22`, border: `1px solid ${accent}60` }}>
+            <span style={{ fontSize: 8, color: accent }}>⚡</span>
+          </div>
+          <div className="flex-1 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${accent}60, ${accent}60, transparent)` }} />
+        </div>
+      )}
+
+      {/* Unit card */}
+      {unit && (
+        <BattleCard
+          unit={unit} phaseId={phaseId} accent={accent} theme={theme}
+          isDone={doneIds.has(unit.id)} onDone={() => toggleDone(unit.id)}
+          isLeader={false} cardHeight={cardHeight}
+        />
+      )}
     </div>
   )
 }
 
-function WeaponRow({ weapon, accent, theme, pulse }) {
+// ── Phase command bar ─────────────────────────────────────────────────────────
+
+function PhaseCommandBar({ phase, accent, theme, showStrats, onToggleStrats }) {
+  const phaseId = phase.id
+  const steps   = PHASE_STEPS[phaseId] || []
+  const tip     = SMART_TIPS[phaseId] || ''
+
   return (
-    <div className="flex items-center gap-2 text-xs py-0.5">
-      <span className="font-bold flex-1 truncate" style={{ color: theme.textPrimary }}>{weapon.name}</span>
-      {weapon.range && <span style={{ color: theme.textSecondary }}>{weapon.range}</span>}
-      <motion.span className="font-black px-1.5 py-0.5 rounded-md"
-        style={{ background: `${accent}18`, color: accent }}
-        animate={pulse ? { opacity: [1, 0.35, 1] } : { opacity: 1 }}
-        transition={pulse ? { repeat: Infinity, duration: 1.0 } : {}}>
-        A{weapon.A}
-      </motion.span>
-      <span style={{ color: theme.textSecondary }}>S{weapon.S}</span>
-      <span style={{ color: theme.textSecondary }}>AP{weapon.AP}</span>
-      <span style={{ color: theme.textSecondary }}>D{weapon.D}</span>
+    <div className="shrink-0 mx-3 mt-3 rounded-2xl overflow-hidden border"
+      style={{ background: `${accent}0c`, borderColor: `${accent}40` }}>
+
+      {/* Header row */}
+      <div className="flex items-center gap-3 px-3 py-2.5" style={{ borderBottom: `1px solid ${accent}25` }}>
+        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: `${accent}22`, border: `1px solid ${accent}55` }}>
+          <PhaseIcon phase={phaseId} size={20} color={accent} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-black text-sm leading-none" style={{ color: theme.textPrimary }}>{phase.label} Phase</p>
+          <p className="text-xs mt-0.5 leading-snug" style={{ color: accent }}>{tip}</p>
+        </div>
+        <button
+          onClick={onToggleStrats}
+          className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[10px] font-black shrink-0 transition-all"
+          style={{
+            background: showStrats ? accent : `${accent}22`,
+            color:      showStrats ? '#000' : accent,
+            border:     `1px solid ${accent}55`,
+          }}>
+          ⚡ Strats {showStrats ? '▾' : '▴'}
+        </button>
+      </div>
+
+      {/* Step chips */}
+      <div className="flex gap-1.5 px-3 py-2 overflow-x-auto">
+        {steps.map((s, i) => (
+          <span key={i}
+            className="whitespace-nowrap text-[10px] font-bold px-2.5 py-1 rounded-lg shrink-0"
+            style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}35` }}>
+            {i + 1}. {s}
+          </span>
+        ))}
+      </div>
+
+      {/* Strats pull-down */}
+      <AnimatePresence>
+        {showStrats && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.18 }}
+            className="overflow-hidden">
+            <div className="px-3 pb-3 pt-1 space-y-1.5" style={{ borderTop: `1px solid ${accent}20` }}>
+              {[
+                { name: 'Insane Bravery', cost: '1 CP', desc: 'Ignore Battleshock test this phase.' },
+                { name: 'Counter-Offensive', cost: '2 CP', desc: 'Fight with a unit that has not yet fought.' },
+                { name: 'Adaptive Strategy', cost: '1 CP', desc: 'Swap one secondary objective at the end of the round.' },
+              ].map(s => (
+                <div key={s.name} className="flex items-start gap-2 rounded-xl px-3 py-2"
+                  style={{ background: `${accent}0e`, border: `1px solid ${accent}25` }}>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold leading-tight" style={{ color: theme.textPrimary }}>{s.name}</p>
+                    <p style={{ fontSize: 9, color: theme.textSecondary, marginTop: 2 }}>{s.desc}</p>
+                  </div>
+                  <span className="text-xs font-black shrink-0 px-2 py-0.5 rounded-full"
+                    style={{ background: theme.surfaceHigh, color: theme.secondary, border: `1px solid ${theme.border}` }}>
+                    {s.cost}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
 
-function PhaseNav({ phaseId, theme, style = 'normal' }) {
+// ── Phase nav ─────────────────────────────────────────────────────────────────
+
+function PhaseNav({ phaseId, theme }) {
   const curIdx = PHASES.findIndex(p => p.id === phaseId)
   return (
-    <div className="flex border-t" style={{ borderColor: theme.border, background: theme.surface }}>
+    <div className="flex border-t shrink-0" style={{ borderColor: theme.border, background: theme.surface }}>
       {PHASES.map((p, i) => {
-        const a = ACCENT[p.id]
-        const isActive = p.id === phaseId
-        const isPast = i < curIdx
-        const opacity = style === 'bright'
-          ? (isActive ? 1 : isPast ? 0.6 : 0.5)
-          : (isActive ? 1 : isPast ? 0.35 : 0.5)
+        const a       = ACCENT[p.id]
+        const isAct   = p.id === phaseId
+        const isPast  = i < curIdx
+        const opacity = isAct ? 1 : isPast ? 0.65 : 0.5
         return (
-          <div key={p.id} className="flex-1 flex flex-col items-center py-2 gap-0.5"
-            style={{ borderTop: isActive ? `2px solid ${a}` : '2px solid transparent', background: isActive ? `${a}12` : 'transparent' }}>
-            {isPast && style === 'bright'
-              ? <span style={{ fontSize: 11, color: a, opacity }}>✓</span>
-              : <PhaseIcon phase={p.id} size={15} color={isActive ? a : theme.textSecondary} style={{ opacity }} />
+          <div key={p.id} className="flex-1 flex flex-col items-center py-2.5 gap-0.5 relative"
+            style={{ borderTop: isAct ? `2px solid ${a}` : '2px solid transparent', background: isAct ? `${a}12` : 'transparent' }}>
+            {isPast
+              ? <span style={{ fontSize: 13, color: a, opacity }}>✓</span>
+              : <PhaseIcon phase={p.id} size={16} color={isAct ? a : theme.textSecondary} style={{ opacity }} />
             }
-            <span className="text-[9px] font-bold" style={{ color: isActive ? a : theme.textSecondary, opacity }}>
+            <span style={{ fontSize: 9, fontWeight: 700, color: isAct ? a : theme.textSecondary, opacity }}>
               {p.short}
             </span>
           </div>
@@ -189,457 +452,68 @@ function PhaseNav({ phaseId, theme, style = 'normal' }) {
   )
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// CONCEPT A — "Phase Brief"
-// Slim 2-line guide banner replaces the tall accordion. Abilities surface inline
-// on each unit card. Tabs remain but guide tab is now compact.
-// ═══════════════════════════════════════════════════════════════════════════════
+// ── Top info strip (CP + VP) ──────────────────────────────────────────────────
 
-const BRIEF_TEXT = {
-  command:  'Gain 1 CP · use command abilities · pick your Hunting Pack option',
-  movement: 'Move all units · advance melee units forward · hold ranged in position',
-  shooting: 'Shoot with every ranged unit · pick targets · melee-only units hold back',
-  charge:   'Charge with melee units · roll 2D6 and beat the gap to the enemy',
-  fight:    'Fight with all units in Engagement Range · strike order matters',
-}
-
-function ConceptA({ theme, phase, accent }) {
-  const phaseId = phase.id
-  const [doneIds, setDoneIds] = useState(new Set())
-  const [openWeapons, setOpenWeapons] = useState(null)
-  const [activeTab, setActiveTab] = useState('guide')
-
-  const toggle = id => setDoneIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
-
+function BattleStrip({ theme }) {
   return (
-    <div className="rounded-2xl overflow-hidden border" style={{ background: theme.surface, borderColor: `${accent}40` }}>
-      {/* Concept label */}
-      <div className="px-4 py-2.5 flex items-center gap-2.5" style={{ background: `${accent}20`, borderBottom: `1px solid ${accent}35` }}>
-        <span className="font-black text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full"
-          style={{ background: accent, color: '#000' }}>A</span>
-        <div>
-          <p className="text-xs font-black" style={{ color: accent }}>Phase Brief</p>
-          <p className="text-[10px]" style={{ color: `${accent}aa` }}>Slim guide banner · abilities surface inline on each unit</p>
-        </div>
-      </div>
-
-      {/* ── SLIM GUIDE BANNER (replaces the tall accordion card) ── */}
-      <div className="mx-3 mt-3 rounded-xl flex items-center gap-3 px-3 py-2.5"
-        style={{ background: `${accent}10`, border: `1px solid ${accent}35` }}>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-          style={{ background: `${accent}20`, border: `1px solid ${accent}50` }}>
-          <PhaseIcon phase={phaseId} size={20} color={accent} />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-black text-[10px] tracking-widest uppercase" style={{ color: accent }}>{phase.label} Phase</p>
-          <p className="text-xs leading-snug mt-0.5" style={{ color: theme.textPrimary }}>{BRIEF_TEXT[phaseId]}</p>
-        </div>
-        <button className="shrink-0 text-[10px] font-bold px-2 py-1 rounded-lg"
-          style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}35` }}>▾ More</button>
-      </div>
-
-      {/* ── UNITS with inline ability callouts ── */}
-      <div className="px-3 mt-3 space-y-2">
-        {PROTO_UNITS.map(u => {
-          const ability = getPhaseAbility(u, phaseId)
-          const active = isActiveThisPhase(u, phaseId)
-          const done = doneIds.has(u.id)
-          const phaseWeapons = phaseId === 'shooting' ? u.weapons.filter(w => w.type === 'ranged')
-            : ['fight','charge'].includes(phaseId) ? u.weapons.filter(w => w.type === 'melee') : []
-
-          return (
-            <div key={u.id} className="rounded-xl border p-3"
-              style={{ background: theme.unitBg, borderColor: done ? theme.border : ability ? `${accent}50` : theme.border, opacity: done ? 0.5 : !active ? 0.38 : 1 }}>
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <p className="font-bold text-sm" style={{ color: theme.textPrimary }}>{u.name}</p>
-                    {u.isLeader && <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
-                      style={{ background: `${theme.secondary}22`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>LEADER</span>}
-                  </div>
-                  <p className="text-[9px] font-medium uppercase tracking-wide mt-0.5" style={{ color: theme.textSecondary }}>{u.role}</p>
-                  <StatRow unit={u} phaseId={phaseId} accent={accent} theme={theme} />
-                  {/* ← KEY DIFFERENTIATOR: ability pulsing inline on the unit card */}
-                  {ability && active && !done && <AbilityBadge text={ability} accent={accent} />}
-                </div>
-                <div className="shrink-0 flex flex-col items-end gap-1.5">
-                  <span className="text-xs font-bold px-2 py-1 rounded-full"
-                    style={{ background: theme.surfaceHigh, color: '#22c55e', border: `1px solid ${theme.border}` }}>
-                    {u.W}/{u.maxW}
-                  </span>
-                </div>
-              </div>
-              <HpBar pct={u.W / u.maxW} theme={theme} />
-              <div className="flex gap-1.5 mt-2">
-                <button className="flex-1 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: theme.surfaceHigh, color: '#22c55e', border: `1px solid ${theme.border}` }}>+ Heal</button>
-                <button className="flex-1 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: theme.surfaceHigh, color: '#ef4444', border: `1px solid ${theme.border}` }}>− Wound</button>
-                <button onClick={() => toggle(u.id)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: done ? 'rgba(34,197,94,0.2)' : theme.surfaceHigh, color: done ? '#4ade80' : theme.textSecondary, border: `1px solid ${done ? 'rgba(34,197,94,0.5)' : theme.border}` }}>
-                  {done ? '✓ Done' : '○ Done'}
-                </button>
-                {phaseWeapons.length > 0 && (
-                  <button onClick={() => setOpenWeapons(openWeapons === u.id ? null : u.id)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold"
-                    style={{ background: openWeapons === u.id ? `${accent}22` : theme.surfaceHigh, color: openWeapons === u.id ? accent : theme.textSecondary, border: `1px solid ${openWeapons === u.id ? accent : theme.border}` }}>
-                    Weapons
-                  </button>
-                )}
-              </div>
-              {openWeapons === u.id && phaseWeapons.length > 0 && (
-                <div className="mt-2 pt-1.5 space-y-0.5" style={{ borderTop: `1px solid ${theme.border}` }}>
-                  {phaseWeapons.map(w => <WeaponRow key={w.name} weapon={w} accent={accent} theme={theme} pulse={false} />)}
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* ── Tab bar — same structure, but guide tab is now compact ── */}
-      <div className="flex border-t mt-3" style={{ borderColor: theme.border, background: theme.surface }}>
-        {[{id:'guide',l:'Guide'},{id:'strats',l:'Strats (4)'},{id:'units',l:'Units'}].map(t => (
-          <button key={t.id} onClick={() => setActiveTab(t.id)}
-            className="flex-1 py-2.5 text-xs font-bold text-center transition-all"
-            style={{ color: activeTab === t.id ? accent : theme.textSecondary, borderTop: activeTab === t.id ? `2px solid ${accent}` : '2px solid transparent', background: activeTab === t.id ? `${accent}0a` : 'transparent' }}>
-            {t.l}
-          </button>
-        ))}
-      </div>
-      <PhaseNav phaseId={phaseId} theme={theme} style="normal" />
-    </div>
-  )
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// CONCEPT B — "Unit First"
-// No guide tab at all. Units dominate the screen. During each phase, the
-// relevant stat (Attacks during Shooting/Fight, M during Movement) is shown
-// as a large pulsing tile on every card. Relevant weapons auto-expand.
-// Stratagems live in a floating pull-up button — no separate tab.
-// ═══════════════════════════════════════════════════════════════════════════════
-
-const PHASE_BREADCRUMB = {
-  command:  { label: 'Gain CP',       sub: 'then use abilities · pick your detachment action' },
-  movement: { label: 'Move your army', sub: 'advance melee units · hold ranged back' },
-  shooting: { label: 'Open fire',      sub: 'roll to hit → wound → save · check weapon range' },
-  charge:   { label: 'Declare charges', sub: 'roll 2D6 · beat the gap · Ragnar gets +3" free' },
-  fight:    { label: 'Melee combat',   sub: 'units in Engagement Range fight · strike order matters' },
-}
-
-function ConceptB({ theme, phase, accent }) {
-  const phaseId = phase.id
-  const [doneIds, setDoneIds] = useState(new Set())
-  const [showStrats, setShowStrats] = useState(false)
-  const bc = PHASE_BREADCRUMB[phaseId]
-  const toggle = id => setDoneIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
-
-  return (
-    <div className="rounded-2xl overflow-hidden border relative" style={{ background: theme.surface, borderColor: `${accent}40` }}>
-      {/* Concept label */}
-      <div className="px-4 py-2.5 flex items-center gap-2.5" style={{ background: `${accent}20`, borderBottom: `1px solid ${accent}35` }}>
-        <span className="font-black text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full"
-          style={{ background: accent, color: '#000' }}>B</span>
-        <div>
-          <p className="text-xs font-black" style={{ color: accent }}>Unit First</p>
-          <p className="text-[10px]" style={{ color: `${accent}aa` }}>No guide tab · attack count prominent · strats pull-up</p>
-        </div>
-      </div>
-
-      {/* ── SLIM BREADCRUMB (replaces both guide card AND battle intel) ── */}
-      <div className="flex items-center gap-3 px-3 py-2.5" style={{ borderBottom: `1px solid ${theme.border}` }}>
-        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl shrink-0"
-          style={{ background: `${accent}18`, border: `1px solid ${accent}40` }}>
-          <PhaseIcon phase={phaseId} size={13} color={accent} />
-          <span className="text-xs font-black" style={{ color: accent }}>{phase.label}</span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold leading-tight" style={{ color: theme.textPrimary }}>{bc.label}</p>
-          <p className="text-[10px] leading-snug" style={{ color: theme.textSecondary }}>{bc.sub}</p>
-        </div>
-      </div>
-
-      {/* ── UNITS — the entire screen ── */}
-      <div className="px-3 pt-3 pb-2 space-y-2">
-        {PROTO_UNITS.map(u => {
-          const active = isActiveThisPhase(u, phaseId)
-          const done = doneIds.has(u.id)
-          const attacks = getAttacks(u, phaseId)
-          const ability = getPhaseAbility(u, phaseId)
-          const phaseWeapons = phaseId === 'shooting' ? u.weapons.filter(w => w.type === 'ranged')
-            : ['fight','charge'].includes(phaseId) ? u.weapons.filter(w => w.type === 'melee') : []
-
-          return (
-            <div key={u.id} className="rounded-xl border p-3"
-              style={{ background: theme.unitBg, borderColor: active && !done ? `${accent}50` : theme.border, opacity: done ? 0.45 : !active ? 0.35 : 1 }}>
-              <div className="flex items-center gap-3">
-                {/* ← KEY DIFFERENTIATOR: large pulsing attack tile */}
-                {active && !done ? (
-                  <div className="w-14 h-14 rounded-xl flex flex-col items-center justify-center shrink-0"
-                    style={{ background: `${accent}18`, border: `1.5px solid ${accent}55` }}>
-                    {attacks !== null ? (
-                      <>
-                        <motion.span className="font-black leading-none" style={{ fontSize: 22, color: accent }}
-                          animate={{ opacity: [1, 0.3, 1] }} transition={{ repeat: Infinity, duration: 1.1 }}>
-                          {attacks}
-                        </motion.span>
-                        <span style={{ fontSize: 8, color: accent, fontWeight: 800, letterSpacing: '0.06em' }}>ATK</span>
-                      </>
-                    ) : (
-                      <PhaseIcon phase={phaseId} size={24} color={accent} />
-                    )}
-                  </div>
-                ) : (
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
-                    <span style={{ fontSize: 20, color: done ? '#4ade80' : theme.textSecondary }}>
-                      {done ? '✓' : '—'}
-                    </span>
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <p className="font-bold text-sm leading-tight" style={{ color: theme.textPrimary }}>{u.name}</p>
-                    {u.isLeader && <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full"
-                      style={{ background: `${theme.secondary}22`, color: theme.secondary }}>LEADER</span>}
-                  </div>
-                  <p className="text-[9px] uppercase tracking-wide font-medium" style={{ color: theme.textSecondary }}>{u.role}</p>
-                  <StatRow unit={u} phaseId={phaseId} accent={accent} theme={theme} />
-                </div>
-                <div className="shrink-0 flex flex-col items-end gap-1.5">
-                  <span className="text-xs font-bold px-2 py-1 rounded-full"
-                    style={{ background: theme.surfaceHigh, color: '#22c55e', border: `1px solid ${theme.border}` }}>
-                    {u.W}/{u.maxW}
-                  </span>
-                  <button onClick={() => toggle(u.id)}
-                    className="text-xs px-2 py-1 rounded-lg font-bold"
-                    style={{ background: done ? 'rgba(34,197,94,0.2)' : theme.surfaceHigh, color: done ? '#4ade80' : theme.textSecondary, border: `1px solid ${done ? 'rgba(34,197,94,0.5)' : theme.border}` }}>
-                    {done ? '✓' : '○'}
-                  </button>
-                </div>
-              </div>
-              <HpBar pct={u.W / u.maxW} theme={theme} />
-
-              {/* Ability — inline on the card */}
-              {ability && active && !done && <AbilityBadge text={ability} accent={accent} />}
-
-              {/* Relevant weapons auto-expanded — no "Weapons" button needed */}
-              {phaseWeapons.length > 0 && active && !done && (
-                <div className="mt-2 pt-1.5 space-y-0.5" style={{ borderTop: `1px solid ${theme.border}` }}>
-                  {phaseWeapons.map(w => <WeaponRow key={w.name} weapon={w} accent={accent} theme={theme} pulse={true} />)}
-                </div>
-              )}
-
-              <div className="flex gap-1.5 mt-2">
-                <button className="flex-1 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: theme.surfaceHigh, color: '#22c55e', border: `1px solid ${theme.border}` }}>+ Heal</button>
-                <button className="flex-1 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: theme.surfaceHigh, color: '#ef4444', border: `1px solid ${theme.border}` }}>− Wound</button>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* ── Floating Stratagems pull-up button (no separate tab) ── */}
-      <div className="px-3 pb-2 flex justify-end">
-        <button onClick={() => setShowStrats(!showStrats)}
-          className="flex items-center gap-2 px-4 py-2 rounded-2xl font-bold text-xs shadow-lg"
-          style={{ background: accent, color: '#000' }}>
-          ⚡ Stratagems (4) {showStrats ? '▾' : '▴'}
-        </button>
-      </div>
-
-      {showStrats && (
-        <div className="mx-3 mb-3 rounded-xl border p-3" style={{ background: theme.unitBg, borderColor: `${accent}40` }}>
-          <p className="text-xs font-black mb-2" style={{ color: accent }}>Phase Stratagems</p>
-          {['Insane Bravery — 1 CP', 'Counter-Offensive — 2 CP', 'Adaptive Strategy — 1 CP', 'Heroic Intervention — 1 CP'].map(s => (
-            <div key={s} className="py-1.5 border-b last:border-0 flex items-center justify-between"
-              style={{ borderColor: theme.border }}>
-              <p className="text-xs font-bold" style={{ color: theme.textPrimary }}>{s.split(' — ')[0]}</p>
-              <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                style={{ background: theme.surfaceHigh, color: theme.secondary }}>{s.split(' — ')[1]}</span>
-            </div>
+    <div className="flex items-center gap-2 px-3 pt-2 shrink-0">
+      {/* CP */}
+      <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
+        style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
+        <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: theme.textSecondary }}>CP</span>
+        <span className="text-sm font-black" style={{ color: theme.secondary }}>3</span>
+        <div className="flex gap-0.5">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="w-2 h-2 rounded-sm"
+              style={{ background: i < 3 ? theme.secondary : theme.border, opacity: i < 3 ? 1 : 0.3 }} />
           ))}
         </div>
-      )}
-
-      <PhaseNav phaseId={phaseId} theme={theme} style="normal" />
+      </div>
+      {/* VP */}
+      <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-xl justify-between"
+        style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
+        <div className="text-center">
+          <p className="text-[9px] font-black uppercase" style={{ color: theme.secondary }}>You</p>
+          <p className="font-black text-base leading-none" style={{ color: '#22c55e' }}>8</p>
+        </div>
+        <p className="text-[10px] font-bold" style={{ color: theme.textSecondary }}>Round 2/5</p>
+        <div className="text-center">
+          <p className="text-[9px] font-black uppercase" style={{ color: theme.textSecondary }}>Them</p>
+          <p className="font-black text-base leading-none" style={{ color: '#ef4444' }}>5</p>
+        </div>
+      </div>
     </div>
   )
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// CONCEPT C — "Mission Control"
-// A sticky command bar at the top acts as the brain of the screen — it shows
-// the current phase, a smart 1-sentence tip tailored to your actual units,
-// scrollable phase checklist chips, and a strats trigger. Units fill everything
-// below. Phase nav is brighter (past phases ✓ checked, not faded).
-// ═══════════════════════════════════════════════════════════════════════════════
-
-const SMART_TIPS = {
-  command:  'Logan: High King of Fenris triggers now (+1 CP) · then pick your Hunting Pack',
-  movement: 'Ragnar & Blood Claws: advance toward enemy · Terminators hold the line',
-  shooting: 'Blood Claws + Terminators: shoot bolt weapons · Ragnar fires Bolt Pistol',
-  charge:   'Ragnar: Battle-lust (+3") charges reliably · Blood Claws follow up',
-  fight:    'Ragnar fights first (Wolf-kin) · Logan\'s aura re-rolls hits for nearby units',
-}
-
-const PHASE_CHIPS = {
-  command:  ['Gain 1 CP ▸', 'High King +1 CP ▸', 'Pick Hunting Pack ▸', 'Use Abilities ▸'],
-  movement: ['Move 6" ▸', 'Advance? ▸', 'Ragnar → enemy ▸', 'Hold ranged ▸'],
-  shooting: ['Pick target ▸', 'Roll to Hit ▸', 'Roll to Wound ▸', 'Opponent saves ▸'],
-  charge:   ['Declare charge ▸', 'Roll 2D6 ▸', 'Ragnar +3" ▸', 'Pile in ▸'],
-  fight:    ['Select unit ▸', 'Ragnar first ▸', 'Logan aura ▸', 'Roll to Hit ▸'],
-}
-
-function ConceptC({ theme, phase, accent }) {
-  const phaseId = phase.id
-  const [doneIds, setDoneIds] = useState(new Set())
-  const [showStrats, setShowStrats] = useState(false)
-  const toggle = id => setDoneIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
-
-  return (
-    <div className="rounded-2xl overflow-hidden border" style={{ background: theme.surface, borderColor: `${accent}40` }}>
-      {/* Concept label */}
-      <div className="px-4 py-2.5 flex items-center gap-2.5" style={{ background: `${accent}20`, borderBottom: `1px solid ${accent}35` }}>
-        <span className="font-black text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full"
-          style={{ background: accent, color: '#000' }}>C</span>
-        <div>
-          <p className="text-xs font-black" style={{ color: accent }}>Mission Control</p>
-          <p className="text-[10px]" style={{ color: `${accent}aa` }}>Smart command bar · units fill screen · phase nav brighter</p>
-        </div>
-      </div>
-
-      {/* ── STICKY COMMAND BAR ── */}
-      <div className="mx-3 mt-3 rounded-2xl overflow-hidden border" style={{ background: `${accent}0c`, borderColor: `${accent}40` }}>
-        {/* Row 1: phase identity + strats trigger */}
-        <div className="px-3 py-2.5 flex items-start gap-2.5" style={{ borderBottom: `1px solid ${accent}25` }}>
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: `${accent}22`, border: `1px solid ${accent}55` }}>
-            <PhaseIcon phase={phaseId} size={20} color={accent} />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-black text-sm leading-none" style={{ color: theme.textPrimary }}>{phase.label} Phase</p>
-            {/* ← KEY DIFFERENTIATOR: smart tip tailored to your actual units */}
-            <p className="text-xs mt-0.5 leading-snug" style={{ color: accent }}>{SMART_TIPS[phaseId]}</p>
-          </div>
-          <button onClick={() => setShowStrats(!showStrats)}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[10px] font-black shrink-0 transition-all"
-            style={{ background: showStrats ? accent : `${accent}22`, color: showStrats ? '#000' : accent, border: `1px solid ${accent}55` }}>
-            ⚡ Strats {showStrats ? '▾' : '▴'}
-          </button>
-        </div>
-        {/* Row 2: scrollable phase step chips */}
-        <div className="flex gap-1.5 px-3 py-2 overflow-x-auto">
-          {(PHASE_CHIPS[phaseId] || []).map(c => (
-            <span key={c} className="whitespace-nowrap text-[10px] font-bold px-2.5 py-1 rounded-lg"
-              style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}35` }}>{c}</span>
-          ))}
-        </div>
-        {/* Strats pull-down */}
-        {showStrats && (
-          <div className="border-t px-3 py-2" style={{ borderColor: `${accent}25` }}>
-            {['Insane Bravery — 1 CP', 'Counter-Offensive — 2 CP', 'Adaptive Strategy — 1 CP'].map(s => (
-              <div key={s} className="py-1 flex items-center justify-between">
-                <p className="text-xs font-bold" style={{ color: theme.textPrimary }}>{s.split(' — ')[0]}</p>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                  style={{ background: theme.surfaceHigh, color: theme.secondary }}>{s.split(' — ')[1]}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ── UNITS — fill the rest ── */}
-      <div className="px-3 mt-3 pb-2 space-y-2">
-        {PROTO_UNITS.map(u => {
-          const active = isActiveThisPhase(u, phaseId)
-          const done = doneIds.has(u.id)
-          const attacks = getAttacks(u, phaseId)
-          const ability = getPhaseAbility(u, phaseId)
-          const phaseWeapons = phaseId === 'shooting' ? u.weapons.filter(w => w.type === 'ranged')
-            : ['fight','charge'].includes(phaseId) ? u.weapons.filter(w => w.type === 'melee') : []
-
-          return (
-            <div key={u.id} className="rounded-xl border p-3"
-              style={{ background: theme.unitBg, borderColor: active && !done ? `${accent}50` : theme.border, opacity: done ? 0.45 : !active ? 0.38 : 1 }}>
-              <div className="flex items-start gap-2.5">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <p className="font-bold text-sm leading-tight" style={{ color: theme.textPrimary }}>{u.name}</p>
-                    {/* Attacks badge in title — inline, not a separate large tile */}
-                    {attacks !== null && active && !done && (
-                      <motion.span className="text-[10px] font-black px-1.5 py-0.5 rounded-full"
-                        style={{ background: `${accent}22`, color: accent, border: `1px solid ${accent}55` }}
-                        animate={{ opacity: [1, 0.35, 1] }} transition={{ repeat: Infinity, duration: 1.0 }}>
-                        {attacks} ATK
-                      </motion.span>
-                    )}
-                  </div>
-                  <p className="text-[9px] uppercase tracking-wide font-medium" style={{ color: theme.textSecondary }}>{u.role}</p>
-                  <StatRow unit={u} phaseId={phaseId} accent={accent} theme={theme} />
-                </div>
-                <div className="shrink-0 flex flex-col items-end gap-1.5">
-                  <span className="text-xs font-bold px-2 py-1 rounded-full"
-                    style={{ background: theme.surfaceHigh, color: '#22c55e', border: `1px solid ${theme.border}` }}>
-                    {u.W}/{u.maxW}
-                  </span>
-                  <button onClick={() => toggle(u.id)}
-                    className="text-xs px-2 py-1 rounded-lg font-bold transition-all"
-                    style={{ background: done ? 'rgba(34,197,94,0.2)' : theme.surfaceHigh, color: done ? '#4ade80' : theme.textSecondary, border: `1px solid ${done ? 'rgba(34,197,94,0.5)' : theme.border}` }}>
-                    {done ? '✓' : '○'}
-                  </button>
-                </div>
-              </div>
-              <HpBar pct={u.W / u.maxW} theme={theme} />
-              {ability && active && !done && <AbilityBadge text={ability} accent={accent} />}
-              {phaseWeapons.length > 0 && active && !done && (
-                <div className="mt-2 pt-1.5 space-y-0.5" style={{ borderTop: `1px solid ${theme.border}` }}>
-                  {phaseWeapons.map(w => <WeaponRow key={w.name} weapon={w} accent={accent} theme={theme} pulse={true} />)}
-                </div>
-              )}
-              <div className="flex gap-1.5 mt-2">
-                <button className="flex-1 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: theme.surfaceHigh, color: '#22c55e', border: `1px solid ${theme.border}` }}>+ Heal</button>
-                <button className="flex-1 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: theme.surfaceHigh, color: '#ef4444', border: `1px solid ${theme.border}` }}>− Wound</button>
-                <button className="px-3 py-1.5 rounded-lg text-xs font-bold"
-                  style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                  Weapons
-                </button>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* ── Phase nav — brighter, past phases show ✓ ── */}
-      <PhaseNav phaseId={phaseId} theme={theme} style="bright" />
-    </div>
-  )
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// Main export — full-screen overlay with phase switcher
+// Main export
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export default function BattleLayoutProto({ theme, onClose }) {
-  const [activePhaseIdx, setActivePhaseIdx] = useState(0)
-  const phase   = PHASES[activePhaseIdx]
-  const accent  = ACCENT[phase.id] || theme.secondary
+  const [phaseIdx,    setPhaseIdx]    = useState(0)
+  const [doneIds,     setDoneIds]     = useState(new Set())
+  const [showStrats,  setShowStrats]  = useState(false)
+  const [cardHeight,  setCardHeight]  = useState(300)
+
+  const phase  = PHASES[phaseIdx]
+  const accent = ACCENT[phase.id] || theme.secondary
+
+  const toggleDone = id => setDoneIds(prev => {
+    const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n
+  })
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col" style={{ background: theme.bg, fontFamily: theme.font }}>
 
-      {/* Header */}
+      {/* ── Header ── */}
       <div className="px-4 py-3 border-b flex items-center justify-between shrink-0"
         style={{ background: theme.surface, borderColor: theme.border }}>
         <div>
-          <p className="font-black text-sm" style={{ color: theme.textPrimary }}>Layout Preview</p>
-          <p className="text-xs" style={{ color: theme.textSecondary }}>Scroll to compare A, B, C — pick your favourite</p>
+          <p className="font-black text-sm" style={{ color: theme.textPrimary }}>Card Mode — Battle Preview</p>
+          <p className="text-xs" style={{ color: theme.textSecondary }}>
+            Leaders linked to their squads · tap ○ to mark units done · change phase below
+          </p>
         </div>
         <button onClick={onClose}
           className="px-3 py-1.5 rounded-xl text-xs font-bold"
@@ -648,18 +522,22 @@ export default function BattleLayoutProto({ theme, onClose }) {
         </button>
       </div>
 
-      {/* Phase switcher */}
+      {/* ── Phase picker ── */}
       <div className="flex items-center gap-2 px-3 py-2 overflow-x-auto shrink-0"
-        style={{ background: theme.surface, borderBottom: `1px solid ${theme.border}` }}>
-        <span className="text-[10px] font-bold uppercase tracking-widest shrink-0 mr-1"
-          style={{ color: theme.textSecondary }}>Test phase:</span>
+        style={{ borderBottom: `1px solid ${theme.border}` }}>
+        <span className="text-[10px] font-bold uppercase tracking-widest shrink-0"
+          style={{ color: theme.textSecondary }}>Phase:</span>
         {PHASES.map((p, i) => {
           const a = ACCENT[p.id]
-          const active = i === activePhaseIdx
+          const active = i === phaseIdx
           return (
-            <button key={p.id} onClick={() => setActivePhaseIdx(i)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap shrink-0 transition-all"
-              style={{ background: active ? `${a}20` : 'transparent', color: active ? a : theme.textSecondary, border: `1px solid ${active ? a + '55' : 'rgba(255,255,255,0.1)'}` }}>
+            <button key={p.id} onClick={() => setPhaseIdx(i)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap shrink-0 transition-all"
+              style={{
+                background: active ? `${a}22` : 'transparent',
+                color: active ? a : theme.textSecondary,
+                border: `1px solid ${active ? a + '60' : 'rgba(255,255,255,0.1)'}`,
+              }}>
               <PhaseIcon phase={p.id} size={11} color={active ? a : theme.textSecondary} />
               {p.label}
             </button>
@@ -667,15 +545,51 @@ export default function BattleLayoutProto({ theme, onClose }) {
         })}
       </div>
 
-      {/* Scrollable comparison */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-8">
-        <ConceptA theme={theme} phase={phase} accent={accent} />
-        <ConceptB theme={theme} phase={phase} accent={accent} />
-        <ConceptC theme={theme} phase={phase} accent={accent} />
-
-        {/* Spacer so last concept isn't cut off */}
-        <div className="h-8" />
+      {/* ── Card height slider ── */}
+      <div className="flex items-center gap-3 px-4 py-1.5 shrink-0"
+        style={{ borderBottom: `1px solid ${theme.border}80`, background: theme.surface }}>
+        <span style={{ fontSize: 10, color: theme.textSecondary, whiteSpace: 'nowrap' }}>Card size:</span>
+        <input type="range" min={220} max={400} value={cardHeight}
+          onChange={e => setCardHeight(Number(e.target.value))}
+          className="flex-1 accent-current" style={{ accentColor: accent }} />
+        <span style={{ fontSize: 10, color: theme.textSecondary, whiteSpace: 'nowrap' }}>{cardHeight}px</span>
       </div>
+
+      {/* ── Main battle layout ── */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* CP + VP strip */}
+        <BattleStrip theme={theme} />
+
+        {/* Phase command bar */}
+        <PhaseCommandBar
+          phase={phase} accent={accent} theme={theme}
+          showStrats={showStrats} onToggleStrats={() => setShowStrats(s => !s)}
+        />
+
+        {/* ── Horizontal card scroll ── */}
+        <div className="flex-1 flex items-center overflow-x-auto overflow-y-hidden px-3 gap-3 py-3"
+          style={{ scrollSnapType: 'x mandatory' }}>
+          {PAIRS.map(pair => (
+            <div key={pair.id} style={{ scrollSnapAlign: 'start' }}>
+              <PairGroup
+                pair={pair} phaseId={phase.id} accent={accent} theme={theme}
+                doneIds={doneIds} toggleDone={toggleDone} cardHeight={cardHeight}
+              />
+            </div>
+          ))}
+          {/* Trailing space */}
+          <div className="w-3 shrink-0" />
+        </div>
+
+        {/* Scroll hint */}
+        <p className="text-center shrink-0 pb-1"
+          style={{ fontSize: 9, color: theme.textSecondary, opacity: 0.6 }}>
+          ← scroll to see all units →
+        </p>
+      </div>
+
+      {/* ── Phase nav ── */}
+      <PhaseNav phaseId={phase.id} theme={theme} />
     </div>
   )
 }
