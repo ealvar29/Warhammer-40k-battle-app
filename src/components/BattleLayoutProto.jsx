@@ -8,6 +8,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { PhaseIcon } from './GameIcon'
 import { PHASES } from '../data/editionConfig'
 
+// Injected once — all pulsing elements share the same wall-clock keyframe so they blink in sync
+const PULSE_STYLE = `
+  @keyframes syncPulse {
+    0%,100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+  }
+  .sync-pulse { animation: syncPulse 1.0s ease-in-out infinite; }
+`
+
 const ACCENT = {
   command: '#c9a84c', movement: '#22c55e', shooting: '#60a5fa',
   charge: '#f97316', fight: '#ef4444',
@@ -146,8 +155,7 @@ const PHASE_STEPS = {
 
 // ── Single battle card ────────────────────────────────────────────────────────
 
-function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, cardHeight }) {
-  const [expanded, setExpanded] = useState(false)
+function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, cardHeight, desktop }) {
   if (!unit) return null
 
   const active     = isActive(unit, phaseId)
@@ -156,12 +164,26 @@ function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, ca
   const showAttack = attacks !== null && active && !isDone
   const pulseMov   = phaseId === 'movement' && active && !isDone
 
-  const cardWidth  = isLeader ? 152 : 172
-  const borderCol  = isDone
+  // Scale everything up on desktop
+  const cardWidth  = isLeader
+    ? (desktop ? 210 : 155)
+    : (desktop ? 245 : 175)
+
+  const fName  = desktop ? 16 : 12
+  const fRole  = desktop ? 10 : 8
+  const fStat  = desktop ? 14 : 11
+  const fLabel = desktop ? 8  : 7
+  const fAbil  = desktop ? 11 : 9
+  const fBtn   = desktop ? 12 : 10
+  const fAtk   = desktop ? 30 : 22
+
+  const borderCol = isDone
     ? `${theme.border}88`
     : !active ? theme.border
     : ability  ? `${accent}70`
     : `${accent}45`
+
+  const rollLabel = phaseId === 'shooting' ? 'Roll Shots' : 'Roll Attacks'
 
   return (
     <div
@@ -172,7 +194,7 @@ function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, ca
         border: `1.5px solid ${borderCol}`,
         opacity: isDone ? 0.45 : !active ? 0.32 : 1,
         boxShadow: active && !isDone && ability
-          ? `0 0 20px ${accent}30, 0 4px 16px rgba(0,0,0,0.5)`
+          ? `0 0 24px ${accent}35, 0 4px 20px rgba(0,0,0,0.55)`
           : '0 4px 16px rgba(0,0,0,0.4)',
         transition: 'opacity 0.3s, box-shadow 0.3s',
       }}
@@ -189,9 +211,9 @@ function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, ca
         background: `linear-gradient(
           to bottom,
           rgba(0,0,0,0.08) 0%,
-          rgba(0,0,0,0.10) 30%,
-          rgba(0,0,0,0.72) 58%,
-          rgba(0,0,0,0.96) 100%
+          rgba(0,0,0,0.10) 28%,
+          rgba(0,0,0,0.75) 56%,
+          rgba(0,0,0,0.97) 100%
         )`,
       }} />
 
@@ -199,51 +221,51 @@ function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, ca
       <div className="absolute top-2 left-2 right-2 flex items-start justify-between z-10">
         {/* HP badge */}
         <div className="flex flex-col items-start gap-1">
-          <span className="text-[10px] font-black px-2 py-0.5 rounded-full"
-            style={{ background: 'rgba(0,0,0,0.65)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.45)', backdropFilter: 'blur(4px)' }}>
-            {unit.W}/{unit.maxW}
+          <span className="font-black px-2 py-0.5 rounded-full"
+            style={{ fontSize: desktop ? 12 : 10, background: 'rgba(0,0,0,0.65)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.45)', backdropFilter: 'blur(4px)' }}>
+            {unit.W}/{unit.maxW} W
           </span>
           {isLeader && (
-            <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase"
-              style={{ background: `${accent}cc`, color: '#000' }}>
+            <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase"
+              style={{ fontSize: desktop ? 9 : 7, background: `${accent}cc`, color: '#000' }}>
               Leader
             </span>
           )}
         </div>
 
-        {/* Done toggle */}
+        {/* Done toggle — clearly labeled */}
         <motion.button
           whileTap={{ scale: 0.85 }}
           onClick={e => { e.stopPropagation(); onDone() }}
-          className="text-[10px] font-black px-2 py-0.5 rounded-full"
+          className="font-black px-2.5 py-1 rounded-full"
           style={{
-            background: isDone ? 'rgba(34,197,94,0.45)' : 'rgba(0,0,0,0.55)',
-            color:      isDone ? '#4ade80' : 'rgba(255,255,255,0.65)',
-            border:     `1px solid ${isDone ? 'rgba(34,197,94,0.6)' : 'rgba(255,255,255,0.2)'}`,
+            fontSize:   desktop ? 11 : 9,
+            background: isDone ? 'rgba(34,197,94,0.45)' : 'rgba(0,0,0,0.60)',
+            color:      isDone ? '#4ade80' : 'rgba(255,255,255,0.80)',
+            border:     `1.5px solid ${isDone ? 'rgba(34,197,94,0.7)' : 'rgba(255,255,255,0.35)'}`,
             backdropFilter: 'blur(4px)',
           }}
         >
-          {isDone ? '✓ Done' : '○'}
+          {isDone ? '✓ Activated' : '○ Mark Done'}
         </motion.button>
       </div>
 
-      {/* ── Phase attack tile (mid-card, right edge) ── */}
+      {/* ── Phase attack tile (mid-card, right edge) — all in sync via CSS ── */}
       {showAttack && (
-        <div className="absolute z-10" style={{ top: '36%', right: 10 }}>
-          <motion.div
-            className="flex flex-col items-center rounded-xl px-2 py-1.5"
+        <div className="absolute z-10 sync-pulse" style={{ top: '34%', right: 10 }}>
+          <div
+            className="flex flex-col items-center rounded-xl"
             style={{
-              background: `${accent}e0`,
-              border:     `1.5px solid ${accent}`,
+              padding:    desktop ? '8px 10px' : '6px 8px',
+              background: `${accent}e8`,
+              border:     `2px solid ${accent}`,
               backdropFilter: 'blur(6px)',
-              boxShadow:  `0 0 12px ${accent}80`,
+              boxShadow:  `0 0 16px ${accent}90`,
             }}
-            animate={{ opacity: [1, 0.45, 1] }}
-            transition={{ repeat: Infinity, duration: 1.0 }}
           >
-            <span className="font-black leading-none" style={{ fontSize: 22, color: '#000' }}>{attacks}</span>
-            <span style={{ fontSize: 7, fontWeight: 900, color: '#000', letterSpacing: '0.08em' }}>ATK</span>
-          </motion.div>
+            <span className="font-black leading-none" style={{ fontSize: fAtk, color: '#000' }}>{attacks}</span>
+            <span style={{ fontSize: desktop ? 9 : 7, fontWeight: 900, color: '#000', letterSpacing: '0.08em' }}>ATK</span>
+          </div>
         </div>
       )}
 
@@ -251,55 +273,66 @@ function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, ca
       <div className="absolute bottom-0 left-0 right-0 z-10 px-3 pb-3 pt-2">
 
         {/* Name + role */}
-        <p className="font-black leading-tight text-white" style={{ fontSize: 12 }}>{unit.name}</p>
-        <p className="font-bold uppercase tracking-wide mt-0.5" style={{ fontSize: 8, color: `${accent}dd` }}>
+        <p className="font-black leading-tight text-white" style={{ fontSize: fName }}>{unit.name}</p>
+        <p className="font-bold uppercase tracking-wide mt-0.5" style={{ fontSize: fRole, color: `${accent}dd` }}>
           {unit.role}
         </p>
 
         {/* Stats row */}
-        <div className="flex gap-2.5 mt-1.5">
+        <div className="flex gap-3 mt-1.5">
           {[['M', unit.M, pulseMov], ['T', unit.T, false], ['SV', unit.Sv, false]].map(([l, v, pulse]) => (
             <div key={l} className="flex flex-col items-center">
-              <motion.span
-                className="font-black leading-none"
-                style={{ fontSize: 11, color: pulse ? accent : 'white' }}
-                animate={pulse ? { opacity: [1, 0.25, 1] } : { opacity: 1 }}
-                transition={pulse ? { repeat: Infinity, duration: 1.0 } : {}}>
+              <span
+                className={pulse ? 'sync-pulse font-black leading-none' : 'font-black leading-none'}
+                style={{ fontSize: fStat, color: pulse ? accent : 'white' }}>
                 {v}
-              </motion.span>
-              <span style={{ fontSize: 7, fontWeight: 800, color: pulse ? `${accent}cc` : 'rgba(255,255,255,0.55)', letterSpacing: '0.04em' }}>{l}</span>
+              </span>
+              <span style={{ fontSize: fLabel, fontWeight: 800, color: pulse ? `${accent}cc` : 'rgba(255,255,255,0.55)', letterSpacing: '0.04em' }}>{l}</span>
             </div>
           ))}
         </div>
 
         {/* Phase ability — inline glowing badge */}
         {ability && active && !isDone && (
-          <div className="mt-1.5 rounded-lg px-2 py-1" style={{ background: `${accent}28`, border: `1px solid ${accent}55` }}>
-            <p style={{ fontSize: 9, color: accent, lineHeight: 1.35 }}>⚡ {ability}</p>
+          <div className="mt-1.5 rounded-lg px-2 py-1.5" style={{ background: `${accent}28`, border: `1px solid ${accent}55` }}>
+            <p style={{ fontSize: fAbil, color: accent, lineHeight: 1.4 }}>⚡ {ability}</p>
           </div>
         )}
 
         {/* HP bar */}
-        <div className="mt-2 w-full rounded-full overflow-hidden" style={{ height: 3, background: 'rgba(255,255,255,0.18)' }}>
-          <motion.div className="h-full rounded-full"
-            style={{ background: unit.W / unit.maxW > 0.5 ? '#22c55e' : unit.W / unit.maxW > 0.25 ? '#f59e0b' : '#ef4444' }}
-            initial={false} animate={{ width: `${(unit.W / unit.maxW) * 100}%` }} />
+        <div className="mt-2 w-full rounded-full overflow-hidden" style={{ height: desktop ? 4 : 3, background: 'rgba(255,255,255,0.18)' }}>
+          <div className="h-full rounded-full transition-all duration-300"
+            style={{
+              width: `${(unit.W / unit.maxW) * 100}%`,
+              background: unit.W / unit.maxW > 0.5 ? '#22c55e' : unit.W / unit.maxW > 0.25 ? '#f59e0b' : '#ef4444',
+            }} />
         </div>
 
-        {/* Action buttons */}
-        <div className="flex gap-1 mt-2">
-          <button className="flex-1 py-1.5 rounded-lg font-black text-center"
-            style={{ fontSize: 11, background: 'rgba(34,197,94,0.22)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.4)' }}>
-            +
+        {/* Action buttons — clearly labeled */}
+        <div className="flex flex-col gap-1 mt-2">
+          {/* Primary: damage (most common action) */}
+          <button className="w-full rounded-lg font-black flex items-center justify-center gap-1.5"
+            style={{ fontSize: fBtn, padding: desktop ? '7px 0' : '6px 0', background: 'rgba(239,68,68,0.30)', color: '#fca5a5', border: '1.5px solid rgba(239,68,68,0.60)' }}>
+            ▼ Take Damage
           </button>
-          <button className="flex-1 py-1.5 rounded-lg font-black text-center"
-            style={{ fontSize: 11, background: 'rgba(239,68,68,0.22)', color: '#f87171', border: '1px solid rgba(239,68,68,0.4)' }}>
-            −
-          </button>
-          <button className="flex-1 py-1.5 rounded-lg font-black text-center"
-            style={{ fontSize: 11, background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.18)' }}>
-            ⚔
-          </button>
+          {/* Secondary row */}
+          <div className="flex gap-1">
+            <button className="flex-1 rounded-lg font-black flex items-center justify-center gap-1"
+              style={{ fontSize: fBtn, padding: desktop ? '6px 0' : '5px 0', background: 'rgba(34,197,94,0.20)', color: '#86efac', border: '1px solid rgba(34,197,94,0.40)' }}>
+              ▲ Heal
+            </button>
+            {(phaseId === 'shooting' || phaseId === 'fight' || phaseId === 'charge') ? (
+              <button className="flex-1 rounded-lg font-black flex items-center justify-center gap-1"
+                style={{ fontSize: fBtn, padding: desktop ? '6px 0' : '5px 0', background: `${accent}22`, color: accent, border: `1px solid ${accent}55` }}>
+                ⚔ {rollLabel}
+              </button>
+            ) : (
+              <button className="flex-1 rounded-lg font-black flex items-center justify-center gap-1"
+                style={{ fontSize: fBtn, padding: desktop ? '6px 0' : '5px 0', background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.70)', border: '1px solid rgba(255,255,255,0.22)' }}>
+                ⚔ Weapons
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -308,7 +341,7 @@ function BattleCard({ unit, phaseId, accent, theme, isDone, onDone, isLeader, ca
 
 // ── Leader + unit pair group ──────────────────────────────────────────────────
 
-function PairGroup({ pair, phaseId, accent, theme, doneIds, toggleDone, cardHeight }) {
+function PairGroup({ pair, phaseId, accent, theme, doneIds, toggleDone, cardHeight, desktop }) {
   const { leader, unit } = pair
   const hasBoth = leader && unit
 
@@ -319,17 +352,17 @@ function PairGroup({ pair, phaseId, accent, theme, doneIds, toggleDone, cardHeig
         <BattleCard
           unit={leader} phaseId={phaseId} accent={accent} theme={theme}
           isDone={doneIds.has(leader.id)} onDone={() => toggleDone(leader.id)}
-          isLeader={true} cardHeight={cardHeight}
+          isLeader={true} cardHeight={cardHeight} desktop={desktop}
         />
       )}
 
       {/* Connector between leader and unit */}
       {hasBoth && (
-        <div className="flex flex-col items-center justify-center w-4 shrink-0 gap-0 self-stretch">
+        <div className="flex flex-col items-center justify-center w-5 shrink-0 gap-0 self-stretch">
           <div className="flex-1 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${accent}60, ${accent}60, transparent)` }} />
-          <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+          <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
             style={{ background: `${accent}22`, border: `1px solid ${accent}60` }}>
-            <span style={{ fontSize: 8, color: accent }}>⚡</span>
+            <span style={{ fontSize: 10, color: accent }}>⚡</span>
           </div>
           <div className="flex-1 w-px" style={{ background: `linear-gradient(to bottom, transparent, ${accent}60, ${accent}60, transparent)` }} />
         </div>
@@ -340,7 +373,7 @@ function PairGroup({ pair, phaseId, accent, theme, doneIds, toggleDone, cardHeig
         <BattleCard
           unit={unit} phaseId={phaseId} accent={accent} theme={theme}
           isDone={doneIds.has(unit.id)} onDone={() => toggleDone(unit.id)}
-          isLeader={false} cardHeight={cardHeight}
+          isLeader={false} cardHeight={cardHeight} desktop={desktop}
         />
       )}
     </div>
@@ -491,10 +524,11 @@ function BattleStrip({ theme }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export default function BattleLayoutProto({ theme, onClose }) {
+  const desktop   = window.innerWidth >= 768
   const [phaseIdx,    setPhaseIdx]    = useState(0)
   const [doneIds,     setDoneIds]     = useState(new Set())
   const [showStrats,  setShowStrats]  = useState(false)
-  const [cardHeight,  setCardHeight]  = useState(300)
+  const [cardHeight,  setCardHeight]  = useState(desktop ? 380 : 300)
 
   const phase  = PHASES[phaseIdx]
   const accent = ACCENT[phase.id] || theme.secondary
@@ -505,6 +539,7 @@ export default function BattleLayoutProto({ theme, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col" style={{ background: theme.bg, fontFamily: theme.font }}>
+      <style>{PULSE_STYLE}</style>
 
       {/* ── Header ── */}
       <div className="px-4 py-3 border-b flex items-center justify-between shrink-0"
@@ -573,7 +608,7 @@ export default function BattleLayoutProto({ theme, onClose }) {
             <div key={pair.id} style={{ scrollSnapAlign: 'start' }}>
               <PairGroup
                 pair={pair} phaseId={phase.id} accent={accent} theme={theme}
-                doneIds={doneIds} toggleDone={toggleDone} cardHeight={cardHeight}
+                doneIds={doneIds} toggleDone={toggleDone} cardHeight={cardHeight} desktop={desktop}
               />
             </div>
           ))}
