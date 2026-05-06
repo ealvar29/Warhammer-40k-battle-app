@@ -138,15 +138,15 @@ function HpBar({ current, max, theme }) {
 // ── Stat Pill ─────────────────────────────────────────────────────────────────
 function StatPill({ label, value, mod, theme }) {
   return (
-    <div className="flex flex-col items-center min-w-[32px]">
+    <div className="flex flex-col items-center min-w-[38px]">
       <div className="flex items-baseline gap-px">
-        <span className="text-xs font-black leading-tight"
-          style={{ color: mod ? theme.secondary : theme.textPrimary }}>{value}</span>
+        <span className="font-black leading-tight"
+          style={{ fontSize: 15, color: mod ? theme.secondary : theme.textPrimary }}>{value}</span>
         {mod && (
-          <span style={{ fontSize: 7, fontWeight: 900, color: theme.secondary, lineHeight: 1 }}>+{mod.delta}</span>
+          <span style={{ fontSize: 8, fontWeight: 900, color: theme.secondary, lineHeight: 1 }}>+{mod.delta}</span>
         )}
       </div>
-      <span style={{ color: mod ? theme.secondary : theme.textSecondary, fontSize: 9, fontWeight: 700, letterSpacing: '0.05em' }}>{label}</span>
+      <span style={{ color: mod ? theme.secondary : theme.textSecondary, fontSize: 10, fontWeight: 700, letterSpacing: '0.05em' }}>{label}</span>
     </div>
   )
 }
@@ -551,22 +551,15 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
       animate={{
         ...(typeof motionProps?.animate === 'object' ? motionProps.animate : { opacity: 1, y: 0 }),
         opacity: isSuppressed ? 0.35 : isDone ? 0.55 : 1,
-        boxShadow: isRelevant
-          ? [
-              `0 0 0 1.5px ${theme.secondary}55, 0 2px 8px rgba(0,0,0,0.3)`,
-              `0 0 0 1.5px ${theme.secondary}cc, 0 0 14px ${theme.secondary}33, 0 2px 8px rgba(0,0,0,0.3)`,
-              `0 0 0 1.5px ${theme.secondary}55, 0 2px 8px rgba(0,0,0,0.3)`,
-            ]
-          : isWarlord
-            ? `0 0 0 1px ${theme.secondary}44, 0 0 20px ${theme.secondary}22, 0 2px 8px rgba(0,0,0,0.3)`
-            : '0 2px 8px rgba(0,0,0,0.3)',
       }}
-      transition={isRelevant ? { boxShadow: { duration: 2, repeat: Infinity, ease: 'easeInOut' } } : undefined}
       layout
       className="rounded-2xl border p-4"
       style={{
         background: theme.unitBg,
         borderColor: isDone ? `${theme.border}88` : isWarlord ? theme.secondary : theme.border,
+        boxShadow: isWarlord
+          ? `0 0 0 1px ${theme.secondary}44, 0 0 20px ${theme.secondary}22, 0 2px 8px rgba(0,0,0,0.3)`
+          : '0 2px 8px rgba(0,0,0,0.3)',
       }}
     >
       {/* Header row */}
@@ -616,18 +609,22 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
               <motion.span
                 key={phaseRelevance.hint}
                 initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
+                animate={isRelevant
+                  ? { opacity: [1, 0.35, 1], scale: 1 }
+                  : { opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.85 }}
-                transition={{ duration: 0.18 }}
+                transition={isRelevant
+                  ? { opacity: { repeat: Infinity, duration: 1.1 }, scale: { duration: 0.18 } }
+                  : { duration: 0.18 }}
                 className="inline-flex mt-1 text-xs px-2 py-0.5 rounded-full font-bold"
                 style={{
-                  background: isSuppressed ? `${theme.hpLow}18` : `${theme.secondary}18`,
+                  background: isSuppressed ? `${theme.hpLow}18` : `${theme.secondary}22`,
                   color: isSuppressed ? theme.hpLow : theme.secondary,
-                  border: `1px solid ${isSuppressed ? theme.hpLow + '35' : theme.secondary + '35'}`,
+                  border: `1px solid ${isSuppressed ? theme.hpLow + '35' : theme.secondary + '55'}`,
                   fontSize: 9,
                 }}
               >
-                {isSuppressed ? '◆ ' : '✦ '}{phaseRelevance.hint}
+                {isSuppressed ? '◆ ' : '● '}{phaseRelevance.hint}
               </motion.span>
             )}
           </AnimatePresence>
@@ -752,7 +749,7 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
               color: isDone ? '#4ade80' : theme.textSecondary,
               border: `1px solid ${isDone ? 'rgba(34,197,94,0.5)' : theme.border}`,
             }}>
-            {isDone ? '✓' : '○'}
+            {isDone ? '✓ Done' : '○ Mark'}
           </motion.button>
         )}
         {getActiveWeapons(unit).length > 0 && (
@@ -764,7 +761,7 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
               color: showWeapons ? theme.secondary : theme.textSecondary,
               border: `1px solid ${showWeapons ? theme.secondary : theme.border}`,
             }}>
-            ⚔
+            ⚔ Arms
           </motion.button>
         )}
         {onMatchup && (
@@ -772,7 +769,7 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
             onClick={onMatchup}
             className="px-3 rounded-xl py-2 text-xs font-bold"
             style={{ background: `${theme.hpLow}18`, color: theme.hpLow, border: `1px solid ${theme.hpLow}44` }}>
-            vs
+            ⚡ vs
           </motion.button>
         )}
       </div>
@@ -1033,7 +1030,7 @@ function PhaseContextRow({ units, phaseId, abilityCount, theme }) {
       (u.abilities || []).some(a => typeof a === 'object' && a.phase === 'command' && /\bCP\b|command point/i.test(a.description || ''))
     )
     if (cpUnits.length) chips.push({ phase: 'command', label: `${cpUnits.length} CP generator${cpUnits.length > 1 ? 's' : ''} on field`, color: '#fbbf24' })
-    if (abilityCount > 0) chips.push({ phase: 'command', label: `${abilityCount} command ${abilityCount === 1 ? 'ability' : 'abilities'}`, color: theme.secondary })
+    if (abilityCount > 0) chips.push({ phase: 'command', label: `${abilityCount} ${abilityCount === 1 ? 'ability' : 'abilities'} — check Battle Intel`, color: theme.secondary })
   }
 
   if (phaseId === 'movement') {
@@ -1041,7 +1038,7 @@ function PhaseContextRow({ units, phaseId, abilityCount, theme }) {
     const scoutUnits = units.filter(u => (u.keywords || []).some(k => /^SCOUTS$/i.test(k)))
     if (dsUnits.length) chips.push({ phase: 'movement', label: `${dsUnits.length} Deep Strike`, color: '#2dd4bf' })
     if (scoutUnits.length) chips.push({ phase: 'movement', label: `${scoutUnits.length} Scouts`, color: '#2dd4bf' })
-    if (abilityCount > 0) chips.push({ phase: 'movement', label: `${abilityCount} movement ${abilityCount === 1 ? 'ability' : 'abilities'}`, color: theme.secondary })
+    if (abilityCount > 0) chips.push({ phase: 'movement', label: `${abilityCount} ${abilityCount === 1 ? 'ability' : 'abilities'} — check Battle Intel`, color: theme.secondary })
   }
 
   if (phaseId === 'shooting') {
@@ -1699,7 +1696,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                 <motion.div key="tab-guide"
                   initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.18 }}
-                  className="pb-6"
+                  className="pb-24"
                 >
                   <PhaseGuideCard activePhase={activePhase} isYourTurn={isYourTurn} theme={theme} />
                   {cpEffectsNode && <div className="px-3 mt-2">{cpEffectsNode}</div>}

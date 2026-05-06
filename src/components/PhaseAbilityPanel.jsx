@@ -20,8 +20,7 @@ const PHASE_CONTEXT = {
 function getUnitRole(unit) {
   if (unit.phaseRole) return unit.phaseRole
   const weapons = unit.weapons || []
-  // A real ranged weapon is one that isn't PISTOL (pistols are secondary / fight-phase)
-  const hasRanged = weapons.some(w => w.type === 'ranged' && !w.keywords?.includes('PISTOL'))
+  const hasRanged = weapons.some(w => w.type === 'ranged')
   const hasMelee  = weapons.some(w => w.type === 'melee')
   if (hasRanged && hasMelee) return 'mixed'
   if (hasRanged) return 'ranged'
@@ -107,7 +106,7 @@ export default function PhaseAbilityPanel({ units, activePhase, theme }) {
           style={{ background: `${accent}18`, borderBottom: `1px solid ${accent}30` }}>
           <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: accent }} />
           <p className="text-xs font-black tracking-widest uppercase" style={{ color: accent }}>
-            Contextual Hints
+            Battle Intel
           </p>
           <p className="text-xs" style={{ color: `${accent}99` }}>— {activePhase?.label}</p>
         </div>
@@ -119,7 +118,7 @@ export default function PhaseAbilityPanel({ units, activePhase, theme }) {
 
             {/* Static new-player tip */}
             {contextTip && (
-              <p className="text-xs mb-2 leading-snug" style={{ color: theme.textSecondary, opacity: 0.75 }}>
+              <p className="text-xs mb-2 leading-snug" style={{ color: theme.textSecondary }}>
                 {contextTip}
               </p>
             )}
@@ -144,7 +143,7 @@ export default function PhaseAbilityPanel({ units, activePhase, theme }) {
 
             {/* Hold-back notice */}
             {holdNotice && (
-              <p className="text-xs mt-2 leading-snug italic" style={{ color: theme.textSecondary, opacity: 0.6 }}>
+              <p className="text-xs mt-2 leading-snug italic" style={{ color: theme.textSecondary }}>
                 ⬤ {holdNotice}
               </p>
             )}
