@@ -63,7 +63,7 @@ export function RunicEdge({ color, opacity = 0.5 }) {
 
 export function FactionEdge({ theme, flip = false }) {
   if (!theme) return null
-  if (theme.id === 'hivemind')   return <ChitinEdge color={theme.primary} flip={flip} />
+  if (theme.id === 'hivemind')   return <ChitinEdge color="#2dd4bf" opacity={0.35} flip={flip} />
   if (theme.id === 'spacewolves') return <RunicEdge  color={theme.secondary} />
   return null
 }

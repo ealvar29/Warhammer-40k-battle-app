@@ -341,10 +341,10 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)}
                   className="flex-1 py-2.5 text-xs font-black rounded-xl transition-all"
                   style={{
-                    background: isActive ? accent : `${accent}12`,
-                    color: isActive ? '#000' : accent,
-                    boxShadow: isActive ? `0 2px 10px ${accent}55` : 'none',
-                    border: `1px solid ${isActive ? 'transparent' : `${accent}30`}`,
+                    background: isActive ? '#2dd4bf' : 'transparent',
+                    color: isActive ? '#000' : theme.textSecondary,
+                    boxShadow: isActive ? '0 2px 10px rgba(45,212,191,0.35)' : 'none',
+                    border: `1px solid ${isActive ? 'transparent' : theme.border}`,
                     letterSpacing: isActive ? '0.03em' : '0',
                   }}>
                   {tab.label}
@@ -401,7 +401,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                             <p className="font-bold text-sm flex-1" style={{ color: theme.textPrimary }}>{opt.label}</p>
                             {opt.shortEffect && (
                               <span className="text-[9px] font-black px-2 py-0.5 rounded-full shrink-0"
-                                style={{ background: `${optColor}30`, color: optColor, border: `1px solid ${optColor}66` }}>
+                                style={{ background: 'rgba(251,191,36,0.18)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.4)' }}>
                                 {opt.shortEffect}
                               </span>
                             )}
@@ -552,7 +552,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
             onClick={() => onChoose(d.id)}
             className="w-full py-3.5 font-black text-sm tracking-wide"
             style={{
-              background: accent, color: '#000',
+              background: '#fbbf24', color: '#000',
               clipPath: themeClip(theme, 12) || undefined,
               borderRadius: themeClip(theme) ? 0 : 16,
             }}>
