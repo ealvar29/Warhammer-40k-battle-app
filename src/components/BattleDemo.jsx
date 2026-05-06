@@ -1196,13 +1196,14 @@ function BattleUnitCard({
   const halfW       = Math.ceil(maxW / 2)
   const needsLdTest = wounds < halfW && !isSynapse && ldValue !== null
 
+  const [showDmgPicker, setShowDmgPicker] = useState(false)
+
   const cardW = isLeader ? (desktop ? 200 : 155) : (desktop ? 230 : 175)
   const fName = desktop ? 15 : 12
   const fRole = desktop ? 10 : 8
-  const fStat = desktop ? 13 : 11
-  const fLbl  = desktop ? 8  : 7
+  const fStat = desktop ? 17 : 14
+  const fLbl  = desktop ? 9  : 8
   const fBtn  = desktop ? 11 : 9
-  const fAtk  = desktop ? 28 : 20
 
   const borderCol = isDone ? `${theme.border}88`
     : !active ? theme.border
@@ -1211,7 +1212,8 @@ function BattleUnitCard({
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden shrink-0 flex flex-col"
+      className="relative rounded-2xl overflow-hidden shrink-0 flex flex-col cursor-pointer"
+      onClick={onDetail}
       style={{
         width: cardW, height: '100%',
         border: `1.5px solid ${borderCol}`,
@@ -1288,23 +1290,6 @@ function BattleUnitCard({
         </motion.button>
       </div>
 
-      {/* ATK tile — synced pulse via CSS */}
-      {showAtk && (
-        <div className="absolute z-10 sync-pulse" style={{ top: '34%', right: 8 }}>
-          <div className="flex flex-col items-center rounded-xl"
-            style={{
-              padding: desktop ? '7px 9px' : '5px 7px',
-              background: `${phaseAccent}e8`,
-              border: `2px solid ${phaseAccent}`,
-              backdropFilter: 'blur(6px)',
-              boxShadow: `0 0 14px ${phaseAccent}80`,
-            }}>
-            <span className="font-black leading-none" style={{ fontSize: fAtk, color: '#000' }}>{attacks}</span>
-            <span style={{ fontSize: desktop ? 8 : 6, fontWeight: 900, color: '#000', letterSpacing: '0.08em' }}>ATK</span>
-          </div>
-        </div>
-      )}
-
       {/* Bottom content */}
       <div className="absolute bottom-0 left-0 right-0 z-10 px-2.5 pb-2.5 pt-2">
         <p className="font-black leading-tight text-white truncate" style={{ fontSize: fName }}>{unit.name}</p>
@@ -1313,7 +1298,7 @@ function BattleUnitCard({
         </p>
 
         {/* Stats */}
-        <div className="flex gap-2.5 mt-1.5">
+        <div className="flex gap-2.5 mt-1.5 items-end">
           {[['M', unit.M, pulseMov], ['T', unit.T, false], ['SV', unit.Sv, false]]
             .filter(([, v]) => v != null)
             .map(([l, v, pulse]) => (
@@ -1328,6 +1313,14 @@ function BattleUnitCard({
                 </span>
               </div>
             ))}
+          {showAtk && (
+            <div className="flex flex-col items-center sync-pulse ml-1">
+              <span className="font-black leading-none" style={{ fontSize: fStat + 5, color: phaseAccent }}>
+                {attacks}
+              </span>
+              <span style={{ fontSize: fLbl, fontWeight: 900, color: `${phaseAccent}cc`, letterSpacing: '0.06em' }}>ATK</span>
+            </div>
+          )}
         </div>
 
         {/* Contextual hint badge */}
@@ -1419,12 +1412,25 @@ function BattleUnitCard({
               {isCharged ? '⚡ Charged!' : '⚡ Did you Charge?'}
             </button>
           )}
-          <button
-            onClick={e => { e.stopPropagation(); onWound() }}
-            className="w-full rounded-lg font-black flex items-center justify-center gap-1"
-            style={{ fontSize: fBtn, padding: desktop ? '6px 0' : '5px 0', background: 'rgba(239,68,68,0.30)', color: '#fca5a5', border: '1.5px solid rgba(239,68,68,0.55)' }}>
-            ▼ Take Damage
-          </button>
+          {showDmgPicker ? (
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5, 6].map(n => (
+                <button key={n}
+                  onClick={e => { e.stopPropagation(); onWound(n); setShowDmgPicker(false) }}
+                  className="flex-1 rounded-lg font-black flex items-center justify-center"
+                  style={{ fontSize: fBtn, padding: desktop ? '6px 0' : '5px 0', background: 'rgba(239,68,68,0.30)', color: '#fca5a5', border: '1.5px solid rgba(239,68,68,0.55)' }}>
+                  -{n}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <button
+              onClick={e => { e.stopPropagation(); setShowDmgPicker(true) }}
+              className="w-full rounded-lg font-black flex items-center justify-center gap-1"
+              style={{ fontSize: fBtn, padding: desktop ? '6px 0' : '5px 0', background: 'rgba(239,68,68,0.30)', color: '#fca5a5', border: '1.5px solid rgba(239,68,68,0.55)' }}>
+              ▼ Take Damage
+            </button>
+          )}
           <div className="flex gap-1">
             <button
               onClick={e => { e.stopPropagation(); onHeal() }}
@@ -1456,7 +1462,7 @@ function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseR
           phaseId={phaseId} phaseAccent={phaseAccent}
           phaseRelevance={getPhaseRel(leader)}
           isDone={doneUnitIds.has(leader.id)} onDone={() => toggleDone(leader.id)}
-          onWound={() => onWound(leader.id, unitStates[leader.id]?.currentWounds ?? leader.maxWounds)}
+          onWound={amount => onWound(leader.id, unitStates[leader.id]?.currentWounds ?? leader.maxWounds, amount)}
           onHeal={() => onHeal(leader.id, unitStates[leader.id]?.currentWounds ?? leader.maxWounds)}
           onDetail={() => onDetail(leader)}
           isLeader={true} theme={theme} desktop={desktop}
@@ -1483,7 +1489,7 @@ function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseR
           phaseId={phaseId} phaseAccent={phaseAccent}
           phaseRelevance={getPhaseRel(unit)}
           isDone={doneUnitIds.has(unit.id)} onDone={() => toggleDone(unit.id)}
-          onWound={() => onWound(unit.id, unitStates[unit.id]?.currentWounds ?? unit.maxWounds)}
+          onWound={amount => onWound(unit.id, unitStates[unit.id]?.currentWounds ?? unit.maxWounds, amount)}
           onHeal={() => onHeal(unit.id, unitStates[unit.id]?.currentWounds ?? unit.maxWounds)}
           onDetail={() => onDetail(unit)}
           isCharged={chargedUnitIds.has(unit.id)} onCharge={() => toggleCharged(unit.id)}
@@ -2080,94 +2086,121 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
         </div>
       </div>
 
-      {/* ── New layout: Intel top / Card gallery bottom ── */}
-      <div className="flex-1 overflow-hidden flex flex-col">
+      {/* ── Layout: left = Intel + Gallery, right = Phase Guide + Stratagems (desktop only) ── */}
+      <div className="flex-1 overflow-hidden flex flex-row">
         <style>{PULSE_STYLE}</style>
 
-        {/* ── INTEL ZONE ── */}
-        <div className="shrink-0" style={{ borderBottom: `1px solid ${phaseAccent}30` }}>
-          {cpLogPanel}
+        {/* ── LEFT COLUMN: Intel + Card gallery ── */}
+        <div className="flex-1 overflow-hidden flex flex-col min-w-0">
 
-          {/* Compact VP + CP row */}
-          <div className="flex items-center gap-2 px-3 pt-2">
-            <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowVp(true)}
-              className="flex items-center gap-3 rounded-xl px-3 py-1.5 border flex-1"
-              style={{ background: theme.surface, borderColor: theme.border }}>
-              <span className="text-base font-black" style={{ color: '#22c55e' }}>{totalYouVp}</span>
-              <span className="flex-1 text-center text-xs font-bold" style={{ color: theme.textSecondary }}>
-                Round {currentRound}/5
-              </span>
-              <span className="text-base font-black" style={{ color: '#ef4444' }}>{totalThemVp}</span>
-            </motion.button>
-          </div>
+          {/* ── INTEL ZONE ── */}
+          <div className="shrink-0" style={{ borderBottom: `1px solid ${phaseAccent}30` }}>
+            {cpLogPanel}
 
-          {activePackNode}
-          {cpEffectsNode && activePhase.id === 'command' && (
-            <div className="px-3 pt-2">{cpEffectsNode}</div>
-          )}
-          <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} onUnitClick={setDetailUnit} chargedUnitIds={chargedUnitIds} battleShockedIds={battleShockedIds} />
-
-          {/* Quick action buttons */}
-          <div className="flex gap-2 px-3 py-2">
-            <button onClick={() => setShowGuideSheet(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold flex-1 justify-center"
-              style={{ background: `${phaseAccent}14`, color: phaseAccent, border: `1px solid ${phaseAccent}40` }}>
-              <PhaseIcon phase={activePhase.id} size={12} color={phaseAccent} />
-              Phase Guide
-            </button>
-            <button onClick={() => setShowStratsPanel(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold flex-1 justify-center"
-              style={{ background: `${theme.secondary}14`, color: theme.secondary, border: `1px solid ${theme.secondary}40` }}>
-              ⚡ Stratagems
-              {visibleStratagems.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 rounded-full font-black leading-none"
-                  style={{ background: theme.secondary, color: theme.bg, fontSize: 9 }}>
-                  {visibleStratagems.length}
+            {/* Compact VP + CP row */}
+            <div className="flex items-center gap-2 px-3 pt-2">
+              <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowVp(true)}
+                className="flex items-center gap-3 rounded-xl px-3 py-1.5 border flex-1"
+                style={{ background: theme.surface, borderColor: theme.border }}>
+                <span className="text-base font-black" style={{ color: '#22c55e' }}>{totalYouVp}</span>
+                <span className="flex-1 text-center text-xs font-bold" style={{ color: theme.textSecondary }}>
+                  Round {currentRound}/5
                 </span>
-              )}
-            </button>
+                <span className="text-base font-black" style={{ color: '#ef4444' }}>{totalThemVp}</span>
+              </motion.button>
+            </div>
+
+            {activePackNode}
+            {cpEffectsNode && activePhase.id === 'command' && (
+              <div className="px-3 pt-2">{cpEffectsNode}</div>
+            )}
+            {/* Hunting Pack selector inline during Command phase on mobile */}
+            {!desktop && activePhase.id === 'command' && (
+              <DetachmentRulePanel detachment={detachment} activePhase={activePhase} theme={theme}
+                onceBuffAvailable={units.some(u => u.id === 'loganGrimnar')} />
+            )}
+            <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} onUnitClick={setDetailUnit} chargedUnitIds={chargedUnitIds} battleShockedIds={battleShockedIds} />
+
+            {/* Quick action buttons — mobile only */}
+            {!desktop && (
+              <div className="flex gap-2 px-3 py-2">
+                <button onClick={() => setShowGuideSheet(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold flex-1 justify-center"
+                  style={{ background: `${phaseAccent}14`, color: phaseAccent, border: `1px solid ${phaseAccent}40` }}>
+                  <PhaseIcon phase={activePhase.id} size={12} color={phaseAccent} />
+                  Phase Guide
+                </button>
+                <button onClick={() => setShowStratsPanel(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold flex-1 justify-center"
+                  style={{ background: `${theme.secondary}14`, color: theme.secondary, border: `1px solid ${theme.secondary}40` }}>
+                  ⚡ Stratagems
+                  {visibleStratagems.length > 0 && (
+                    <span className="ml-1 px-1.5 py-0.5 rounded-full font-black leading-none"
+                      style={{ background: theme.secondary, color: theme.bg, fontSize: 9 }}>
+                      {visibleStratagems.length}
+                    </span>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* ── CARD GALLERY ── */}
+          <div className="flex-1 overflow-hidden flex flex-col">
+            <div
+              className="flex-1 flex items-stretch overflow-x-auto overflow-y-hidden px-3 gap-3 py-3"
+              style={{ scrollSnapType: 'x mandatory' }}
+            >
+              {pairs.map(pair => (
+                <BattleUnitPairGroup
+                  key={pair.id}
+                  pair={pair}
+                  phaseId={activePhase.id}
+                  phaseAccent={phaseAccent}
+                  unitStates={unitStates}
+                  getPhaseRel={u => getPhaseRelevance(u, activePhase.id, chargedUnitIds, advancedUnitIds)}
+                  doneUnitIds={doneUnitIds}
+                  toggleDone={id => setDoneUnitIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })}
+                  onWound={(id, cur, amount = 1) => setWounds(id, Math.max(0, cur - amount))}
+                  onHeal={(id, cur) => setWounds(id, cur + 1)}
+                  onDetail={setDetailUnit}
+                  theme={theme}
+                  desktop={desktop}
+                  chargedUnitIds={chargedUnitIds}
+                  toggleCharged={toggleCharged}
+                  advancedUnitIds={advancedUnitIds}
+                  toggleAdvanced={toggleAdvanced}
+                  battleShockedIds={battleShockedIds}
+                  toggleBattleShocked={toggleBattleShocked}
+                  synapseRangeIds={synapseRangeIds}
+                  toggleSynapseRange={toggleSynapseRange}
+                  hasSynapse={hasSynapse}
+                />
+              ))}
+              <div className="w-3 shrink-0" />
+            </div>
+            <p className="text-center shrink-0 pb-1"
+              style={{ fontSize: 9, color: theme.textSecondary, opacity: 0.45 }}>
+              ← scroll to see all units →
+            </p>
           </div>
         </div>
 
-        {/* ── CARD GALLERY ── */}
-        <div className="flex-1 overflow-hidden flex flex-col">
-          <div
-            className="flex-1 flex items-stretch overflow-x-auto overflow-y-hidden px-3 gap-3 py-3"
-            style={{ scrollSnapType: 'x mandatory' }}
-          >
-            {pairs.map(pair => (
-              <BattleUnitPairGroup
-                key={pair.id}
-                pair={pair}
-                phaseId={activePhase.id}
-                phaseAccent={phaseAccent}
-                unitStates={unitStates}
-                getPhaseRel={u => getPhaseRelevance(u, activePhase.id, chargedUnitIds, advancedUnitIds)}
-                doneUnitIds={doneUnitIds}
-                toggleDone={id => setDoneUnitIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })}
-                onWound={(id, cur) => setWounds(id, cur - 1)}
-                onHeal={(id, cur) => setWounds(id, cur + 1)}
-                onDetail={setDetailUnit}
-                theme={theme}
-                desktop={desktop}
-                chargedUnitIds={chargedUnitIds}
-                toggleCharged={toggleCharged}
-                advancedUnitIds={advancedUnitIds}
-                toggleAdvanced={toggleAdvanced}
-                battleShockedIds={battleShockedIds}
-                toggleBattleShocked={toggleBattleShocked}
-                synapseRangeIds={synapseRangeIds}
-                toggleSynapseRange={toggleSynapseRange}
-                hasSynapse={hasSynapse}
-              />
-            ))}
-            <div className="w-3 shrink-0" />
+        {/* ── RIGHT COLUMN: Phase Guide + Detachment + Stratagems (desktop only) ── */}
+        {desktop && (
+          <div className="w-80 shrink-0 flex flex-col overflow-hidden border-l" style={{ borderColor: theme.border }}>
+            <div className="flex-1 overflow-y-auto">
+              <PhaseGuideCard activePhase={activePhase} isYourTurn={isYourTurn} theme={theme} cpEffectsNode={cpEffectsNode} />
+              <DetachmentRulePanel detachment={detachment} activePhase={activePhase} theme={theme}
+                onceBuffAvailable={units.some(u => u.id === 'loganGrimnar')} />
+              <p className="text-xs font-black tracking-widest uppercase px-4 pt-3 pb-1" style={{ color: theme.secondary }}>
+                Stratagems — {activePhase.label}
+              </p>
+              {stratagemFilterBar}
+              {stratagemList}
+            </div>
           </div>
-          <p className="text-center shrink-0 pb-1"
-            style={{ fontSize: 9, color: theme.textSecondary, opacity: 0.45 }}>
-            ← scroll to see all units →
-          </p>
-        </div>
+        )}
       </div>
 
       {/* ── Phase nav — phase-colored active state ── */}
