@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react'
-import { PhaseIcon } from '../components/GameIcon'
+import { PhaseIcon, PickOneIcon } from '../components/GameIcon'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
-import { FACTION_META } from '../data/factionRegistry'
+import { FACTION_META, getDetachment } from '../data/factionRegistry'
 import { unitLeaderMap, leaderAbilities } from '../data/leaderData'
 import OpponentProfile from '../components/OpponentProfile'
 import { usePortraitStore } from '../store/portraitStore'
@@ -268,7 +268,40 @@ function LeaderStep({ leader, leaderIdx, totalLeaders, eligibleSquads, unitState
 }
 
 // ── Review step ───────────────────────────────────────────────────────────────
-function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, factionMeta, accent, theme, onEditLeader }) {
+function HuntingPacksPreview({ faction, detachmentId, theme }) {
+  if (faction !== 'spacewolves' || detachmentId !== 'sagaOfTheGreatWolf') return null
+  const detachment = getDetachment('spacewolves', 'sagaOfTheGreatWolf')
+  const packs = detachment?.commandPhaseAction?.options || []
+  if (!packs.length) return null
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${theme.border}`, background: theme.surface }}>
+      <div className="px-4 py-2.5 border-b flex items-center gap-2" style={{ borderColor: theme.border, background: theme.surfaceHigh }}>
+        <PhaseIcon phase="command" size={12} color="#fbbf24" />
+        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#fbbf24' }}>
+          Hunting Packs — pick one each Command Phase
+        </p>
+      </div>
+      <div className="divide-y" style={{ borderColor: theme.border }}>
+        {packs.map(p => (
+          <div key={p.id} className="flex items-center gap-3 px-4 py-2.5">
+            <PickOneIcon icon={p.icon} size={18} color={p.unitEffects?.badgeColor || theme.secondary} className="shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-black" style={{ color: p.unitEffects?.badgeColor || theme.secondary }}>{p.label}</p>
+              <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{p.shortEffect}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="px-4 py-2 border-t" style={{ borderColor: theme.border }}>
+        <p style={{ color: theme.textSecondary, fontSize: 10, opacity: 0.7 }}>
+          Each pack usable once per battle. Logan Grimnar on field unlocks Howling Onslaught — re-select one used pack.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, factionMeta, accent, theme, onEditLeader, faction, detachmentId }) {
   const portraits = usePortraitStore(s => s.portraits)
   const unledSquads = squadUnits.filter(u => !unitStates[u.id]?.attachedLeaderId)
 
@@ -289,6 +322,8 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
       </div>
 
       <OpponentProfile theme={theme} />
+
+      <HuntingPacksPreview faction={faction} detachmentId={detachmentId} theme={theme} />
 
       {leaderUnits.length > 0 && (
         <div className="space-y-2">
@@ -373,7 +408,7 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
 
 // ── Main screen ───────────────────────────────────────────────────────────────
 export default function DeployScreen({ theme, onNavigate }) {
-  const { faction, selectedUnits, unitStates, attachLeader, detachLeader, startBattle } = useBattleStore()
+  const { faction, detachmentId, selectedUnits, unitStates, attachLeader, detachLeader, startBattle } = useBattleStore()
   const factionMeta = faction ? FACTION_META[faction] : null
   const accent = theme.secondary
 
@@ -495,6 +530,8 @@ export default function DeployScreen({ theme, onNavigate }) {
               factionMeta={factionMeta}
               accent={accent}
               theme={theme}
+              faction={faction}
+              detachmentId={detachmentId}
               onEditLeader={(idx) => { setLeaderIdx(idx); setStep('guided') }}
             />
           ) : currentLeader ? (

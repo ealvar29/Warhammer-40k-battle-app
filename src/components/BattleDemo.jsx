@@ -506,7 +506,7 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
 }
 
 // ── Unit Card ─────────────────────────────────────────────────────────────────
-function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, activePickEffect, phaseRelevance, theme, motionProps, onMatchup, onCalcWeapon }) {
+function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, activePickEffect, phaseRelevance, ferocityChoice, onFerocityChoice, theme, motionProps, onMatchup, onCalcWeapon }) {
   const wounds = unitState?.currentWounds ?? unit.currentWounds ?? unit.maxWounds
   const pct = wounds / unit.maxWounds
   const statusColor = pct > 0.6 ? theme.hpFull : pct > 0.3 ? theme.hpMid : theme.hpLow
@@ -671,6 +671,26 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
               <p className="text-xs mt-0.5 px-1 leading-snug" style={{ color: theme.textSecondary, fontSize: 9 }}>
                 {pickBadge.why}
               </p>
+            )}
+            {/* Ferocious Strike sub-choice — shown when that pack is active in Fight phase */}
+            {activePhase === 'fight' && activePickEffect?.id === 'ferocityStrike' && onFerocityChoice && (
+              <div className="flex gap-1.5 mt-1.5">
+                {['lethal', 'sustained'].map(opt => {
+                  const label = opt === 'lethal' ? 'Lethal Hits' : 'Sustained Hits 1'
+                  const chosen = ferocityChoice === opt
+                  return (
+                    <button key={opt} onClick={() => onFerocityChoice(opt)}
+                      className="flex-1 py-1.5 rounded-lg text-xs font-black transition-all"
+                      style={{
+                        background: chosen ? pickBadge.badgeColor : theme.surfaceHigh,
+                        color: chosen ? '#000' : theme.textSecondary,
+                        border: `1px solid ${chosen ? pickBadge.badgeColor : theme.border}`,
+                      }}>
+                      {label}
+                    </button>
+                  )
+                })}
+              </div>
             )}
           </motion.div>
         )}
@@ -1048,6 +1068,10 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   const [mathHammerWeapon, setMathHammerWeapon] = useState(null)
   const [showCpLog, setShowCpLog] = useState(false)
   const [activeStratIds, setActiveStratIds] = useState(new Set())
+  // Ferocious Strike sub-choice: per unit, resets when fight phase changes
+  const [ferocityChoices, setFerocityChoices] = useState({})
+  const setFerocityChoice = (unitId, choice) =>
+    setFerocityChoices(prev => ({ ...prev, [unitId]: prev[unitId] === choice ? null : choice }))
 
   const totalYouVp = vpScores?.you.reduce((a, b) => a + b, 0) ?? 0
   const totalThemVp = vpScores?.them.reduce((a, b) => a + b, 0) ?? 0
@@ -1236,6 +1260,23 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     return null
   })()
 
+  // Active detachment pack callout — shown in Guide tab when a pack is active
+  const activePackNode = activePickEffect && (
+    <div className="mx-3 mt-2 rounded-2xl overflow-hidden shrink-0"
+      style={{ background: theme.surface, border: `1px solid ${activePickEffect.badgeColor}40` }}>
+      <div className="px-3 py-2 flex items-center gap-2"
+        style={{ background: `${activePickEffect.badgeColor}12`, borderBottom: `1px solid ${activePickEffect.badgeColor}25` }}>
+        <GiLightningTrio size={11} color={activePickEffect.badgeColor} />
+        <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: activePickEffect.badgeColor }}>
+          Active Pack — {activePickEffect.badge}
+        </p>
+      </div>
+      <p className="px-3 py-2 text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
+        {activePickEffect.why}
+      </p>
+    </div>
+  )
+
   // Shared content blocks — referenced by both mobile tabs and desktop columns
   const cpLogPanel = (
     <AnimatePresence>
@@ -1373,6 +1414,8 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           activePhase={activePhase.id}
           activePickEffect={activePickEffect}
           phaseRelevance={getPhaseRelevance(u, activePhase.id)}
+          ferocityChoice={ferocityChoices[u.id] ?? null}
+          onFerocityChoice={(choice) => setFerocityChoice(u.id, choice)}
           theme={theme}
           onMatchup={opponentArmy?.units?.length > 0 ? () => setMatchupUnit(u) : undefined}
           onCalcWeapon={setMathHammerWeapon}
@@ -1578,6 +1621,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                 >
                   <PhaseGuideCard activePhase={activePhase} isYourTurn={isYourTurn} theme={theme} />
                   {cpEffectsNode && <div className="px-3 mt-2">{cpEffectsNode}</div>}
+                  {activePackNode}
                   <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} />
                   <DetachmentRulePanel
                     detachment={detachment} activePhase={activePhase} theme={theme}
@@ -1619,6 +1663,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
             <div className="shrink-0">
               <PhaseGuideCard activePhase={activePhase} isYourTurn={isYourTurn} theme={theme} />
               {cpEffectsNode && <div className="px-3 mt-2">{cpEffectsNode}</div>}
+              {activePackNode}
             </div>
             <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} />
             {stratagemFilterBar}
