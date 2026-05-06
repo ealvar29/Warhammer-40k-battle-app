@@ -269,7 +269,7 @@ export const tyranidDetachments = {
   synapticNexus: {
     id: 'synapticNexus',
     name: 'Synaptic Nexus',
-    subtitle: 'The Hive Mind's will, focused through living conduits.',
+    subtitle: "The Hive Mind's will, focused through living conduits.",
     playstyle: 'Synapse-network control — pick one Synaptic Imperative each battle round (each usable once per battle). Stack SYNAPSE units to maximise area of effect. The three imperatives cover defence, mobility, and melee aggression.',
     detachmentRule: {
       name: 'Synaptic Imperatives',
