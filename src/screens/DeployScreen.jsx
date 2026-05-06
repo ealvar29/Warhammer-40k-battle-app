@@ -130,8 +130,7 @@ function LeaderStep({ leader, leaderIdx, totalLeaders, eligibleSquads, unitState
       className="flex-1 flex flex-col md:flex-row min-h-0"
     >
       {/* ── LEFT: Portrait panel ── */}
-      <div className="relative shrink-0 md:w-2/5 md:h-full"
-        style={{ height: 'clamp(220px, 40vh, 340px)' }}>
+      <div className="relative shrink-0 md:w-2/5 md:h-full h-[clamp(220px,42vh,360px)]">
 
         {/* Portrait image */}
         {leader.artUrl && (
