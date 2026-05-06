@@ -146,7 +146,7 @@ function DetachmentCard({ d, selected, accent, theme, onClick }) {
         {tags.length > 0 && (
           <div className="mb-3">
             <p className="text-[9px] font-black uppercase tracking-widest mb-1.5"
-              style={{ color: theme.textSecondary, opacity: 0.55 }}>
+              style={{ color: 'rgba(255,255,255,0.4)' }}>
               Playstyle focus
             </p>
             <div className="flex flex-wrap gap-1">
@@ -537,7 +537,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                               {enh.cost}pts
                             </span>
                           </div>
-                          <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{enh.description}</p>
+                          <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>{enh.description}</p>
                         </div>
                       ))}
                     </div>
@@ -670,6 +670,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
     return counts
   })
   const [localOpponentTags, setLocalOpponentTags] = useState(store.opponentTags)
+
+  // Scroll to top whenever the wizard step changes
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [step])
 
   // Kick off image preloads so they're in cache when the faction grid renders
   useEffect(() => {
