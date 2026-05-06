@@ -118,6 +118,14 @@ function getPhaseRelevance(unit, phaseId) {
 }
 const FADE_IN = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 8 } }
 
+const PHASE_ACTION_LABEL = {
+  command:  'Used',
+  movement: 'Moved',
+  shooting: 'Fired',
+  charge:   'Charged',
+  fight:    'Fought',
+}
+
 // ── HP Bar ────────────────────────────────────────────────────────────────────
 function HpBar({ current, max, theme }) {
   const pct = Math.max(0, (current / max) * 100)
@@ -136,17 +144,27 @@ function HpBar({ current, max, theme }) {
 }
 
 // ── Stat Pill ─────────────────────────────────────────────────────────────────
-function StatPill({ label, value, mod, theme }) {
+function StatPill({ label, value, mod, pulse, theme }) {
+  const valueColor = mod ? theme.secondary : theme.textPrimary
+  const labelColor = mod ? theme.secondary : theme.textSecondary
+  const pulseAnim = pulse ? { opacity: [1, 0.3, 1] } : { opacity: 1 }
+  const pulseTrans = pulse ? { repeat: Infinity, duration: 1.0 } : { duration: 0.2 }
   return (
     <div className="flex flex-col items-center min-w-[38px]">
       <div className="flex items-baseline gap-px">
-        <span className="font-black leading-tight"
-          style={{ fontSize: 15, color: mod ? theme.secondary : theme.textPrimary }}>{value}</span>
+        <motion.span className="font-black leading-tight"
+          style={{ fontSize: 15, color: valueColor }}
+          animate={pulseAnim} transition={pulseTrans}>
+          {value}
+        </motion.span>
         {mod && (
           <span style={{ fontSize: 8, fontWeight: 900, color: theme.secondary, lineHeight: 1 }}>+{mod.delta}</span>
         )}
       </div>
-      <span style={{ color: mod ? theme.secondary : theme.textSecondary, fontSize: 10, fontWeight: 700, letterSpacing: '0.05em' }}>{label}</span>
+      <motion.span style={{ color: labelColor, fontSize: 10, fontWeight: 700, letterSpacing: '0.05em' }}
+        animate={pulseAnim} transition={pulseTrans}>
+        {label}
+      </motion.span>
     </div>
   )
 }
@@ -444,12 +462,22 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
               <p className="text-xs" style={{ color: theme.textSecondary }}>{attached.role}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
             {abilities.length > 0 && (
-              <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-                style={{ background: `${theme.secondary}22`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
-                {abilities.length} {abilities.length === 1 ? 'ability' : 'abilities'}
-              </span>
+              <div className="flex flex-wrap gap-1">
+                {abilities.slice(0, 3).map(a => (
+                  <span key={a.name} className="text-xs px-2 py-0.5 rounded-full font-medium"
+                    style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}40` }}>
+                    {a.name}
+                  </span>
+                ))}
+                {abilities.length > 3 && (
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                    style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                    +{abilities.length - 3}
+                  </span>
+                )}
+              </div>
             )}
             <button onClick={() => onDetach(unit.id)}
               className="text-xs px-2 py-1 rounded-lg font-bold"
@@ -664,7 +692,11 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
       {/* Stat bar */}
       {stats.length > 0 && (
         <div className="flex gap-3 mb-1 px-1">
-          {stats.map(s => <StatPill key={s.label} label={s.label} value={s.value} mod={s.mod} theme={theme} />)}
+          {stats.map(s => (
+            <StatPill key={s.label} label={s.label} value={s.value} mod={s.mod}
+              pulse={activePhase === 'movement' && s.label === 'M'}
+              theme={theme} />
+          ))}
         </div>
       )}
 
@@ -749,7 +781,7 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
               color: isDone ? '#4ade80' : theme.textSecondary,
               border: `1px solid ${isDone ? 'rgba(34,197,94,0.5)' : theme.border}`,
             }}>
-            {isDone ? '✓ Done' : '○ Mark'}
+            {isDone ? `✓ ${PHASE_ACTION_LABEL[activePhase] || 'Done'}` : `○ ${PHASE_ACTION_LABEL[activePhase] || 'Done'}`}
           </motion.button>
         )}
         {getActiveWeapons(unit).length > 0 && (
@@ -761,7 +793,7 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
               color: showWeapons ? theme.secondary : theme.textSecondary,
               border: `1px solid ${showWeapons ? theme.secondary : theme.border}`,
             }}>
-            ⚔ Arms
+            Weapons
           </motion.button>
         )}
         {onMatchup && (
@@ -1241,7 +1273,8 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
 
   useEffect(() => {
     setActiveStratIds(new Set())
-    setActiveTab('guide')
+    // Movement phase defaults to units so players immediately see who to move
+    setActiveTab(PHASES[activePhaseIdx]?.id === 'movement' ? 'units' : 'guide')
   }, [activePhaseIdx, isYourTurn])
 
   const sourceOptions = [
@@ -1696,7 +1729,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                 <motion.div key="tab-guide"
                   initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.18 }}
-                  className="pb-24"
+                  className="pb-32"
                 >
                   <PhaseGuideCard activePhase={activePhase} isYourTurn={isYourTurn} theme={theme} />
                   {cpEffectsNode && <div className="px-3 mt-2">{cpEffectsNode}</div>}
@@ -1744,7 +1777,9 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
               {cpEffectsNode && <div className="px-3 mt-2">{cpEffectsNode}</div>}
               {activePackNode}
             </div>
-            <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} />
+            <div className="shrink-0">
+              <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} />
+            </div>
             {stratagemFilterBar}
             <div className="flex-1 overflow-y-auto">
               {stratagemList}

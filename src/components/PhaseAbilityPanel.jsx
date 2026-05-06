@@ -150,7 +150,8 @@ export default function PhaseAbilityPanel({ units, activePhase, theme }) {
           </div>
         )}
 
-        {/* Active abilities */}
+        {/* Active abilities — scrollable if many */}
+        <div className={phaseItems.length > 5 ? 'max-h-52 overflow-y-auto' : undefined}>
         {phaseItems.map(({ unit, ability }, i) => {
           const key    = `${unit.id}-${ability.name}`
           const isOpen = expandedKey === key
@@ -203,6 +204,7 @@ export default function PhaseAbilityPanel({ units, activePhase, theme }) {
             </div>
           )
         })}
+        </div>
       </motion.div>
     </AnimatePresence>
   )

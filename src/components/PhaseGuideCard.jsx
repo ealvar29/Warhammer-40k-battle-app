@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PHASE_STEPS, PHASE_RULES_PRIMER } from '../data/phaseGuide'
 import KeywordChip from './KeywordChip'
+import { PhaseIcon } from './GameIcon'
 
 const PHASE_ACCENT = {
   command:  '#c9a84c',
@@ -45,10 +46,10 @@ export default function PhaseGuideCard({ activePhase, isYourTurn, theme, cpEffec
 
         <div className="flex items-center gap-3">
           <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0"
+            className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
             style={{ background: `${accent}18`, border: `1.5px solid ${accent}40` }}
           >
-            {activePhase?.icon}
+            <PhaseIcon phase={phaseId} size={30} color={accent} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-black tracking-widest uppercase mb-0.5"
