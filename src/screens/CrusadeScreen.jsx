@@ -6,7 +6,7 @@ import { battleHonours } from '../data/crusade/battleHonours'
 import { battleScars } from '../data/crusade/battleScars'
 import { agendas as ALL_AGENDAS } from '../data/crusade/agendas'
 import { rpActions as RP_ACTIONS } from '../data/crusade/rpActions'
-import { FACTION_META, FACTION_DETACHMENTS } from '../data/factionRegistry'
+import { FACTION_META, FACTION_DETACHMENTS, FACTION_UNITS } from '../data/factionRegistry'
 import { FactionIcon } from '../components/GameIcon'
 import {
   SW_AGENDAS, SW_BATTLE_TRAITS, SW_HEROIC_TRAITS,
@@ -1202,24 +1202,39 @@ function UnitCrusadeCard({ unit, orderId, isSW, onRollHonour, onRollScar, theme 
 
 // ── Order of Battle Tab ─────────────────────────────────────────────────────
 
-const UNIT_TYPES = ['Infantry', 'Character', 'Cavalry', 'Monster', 'Vehicle', 'Battleline', 'Mounted']
+function deriveUnitType(unit) {
+  const kws = unit.keywords || []
+  if (kws.includes('VEHICLE')) return 'Vehicle'
+  if (kws.includes('MONSTER')) return 'Monster'
+  if (kws.includes('CAVALRY')) return 'Cavalry'
+  if (kws.includes('BATTLELINE')) return 'Battleline'
+  if (unit.category === 'epicHero' || unit.category === 'character') return 'Character'
+  return 'Infantry'
+}
 
 function RosterTab({ order, onRollHonour, onRollScar, theme }) {
   const store = useCrusadeStore()
   const [addingUnit, setAddingUnit] = useState(false)
-  const [form, setForm] = useState({ name: '', unitType: 'Infantry', powerRating: '1' })
+  const [search, setSearch] = useState('')
 
-  const handleAdd = () => {
-    if (!form.name.trim()) return
+  const factionUnits = FACTION_UNITS[order.faction] || []
+  const existingIds  = new Set(order.units.map(u => u.sourceId || u.id))
+
+  const filtered = factionUnits.filter(u =>
+    u.name.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const handlePickUnit = (u) => {
     store.addUnit(order.id, {
-      id: `crusade_manual_${Date.now()}`,
-      name: form.name.trim(),
-      unitType: form.unitType,
-      powerRating: parseInt(form.powerRating) || 1,
+      id:          `crusade_${u.id}_${Date.now()}`,
+      sourceId:    u.id,
+      name:        u.name,
+      unitType:    deriveUnitType(u),
+      powerRating: u.points || 0,
       xp: 0, battlesPlayed: 0,
       battleHonours: [], battleScars: [], relics: [], notes: '',
     })
-    setForm({ name: '', unitType: 'Infantry', powerRating: '1' })
+    setSearch('')
     setAddingUnit(false)
   }
 
@@ -1251,57 +1266,68 @@ function RosterTab({ order, onRollHonour, onRollScar, theme }) {
           onRollHonour={onRollHonour} onRollScar={onRollScar} theme={theme} />
       ))}
 
-      {/* Add unit sheet */}
+      {/* Add unit sheet — roster picker */}
       <AnimatePresence>
         {addingUnit && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ background: 'rgba(0,0,0,0.7)' }}>
+          <div className="fixed inset-0 z-50 flex items-end justify-center"
+            style={{ background: 'rgba(0,0,0,0.7)' }}
+            onClick={() => { setAddingUnit(false); setSearch('') }}>
             <motion.div variants={slideUp} initial="hidden" animate="visible"
-              className="w-full max-w-sm rounded-t-3xl p-5 pb-8"
-              style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
-              <div className="w-10 h-1 rounded-full mx-auto mb-5" style={{ background: theme.border }} />
-              <h2 className="font-black text-base mb-1" style={{ color: theme.textPrimary }}>Add Unit to Roster</h2>
-              <p className="text-xs mb-4" style={{ color: theme.textSecondary }}>
-                Manually add a unit to your Order of Battle. Gives it a permanent slot to earn XP across all future battles.
-              </p>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-xs font-bold mb-1.5" style={{ color: theme.textSecondary }}>Unit Name</p>
-                  <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                    placeholder="e.g. Wolf Guard"
-                    className="w-full rounded-xl px-4 py-2.5 text-sm outline-none"
-                    style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }} />
-                </div>
-                <div>
-                  <p className="text-xs font-bold mb-1.5" style={{ color: theme.textSecondary }}>Unit Type</p>
-                  <div className="flex flex-wrap gap-2">
-                    {UNIT_TYPES.map(t => (
-                      <button key={t} onClick={() => setForm(f => ({ ...f, unitType: t }))}
-                        className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
-                        style={{ background: form.unitType === t ? theme.secondary : theme.surfaceHigh, color: form.unitType === t ? theme.bg : theme.textSecondary, border: `1px solid ${form.unitType === t ? theme.secondary : theme.border}` }}>
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <p className="text-xs font-bold mb-1.5" style={{ color: theme.textSecondary }}>Power Rating</p>
-                  <div className="flex gap-2 flex-wrap">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 10, 12].map(n => (
-                      <button key={n} onClick={() => setForm(f => ({ ...f, powerRating: String(n) }))}
-                        className="flex-1 min-w-[2.5rem] py-2 rounded-xl text-xs font-bold"
-                        style={{ background: form.powerRating === String(n) ? theme.secondary : theme.surfaceHigh, color: form.powerRating === String(n) ? theme.bg : theme.textSecondary, border: `1px solid ${form.powerRating === String(n) ? theme.secondary : theme.border}` }}>
-                        {n}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              className="w-full max-w-sm rounded-t-3xl pb-8"
+              style={{ background: theme.surface, border: `1px solid ${theme.border}`, maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}
+              onClick={e => e.stopPropagation()}>
+
+              {/* Handle + header */}
+              <div className="px-5 pt-5 pb-3 shrink-0">
+                <div className="w-10 h-1 rounded-full mx-auto mb-4" style={{ background: theme.border }} />
+                <h2 className="font-black text-base mb-1" style={{ color: theme.textPrimary }}>Add Unit to Roster</h2>
+                <p className="text-xs mb-3" style={{ color: theme.textSecondary }}>
+                  Pick from your {FACTION_META[order.faction]?.name || 'faction'} roster.
+                </p>
+                <input
+                  value={search} onChange={e => setSearch(e.target.value)}
+                  placeholder="Search units…"
+                  className="w-full rounded-xl px-4 py-2.5 text-sm outline-none"
+                  style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }}
+                />
               </div>
-              <button onClick={handleAdd}
-                className="w-full mt-5 py-3.5 rounded-2xl font-bold text-sm"
-                style={{ background: form.name.trim() ? theme.secondary : theme.border, color: form.name.trim() ? theme.bg : theme.textSecondary }}>
-                Add to Roster
-              </button>
-              <button onClick={() => setAddingUnit(false)} className="w-full mt-2 py-2 text-xs font-medium" style={{ color: theme.textSecondary }}>Cancel</button>
+
+              {/* Scrollable unit list */}
+              <div className="overflow-y-auto flex-1 px-5 space-y-1.5 pb-2">
+                {filtered.length === 0 && (
+                  <p className="text-xs text-center py-6" style={{ color: theme.textSecondary }}>No units found</p>
+                )}
+                {filtered.map(u => {
+                  const alreadyAdded = existingIds.has(u.id)
+                  return (
+                    <button key={u.id}
+                      disabled={alreadyAdded}
+                      onClick={() => handlePickUnit(u)}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all"
+                      style={{
+                        background: alreadyAdded ? `${theme.surfaceHigh}80` : theme.surfaceHigh,
+                        border: `1px solid ${theme.border}`,
+                        opacity: alreadyAdded ? 0.5 : 1,
+                      }}>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold truncate" style={{ color: theme.textPrimary }}>{u.name}</p>
+                        <p className="text-xs" style={{ color: theme.textSecondary }}>{deriveUnitType(u)} · {u.points} pts</p>
+                      </div>
+                      {alreadyAdded
+                        ? <span className="text-xs font-bold shrink-0" style={{ color: theme.secondary }}>✓ Added</span>
+                        : <span className="text-xs shrink-0" style={{ color: theme.textSecondary }}>+</span>
+                      }
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="px-5 pt-2 shrink-0">
+                <button onClick={() => { setAddingUnit(false); setSearch('') }}
+                  className="w-full py-2 text-xs font-medium" style={{ color: theme.textSecondary }}>
+                  Cancel
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
