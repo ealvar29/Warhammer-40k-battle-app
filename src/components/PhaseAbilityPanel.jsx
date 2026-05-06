@@ -164,7 +164,7 @@ export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitCli
                           {fightsFirst && (
                             <span className="font-black px-1 py-0.5 rounded"
                               style={{ background: accent, color: '#000', fontSize: 8 }}>
-                              1st
+                              🥊
                             </span>
                           )}
                           {atk !== null && (

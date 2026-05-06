@@ -1250,7 +1250,7 @@ function BattleUnitCard({
           {isCharged && phaseId === 'fight' && (
             <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase sync-pulse"
               style={{ fontSize: 7, background: `${phaseAccent}dd`, color: '#000' }}>
-              ⚡ 1ST
+              🥊 Fights First
             </span>
           )}
           {isAdvanced && phaseId === 'shooting' && (
