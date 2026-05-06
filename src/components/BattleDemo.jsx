@@ -46,29 +46,72 @@ function getActiveWeapons(unit) {
 // ── Phase relevance — drives contextual hints and suppress dimming ─────────────
 function getPhaseRelevance(unit, phaseId) {
   const weapons = getActiveWeapons(unit)
-  const hasRanged = weapons.some(w => w.type === 'ranged')
+  // Pistols don't count as ranged for phase suppression purposes
+  const hasRanged = weapons.some(w => w.type === 'ranged' && !w.keywords?.some(k => /^PISTOL$/i.test(k)))
   const hasMelee  = weapons.some(w => w.type === 'melee')
-  const phaseAbilities = (unit.abilities || []).filter(
-    a => typeof a === 'object' && a.phase === phaseId
-  )
+  const kws = (unit.keywords || []).map(k => k.toUpperCase())
+  const abilities = unit.abilities || []
 
-  if (phaseId === 'shooting') {
-    if (!hasRanged && hasMelee) return { level: 'suppress', hint: 'No ranged weapons — save for Fight phase' }
-    return { level: hasRanged ? 'relevant' : 'neutral', hint: null }
-  }
-  if (phaseId === 'fight') {
-    if (!hasMelee && hasRanged) return { level: 'suppress', hint: 'No melee weapons — hold position' }
-    return { level: hasMelee ? 'relevant' : 'neutral', hint: null }
-  }
-  if (phaseId === 'charge') {
-    if (!hasMelee) return { level: 'suppress', hint: 'Ranged unit — stay back' }
-    return { level: 'relevant', hint: null }
-  }
-  if (phaseId === 'command' || phaseId === 'movement') {
-    if (phaseAbilities.length > 0)
-      return { level: 'relevant', hint: `${phaseAbilities[0].name} — use this now` }
+  if (phaseId === 'command') {
+    // CP generators get top billing (e.g. Bjorn's Ancient Tactician)
+    const cpAbility = abilities.find(a =>
+      typeof a === 'object' && a.phase === 'command' && /\bCP\b|command point/i.test(a.description || '')
+    )
+    if (cpAbility) return { level: 'relevant', hint: `${cpAbility.name} — gain 1 CP if on battlefield` }
+    const cmdAbility = abilities.find(a => typeof a === 'object' && a.phase === 'command')
+    if (cmdAbility) return { level: 'relevant', hint: `${cmdAbility.name} — use this now` }
     return { level: 'neutral', hint: null }
   }
+
+  if (phaseId === 'movement') {
+    if (kws.includes('DEEP STRIKE'))
+      return { level: 'relevant', hint: 'Deep Strike — deploy from Reserves this phase' }
+    const movAbility = abilities.find(a => typeof a === 'object' && a.phase === 'movement')
+    if (movAbility) return { level: 'relevant', hint: `${movAbility.name} — use this phase` }
+    if (kws.includes('SCOUTS'))
+      return { level: 'relevant', hint: 'Scouts — advance move before battle' }
+    if (!hasRanged && hasMelee)
+      return { level: 'relevant', hint: 'Melee unit — advance toward the enemy' }
+    return { level: 'neutral', hint: null }
+  }
+
+  if (phaseId === 'shooting') {
+    if (!hasRanged && hasMelee)
+      return { level: 'suppress', hint: 'No ranged weapons — save for Fight phase' }
+    const torrent = weapons.find(w => w.type === 'ranged' && w.keywords?.some(k => /^TORRENT$/i.test(k)))
+    if (torrent) return { level: 'relevant', hint: `${torrent.name} auto-hits — great vs blobs` }
+    return { level: hasRanged ? 'relevant' : 'neutral', hint: null }
+  }
+
+  if (phaseId === 'charge') {
+    if (!hasMelee) return { level: 'suppress', hint: 'Ranged unit — stay back' }
+    // Charge bonus abilities (covers Ragnar's Battle-lust, War Howl, etc.)
+    const chargeAbility = abilities.find(a =>
+      typeof a === 'object' &&
+      /charge/i.test(a.description || '') &&
+      /add \d|\+\d|bonus|extra attack/i.test(a.description || '')
+    )
+    if (chargeAbility) return { level: 'relevant', hint: `${chargeAbility.name} — charge bonus triggers` }
+    return { level: 'relevant', hint: null }
+  }
+
+  if (phaseId === 'fight') {
+    if (!hasMelee && hasRanged)
+      return { level: 'suppress', hint: 'No melee weapons — hold position' }
+    // Fight-phase abilities surface by name (includes injected leader abilities)
+    const fightAbility = abilities.find(a => typeof a === 'object' && a.phase === 'fight')
+    if (fightAbility) return { level: 'relevant', hint: `${fightAbility.name} — active in melee` }
+    // Highlight powerful melee keywords
+    const bonusMelee = weapons.find(w =>
+      w.type === 'melee' && w.keywords?.some(k => /LETHAL HITS|SUSTAINED HITS/i.test(k))
+    )
+    if (bonusMelee) {
+      const kw = bonusMelee.keywords.find(k => /LETHAL HITS|SUSTAINED HITS/i.test(k))
+      return { level: 'relevant', hint: `${kw} on ${bonusMelee.name}` }
+    }
+    return { level: hasMelee ? 'relevant' : 'neutral', hint: null }
+  }
+
   return { level: 'neutral', hint: null }
 }
 const FADE_IN = { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: 8 } }
@@ -920,19 +963,45 @@ const PHASE_ACCENT_MAP = {
 
 // ── Phase Context Row (weapon + ability counts for the units area) ─────────────
 function PhaseContextRow({ units, phaseId, abilityCount, theme }) {
-  const WEAPON_PHASE_COLORS = { shooting: '#60a5fa', fight: '#ef4444' }
   const chips = []
 
-  if (phaseId === 'shooting') {
-    const n = units.filter(u => u.weapons?.some(w => w.type === 'ranged')).length
-    if (n > 0) chips.push({ phase: 'shooting', label: `${n} can shoot`, color: WEAPON_PHASE_COLORS.shooting })
+  if (phaseId === 'command') {
+    const cpUnits = units.filter(u =>
+      (u.abilities || []).some(a => typeof a === 'object' && a.phase === 'command' && /\bCP\b|command point/i.test(a.description || ''))
+    )
+    if (cpUnits.length) chips.push({ phase: 'command', label: `${cpUnits.length} CP generator${cpUnits.length > 1 ? 's' : ''} on field`, color: '#fbbf24' })
+    if (abilityCount > 0) chips.push({ phase: 'command', label: `${abilityCount} command ${abilityCount === 1 ? 'ability' : 'abilities'}`, color: theme.secondary })
   }
+
+  if (phaseId === 'movement') {
+    const dsUnits = units.filter(u => (u.keywords || []).some(k => /^DEEP STRIKE$/i.test(k)))
+    const scoutUnits = units.filter(u => (u.keywords || []).some(k => /^SCOUTS$/i.test(k)))
+    if (dsUnits.length) chips.push({ phase: 'movement', label: `${dsUnits.length} Deep Strike`, color: '#2dd4bf' })
+    if (scoutUnits.length) chips.push({ phase: 'movement', label: `${scoutUnits.length} Scouts`, color: '#2dd4bf' })
+    if (abilityCount > 0) chips.push({ phase: 'movement', label: `${abilityCount} movement ${abilityCount === 1 ? 'ability' : 'abilities'}`, color: theme.secondary })
+  }
+
+  if (phaseId === 'shooting') {
+    const n = units.filter(u => u.weapons?.some(w => w.type === 'ranged' && !w.keywords?.some(k => /^PISTOL$/i.test(k)))).length
+    const suppressed = units.filter(u => !u.weapons?.some(w => w.type === 'ranged') && u.weapons?.some(w => w.type === 'melee')).length
+    if (n > 0) chips.push({ phase: 'shooting', label: `${n} can shoot`, color: '#60a5fa' })
+    if (suppressed > 0) chips.push({ phase: 'fight', label: `${suppressed} melee-only — hold`, color: theme.textSecondary })
+  }
+
+  if (phaseId === 'charge') {
+    const meleeUnits = units.filter(u => u.weapons?.some(w => w.type === 'melee'))
+    const withBonus = meleeUnits.filter(u =>
+      (u.abilities || []).some(a => typeof a === 'object' && /charge/i.test(a.description || '') && /add \d|\+\d|bonus/i.test(a.description || ''))
+    )
+    if (meleeUnits.length) chips.push({ phase: 'charge', label: `${meleeUnits.length} can charge`, color: '#f97316' })
+    if (withBonus.length) chips.push({ phase: 'charge', label: `${withBonus.length} charge bonus`, color: '#fbbf24' })
+  }
+
   if (phaseId === 'fight') {
     const n = units.filter(u => u.weapons?.some(w => w.type === 'melee')).length
-    if (n > 0) chips.push({ phase: 'fight', label: `${n} can fight`, color: WEAPON_PHASE_COLORS.fight })
-  }
-  if (abilityCount > 0) {
-    chips.push({ phase: 'command', label: `${abilityCount} active ${abilityCount === 1 ? 'ability' : 'abilities'}`, color: theme.secondary })
+    const withAbility = units.filter(u => (u.abilities || []).some(a => typeof a === 'object' && a.phase === 'fight')).length
+    if (n > 0) chips.push({ phase: 'fight', label: `${n} can fight`, color: '#ef4444' })
+    if (withAbility > 0) chips.push({ phase: 'fight', label: `${withAbility} fight ${withAbility === 1 ? 'ability' : 'abilities'}`, color: '#fbbf24' })
   }
 
   if (chips.length === 0) return null
