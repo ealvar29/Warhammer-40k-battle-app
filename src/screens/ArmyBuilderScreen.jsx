@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { usePortraitStore } from '../store/portraitStore'
 import { PhaseIcon, FactionIcon } from '../components/GameIcon'
 import { FactionEdge, themeClip } from '../components/FactionAccent'
 import { GiEagleEmblem, GiSkullCrossedBones, GiAlienBug, GiPistolGun, GiAxeSword, GiCrossedSwords } from 'react-icons/gi'
@@ -644,6 +645,7 @@ function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCoun
 export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const store = useBattleStore()
   const setSelectedFaction = useListStore(s => s.setSelectedFaction)
+  const portraits = usePortraitStore(s => s.portraits)
   const [step, setStep] = useState('faction') // faction → detachment → units → opponent → ready
   const [localFaction, setLocalFaction] = useState(store.faction || 'spacewolves')
   const [localDetachment, setLocalDetachment] = useState(store.detachmentId || null)
@@ -1011,12 +1013,19 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                             }}>
 
                             {/* Background: unit art or faction gradient */}
-                            <div className="absolute inset-0"
-                              style={{
-                                backgroundImage: u.artUrl ? `url(${u.artUrl})` : factionMeta.gradient,
-                                backgroundSize: u.artUrl ? 'cover' : '100% 100%',
-                                backgroundPosition: u.artPosition || 'center center',
-                              }} />
+                            {(() => {
+                              const pu = portraits[u.id]
+                              const resolvedUrl = pu?.artUrl ?? u.artUrl
+                              const resolvedPos = pu?.artPosition ?? u.artPosition ?? 'center center'
+                              return (
+                                <div className="absolute inset-0"
+                                  style={{
+                                    backgroundImage: resolvedUrl ? `url(${resolvedUrl})` : factionMeta.gradient,
+                                    backgroundSize: resolvedUrl ? 'cover' : '100% 100%',
+                                    backgroundPosition: resolvedPos,
+                                  }} />
+                              )
+                            })()}
 
                             {/* Overlay */}
                             <div className="absolute inset-0"

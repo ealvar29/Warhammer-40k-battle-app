@@ -5,6 +5,7 @@ import { useBattleStore } from '../store/battleStore'
 import { FACTION_META } from '../data/factionRegistry'
 import { unitLeaderMap, leaderAbilities } from '../data/leaderData'
 import OpponentProfile from '../components/OpponentProfile'
+import { usePortraitStore } from '../store/portraitStore'
 
 const PHASE_ICON_FALLBACK = '✦'
 const PHASE_LABEL = { command: 'Command', movement: 'Move', shooting: 'Shoot', charge: 'Charge', fight: 'Fight', any: 'Any' }
@@ -43,6 +44,10 @@ function AbilityCard({ ability, accent, theme }) {
 function SquadCard({ squad, leader, isAssigned, takenByOther, factionMeta, accent, theme, onAssign }) {
   const abilities = getPairingAbilities(leader.id, squad.id)
   const firstName = leader.name.split(' ')[0]
+  const portraits = usePortraitStore(s => s.portraits)
+  const portraitOverride = portraits[squad.id]
+  const resolvedArtUrl = portraitOverride?.artUrl ?? squad.artUrl
+  const resolvedArtPos = portraitOverride?.artPosition ?? squad.artPosition ?? 'center center'
 
   return (
     <motion.button
@@ -58,13 +63,13 @@ function SquadCard({ squad, leader, isAssigned, takenByOther, factionMeta, accen
         transition: 'border-color 0.2s, box-shadow 0.2s',
       }}
     >
-      {/* Portrait strip — left-gradient so text is always legible */}
-      <div className="relative" style={{ height: 88 }}>
+      {/* Portrait strip */}
+      <div className="relative" style={{ height: 140 }}>
         <div className="absolute inset-0"
           style={{
-            backgroundImage: squad.artUrl ? `url(${squad.artUrl})` : factionMeta?.gradient,
+            backgroundImage: resolvedArtUrl ? `url(${resolvedArtUrl})` : factionMeta?.gradient,
             backgroundSize: 'cover',
-            backgroundPosition: squad.artPosition || 'center center',
+            backgroundPosition: resolvedArtPos,
           }} />
         <div className="absolute inset-0"
           style={{ background: 'linear-gradient(105deg, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.50) 50%, rgba(0,0,0,0.08) 100%)' }} />
@@ -116,6 +121,7 @@ function SquadCard({ squad, leader, isAssigned, takenByOther, factionMeta, accen
 function LeaderStep({ leader, leaderIdx, totalLeaders, eligibleSquads, unitStates,
   leaderAssignmentMap, factionMeta, accent, theme, onAssign, onDetach, onNext, onSkip, isLast }) {
 
+  const portraits = usePortraitStore(s => s.portraits)
   const currentSquadId = leaderAssignmentMap[leader.id]
   const currentSquad = currentSquadId ? eligibleSquads.find(s => s.id === currentSquadId) : null
   const roleLabel = leader.category === 'epicHero' ? 'Epic Hero' : 'Character'
@@ -150,12 +156,9 @@ function LeaderStep({ leader, leaderIdx, totalLeaders, eligibleSquads, unitState
         <div className="absolute bottom-0 left-0 right-0 md:hidden"
           style={{ height: '60%', background: `linear-gradient(to top, ${theme.bg} 0%, transparent 100%)` }} />
 
-        {/* Desktop: fade to surface bg on the right edge */}
-        <div className="absolute inset-y-0 right-0 hidden md:block"
-          style={{ width: '38%', background: `linear-gradient(to right, transparent, ${theme.bg})` }} />
-        {/* Desktop: fade bottom too */}
+        {/* Desktop: subtle bottom fade for text legibility */}
         <div className="absolute bottom-0 left-0 right-0 hidden md:block"
-          style={{ height: '35%', background: `linear-gradient(to top, ${theme.bg} 0%, transparent 100%)` }} />
+          style={{ height: '25%', background: `linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%)` }} />
 
         {/* Name + role overlay */}
         <div className="absolute bottom-0 left-0 right-0 px-5 pb-4 md:pb-6">
@@ -192,9 +195,9 @@ function LeaderStep({ leader, leaderIdx, totalLeaders, eligibleSquads, unitState
               style={{ background: `${accent}12`, border: `1px solid ${accent}30` }}>
               <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0"
                 style={{
-                  backgroundImage: `url(${currentSquad.artUrl})`,
+                  backgroundImage: `url(${portraits[currentSquad.id]?.artUrl ?? currentSquad.artUrl ?? ''})`,
                   backgroundSize: 'cover',
-                  backgroundPosition: currentSquad.artPosition || 'center center',
+                  backgroundPosition: portraits[currentSquad.id]?.artPosition ?? currentSquad.artPosition ?? 'center center',
                 }} />
               <p className="text-xs font-bold flex-1 min-w-0 truncate" style={{ color: accent }}>
                 Currently leading {currentSquad.name}
@@ -266,6 +269,7 @@ function LeaderStep({ leader, leaderIdx, totalLeaders, eligibleSquads, unitState
 
 // ── Review step ───────────────────────────────────────────────────────────────
 function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, factionMeta, accent, theme, onEditLeader }) {
+  const portraits = usePortraitStore(s => s.portraits)
   const unledSquads = squadUnits.filter(u => !unitStates[u.id]?.attachedLeaderId)
 
   return (
@@ -307,9 +311,9 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
                 <div className="relative shrink-0" style={{ width: 72 }}>
                   <div className="absolute inset-0"
                     style={{
-                      backgroundImage: leader.artUrl ? `url(${leader.artUrl})` : factionMeta?.gradient,
+                      backgroundImage: `url(${portraits[leader.id]?.artUrl ?? leader.artUrl ?? ''})` ,
                       backgroundSize: 'cover',
-                      backgroundPosition: leader.artPosition || 'center top',
+                      backgroundPosition: portraits[leader.id]?.artPosition ?? leader.artPosition ?? 'center top',
                     }} />
                   <div className="absolute inset-0"
                     style={{ background: 'linear-gradient(to right, transparent 60%, rgba(0,0,0,0.25))' }} />
@@ -348,9 +352,9 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
               <div className="w-10 h-10 rounded-lg overflow-hidden relative shrink-0">
                 <div className="absolute inset-0"
                   style={{
-                    backgroundImage: unit.artUrl ? `url(${unit.artUrl})` : factionMeta?.gradient,
+                    backgroundImage: `url(${portraits[unit.id]?.artUrl ?? unit.artUrl ?? ''})`,
                     backgroundSize: 'cover',
-                    backgroundPosition: unit.artPosition || 'center center',
+                    backgroundPosition: portraits[unit.id]?.artPosition ?? unit.artPosition ?? 'center center',
                   }} />
               </div>
               <div className="flex-1 min-w-0">
