@@ -1266,7 +1266,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                 {enh.cost}pts
                               </span>
                             </div>
-                            <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                            <p className="text-[10px] leading-relaxed" style={{ color: '#fbbf24', opacity: 0.85 }}>
                               {enh.description}
                             </p>
                           </button>
@@ -1330,7 +1330,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               Continue →
             </button>
             <button onClick={() => setStep('opponent')} className="w-full py-2 text-xs font-medium"
-              style={{ color: 'rgba(255,255,255,0.35)' }}>
+              style={{ color: 'rgba(255,255,255,0.6)' }}>
               Skip — no enhancements
             </button>
           </div>

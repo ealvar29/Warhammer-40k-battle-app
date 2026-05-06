@@ -5,7 +5,7 @@ import { FactionEdge } from './FactionAccent'
 import { GiLightningTrio } from 'react-icons/gi'
 import { demoStratagems, demoUnits } from '../data/demoData'
 import { PHASES, KEYWORD_PHASE_HINTS, WEAPON_KEYWORD_PHASE_HINTS, CHARGE_BONUS_PATTERN } from '../data/editionConfig'
-import { leaders, unitLeaderMap } from '../data/leaderData'
+import { leaders, unitLeaderMap, leaderAbilities } from '../data/leaderData'
 import { getLeaderAbilities } from '../data/factionRegistry'
 import { getSuggestions, opponentProfiles } from '../data/suggestions'
 import { findDetachment } from '../data/factionRegistry'
@@ -1095,6 +1095,10 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     const baseLeaderId = leaderId?.replace(/_\d+$/, '')
     const leaderExtra = baseLeaderId ? getLeaderAbilities(baseLeaderId) : []
 
+    // Inject pair-specific abilities (e.g. Ragnar leading Headtakers → War Howl + Berserk Charge)
+    const pairKey = baseLeaderId ? `${baseLeaderId}_${baseUnitId}` : null
+    const pairExtra = pairKey ? (leaderAbilities[pairKey]?.abilities || []) : []
+
     // Inject assigned enhancement as an ability
     const assignedEnhName = enhancementAssignments?.[baseUnitId]
     const assignedEnh = assignedEnhName
@@ -1104,8 +1108,8 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
       ? [{ name: assignedEnh.name, phase: 'any', description: assignedEnh.description, isEnhancement: true }]
       : []
 
-    if (!leaderExtra.length && !enhExtra.length) return u
-    return { ...u, abilities: [...(u.abilities || []), ...leaderExtra, ...enhExtra] }
+    if (!leaderExtra.length && !pairExtra.length && !enhExtra.length) return u
+    return { ...u, abilities: [...(u.abilities || []), ...leaderExtra, ...pairExtra, ...enhExtra] }
   })
 
   const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')

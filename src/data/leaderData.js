@@ -316,9 +316,9 @@ export const leaderAbilities = {
     ],
   },
 
-  ragnar_headtakers: {
+  ragnar_wolfGuardHeadtakers: {
     leaderId: 'ragnar',
-    unitId: 'headtakers',
+    unitId: 'wolfGuardHeadtakers',
     abilities: [
       {
         name: 'War Howl',
