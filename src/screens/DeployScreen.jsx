@@ -65,15 +65,16 @@ function SquadCard({ squad, leader, isAssigned, takenByOther, factionMeta, accen
       }}
     >
       {/* Portrait strip */}
-      <div className="relative" style={{ height: 140 }}>
+      <div className="relative h-[140px] md:h-[200px]">
         <div className="absolute inset-0"
           style={{
             backgroundImage: resolvedArtUrl ? `url(${resolvedArtUrl})` : factionMeta?.gradient,
             backgroundSize: 'cover',
             backgroundPosition: resolvedArtPos,
           }} />
+        {/* Subtle dark vignette only at left edge so text stays readable */}
         <div className="absolute inset-0"
-          style={{ background: 'linear-gradient(105deg, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.50) 50%, rgba(0,0,0,0.08) 100%)' }} />
+          style={{ background: 'linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0) 100%)' }} />
 
         <div className="absolute inset-0 flex items-center px-4 gap-3">
           <div className="flex-1 min-w-0">

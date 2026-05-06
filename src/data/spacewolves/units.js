@@ -15,7 +15,7 @@ export const swUnits = {
       { name: 'Frostfang', type: 'melee', A: 8, WS: '2+', S: 6, AP: -3, D: 2, keywords: ['SUSTAINED HITS 1'] },
     ],
     abilities: [
-      { name: 'War Howl', phase: 'fight', description: 'While this model is leading a unit, melee weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability. Each time this model\'s unit makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit.' },
+      { name: 'War Howl', phase: 'charge', description: 'While this model is leading a unit, each time this model\'s unit makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit.' },
       { name: 'Battle-lust', phase: 'fight', description: 'After this model finishes a Charge move, until the end of the turn, add 2 to the Attacks characteristic of this model\'s Frostfang.' },
     ],
     isLeader: true,

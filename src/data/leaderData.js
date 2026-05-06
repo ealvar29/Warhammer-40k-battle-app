@@ -309,8 +309,8 @@ export const leaderAbilities = {
       {
         name: 'War Howl',
         phase: 'fight',
-        description: "While this model is leading a unit, melee weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability. Each time this model's unit makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit.",
-        reminder: '[SUSTAINED HITS 1] on all melee weapons. +1 Attack on all melee weapons after charging.',
+        description: "While this model is leading a unit, each time this model's unit makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit.",
+        reminder: '+1 Attack on all melee weapons after charging.',
       },
     ],
   },
