@@ -826,9 +826,10 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
       <div className="px-4 py-3 border-b flex items-center gap-3 shrink-0"
         style={{ background: theme.surface, borderColor: theme.border }}>
         <button onClick={() => step === 'faction' ? onNavigate('home') : setStep(
-          step === 'detachment' ? 'faction' :
-          step === 'units' ? 'detachment' :
-          step === 'opponent' ? 'units' : 'opponent'
+          step === 'detachment'   ? 'faction' :
+          step === 'units'        ? 'detachment' :
+          step === 'enhancements' ? 'units' :
+          step === 'opponent'     ? 'enhancements' : 'opponent'
         )}
           className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm"
           style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
@@ -841,15 +842,16 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           <p className="text-sm font-bold" style={{ color: theme.textPrimary }}>
             {step === 'faction' ? 'Choose Faction' :
              step === 'detachment' ? 'Choose Detachment' :
-             step === 'units' ? 'Select Units' :
-             step === 'opponent' ? "Opponent's Profile" : 'Ready to Battle'}
+             step === 'units'        ? 'Select Units' :
+             step === 'enhancements' ? 'Assign Enhancements' :
+             step === 'opponent'     ? "Opponent's Profile" : 'Ready to Battle'}
           </p>
         </div>
         {/* Step dots */}
         <div className="flex gap-1.5">
-          {['faction','detachment','units','opponent'].map((s, i) => (
+          {['faction','detachment','units','enhancements','opponent'].map((s, i) => (
             <div key={s} className="w-1.5 h-1.5 rounded-full"
-              style={{ background: ['faction','detachment','units','opponent'].indexOf(step) >= i ? theme.secondary : theme.border }} />
+              style={{ background: ['faction','detachment','units','enhancements','opponent'].indexOf(step) >= i ? theme.secondary : theme.border }} />
           ))}
         </div>
       </div>
@@ -1182,39 +1184,37 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           </div>
         )}
 
-        {/* ── Enhancement Assignments (shown at bottom of units step) ── */}
-        {step === 'units' && (() => {
+        {/* ── Step: Enhancements ── */}
+        {step === 'enhancements' && (() => {
           const currentDet = detachments.find(d => d.id === localDetachment)
           const detEnhancements = currentDet?.enhancements || []
-          if (!detEnhancements.length) return null
-          // Collect all selected CHARACTER units across sections
           const selectedChars = unitSections.flatMap(s =>
             Object.values(s.byCategory).flat().filter(u =>
               unitCount(u.id) > 0 && (u.isLeader || (u.keywords || []).includes('CHARACTER'))
             )
           )
-          if (!selectedChars.length) return null
+          const hasAny = detEnhancements.length > 0 && selectedChars.length > 0
           return (
-            <div className="mt-2 rounded-2xl p-4 space-y-3"
-              style={{ background: 'rgba(251,191,36,0.05)', border: '1px solid rgba(251,191,36,0.2)' }}>
-              <div className="flex items-center gap-2">
-                <span style={{ fontSize: 13 }}>⭐</span>
-                <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#fbbf24' }}>
-                  Enhancement Assignments
-                </p>
-                <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                  · 1 per CHARACTER · max 3 per army
+            <div className="space-y-4">
+              <div className="rounded-2xl px-4 py-3" style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.18)' }}>
+                <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: '#fbbf24' }}>What are enhancements?</p>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                  Enhancements are special upgrades assigned to CHARACTER models before battle. Each character can carry one, and your army can have up to 3 total. They add extra abilities that show up on their unit card during combat.
                 </p>
               </div>
-              {selectedChars.map(char => {
+              {!hasAny && (
+                <p className="text-sm text-center py-6" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  {!selectedChars.length ? 'No CHARACTER units in your army yet.' : 'This detachment has no enhancements available.'}
+                </p>
+              )}
+              {hasAny && selectedChars.map(char => {
                 const assigned = enhancementAssignments[char.id]
                 return (
                   <div key={char.id} className="rounded-xl overflow-hidden"
-                    style={{ border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.2)' }}>
-                    {/* Character header */}
-                    <div className="px-3 py-2 flex items-center justify-between"
-                      style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                      <p className="text-xs font-black" style={{ color: theme.textPrimary }}>{char.name}</p>
+                    style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)' }}>
+                    <div className="px-3 py-2.5 flex items-center justify-between"
+                      style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.03)' }}>
+                      <p className="text-sm font-black" style={{ color: theme.textPrimary }}>{char.name}</p>
                       {assigned && (
                         <button onClick={() => setEnhancement(char.id, null)}
                           className="text-[10px] px-2 py-0.5 rounded-full"
@@ -1223,7 +1223,6 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                         </button>
                       )}
                     </div>
-                    {/* Enhancement options */}
                     <div className="p-2 space-y-1.5">
                       {detEnhancements.map(enh => {
                         const isChosen = assigned === enh.name
@@ -1244,8 +1243,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                 {enh.cost}pts
                               </span>
                             </div>
-                            <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                              {enh.description?.length > 90 ? enh.description.slice(0, 90) + '…' : enh.description}
+                            <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                              {enh.description?.length > 100 ? enh.description.slice(0, 100) + '…' : enh.description}
                             </p>
                           </button>
                         )
@@ -1254,6 +1253,14 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                   </div>
                 )
               })}
+              <button onClick={() => setStep('opponent')} className="w-full py-3.5 rounded-2xl font-bold text-sm"
+                style={{ background: '#fbbf24', color: '#000' }}>
+                Continue →
+              </button>
+              <button onClick={() => setStep('opponent')} className="w-full py-2 text-xs font-medium"
+                style={{ color: 'rgba(255,255,255,0.35)' }}>
+                Skip — no enhancements
+              </button>
             </div>
           )
         })()}
@@ -1261,9 +1268,12 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         {/* ── Step: Opponent ── */}
         {step === 'opponent' && (
           <div className="space-y-3">
-            <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
-              Tag your opponent's army style — the app will suggest the best stratagems for your detachment during battle. You can skip this.
-            </p>
+            <div className="rounded-2xl px-4 py-3" style={{ background: 'rgba(45,212,191,0.06)', border: '1px solid rgba(45,212,191,0.18)' }}>
+              <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: '#2dd4bf' }}>Why this matters</p>
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                Tag what kind of army you're facing. During battle the Guide tab will highlight the stratagems most useful against this opponent — saving you from reading all 6+ options mid-game.
+              </p>
+            </div>
             <div className="grid grid-cols-2 gap-2">
               {opponentProfiles.map(p => {
                 const active = localOpponentTags.includes(p.id)
@@ -1296,7 +1306,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         )}
       </div>
 
-      {/* Sticky Continue footer — only for detachment and units steps */}
+      {/* Sticky Continue footer — detachment and units steps */}
       {(step === 'detachment' || step === 'units') && (() => {
         const totalPts = Object.entries(unitCounts).reduce((sum, [id, n]) => {
           const u = unitList.find(u => u.id === id)
@@ -1307,7 +1317,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         return (
           <div className="px-4 pb-4 pt-2 shrink-0 border-t" style={{ background: theme.surface, borderColor: theme.border }}>
             <button
-              onClick={isDetach ? () => localDetachment && setStep('units') : () => totalUnits > 0 && setStep('opponent')}
+              onClick={isDetach ? () => localDetachment && setStep('units') : () => totalUnits > 0 && setStep('enhancements')}
               className="w-full py-3.5 rounded-2xl font-bold text-sm transition-all"
               style={{ background: enabled ? theme.secondary : theme.border, color: enabled ? theme.bg : theme.textSecondary }}>
               {isDetach ? 'Continue →' : `Continue — ${totalUnits} units · ${totalPts} pts →`}

@@ -107,7 +107,7 @@ function SquadCard({ squad, leader, isAssigned, takenByOther, factionMeta, accen
               {abilities.map((ab, i) => <AbilityCard key={i} ability={ab} accent={accent} theme={theme} />)}
             </>
           ) : (
-            <p className="text-xs italic" style={{ color: theme.textSecondary }}>
+            <p className="text-xs italic" style={{ color: 'rgba(255,255,255,0.55)' }}>
               General leadership — {firstName} fights alongside this unit and contributes their personal stats and abilities.
             </p>
           )}
@@ -183,7 +183,7 @@ function LeaderStep({ leader, leaderIdx, totalLeaders, eligibleSquads, unitState
         <div className="flex-1 overflow-y-auto overscroll-contain px-4 md:px-6 pt-3 md:pt-6 pb-3 space-y-4">
 
           {/* Context */}
-          <p className="text-sm leading-relaxed" style={{ color: theme.textSecondary }}>
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>
             {eligibleSquads.length > 0
               ? `Choose a squad for ${leader.name} to join. Your choice determines which bonuses this unit gains during battle.`
               : `${leader.name} has no eligible squads in your current army and will operate as an independent unit.`}
