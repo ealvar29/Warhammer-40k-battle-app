@@ -11,6 +11,13 @@ export const daDetachments = {
       name: 'Inner Circle Secrets',
       description: "DARK ANGELS INFANTRY and MOUNTED units gain the INNER CIRCLE keyword. Each time a DARK ANGELS unit destroys an enemy CHARACTER or MONSTER, until the end of the turn, that DARK ANGELS unit may make a free Normal Move of up to 6\" (even if it has already moved this turn). Additionally, INNER CIRCLE units are never Battle-shocked while within 6\" of a friendly DARK ANGELS CHARACTER.",
     },
+    commandPhaseAction: {
+      type: 'designate_target',
+      label: 'Hunt the Fallen',
+      prompt: 'Designate a Hunt the Fallen target (CHARACTER, MONSTER or VEHICLE):',
+      placeholder: 'e.g. Chaos Lord, Daemon Prince',
+      effect: "Each time a friendly DARK ANGELS unit makes an attack targeting the designated unit, add 1 to the Wound roll. Use the Hunt the Fallen stratagem (1CP, Command phase) to set a new target.",
+    },
     enhancements: [
       { name: 'The Lion Sword', cost: 20, description: "DARK ANGELS CHARACTER model only. Each time the bearer makes a melee attack, on an unmodified wound roll of 6, that attack has the [DEVASTATING WOUNDS] ability." },
       { name: 'Shroud of Heroes', cost: 15, description: "DARK ANGELS CHARACTER model only. Each time an attack is allocated to the bearer, roll one D6: on a 5+, that attack is ignored and the wound is not lost." },

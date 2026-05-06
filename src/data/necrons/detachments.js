@@ -12,6 +12,18 @@ export const necronsDetachments = {
       name: 'Command Protocols',
       description: 'While a NECRONS CHARACTER model is leading a unit from your army, each time a model in that unit makes an attack, add 1 to the Hit roll.',
     },
+    commandPhaseAction: {
+      type: 'passive',
+      label: 'Command Protocols',
+      effect: 'While a NECRONS CHARACTER leads this unit, every attack gets +1 to Hit. Keep your characters attached to maximise output.',
+      unitEffects: {
+        phases: ['shooting', 'fight'],
+        factionKeywords: ['NECRONS'],
+        badge: '+1 to Hit (with Leader)',
+        badgeColor: '#10b981',
+        why: "Command Protocols — +1 to Hit rolls for all attacks while this unit is led by a NECRONS CHARACTER model",
+      },
+    },
     enhancements: [
       {
         name: 'Veil of Darkness',

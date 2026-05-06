@@ -11,6 +11,18 @@ export const csmDetachments = {
       name: 'Veterans of the Long War',
       description: "Each time a HERETIC ASTARTES unit from your army makes an attack, on an unmodified Hit roll of 6, that attack automatically wounds the target (do not make a Wound roll). In addition, at the start of the battle, you can give every HERETIC ASTARTES unit in your army one of the following Marks of Chaos: KHORNE (+1 Attack to melee weapons), NURGLE (Feel No Pain 6+), SLAANESH (+1 to Advance and Charge rolls), or TZEENTCH (+1 to Invulnerable saves, min 4+).",
     },
+    commandPhaseAction: {
+      type: 'passive',
+      label: 'Veterans of the Long War',
+      effect: 'On an unmodified Hit roll of 6, this unit\'s attacks automatically wound — no Wound roll needed. Applies to both ranged and melee attacks.',
+      unitEffects: {
+        phases: ['shooting', 'fight'],
+        factionKeywords: ['HERETIC ASTARTES'],
+        badge: 'Auto-Wound on 6',
+        badgeColor: '#c41e3a',
+        why: "Veterans of the Long War — unmodified Hit roll of 6 automatically wounds the target, skipping the Wound roll",
+      },
+    },
     enhancements: [
       { name: 'Arch-Despoiler', cost: 25, description: "HERETIC ASTARTES CHARACTER model only. Once per battle, at the start of your Command phase, select one objective marker within 6\" of the bearer. Until the end of the battle, that objective is under your control unless your opponent's Level of Control exceeds yours at the end of a phase." },
       { name: 'Trophies of Slaughter', cost: 15, description: "HERETIC ASTARTES model only. Each time the bearer's unit destroys an enemy unit, until the end of the battle, add 1 to the Attacks characteristic of melee weapons equipped by models in the bearer's unit (max +3)." },
