@@ -17,6 +17,11 @@ function getPairingAbilities(leaderId, unitId) {
   return leaderAbilities[key]?.abilities || []
 }
 
+function getPairingNote(leaderId, unitId) {
+  const key = `${baseId(leaderId)}_${baseId(unitId)}`
+  return leaderAbilities[key]?.pairingNote || null
+}
+
 // ── Ability row ───────────────────────────────────────────────────────────────
 function AbilityCard({ ability, accent, theme }) {
   return (
@@ -44,7 +49,7 @@ function AbilityCard({ ability, accent, theme }) {
 // ── Squad assignment card ─────────────────────────────────────────────────────
 function SquadCard({ squad, leader, isAssigned, takenByOther, factionMeta, accent, theme, onAssign }) {
   const abilities = getPairingAbilities(leader.id, squad.id)
-  const firstName = leader.name.split(' ')[0]
+  const pairingNote = getPairingNote(leader.id, squad.id)
   const portraits = usePortraitStore(s => s.portraits)
   const portraitOverride = portraits[squad.id]
   const resolvedArtUrl = portraitOverride?.artUrl ?? squad.artUrl
@@ -72,10 +77,6 @@ function SquadCard({ squad, leader, isAssigned, takenByOther, factionMeta, accen
             backgroundSize: 'cover',
             backgroundPosition: resolvedArtPos,
           }} />
-        {/* Subtle dark vignette only at left edge so text stays readable */}
-        <div className="absolute inset-0"
-          style={{ background: 'linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0) 100%)' }} />
-
         <div className="absolute inset-0 flex items-center px-4 gap-3">
           <div className="flex-1 min-w-0">
             <p className="font-black text-base leading-tight truncate" style={{ color: '#fff' }}>{squad.name}</p>
@@ -104,13 +105,18 @@ function SquadCard({ squad, leader, isAssigned, takenByOther, factionMeta, accen
           {abilities.length > 0 ? (
             <>
               <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: `${accent}bb` }}>
-                What {firstName} gives this squad:
+                What {leader.name} gives this squad:
               </p>
               {abilities.map((ab, i) => <AbilityCard key={i} ability={ab} accent={accent} theme={theme} />)}
+              {pairingNote && (
+                <p className="text-[11px] leading-relaxed px-1 mt-1" style={{ color: 'rgba(255,255,255,0.52)' }}>
+                  {pairingNote}
+                </p>
+              )}
             </>
           ) : (
             <p className="text-xs italic" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              General leadership — {firstName} fights alongside this unit and contributes their personal stats and abilities.
+              General leadership — {leader.name} fights alongside this unit and contributes their personal stats and abilities.
             </p>
           )}
         </div>
@@ -289,13 +295,13 @@ function HuntingPacksPreview({ faction, detachmentId, theme }) {
             <PickOneIcon icon={p.icon} size={18} color={p.unitEffects?.badgeColor || theme.secondary} className="shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-black" style={{ color: p.unitEffects?.badgeColor || theme.secondary }}>{p.label}</p>
-              <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{p.shortEffect}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.68)' }}>{p.shortEffect}</p>
             </div>
           </div>
         ))}
       </div>
       <div className="px-4 py-2 border-t" style={{ borderColor: theme.border }}>
-        <p style={{ color: theme.textSecondary, fontSize: 10, opacity: 0.7 }}>
+        <p style={{ color: 'rgba(255,255,255,0.52)', fontSize: 10 }}>
           Each pack usable once per battle. Logan Grimnar on field unlocks Howling Onslaught — re-select one used pack.
         </p>
       </div>
@@ -314,11 +320,11 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -32 }}
       transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-      className="px-4 md:px-8 py-5 space-y-5 max-w-2xl md:mx-auto w-full"
+      className="px-4 md:px-8 py-5 space-y-5 max-w-2xl md:mx-auto w-full flex-1 min-h-0 overflow-y-auto"
     >
       <div>
         <p className="text-xs font-black uppercase tracking-widest mb-1" style={{ color: accent }}>Ready to deploy</p>
-        <p className="text-sm leading-relaxed" style={{ color: theme.textSecondary }}>
+        <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>
           Your leaders are assigned. Tap any entry to reassign before battle.
         </p>
       </div>
@@ -329,7 +335,7 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
 
       {leaderUnits.length > 0 && (
         <div className="space-y-2">
-          <p className="text-[10px] font-black uppercase tracking-widest px-1" style={{ color: theme.textSecondary }}>Leaders</p>
+          <p className="text-[10px] font-black uppercase tracking-widest px-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Leaders</p>
           {leaderUnits.map((leader, i) => {
             const squadId = leaderAssignmentMap[leader.id]
             const squad = squadId ? squadUnits.find(u => u.id === squadId) : null
@@ -359,8 +365,8 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
                 <div className="flex-1 px-4 py-3 min-w-0 flex flex-col justify-center">
                   <p className="font-black text-sm truncate" style={{ color: squad ? accent : theme.textPrimary }}>{leader.name}</p>
                   {squad
-                    ? <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>→ Leading {squad.name}</p>
-                    : <p className="text-xs mt-0.5 italic" style={{ color: theme.textSecondary }}>Operating independently</p>}
+                    ? <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.65)' }}>→ Leading {squad.name}</p>
+                    : <p className="text-xs mt-0.5 italic" style={{ color: 'rgba(255,255,255,0.5)' }}>Operating independently</p>}
                 </div>
                 {/* Status chip */}
                 <div className="flex items-center px-4 shrink-0">
@@ -381,7 +387,7 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
 
       {unledSquads.length > 0 && (
         <div className="space-y-2">
-          <p className="text-[10px] font-black uppercase tracking-widest px-1" style={{ color: theme.textSecondary }}>Unled Units</p>
+          <p className="text-[10px] font-black uppercase tracking-widest px-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Unled Units</p>
           {unledSquads.map(unit => (
             <div key={unit.id}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl border"
@@ -396,7 +402,7 @@ function ReviewStep({ leaderUnits, squadUnits, unitStates, leaderAssignmentMap, 
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold truncate" style={{ color: theme.textPrimary }}>{unit.name}</p>
-                <p className="text-[11px]" style={{ color: theme.textSecondary }}>{unit.points}pts · No leader attached</p>
+                <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.58)' }}>{unit.points}pts · No leader attached</p>
               </div>
             </div>
           ))}

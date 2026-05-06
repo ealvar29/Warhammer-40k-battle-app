@@ -647,6 +647,7 @@ export const leaderAbilities = {
   wolfGuardBattleLeader_wolfGuardHeadtakers: {
     leaderId: 'wolfGuardBattleLeader',
     unitId: 'wolfGuardHeadtakers',
+    pairingNote: 'Squad composition: 3–6 Headtakers + 0–6 Cyberwolves. WGBL can lead up to 12 models (6+6).',
     abilities: [
       {
         name: 'Tempered Ferocity',
@@ -658,7 +659,7 @@ export const leaderAbilities = {
         name: 'Heroic Last Stand',
         phase: 'fight',
         description: 'If this model is destroyed by a melee attack, if it has not fought this phase, roll one D6: on a 2+, do not remove it from play. The destroyed model can fight after the attacking unit has finished making its attacks, and is then removed from play.',
-        reminder: 'If killed in melee before fighting, roll D6 — on 2+ fight back first.',
+        reminder: 'WGBL model only — if destroyed in melee before fighting, roll D6: on 2+ fight back first, then removed.',
       },
     ],
   },
