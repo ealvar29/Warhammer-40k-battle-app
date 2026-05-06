@@ -8,6 +8,11 @@ import { agendas as ALL_AGENDAS } from '../data/crusade/agendas'
 import { rpActions as RP_ACTIONS } from '../data/crusade/rpActions'
 import { FACTION_META, FACTION_DETACHMENTS } from '../data/factionRegistry'
 import { FactionIcon } from '../components/GameIcon'
+import {
+  SW_AGENDAS, SW_BATTLE_TRAITS, SW_HEROIC_TRAITS,
+  SW_REQUISITIONS, SW_CRUSADE_RELICS, SW_CRUSADE_BADGES,
+  SW_SAGAS, SW_CAMPAIGN_PATHS,
+} from '../data/spacewolves/swCrusade'
 
 // ── Rank milestone thresholds — used to detect level-ups ──────────────────
 const RANK_MILESTONES = RANKS.map(r => r.xpMin)
@@ -45,10 +50,9 @@ const SW_AGENDA_IDS = ['assassinate', 'no-prisoners', 'grind-them-down', 'bring-
 
 function getAgendasForFaction(faction) {
   if (faction === 'spacewolves') {
-    const swAgendas = ALL_AGENDAS.filter(a => SW_AGENDA_IDS.includes(a.id))
-    // Append the full list de-duped
+    const swRecommended = ALL_AGENDAS.filter(a => SW_AGENDA_IDS.includes(a.id))
     const rest = ALL_AGENDAS.filter(a => !SW_AGENDA_IDS.includes(a.id))
-    return [...swAgendas, ...rest]
+    return [...SW_AGENDAS, ...swRecommended, ...rest]
   }
   return ALL_AGENDAS
 }
@@ -337,13 +341,20 @@ function CreateRosterSheet({ onClose, onCreate, theme }) {
 function OverviewTab({ order, onAddBattle, onSpendRP, theme }) {
   const store = useCrusadeStore()
   const factionMeta = FACTION_META[order.faction]
+  const isSW = order.faction === 'spacewolves'
   const supplyUsed = order.units.reduce((s, u) => s + (u.powerRating || 0), 0)
   const winRate = order.battlesPlayed > 0
     ? Math.round((order.battlesWon / order.battlesPlayed) * 100)
     : null
 
   const topUnit = [...order.units].sort((a, b) => b.xp - a.xp)[0] || null
-  const activeAgendaNames = (order.agendas || []).map(id => ALL_AGENDAS.find(a => a.id === id)?.name).filter(Boolean)
+  const activeAgendaNames = (order.agendas || [])
+    .map(id => [...SW_AGENDAS, ...ALL_AGENDAS].find(a => a.id === id)?.name)
+    .filter(Boolean)
+  const [showBadgePicker, setShowBadgePicker] = useState(false)
+  const [showPathPicker, setShowPathPicker] = useState(false)
+  const activeBadge = isSW ? SW_CRUSADE_BADGES.find(b => b.id === order.crusadeBadge) : null
+  const activePath = isSW ? SW_CAMPAIGN_PATHS.find(p => p.id === order.campaignPath) : null
 
   return (
     <motion.div variants={tabFade} initial="hidden" animate="visible" exit="exit"
@@ -351,6 +362,82 @@ function OverviewTab({ order, onAddBattle, onSpendRP, theme }) {
 
       <TipCard id="tip_overview" theme={theme}
         body="This is your campaign summary. Track your force's record, Requisition Points, and supply limit here. Tap the tabs above to manage units, agendas, and RP spending." />
+
+      {/* SW Campaign Path + Badge */}
+      {isSW && (
+        <div className="grid grid-cols-2 gap-2">
+          {/* Campaign Path */}
+          <button onClick={() => setShowPathPicker(!showPathPicker)}
+            className="rounded-2xl p-3 text-left"
+            style={{ background: activePath ? `${theme.secondary}12` : theme.surfaceHigh, border: `1px solid ${activePath ? theme.secondary + '44' : theme.border}` }}>
+            <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: theme.textSecondary, fontSize: 8 }}>Campaign Path</p>
+            {activePath ? (
+              <>
+                <p style={{ fontSize: 18, lineHeight: 1 }}>{activePath.icon}</p>
+                <p className="text-xs font-black mt-1 leading-tight" style={{ color: theme.secondary }}>{activePath.name}</p>
+              </>
+            ) : (
+              <p className="text-xs font-bold" style={{ color: theme.textSecondary }}>+ Choose path</p>
+            )}
+          </button>
+
+          {/* Crusade Badge */}
+          <button onClick={() => setShowBadgePicker(!showBadgePicker)}
+            className="rounded-2xl p-3 text-left"
+            style={{ background: activeBadge ? `${theme.primary}12` : theme.surfaceHigh, border: `1px solid ${activeBadge ? theme.primary + '44' : theme.border}` }}>
+            <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: theme.textSecondary, fontSize: 8 }}>Crusade Badge</p>
+            {activeBadge ? (
+              <>
+                <p style={{ fontSize: 18, lineHeight: 1 }}>{activeBadge.icon}</p>
+                <p className="text-xs font-black mt-1 leading-tight" style={{ color: theme.primary }}>{activeBadge.name}</p>
+              </>
+            ) : (
+              <p className="text-xs font-bold" style={{ color: theme.textSecondary }}>+ Choose badge</p>
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Campaign Path picker */}
+      {isSW && showPathPicker && (
+        <div className="rounded-2xl border p-3 space-y-2" style={{ background: theme.surfaceHigh, borderColor: theme.border }}>
+          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>Choose Campaign Path</p>
+          {SW_CAMPAIGN_PATHS.map(path => (
+            <button key={path.id} onClick={() => { store.setCampaignPath(order.id, path.id); setShowPathPicker(false) }}
+              className="w-full rounded-xl border p-3 text-left transition-all"
+              style={{ background: order.campaignPath === path.id ? `${theme.secondary}12` : theme.surface, borderColor: order.campaignPath === path.id ? theme.secondary : theme.border }}>
+              <div className="flex items-center gap-2">
+                <span style={{ fontSize: 18 }}>{path.icon}</span>
+                <div className="flex-1">
+                  <p className="text-xs font-black" style={{ color: order.campaignPath === path.id ? theme.secondary : theme.textPrimary }}>{path.name}</p>
+                  <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary }}>{path.bonus}</p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Crusade Badge picker */}
+      {isSW && showBadgePicker && (
+        <div className="rounded-2xl border p-3 space-y-2" style={{ background: theme.surfaceHigh, borderColor: theme.border }}>
+          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>Choose Crusade Badge</p>
+          {SW_CRUSADE_BADGES.map(badge => (
+            <button key={badge.id} onClick={() => { store.setCrusadeBadge(order.id, badge.id); setShowBadgePicker(false) }}
+              className="w-full rounded-xl border p-3 text-left transition-all"
+              style={{ background: order.crusadeBadge === badge.id ? `${theme.primary}12` : theme.surface, borderColor: order.crusadeBadge === badge.id ? theme.primary : theme.border }}>
+              <div className="flex items-start gap-2">
+                <span style={{ fontSize: 18 }}>{badge.icon}</span>
+                <div className="flex-1">
+                  <p className="text-xs font-black" style={{ color: order.crusadeBadge === badge.id ? theme.primary : theme.textPrimary }}>{badge.name}</p>
+                  <p className="text-xs mt-0.5" style={{ color: theme.secondary, fontStyle: 'italic' }}>{badge.bonus}</p>
+                  <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary }}>{badge.thematic}</p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Faction hero banner */}
       {factionMeta && (
@@ -592,20 +679,180 @@ function SyncPanel({ theme }) {
   )
 }
 
+// ── Saga Picker Sheet ────────────────────────────────────────────────────────
+
+function SagaPickerSheet({ unit, orderId, onClose, theme }) {
+  const store = useCrusadeStore()
+  const [selected, setSelected] = useState(null)
+
+  const completedIds = (unit.completedSagas || []).map(s => s.sagaId)
+  const CATEGORY_COLORS = { Glory: theme.secondary, Endurance: theme.hpFull, Hunt: '#f59e0b', Hold: '#6366f1', Brotherhood: '#ec4899', Assault: '#ef4444', Tactics: '#06b6d4', Fear: '#8b5cf6' }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ background: 'rgba(0,0,0,0.8)' }}>
+      <motion.div variants={slideUp} initial="hidden" animate="visible"
+        className="w-full max-w-sm rounded-t-3xl flex flex-col"
+        style={{ background: theme.surface, border: `1px solid ${theme.border}`, maxHeight: '88vh' }}>
+
+        <div className="px-5 pt-5 pb-3 shrink-0">
+          <div className="w-10 h-1 rounded-full mx-auto mb-4" style={{ background: theme.border }} />
+          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>Undertake a Saga</p>
+          <h2 className="text-base font-black mt-0.5" style={{ color: theme.textPrimary }}>{unit.name}</h2>
+          <p className="text-xs mt-1" style={{ color: theme.textSecondary }}>Choose one oath for this unit to pursue. Complete the condition across battles to earn a permanent reward.</p>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-5 pb-2 space-y-2">
+          {SW_SAGAS.map(saga => {
+            const done = completedIds.includes(saga.id)
+            const isCurrent = unit.activeSaga === saga.id
+            const color = CATEGORY_COLORS[saga.category] || theme.secondary
+            const sel = selected === saga.id
+            return (
+              <button key={saga.id}
+                onClick={() => !done && !isCurrent && setSelected(sel ? null : saga.id)}
+                disabled={done || isCurrent}
+                className="w-full rounded-2xl border p-3.5 text-left transition-all"
+                style={{
+                  background: sel ? `${color}12` : done || isCurrent ? theme.surfaceHigh : theme.surface,
+                  borderColor: sel ? color : done || isCurrent ? theme.border : theme.border,
+                  opacity: done || isCurrent ? 0.5 : 1,
+                }}>
+                <div className="flex items-start gap-2.5">
+                  <span style={{ fontSize: 20, lineHeight: 1.2 }}>{saga.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <p className="text-xs font-black" style={{ color: sel ? color : theme.textPrimary }}>{saga.name}</p>
+                      <span className="text-xs px-1.5 py-0.5 rounded font-bold"
+                        style={{ background: `${color}18`, color, fontSize: 9 }}>{saga.category}</span>
+                      {done && <span className="text-xs px-1.5 py-0.5 rounded font-bold" style={{ background: `${theme.hpFull}20`, color: theme.hpFull, fontSize: 9 }}>✅ Done</span>}
+                      {isCurrent && <span className="text-xs px-1.5 py-0.5 rounded font-bold" style={{ background: `${theme.secondary}20`, color: theme.secondary, fontSize: 9 }}>Active</span>}
+                    </div>
+                    <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{saga.conditionShort}</p>
+                    {sel && (
+                      <p className="text-xs mt-1.5 font-bold" style={{ color }}>Reward: {saga.rewardShort}</p>
+                    )}
+                  </div>
+                  {sel && <span className="text-base shrink-0">✓</span>}
+                </div>
+
+                {sel && (
+                  <div className="mt-2.5 pt-2.5 border-t" style={{ borderColor: `${color}30` }}>
+                    <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{saga.condition}</p>
+                  </div>
+                )}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="px-5 pb-8 pt-3 space-y-2 shrink-0" style={{ borderTop: `1px solid ${theme.border}` }}>
+          <button
+            onClick={() => { if (selected) { store.setUnitSaga(orderId, unit.id, selected); onClose() } }}
+            disabled={!selected}
+            className="w-full py-3.5 rounded-2xl text-sm font-bold"
+            style={{ background: selected ? theme.secondary : theme.border, color: selected ? theme.bg : theme.textSecondary }}>
+            Undertake Saga →
+          </button>
+          <button onClick={onClose} className="w-full py-2 text-xs font-medium" style={{ color: theme.textSecondary }}>Cancel</button>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
+// ── Crusade Relic Picker ──────────────────────────────────────────────────────
+
+function RelicPickerSheet({ unit, orderId, onClose, theme }) {
+  const store = useCrusadeStore()
+  const [selected, setSelected] = useState(null)
+
+  const existing = (unit.relics || []).map(r => r.toLowerCase())
+  const TIER_COLOR = { relic: theme.secondary, legendary: '#f59e0b' }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ background: 'rgba(0,0,0,0.8)' }}>
+      <motion.div variants={slideUp} initial="hidden" animate="visible"
+        className="w-full max-w-sm rounded-t-3xl flex flex-col"
+        style={{ background: theme.surface, border: `1px solid ${theme.border}`, maxHeight: '88vh' }}>
+
+        <div className="px-5 pt-5 pb-3 shrink-0">
+          <div className="w-10 h-1 rounded-full mx-auto mb-4" style={{ background: theme.border }} />
+          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>Crusade Relics</p>
+          <h2 className="text-base font-black mt-0.5" style={{ color: theme.textPrimary }}>Bestow a Relic</h2>
+          <p className="text-xs mt-1" style={{ color: theme.textSecondary }}>Award a Space Wolves Crusade Relic to {unit.name}. Costs RP when granted — record the spend in the RP tab.</p>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-5 pb-2 space-y-2">
+          {SW_CRUSADE_RELICS.map(relic => {
+            const alreadyHas = existing.includes(relic.name.toLowerCase())
+            const color = TIER_COLOR[relic.tier] || theme.secondary
+            const sel = selected === relic.id
+            return (
+              <button key={relic.id}
+                onClick={() => !alreadyHas && setSelected(sel ? null : relic.id)}
+                disabled={alreadyHas}
+                className="w-full rounded-2xl border p-3.5 text-left transition-all"
+                style={{ background: sel ? `${color}12` : alreadyHas ? theme.surfaceHigh : theme.surface, borderColor: sel ? color : theme.border, opacity: alreadyHas ? 0.45 : 1 }}>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <p className="text-xs font-black" style={{ color: sel ? color : theme.textPrimary }}>{relic.name}</p>
+                      <span className="text-xs px-1.5 py-0.5 rounded font-bold"
+                        style={{ background: `${color}18`, color, fontSize: 9 }}>{relic.tier === 'legendary' ? '★ Legendary' : 'Relic'}</span>
+                      {relic.bearer !== 'Any' && (
+                        <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: theme.surfaceHigh, color: theme.textSecondary, fontSize: 9, border: `1px solid ${theme.border}` }}>{relic.bearer} only</span>
+                      )}
+                      {alreadyHas && <span className="text-xs font-bold" style={{ color: theme.hpFull }}>✓ Held</span>}
+                    </div>
+                    <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{relic.description}</p>
+                  </div>
+                  <span className="text-xs font-black px-2 py-1 rounded-lg shrink-0"
+                    style={{ background: sel ? color : theme.surfaceHigh, color: sel ? theme.bg : theme.textSecondary, border: `1px solid ${sel ? color : theme.border}` }}>
+                    {relic.rpCost} RP
+                  </span>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="px-5 pb-8 pt-3 space-y-2 shrink-0" style={{ borderTop: `1px solid ${theme.border}` }}>
+          <button
+            onClick={() => {
+              if (!selected) return
+              const relic = SW_CRUSADE_RELICS.find(r => r.id === selected)
+              store.addRelic(orderId, unit.id, relic.name)
+              onClose()
+            }}
+            disabled={!selected}
+            className="w-full py-3.5 rounded-2xl text-sm font-bold"
+            style={{ background: selected ? theme.secondary : theme.border, color: selected ? theme.bg : theme.textSecondary }}>
+            Bestow Relic →
+          </button>
+          <button onClick={onClose} className="w-full py-2 text-xs font-medium" style={{ color: theme.textSecondary }}>Cancel</button>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 // ── Unit Crusade Card ───────────────────────────────────────────────────────
 
-function UnitCrusadeCard({ unit, orderId, onRollHonour, onRollScar, theme }) {
+function UnitCrusadeCard({ unit, orderId, isSW, onRollHonour, onRollScar, theme }) {
   const store = useCrusadeStore()
   const [expanded, setExpanded] = useState(false)
   const [addingHonour, setAddingHonour] = useState(false)
   const [addingScar, setAddingScar] = useState(false)
   const [addingRelic, setAddingRelic] = useState(false)
+  const [showSagaPicker, setShowSagaPicker] = useState(false)
+  const [showRelicPicker, setShowRelicPicker] = useState(false)
   const [inputVal, setInputVal] = useState('')
   const rank = getRank(unit.xp)
   const nextRank = getNextRank(unit.xp)
 
-  // Detect if this unit is right at a rank milestone (xp is exactly the threshold) to
-  // surface the "roll for Battle Honour" prompt
+  const activeSagaData = isSW ? SW_SAGAS.find(s => s.id === unit.activeSaga) : null
+  const SAGA_CATEGORY_COLORS = { Glory: theme.secondary, Endurance: theme.hpFull, Hunt: '#f59e0b', Hold: '#6366f1', Brotherhood: '#ec4899', Assault: '#ef4444', Tactics: '#06b6d4', Fear: '#8b5cf6' }
+
   const atMilestone = RANK_MILESTONES.includes(unit.xp) && unit.xp > 0
 
   return (
@@ -785,11 +1032,20 @@ function UnitCrusadeCard({ unit, orderId, onRollHonour, onRollScar, theme }) {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-xs font-bold" style={{ color: theme.primary }}>Relics</p>
-                  <button onClick={() => { setAddingRelic(!addingRelic); setInputVal('') }}
-                    className="text-xs px-2 py-1 rounded-lg"
-                    style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                    + Add
-                  </button>
+                  <div className="flex gap-1.5">
+                    {isSW && (
+                      <button onClick={() => setShowRelicPicker(true)}
+                        className="text-xs px-2 py-1 rounded-lg font-bold"
+                        style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
+                        SW Relics
+                      </button>
+                    )}
+                    <button onClick={() => { setAddingRelic(!addingRelic); setInputVal('') }}
+                      className="text-xs px-2 py-1 rounded-lg"
+                      style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                      + Custom
+                    </button>
+                  </div>
                 </div>
                 {unit.relics?.length === 0 && !addingRelic && (
                   <p className="text-xs" style={{ color: theme.textSecondary }}>No relics.</p>
@@ -809,8 +1065,98 @@ function UnitCrusadeCard({ unit, orderId, onRollHonour, onRollScar, theme }) {
                   </div>
                 )}
               </div>
+
+              {/* ── Sagas (SW only) ── */}
+              {isSW && (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-bold" style={{ color: theme.secondary }}>⚔️ Saga</p>
+                    {!unit.activeSaga && (
+                      <button onClick={() => setShowSagaPicker(true)}
+                        className="text-xs px-2 py-1 rounded-lg font-bold"
+                        style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
+                        + Undertake Saga
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Active saga */}
+                  {activeSagaData ? (
+                    <div className="rounded-xl p-3 space-y-2.5"
+                      style={{ background: `${SAGA_CATEGORY_COLORS[activeSagaData.category] || theme.secondary}0d`, border: `1px solid ${SAGA_CATEGORY_COLORS[activeSagaData.category] || theme.secondary}35` }}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span>{activeSagaData.icon}</span>
+                            <p className="text-xs font-black" style={{ color: SAGA_CATEGORY_COLORS[activeSagaData.category] || theme.secondary }}>{activeSagaData.name}</p>
+                          </div>
+                          <p className="text-xs mt-1 leading-relaxed" style={{ color: theme.textSecondary }}>{activeSagaData.conditionShort}</p>
+                        </div>
+                        <button onClick={() => store.setUnitSaga(orderId, unit.id, null)}
+                          className="text-xs px-1.5 py-0.5 rounded shrink-0"
+                          style={{ color: theme.textSecondary, background: theme.surfaceHigh }}>Abandon</button>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold mb-1" style={{ color: theme.textSecondary }}>Progress</p>
+                        <textarea value={unit.sagaProgress || ''}
+                          onChange={e => store.updateSagaProgress(orderId, unit.id, e.target.value)}
+                          placeholder={`e.g. 3/10 kills, 1/3 charges survived…`}
+                          rows={2}
+                          className="w-full rounded-xl px-3 py-2 text-xs outline-none resize-none"
+                          style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }} />
+                      </div>
+                      <div className="rounded-xl p-2.5" style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
+                        <p className="text-xs font-bold mb-0.5" style={{ color: theme.textSecondary }}>Reward on completion:</p>
+                        <p className="text-xs" style={{ color: theme.textPrimary }}>{activeSagaData.rewardShort}</p>
+                      </div>
+                      <button onClick={() => store.completeSaga(orderId, unit.id)}
+                        className="w-full py-2.5 rounded-xl text-xs font-black"
+                        style={{ background: theme.hpFull, color: '#fff' }}>
+                        ✓ Mark Saga Complete
+                      </button>
+                    </div>
+                  ) : (unit.completedSagas || []).length === 0 ? (
+                    <p className="text-xs" style={{ color: theme.textSecondary }}>No saga active. Undertake a saga to earn permanent rewards for this unit.</p>
+                  ) : null}
+
+                  {/* Completed sagas */}
+                  {(unit.completedSagas || []).length > 0 && (
+                    <div className="space-y-1 mt-2">
+                      {unit.completedSagas.map(cs => {
+                        const saga = SW_SAGAS.find(s => s.id === cs.sagaId)
+                        return (
+                          <div key={cs.sagaId} className="flex items-start gap-2 rounded-xl px-2.5 py-1.5"
+                            style={{ background: `${theme.hpFull}10`, border: `1px solid ${theme.hpFull}25` }}>
+                            <span className="text-xs" style={{ color: theme.hpFull }}>✅</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-bold" style={{ color: theme.hpFull }}>{saga?.name || cs.sagaId}</p>
+                              <p className="text-xs" style={{ color: theme.textSecondary }}>{saga?.rewardShort}</p>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Saga picker overlay */}
+      <AnimatePresence>
+        {showSagaPicker && (
+          <SagaPickerSheet key="saga-picker" unit={unit} orderId={orderId}
+            onClose={() => setShowSagaPicker(false)} theme={theme} />
+        )}
+      </AnimatePresence>
+
+      {/* Relic picker overlay */}
+      <AnimatePresence>
+        {showRelicPicker && (
+          <RelicPickerSheet key="relic-picker" unit={unit} orderId={orderId}
+            onClose={() => setShowRelicPicker(false)} theme={theme} />
         )}
       </AnimatePresence>
     </motion.div>
@@ -864,6 +1210,7 @@ function RosterTab({ order, onRollHonour, onRollScar, theme }) {
 
       {order.units.map(u => (
         <UnitCrusadeCard key={u.id} unit={u} orderId={order.id}
+          isSW={order.faction === 'spacewolves'}
           onRollHonour={onRollHonour} onRollScar={onRollScar} theme={theme} />
       ))}
 
@@ -954,8 +1301,8 @@ function AgendasTab({ order, theme }) {
       {isSW && (
         <div className="rounded-2xl px-3 py-2"
           style={{ background: `${theme.secondary}0e`, border: `1px solid ${theme.secondary}25` }}>
-          <p className="text-xs font-bold" style={{ color: theme.secondary }}>Space Wolves recommended agendas shown first</p>
-          <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>Aggressive, forward-focused goals that match how the Sons of Fenris fight.</p>
+          <p className="text-xs font-bold" style={{ color: theme.secondary }}>Oathsworn Campaigns — SW agendas shown first</p>
+          <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>SW-exclusive agendas (marked ⚔️) and recommended picks shown at the top.</p>
         </div>
       )}
 
@@ -973,7 +1320,7 @@ function AgendasTab({ order, theme }) {
         <div className="rounded-2xl p-3 space-y-2" style={{ background: `${theme.secondary}10`, border: `1px solid ${theme.secondary}30` }}>
           <p className="text-xs font-bold" style={{ color: theme.secondary }}>Active for next battle:</p>
           {active.map(id => {
-            const a = ALL_AGENDAS.find(ag => ag.id === id)
+            const a = [...SW_AGENDAS, ...ALL_AGENDAS].find(ag => ag.id === id)
             if (!a) return null
             return (
               <div key={id} className="flex items-center justify-between">
@@ -997,12 +1344,13 @@ function AgendasTab({ order, theme }) {
           const disabled = !sel && active.length >= 3
           const color = CATEGORY_COLORS[a.category] || theme.secondary
           const isRecommended = isSW && SW_AGENDA_IDS.includes(a.id)
+          const isSWExclusive = isSW && a.swExclusive
           return (
             <button key={a.id} onClick={() => !disabled && toggle(a.id)}
               className="w-full rounded-2xl border p-3.5 text-left transition-all"
               style={{
                 background: sel ? `${color}12` : theme.surfaceHigh,
-                borderColor: sel ? color : isRecommended ? `${theme.secondary}40` : theme.border,
+                borderColor: sel ? color : isSWExclusive ? `${theme.secondary}50` : isRecommended ? `${theme.secondary}30` : theme.border,
                 opacity: disabled ? 0.4 : 1,
               }}>
               <div className="flex items-start justify-between gap-2">
@@ -1011,7 +1359,11 @@ function AgendasTab({ order, theme }) {
                     <p className="text-xs font-black" style={{ color: sel ? color : theme.textPrimary }}>{a.name}</p>
                     <span className="text-xs px-1.5 py-0.5 rounded font-bold"
                       style={{ background: `${color}18`, color, fontSize: 9 }}>{a.category}</span>
-                    {isRecommended && !sel && (
+                    {isSWExclusive && !sel && (
+                      <span className="text-xs px-1.5 py-0.5 rounded font-bold"
+                        style={{ background: `${theme.secondary}22`, color: theme.secondary, fontSize: 9 }}>⚔️ SW</span>
+                    )}
+                    {isRecommended && !isSWExclusive && !sel && (
                       <span className="text-xs px-1.5 py-0.5 rounded font-bold"
                         style={{ background: `${theme.secondary}18`, color: theme.secondary, fontSize: 9 }}>SW pick</span>
                     )}
@@ -1044,7 +1396,9 @@ function RPTab({ order, theme }) {
   const [selected, setSelected] = useState(null)
   const [note, setNote] = useState('')
   const [showActions, setShowActions] = useState(false)
+  const [showSWActions, setShowSWActions] = useState(false)
 
+  const isSW = order.faction === 'spacewolves'
   const canAfford = selected && order.requisitionPoints >= selected.cost
 
   const CATEGORY_LABELS = { Unit: 'Unit upgrade', Recovery: 'Recovery', Roster: 'Roster' }
@@ -1056,6 +1410,7 @@ function RPTab({ order, theme }) {
     setSelected(null)
     setNote('')
     setShowActions(false)
+    setShowSWActions(false)
   }
 
   return (
@@ -1083,7 +1438,63 @@ function RPTab({ order, theme }) {
         </div>
       </div>
 
-      {/* Spend RP section */}
+      {/* SW Requisitions */}
+      {isSW && (
+        <>
+          <button onClick={() => setShowSWActions(!showSWActions)}
+            className="w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2"
+            style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}40` }}>
+            {showSWActions ? 'Hide SW Requisitions' : '⚔️ Space Wolves Requisitions →'}
+          </button>
+          <AnimatePresence>
+            {showSWActions && (
+              <motion.div key="sw-actions" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22 }} className="overflow-hidden space-y-2">
+                <p className="text-xs font-bold tracking-widest uppercase pt-1" style={{ color: theme.textSecondary }}>Oathsworn Requisitions</p>
+                {SW_REQUISITIONS.map(action => {
+                  const affordable = order.requisitionPoints >= action.cost
+                  const sel = selected?.id === action.id
+                  const catColor = categoryColor[action.category] || theme.secondary
+                  return (
+                    <button key={action.id} onClick={() => affordable && setSelected(sel ? null : action)}
+                      className="w-full rounded-2xl border p-3.5 text-left transition-all"
+                      style={{ background: sel ? `${theme.secondary}12` : theme.surfaceHigh, borderColor: sel ? theme.secondary : affordable ? `${theme.secondary}40` : `${theme.border}60`, opacity: affordable ? 1 : 0.45 }}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <p className="text-xs font-black" style={{ color: sel ? theme.secondary : theme.textPrimary }}>{action.name}</p>
+                            <span className="text-xs px-1.5 py-0.5 rounded font-bold" style={{ background: `${theme.secondary}18`, color: theme.secondary, fontSize: 9 }}>⚔️ SW</span>
+                            <span className="text-xs px-1.5 py-0.5 rounded font-bold" style={{ background: `${catColor}15`, color: catColor, fontSize: 9 }}>{CATEGORY_LABELS[action.category]}</span>
+                          </div>
+                          <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>{action.description}</p>
+                        </div>
+                        <span className="text-xs font-black px-2 py-1 rounded-lg shrink-0"
+                          style={{ background: sel ? theme.secondary : theme.border, color: sel ? theme.bg : theme.textSecondary }}>
+                          {action.cost} RP
+                        </span>
+                      </div>
+                    </button>
+                  )
+                })}
+                {selected?.sw && (
+                  <motion.div key="sw-confirm" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-2 pt-1">
+                    <input value={note} onChange={e => setNote(e.target.value)}
+                      placeholder="Note (optional — e.g. which unit)"
+                      className="w-full rounded-xl px-3 py-2 text-xs outline-none"
+                      style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }} />
+                    <button onClick={handleSpend}
+                      className="w-full py-3 rounded-2xl font-bold text-sm"
+                      style={{ background: canAfford ? theme.secondary : theme.border, color: canAfford ? theme.bg : theme.textSecondary }}>
+                      Spend {selected.cost} RP — {selected.name}
+                    </button>
+                  </motion.div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      )}
+
+      {/* Spend RP section (generic) */}
       <button onClick={() => setShowActions(!showActions)}
         className="w-full py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2"
         style={{ background: theme.secondary, color: theme.bg }}>
@@ -1512,8 +1923,13 @@ export default function CrusadeScreen({ theme }) {
   const [diceRoll, setDiceRoll] = useState(null) // { table, title, unit, type }
   const [showSpendRP, setShowSpendRP] = useState(false)
 
-  const handleRollHonour = (unit) => setDiceRoll({ table: battleHonours, title: `${unit.name} — Battle Honour`, unit, type: 'honour' })
-  const handleRollScar   = (unit) => setDiceRoll({ table: battleScars,   title: `${unit.name} — Battle Scar`,  unit, type: 'scar'   })
+  const handleRollHonour = (unit) => {
+    const isSW = activeOrder?.faction === 'spacewolves'
+    const table = isSW ? SW_BATTLE_TRAITS : battleHonours
+    const title = isSW ? `${unit.name} — Battle Trait` : `${unit.name} — Battle Honour`
+    setDiceRoll({ table, title, unit, type: 'honour' })
+  }
+  const handleRollScar = (unit) => setDiceRoll({ table: battleScars, title: `${unit.name} — Battle Scar`, unit, type: 'scar' })
 
   const handleDiceApply = (result) => {
     if (!diceRoll || !activeOrder) return

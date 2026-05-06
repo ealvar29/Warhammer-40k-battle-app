@@ -25,6 +25,22 @@ function generateSyncCode() {
   return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
 
+function blankUnit(overrides = {}) {
+  return {
+    id: overrides.id || `crusade_${Date.now()}`,
+    name: overrides.name || '',
+    unitType: overrides.unitType || 'Infantry',
+    powerRating: overrides.powerRating || 1,
+    xp: 0, battlesPlayed: 0,
+    battleHonours: [], battleScars: [], relics: [], notes: '',
+    // Saga tracking
+    activeSaga: null,
+    sagaProgress: '',
+    completedSagas: [],  // [{ sagaId, completedDate }]
+    ...overrides,
+  }
+}
+
 function blankOrder(id, name, faction, detachmentId) {
   return {
     id,
@@ -36,9 +52,11 @@ function blankOrder(id, name, faction, detachmentId) {
     battlesPlayed: 0,
     battlesWon: 0,
     crusadePoints: 0,
-    agendas: [],     // active agenda ids for the next battle
-    rpLog: [],       // [{ id, actionId, actionName, cost, note, date }]
-    battleLog: [],   // [{ id, date, opponent, mission, result, completedAgendaIds, unitXpAwards }]
+    agendas: [],        // active agenda ids for the next battle
+    rpLog: [],          // [{ id, actionId, actionName, cost, note, date }]
+    battleLog: [],      // [{ id, date, opponent, mission, result, completedAgendaIds, unitXpAwards }]
+    crusadeBadge: null, // SW badge id
+    campaignPath: null, // SW oathsworn campaign path id
     units: [],
   }
 }
@@ -57,6 +75,8 @@ const initialOrder = {
   agendas: [],
   rpLog: [],
   battleLog: [],
+  crusadeBadge: null,
+  campaignPath: null,
   units: [
     {
       id: 'crusade_ragnar',
@@ -69,6 +89,9 @@ const initialOrder = {
       battleScars: [],
       relics: ['Frostfang (Master-Crafted)'],
       notes: '',
+      activeSaga: null,
+      sagaProgress: '',
+      completedSagas: [],
     },
     {
       id: 'crusade_bloodclaws',
@@ -81,6 +104,9 @@ const initialOrder = {
       battleScars: ['Battle-Scarred (−1 Move)'],
       relics: [],
       notes: '',
+      activeSaga: null,
+      sagaProgress: '',
+      completedSagas: [],
     },
     {
       id: 'crusade_thunderwolf',
@@ -93,6 +119,9 @@ const initialOrder = {
       battleScars: [],
       relics: [],
       notes: '',
+      activeSaga: null,
+      sagaProgress: '',
+      completedSagas: [],
     },
   ],
 }
@@ -134,7 +163,7 @@ export const useCrusadeStore = create(
 
       addUnit: (orderId, unit) => set(s => ({
         orders: s.orders.map(o =>
-          o.id === orderId ? { ...o, units: [...o.units, unit] } : o
+          o.id === orderId ? { ...o, units: [...o.units, blankUnit(unit)] } : o
         ),
       })),
 
@@ -219,18 +248,74 @@ export const useCrusadeStore = create(
         ),
       })),
 
+      // ── Saga actions ──
+
+      setUnitSaga: (orderId, unitId, sagaId) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : {
+            ...o,
+            units: o.units.map(u =>
+              u.id !== unitId ? u : { ...u, activeSaga: sagaId, sagaProgress: '' }
+            ),
+          }
+        ),
+      })),
+
+      updateSagaProgress: (orderId, unitId, progress) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : {
+            ...o,
+            units: o.units.map(u =>
+              u.id !== unitId ? u : { ...u, sagaProgress: progress }
+            ),
+          }
+        ),
+      })),
+
+      completeSaga: (orderId, unitId) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : {
+            ...o,
+            units: o.units.map(u => {
+              if (u.id !== unitId || !u.activeSaga) return u
+              return {
+                ...u,
+                activeSaga: null,
+                sagaProgress: '',
+                completedSagas: [
+                  ...(u.completedSagas || []),
+                  { sagaId: u.activeSaga, completedDate: new Date().toISOString() },
+                ],
+              }
+            }),
+          }
+        ),
+      })),
+
+      // ── Order-level settings ──
+
+      setCrusadeBadge: (orderId, badgeId) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : { ...o, crusadeBadge: badgeId }
+        ),
+      })),
+
+      setCampaignPath: (orderId, pathId) => set(s => ({
+        orders: s.orders.map(o =>
+          o.id !== orderId ? o : { ...o, campaignPath: pathId }
+        ),
+      })),
+
       addUnitFromBattle: (orderId, unit) => set(s => {
         const order = s.orders.find(o => o.id === orderId)
         if (!order) return s
         if (order.units.some(u => u.name.toLowerCase() === unit.name.toLowerCase())) return s
-        const newUnit = {
+        const newUnit = blankUnit({
           id: `crusade_${unit.id}_${Date.now()}`,
           name: unit.name,
           unitType: unit.type || unit.category || 'Infantry',
           powerRating: unit.powerRating || 1,
-          xp: 0, battlesPlayed: 0,
-          battleHonours: [], battleScars: [], relics: [], notes: '',
-        }
+        })
         return { orders: s.orders.map(o => o.id === orderId ? { ...o, units: [...o.units, newUnit] } : o) }
       }),
 
