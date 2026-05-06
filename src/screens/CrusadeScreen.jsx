@@ -356,7 +356,7 @@ function OverviewTab({ order, onAddBattle, onSpendRP, theme }) {
       {factionMeta && (
         <div className="rounded-2xl p-4 flex items-center gap-3"
           style={{ background: `${factionMeta.color}14`, border: `1px solid ${factionMeta.color}35` }}>
-          <FactionIcon id={faction} size={30} color={factionMeta.color} />
+          <FactionIcon id={order.faction} size={30} color={factionMeta.color} />
           <div className="flex-1 min-w-0">
             <p className="font-black text-sm truncate" style={{ color: factionMeta.color }}>{order.name}</p>
             <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>
@@ -481,6 +481,46 @@ function OverviewTab({ order, onAddBattle, onSpendRP, theme }) {
 
       {/* Sync panel */}
       <SyncPanel theme={theme} />
+
+      {/* Battle History */}
+      {(order.battleLog || []).length > 0 && (
+        <div className="space-y-2">
+          <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.textSecondary }}>Battle History</p>
+          {(order.battleLog || []).slice(0, 8).map(entry => (
+            <div key={entry.id} className="rounded-2xl border px-3 py-2.5 flex items-center gap-3"
+              style={{ background: theme.surfaceHigh, borderColor: theme.border }}>
+              <span className="text-xs font-black px-2.5 py-1 rounded-xl shrink-0"
+                style={{
+                  background: entry.result === 'victory' ? `${theme.hpFull}22` : `${theme.hpLow}22`,
+                  color: entry.result === 'victory' ? theme.hpFull : theme.hpLow,
+                  border: `1px solid ${entry.result === 'victory' ? theme.hpFull + '44' : theme.hpLow + '44'}`,
+                }}>
+                {entry.result === 'victory' ? 'W' : 'L'}
+              </span>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold truncate" style={{ color: theme.textPrimary }}>
+                  vs. {entry.opponent}
+                </p>
+                <p className="text-xs truncate mt-0.5" style={{ color: theme.textSecondary }}>
+                  {entry.mission || 'Unknown mission'} · {formatDate(entry.date)}
+                </p>
+              </div>
+              <div className="text-right shrink-0">
+                {(entry.unitXpAwards || []).some(a => a.xp > 0) && (
+                  <p className="text-xs font-black" style={{ color: theme.secondary }}>
+                    +{(entry.unitXpAwards || []).reduce((s, a) => s + (a.xp || 0), 0)} XP
+                  </p>
+                )}
+                {(entry.completedAgendaIds || []).length > 0 && (
+                  <p className="text-xs" style={{ color: theme.textSecondary }}>
+                    {entry.completedAgendaIds.length} agenda{entry.completedAgendaIds.length > 1 ? 's' : ''}
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </motion.div>
   )
 }
@@ -1147,6 +1187,318 @@ function RPTab({ order, theme }) {
   )
 }
 
+// ── Record Battle Sheet (3-step) ────────────────────────────────────────────
+
+const CATEGORY_COLORS_AGENDA = { Recon: '#00b4d8', Destroy: '#ef4444', Hold: '#22c55e', Achieve: '#a855f7' }
+
+function RecordBattleSheet({ order, onClose, theme }) {
+  const store = useCrusadeStore()
+  const [step, setStep] = useState(1)
+  const [opponent, setOpponent] = useState('')
+  const [mission, setMission] = useState('')
+  const [won, setWon] = useState(null)
+
+  const activeAgendas = (order.agendas || [])
+    .map(id => ALL_AGENDAS.find(a => a.id === id))
+    .filter(Boolean)
+
+  const [agendaResults, setAgendaResults] = useState(() =>
+    Object.fromEntries(activeAgendas.map(a => [a.id, { completed: false, unitIds: [] }]))
+  )
+  const [participated, setParticipated] = useState(() =>
+    Object.fromEntries(order.units.map(u => [u.id, true]))
+  )
+
+  const toggleAgendaUnit = (agendaId, unitId) => {
+    setAgendaResults(prev => {
+      const cur = prev[agendaId] || { completed: true, unitIds: [] }
+      const ids = cur.unitIds.includes(unitId)
+        ? cur.unitIds.filter(id => id !== unitId)
+        : [...cur.unitIds, unitId]
+      return { ...prev, [agendaId]: { ...cur, unitIds: ids } }
+    })
+  }
+
+  const calcUnitXp = (unitId) => {
+    if (!participated[unitId]) return 0
+    let xp = 1
+    if (won) xp += 1
+    activeAgendas.forEach(agenda => {
+      const r = agendaResults[agenda.id]
+      if (r?.completed && r.unitIds.includes(unitId)) xp += agenda.xpReward
+    })
+    return xp
+  }
+
+  const handleConfirm = () => {
+    if (won === null) return
+    const unitXpAwards = order.units.map(u => ({
+      unitId: u.id,
+      xp: calcUnitXp(u.id),
+      participated: !!participated[u.id],
+    }))
+    const completedAgendaIds = Object.entries(agendaResults)
+      .filter(([, v]) => v.completed)
+      .map(([id]) => id)
+    store.recordBattle(order.id, {
+      won,
+      opponent: opponent.trim() || 'Unknown',
+      mission: mission.trim() || '',
+      unitXpAwards,
+      completedAgendaIds,
+    })
+    onClose()
+  }
+
+  const STEP_LABELS = ['Mission Info', 'Agenda Results', 'XP & Result']
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ background: 'rgba(0,0,0,0.78)' }}>
+      <motion.div variants={slideUp} initial="hidden" animate="visible"
+        className="w-full max-w-sm rounded-t-3xl flex flex-col"
+        style={{ background: theme.surface, border: `1px solid ${theme.border}`, maxHeight: '92vh' }}>
+
+        {/* Header */}
+        <div className="px-5 pt-5 pb-3 shrink-0">
+          <div className="w-10 h-1 rounded-full mx-auto mb-4" style={{ background: theme.border }} />
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: theme.secondary }}>Record Battle</p>
+            <div className="flex gap-1">
+              {STEP_LABELS.map((_, i) => (
+                <div key={i} className="h-1.5 rounded-full transition-all"
+                  style={{ width: step === i + 1 ? 20 : 8, background: step > i ? theme.secondary : theme.border }} />
+              ))}
+            </div>
+          </div>
+          <h2 className="text-base font-black" style={{ color: theme.textPrimary }}>{STEP_LABELS[step - 1]}</h2>
+        </div>
+
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto px-5 pb-2">
+
+          {/* ── Step 1: Mission Info ── */}
+          {step === 1 && (
+            <div className="space-y-4 pb-4">
+              <div>
+                <p className="text-xs font-bold mb-1.5" style={{ color: theme.textSecondary }}>Opponent</p>
+                <input value={opponent} onChange={e => setOpponent(e.target.value)}
+                  placeholder="Who did you fight?"
+                  className="w-full rounded-xl px-4 py-2.5 text-sm outline-none"
+                  style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }} />
+              </div>
+              <div>
+                <p className="text-xs font-bold mb-1.5" style={{ color: theme.textSecondary }}>Mission</p>
+                <input value={mission} onChange={e => setMission(e.target.value)}
+                  placeholder="e.g. Priority Target"
+                  className="w-full rounded-xl px-4 py-2.5 text-sm outline-none"
+                  style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }} />
+              </div>
+
+              {activeAgendas.length > 0 ? (
+                <div className="rounded-2xl p-3.5 space-y-1.5"
+                  style={{ background: `${theme.secondary}0d`, border: `1px solid ${theme.secondary}28` }}>
+                  <p className="text-xs font-bold mb-2" style={{ color: theme.secondary }}>Active Agendas this battle</p>
+                  {activeAgendas.map(a => (
+                    <div key={a.id} className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs px-1.5 py-0.5 rounded font-bold"
+                          style={{ background: `${CATEGORY_COLORS_AGENDA[a.category] || theme.secondary}20`, color: CATEGORY_COLORS_AGENDA[a.category] || theme.secondary, fontSize: 9 }}>
+                          {a.category}
+                        </span>
+                        <p className="text-xs font-bold" style={{ color: theme.textPrimary }}>{a.name}</p>
+                      </div>
+                      <p className="text-xs font-bold shrink-0 ml-2" style={{ color: theme.secondary }}>+{a.xpReward} XP</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl p-3.5" style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
+                  <p className="text-xs font-bold mb-1" style={{ color: theme.textSecondary }}>No agendas set</p>
+                  <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary, opacity: 0.8 }}>
+                    Go to the Agendas tab before your next battle to earn bonus XP for units that complete them.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Step 2: Agenda Completions ── */}
+          {step === 2 && (
+            <div className="space-y-3 pb-4">
+              {activeAgendas.length === 0 ? (
+                <div className="rounded-2xl p-4 text-center"
+                  style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
+                  <p className="text-sm font-bold mb-1" style={{ color: theme.textSecondary }}>No agendas to track</p>
+                  <p className="text-xs" style={{ color: theme.textSecondary, opacity: 0.8 }}>
+                    Proceed to the next step to record your result and award XP.
+                  </p>
+                </div>
+              ) : (
+                activeAgendas.map(agenda => {
+                  const result = agendaResults[agenda.id] || { completed: false, unitIds: [] }
+                  const color = CATEGORY_COLORS_AGENDA[agenda.category] || theme.secondary
+                  return (
+                    <div key={agenda.id} className="rounded-2xl border p-3.5 space-y-3"
+                      style={{ background: result.completed ? `${color}0d` : theme.surfaceHigh, borderColor: result.completed ? color : theme.border }}>
+                      {/* Agenda header with toggle */}
+                      <div className="flex items-start gap-3">
+                        <button
+                          onClick={() => setAgendaResults(prev => ({
+                            ...prev,
+                            [agenda.id]: { ...result, completed: !result.completed, unitIds: result.completed ? [] : result.unitIds }
+                          }))}
+                          className="w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 mt-0.5"
+                          style={{ borderColor: result.completed ? color : theme.border, background: result.completed ? color : 'transparent' }}>
+                          {result.completed && <span className="font-black" style={{ color: theme.bg, fontSize: 9 }}>✓</span>}
+                        </button>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="text-xs font-black" style={{ color: result.completed ? color : theme.textPrimary }}>{agenda.name}</p>
+                            <span className="text-xs px-1.5 py-0.5 rounded font-bold"
+                              style={{ background: `${color}18`, color, fontSize: 9 }}>{agenda.category}</span>
+                            <span className="text-xs font-bold" style={{ color: theme.textSecondary }}>+{agenda.xpReward} XP</span>
+                          </div>
+                          {agenda.unitReward && (
+                            <p className="text-xs mt-0.5 leading-relaxed" style={{ color: theme.textSecondary }}>{agenda.unitReward}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Unit selector when completed */}
+                      {result.completed && order.units.length > 0 && (
+                        <div className="space-y-1.5 pl-8">
+                          <p className="text-xs font-bold" style={{ color: theme.textSecondary }}>Which units earned XP?</p>
+                          {order.units.map(u => {
+                            const checked = result.unitIds.includes(u.id)
+                            return (
+                              <button key={u.id} onClick={() => toggleAgendaUnit(agenda.id, u.id)}
+                                className="w-full flex items-center gap-2.5 rounded-xl px-2.5 py-1.5 text-left"
+                                style={{ background: checked ? `${color}18` : theme.surface, border: `1px solid ${checked ? color + '55' : theme.border}` }}>
+                                <div className="w-4 h-4 rounded border-2 flex items-center justify-center shrink-0"
+                                  style={{ borderColor: checked ? color : theme.border, background: checked ? color : 'transparent' }}>
+                                  {checked && <span className="font-black" style={{ color: theme.bg, fontSize: 8 }}>✓</span>}
+                                </div>
+                                <p className="text-xs font-bold" style={{ color: checked ? color : theme.textPrimary }}>{u.name}</p>
+                                <p className="text-xs ml-auto shrink-0" style={{ color: theme.textSecondary }}>{getRank(u.xp).label}</p>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          )}
+
+          {/* ── Step 3: XP & Result ── */}
+          {step === 3 && (
+            <div className="space-y-4 pb-4">
+              {/* Result picker */}
+              <div>
+                <p className="text-xs font-bold mb-2" style={{ color: theme.textSecondary }}>Battle Result</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button onClick={() => setWon(true)}
+                    className="py-3 rounded-2xl font-bold text-sm transition-all"
+                    style={{ background: won === true ? theme.hpFull : theme.surfaceHigh, color: won === true ? '#fff' : theme.textSecondary, border: `1px solid ${won === true ? theme.hpFull : theme.border}` }}>
+                    Victory
+                  </button>
+                  <button onClick={() => setWon(false)}
+                    className="py-3 rounded-2xl font-bold text-sm transition-all"
+                    style={{ background: won === false ? theme.hpLow : theme.surfaceHigh, color: won === false ? '#fff' : theme.textSecondary, border: `1px solid ${won === false ? theme.hpLow : theme.border}` }}>
+                    Defeat
+                  </button>
+                </div>
+                {won !== null && (
+                  <p className="text-xs mt-1.5 text-center" style={{ color: theme.textSecondary }}>
+                    {won ? '+1 XP victory bonus applied to all participating units' : 'No victory bonus'}
+                  </p>
+                )}
+              </div>
+
+              {/* Unit participation + XP */}
+              <div>
+                <p className="text-xs font-bold mb-2" style={{ color: theme.textSecondary }}>Unit Participation & XP</p>
+                <div className="space-y-2">
+                  {order.units.map(u => {
+                    const xp = calcUnitXp(u.id)
+                    const agendaXp = activeAgendas
+                      .filter(a => agendaResults[a.id]?.completed && agendaResults[a.id]?.unitIds.includes(u.id))
+                      .reduce((s, a) => s + a.xpReward, 0)
+                    const breakdownParts = []
+                    if (participated[u.id]) {
+                      breakdownParts.push('1 base')
+                      if (won) breakdownParts.push('+1 victory')
+                      if (agendaXp) breakdownParts.push(`+${agendaXp} agenda`)
+                    }
+                    return (
+                      <div key={u.id} className="rounded-xl border px-3 py-2.5 flex items-center gap-3 transition-all"
+                        style={{ background: participated[u.id] ? theme.surface : theme.surfaceHigh, borderColor: participated[u.id] ? theme.border : `${theme.border}50`, opacity: participated[u.id] ? 1 : 0.55 }}>
+                        <button onClick={() => setParticipated(p => ({ ...p, [u.id]: !p[u.id] }))}
+                          className="w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0"
+                          style={{ borderColor: participated[u.id] ? theme.secondary : theme.border, background: participated[u.id] ? theme.secondary : 'transparent' }}>
+                          {participated[u.id] && <span className="font-black" style={{ color: theme.bg, fontSize: 9 }}>✓</span>}
+                        </button>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold truncate" style={{ color: theme.textPrimary }}>{u.name}</p>
+                          {participated[u.id] && (
+                            <p className="text-xs mt-0.5" style={{ color: theme.textSecondary }}>{breakdownParts.join(' ')}</p>
+                          )}
+                        </div>
+                        {participated[u.id] && xp > 0 && (
+                          <span className="text-sm font-black shrink-0" style={{ color: theme.secondary }}>+{xp} XP</span>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+                {won === null && (
+                  <p className="text-xs mt-2 text-center" style={{ color: theme.hpLow }}>Select a battle result above to confirm.</p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer buttons */}
+        <div className="px-5 pb-8 pt-3 shrink-0 space-y-2" style={{ borderTop: `1px solid ${theme.border}` }}>
+          {step < 3 ? (
+            <div className="flex gap-2">
+              {step > 1 && (
+                <button onClick={() => setStep(s => s - 1)}
+                  className="flex-1 py-3 rounded-2xl text-sm font-bold"
+                  style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                  ← Back
+                </button>
+              )}
+              <button onClick={() => setStep(s => s + 1)}
+                className="flex-1 py-3.5 rounded-2xl text-sm font-bold"
+                style={{ background: theme.secondary, color: theme.bg }}>
+                Continue →
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <button onClick={() => setStep(2)}
+                className="flex-1 py-3 rounded-2xl text-sm font-bold"
+                style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                ← Back
+              </button>
+              <button onClick={handleConfirm} disabled={won === null}
+                className="flex-1 py-3.5 rounded-2xl text-sm font-bold transition-all"
+                style={{ background: won !== null ? theme.secondary : theme.border, color: won !== null ? theme.bg : theme.textSecondary }}>
+                Record Battle →
+              </button>
+            </div>
+          )}
+          <button onClick={onClose} className="w-full py-2 text-xs font-medium" style={{ color: theme.textSecondary }}>Cancel</button>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 // ── Main Screen ─────────────────────────────────────────────────────────────
 
 export default function CrusadeScreen({ theme }) {
@@ -1288,31 +1640,10 @@ export default function CrusadeScreen({ theme }) {
 
       <AnimatePresence>
         {recordingBattle && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center" style={{ background: 'rgba(0,0,0,0.7)' }}>
-            <motion.div variants={slideUp} initial="hidden" animate="visible"
-              className="w-full max-w-sm rounded-t-3xl p-5 pb-8"
-              style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
-              <div className="w-10 h-1 rounded-full mx-auto mb-4" style={{ background: theme.border }} />
-              <h2 className="font-black text-base mb-1" style={{ color: theme.textPrimary }}>Record Battle Result</h2>
-              <p className="text-xs mb-2" style={{ color: theme.textSecondary }}>
-                Adds 1 RP to your pool and increments your battle count. You can then add XP to individual units in the Roster tab.
-              </p>
-              <TipCard id="tip_battle_record" theme={theme}
-                body="After recording, go to the Roster tab and tap each unit that participated to add their earned XP. Agendas completed during the battle give +1 XP to qualifying units." />
-              <div className="flex gap-3 mt-4">
-                <button onClick={() => { store.recordBattle(activeOrder.id, true); setRecordingBattle(false) }}
-                  className="flex-1 py-3 rounded-2xl font-bold text-sm" style={{ background: theme.hpFull, color: '#fff' }}>
-                  Victory
-                </button>
-                <button onClick={() => { store.recordBattle(activeOrder.id, false); setRecordingBattle(false) }}
-                  className="flex-1 py-3 rounded-2xl font-bold text-sm"
-                  style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }}>
-                  Defeat
-                </button>
-              </div>
-              <button onClick={() => setRecordingBattle(false)} className="w-full mt-2 py-2 text-xs font-medium" style={{ color: theme.textSecondary }}>Cancel</button>
-            </motion.div>
-          </div>
+          <RecordBattleSheet key="record-battle"
+            order={activeOrder}
+            onClose={() => setRecordingBattle(false)}
+            theme={theme} />
         )}
       </AnimatePresence>
     </div>

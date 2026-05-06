@@ -36,8 +36,9 @@ function blankOrder(id, name, faction, detachmentId) {
     battlesPlayed: 0,
     battlesWon: 0,
     crusadePoints: 0,
-    agendas: [],   // active agenda ids for the next battle
-    rpLog: [],     // [{ id, actionId, actionName, cost, note, date }]
+    agendas: [],     // active agenda ids for the next battle
+    rpLog: [],       // [{ id, actionId, actionName, cost, note, date }]
+    battleLog: [],   // [{ id, date, opponent, mission, result, completedAgendaIds, unitXpAwards }]
     units: [],
   }
 }
@@ -55,6 +56,7 @@ const initialOrder = {
   crusadePoints: 0,
   agendas: [],
   rpLog: [],
+  battleLog: [],
   units: [
     {
       id: 'crusade_ragnar',
@@ -232,16 +234,48 @@ export const useCrusadeStore = create(
         return { orders: s.orders.map(o => o.id === orderId ? { ...o, units: [...o.units, newUnit] } : o) }
       }),
 
-      recordBattle: (orderId, won) => set(s => ({
-        orders: s.orders.map(o =>
-          o.id !== orderId ? o : {
-            ...o,
-            battlesPlayed: o.battlesPlayed + 1,
-            battlesWon: won ? o.battlesWon + 1 : o.battlesWon,
-            requisitionPoints: o.requisitionPoints + 1,
-          }
-        ),
-      })),
+      recordBattle: (orderId, battleData) => {
+        // Support legacy boolean call: recordBattle(id, true/false)
+        const isLegacy = typeof battleData === 'boolean'
+        const won = isLegacy ? battleData : battleData.won
+        const opponent = isLegacy ? 'Unknown' : (battleData.opponent || 'Unknown')
+        const mission = isLegacy ? '' : (battleData.mission || '')
+        const unitXpAwards = isLegacy ? [] : (battleData.unitXpAwards || [])
+        const completedAgendaIds = isLegacy ? [] : (battleData.completedAgendaIds || [])
+
+        set(s => ({
+          orders: s.orders.map(o => {
+            if (o.id !== orderId) return o
+            const entry = {
+              id: `battle_${Date.now()}`,
+              date: new Date().toISOString(),
+              opponent,
+              mission,
+              result: won ? 'victory' : 'defeat',
+              completedAgendaIds,
+              unitXpAwards,
+            }
+            const updatedUnits = o.units.map(u => {
+              const award = unitXpAwards.find(a => a.unitId === u.id)
+              if (!award || (!award.xp && !award.participated)) return u
+              return {
+                ...u,
+                xp: u.xp + (award.xp || 0),
+                battlesPlayed: award.participated ? u.battlesPlayed + 1 : u.battlesPlayed,
+              }
+            })
+            return {
+              ...o,
+              battlesPlayed: o.battlesPlayed + 1,
+              battlesWon: won ? o.battlesWon + 1 : o.battlesWon,
+              requisitionPoints: o.requisitionPoints + 1,
+              agendas: [],
+              battleLog: [entry, ...(o.battleLog || [])],
+              units: updatedUnits,
+            }
+          }),
+        }))
+      },
 
       // ── Agendas ──
 
