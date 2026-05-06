@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { PhaseIcon, PickOneIcon } from '../components/GameIcon'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
-import { FACTION_META, getDetachment } from '../data/factionRegistry'
+import { FACTION_META, findDetachment } from '../data/factionRegistry'
 import { unitLeaderMap, leaderAbilities } from '../data/leaderData'
 import OpponentProfile from '../components/OpponentProfile'
 import { usePortraitStore } from '../store/portraitStore'
@@ -270,7 +270,7 @@ function LeaderStep({ leader, leaderIdx, totalLeaders, eligibleSquads, unitState
 // ── Review step ───────────────────────────────────────────────────────────────
 function HuntingPacksPreview({ faction, detachmentId, theme }) {
   if (faction !== 'spacewolves' || detachmentId !== 'sagaOfTheGreatWolf') return null
-  const detachment = getDetachment('spacewolves', 'sagaOfTheGreatWolf')
+  const detachment = findDetachment('spacewolves', 'sagaOfTheGreatWolf')
   const packs = detachment?.commandPhaseAction?.options || []
   if (!packs.length) return null
   return (
