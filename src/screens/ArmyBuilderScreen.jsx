@@ -131,9 +131,15 @@ function DetachmentCard({ d, selected, accent, theme, onClick }) {
 
         {/* Playstyle — the key summary for new players */}
         {d.playstyle && (
-          <p className="text-xs leading-relaxed mt-2 mb-3" style={{ color: theme.textSecondary }}>
-            {d.playstyle}
-          </p>
+          <div className="px-3 py-2.5 rounded-xl mt-2 mb-3"
+            style={{ background: 'rgba(45,212,191,0.06)', border: '1px solid rgba(45,212,191,0.18)' }}>
+            <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: '#2dd4bf' }}>
+              How this detachment plays
+            </p>
+            <p className="text-xs leading-relaxed font-medium" style={{ color: theme.textPrimary }}>
+              {d.playstyle}
+            </p>
+          </div>
         )}
 
         {/* Tags derived from stratagems + rule */}
@@ -186,7 +192,7 @@ function DetachmentCard({ d, selected, accent, theme, onClick }) {
               {d.stratagems.length} stratagems
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+              style={{ background: `${accent}12`, color: accent }}>
               {d.enhancements.length} enhancements
             </span>
           </div>
