@@ -69,6 +69,14 @@ import {
   GiCrown,             // leader — attaches to unit
   GiHealingShield,     // feel no pain — ignore wounds
   GiMagicSwirl,        // psychic — psychic abilities
+  // Pick-one detachment option icons
+  GiCaterpillar,     // 🐛 / 🪱 — infestation, worm, plague
+  GiSpikyExplosion,  // 💥 — rupture, explosion
+  GiPawPrint,        // 🐾 — pack, wolf
+  GiPointySword,     // 🗡️ — assault doctrine, single blade
+  GiBrokenBone,      // 🦴 — rot, decay
+  GiBiohazard,       // ☣️ — corruption, contagion
+  GiStarMedal,       // ⭐ — once-per-battle special
   // Misc icons
   GiShield,
   GiChestArmor,
@@ -190,6 +198,28 @@ export const KEYWORD_ICON_MAP = {
   'leader':             GiCrown,
   'feel no pain':       GiHealingShield,
   'psychic':            GiMagicSwirl,
+}
+
+// ── Pick-one detachment option icon map ──────────────────────────────────────
+// Maps emoji strings used in detachment data → GI components
+const PICK_ONE_ICON_MAP = {
+  '🐛': GiCaterpillar,
+  '🪱': GiCaterpillar,
+  '💥': GiSpikyExplosion,
+  '🎯': GiBullseye,
+  '🐾': GiPawPrint,
+  '⚔️': GiCrossedSwords,
+  '🗡️': GiPointySword,
+  '🦴': GiBrokenBone,
+  '☣️': GiBiohazard,
+  '⭐': GiStarMedal,
+  '📜': GiScrollUnfurled,
+}
+
+export function PickOneIcon({ icon, size = 20, color, style, className }) {
+  const Icon = PICK_ONE_ICON_MAP[icon]
+  if (!Icon) return <span>{icon}</span>
+  return <Icon size={size} color={color} style={style} className={className} />
 }
 
 export function KeywordIcon({ keyword, size = 18, color, style, className }) {

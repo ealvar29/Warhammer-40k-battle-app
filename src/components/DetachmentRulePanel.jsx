@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
+import { PickOneIcon } from './GameIcon'
 
 export default function DetachmentRulePanel({ detachment, activePhase, theme, onceBuffAvailable = false }) {
   const {
@@ -76,9 +77,10 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
           </p>
 
           {activeOption && (
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1"
               style={{ background: `${theme.secondary}22`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
-              {activeOption.icon} {activeOption.label}
+              <PickOneIcon icon={activeOption.icon} size={11} color={theme.secondary} />
+              {activeOption.label}
             </span>
           )}
 
@@ -181,7 +183,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                                 : theme.border,
                             opacity: isDisabled ? 0.4 : 1,
                           }}>
-                          <div className="text-base mb-1">{opt.icon}</div>
+                          <PickOneIcon icon={opt.icon} size={22} color={isPending || isActive ? theme.secondary : isUsed ? theme.textSecondary : theme.textPrimary} className="mb-1" />
                           <p className="text-xs font-bold leading-tight"
                             style={{ color: isPending || isActive ? theme.secondary : isUsed ? theme.textSecondary : theme.textPrimary }}>
                             {opt.label}
@@ -212,14 +214,17 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                     <div className="rounded-xl p-2.5 space-y-2"
                       style={{ background: `${theme.secondary}12`, border: `1px solid ${theme.secondary}40` }}>
                       <div>
-                        <p className="text-xs font-bold" style={{ color: theme.secondary }}>
-                          {pendingOption.icon} {pendingOption.label}
-                          {usedSelections.includes(pendingId) && canUsOnceBuff && (
-                            <span className="ml-2 font-normal" style={{ color: theme.primary }}>
-                              — Howling Onslaught (Logan)
-                            </span>
-                          )}
-                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <PickOneIcon icon={pendingOption.icon} size={16} color={theme.secondary} />
+                          <p className="text-xs font-bold" style={{ color: theme.secondary }}>
+                            {pendingOption.label}
+                            {usedSelections.includes(pendingId) && canUsOnceBuff && (
+                              <span className="ml-2 font-normal" style={{ color: theme.primary }}>
+                                — Howling Onslaught (Logan)
+                              </span>
+                            )}
+                          </p>
+                        </div>
                         <p className="text-xs mt-1 leading-relaxed" style={{ color: theme.textPrimary }}>
                           {pendingOption.fullEffect}
                         </p>
@@ -237,9 +242,12 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                     <div className="rounded-xl p-2.5"
                       style={{ background: `${theme.secondary}12`, border: `1px solid ${theme.secondary}30` }}>
                       <div className="flex items-center justify-between gap-2">
-                        <p className="text-xs font-bold" style={{ color: theme.secondary }}>
-                          {activeOption.icon} {activeOption.label} — Active
-                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <PickOneIcon icon={activeOption.icon} size={16} color={theme.secondary} />
+                          <p className="text-xs font-bold" style={{ color: theme.secondary }}>
+                            {activeOption.label} — Active
+                          </p>
+                        </div>
                         {isCommandPhase && (perRound || remainingCount > 0) && (
                           <button onClick={() => { clearDetachmentSelection(); setPendingId(null) }}
                             className="text-xs font-bold px-2 py-0.5 rounded-lg"

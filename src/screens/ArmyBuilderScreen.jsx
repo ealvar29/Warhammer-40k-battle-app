@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { usePortraitStore } from '../store/portraitStore'
-import { PhaseIcon, FactionIcon } from '../components/GameIcon'
+import { PhaseIcon, FactionIcon, PickOneIcon } from '../components/GameIcon'
 import { FactionEdge, themeClip } from '../components/FactionAccent'
 import { GiEagleEmblem, GiSkullCrossedBones, GiAlienBug, GiPistolGun, GiAxeSword, GiCrossedSwords } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -395,11 +395,11 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                         <div key={opt.id}
                           className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
                           style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
-                          <span className="text-lg shrink-0">{opt.icon}</span>
+                          <PickOneIcon icon={opt.icon} size={20} color={accent} className="shrink-0" />
                           <p className="font-bold text-sm flex-1" style={{ color: theme.textPrimary }}>{opt.label}</p>
                           {opt.shortEffect && (
                             <span className="text-[9px] font-black px-2 py-0.5 rounded-full shrink-0"
-                              style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}33` }}>
+                              style={{ background: `${accent}30`, color: accent, border: `1px solid ${accent}66` }}>
                               {opt.shortEffect}
                             </span>
                           )}
@@ -409,7 +409,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                     {d.commandPhaseAction.onceBuff && (
                       <div className="mt-2 px-3 py-2 rounded-xl flex gap-2 items-center"
                         style={{ background: `${accent}08`, border: `1px dashed ${accent}33` }}>
-                        <span className="text-sm shrink-0">⭐</span>
+                        <PickOneIcon icon="⭐" size={14} color={accent} className="shrink-0" />
                         <p className="text-xs font-bold" style={{ color: accent }}>
                           {d.commandPhaseAction.onceBuff.label} — once per battle
                         </p>
@@ -424,7 +424,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                     <button onClick={() => setActiveTab('stratagems')}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
                       style={{ background: theme.surface, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                      <span style={{ color: accent }}>📜</span>
+                      <PickOneIcon icon="📜" size={13} color={accent} />
                       {d.stratagems.length} stratagems →
                     </button>
                   )}
