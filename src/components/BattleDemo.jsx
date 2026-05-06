@@ -29,7 +29,7 @@ const PULSE_STYLE = `
     0%,100% { opacity: 1; }
     50%      { opacity: 0.35; }
   }
-  .sync-pulse { animation: syncPulse 1.0s ease-in-out infinite; }
+  .sync-pulse { animation: syncPulse 1.8s ease-in-out infinite; }
 `
 
 function getStratagems(faction, detachmentId) {
@@ -1123,15 +1123,17 @@ function getCardAttacks(unit, phaseId) {
   const weapons = getActiveWeapons(unit)
   let relevant = []
   if (phaseId === 'shooting')
-    relevant = weapons.filter(w => w.type === 'ranged' && !(w.keywords || []).includes('PISTOL'))
+    relevant = weapons.filter(w => w.type === 'ranged')
   else if (phaseId === 'fight' || phaseId === 'charge')
     relevant = weapons.filter(w => w.type === 'melee')
   if (!relevant.length) return null
-  return relevant.reduce((best, w) => {
+  const bestA = relevant.reduce((best, w) => {
     const ba = typeof best.A === 'number' ? best.A : 0
     const ca = typeof w.A === 'number' ? w.A : 0
     return ca > ba ? w : best
   }).A
+  if (phaseId === 'charge' && unit.id === 'ragnar' && typeof bestA === 'number') return bestA + 2
+  return bestA
 }
 
 function buildPairs(allUnits, unitStates) {
@@ -1895,7 +1897,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                   animate={{ scale: i < Math.min(cp, 6) ? 1 : 0.7, opacity: i < Math.min(cp, 6) ? 1 : 0.35 }}
                   transition={{ duration: 0.2 }}
                   className="w-2.5 h-2.5 rounded-sm"
-                  style={{ background: i < Math.min(cp, 6) ? theme.secondary : theme.border }}
+                  style={{ background: i < Math.min(cp, 6) ? (hasBjorn && i === 1 ? '#3b82f6' : theme.secondary) : theme.border }}
                 />
               ))}
             </div>
@@ -1955,36 +1957,17 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
               style={{ background: theme.surface, borderColor: theme.border }}>
               <span className="text-base font-black" style={{ color: '#22c55e' }}>{totalYouVp}</span>
               <span className="flex-1 text-center text-xs font-bold" style={{ color: theme.textSecondary }}>
-                YOU · Rd {currentRound}/5 · THEM
+                Rd {currentRound}/5
               </span>
               <span className="text-base font-black" style={{ color: '#ef4444' }}>{totalThemVp}</span>
             </motion.button>
-            <div className="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 border"
-              style={{ background: theme.surface, borderColor: theme.border }}>
-              <span className="text-xs font-black uppercase tracking-widest" style={{ color: theme.textSecondary }}>CP</span>
-              <span className="text-sm font-black" style={{ color: theme.secondary }}>{cp}</span>
-              <div className="flex gap-0.5">
-                {[...Array(6)].map((_, i) => (
-                  <motion.div key={i} initial={false}
-                    animate={{ scale: i < Math.min(cp, 6) ? 1 : 0.7, opacity: i < Math.min(cp, 6) ? 1 : 0.3 }}
-                    className="w-2 h-2 rounded-sm"
-                    style={{ background: i < Math.min(cp, 6) ? theme.secondary : theme.border }} />
-                ))}
-              </div>
-              <motion.button whileTap={{ scale: 0.85 }} onClick={() => gainCp(1)}
-                className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center"
-                style={{ background: theme.surfaceHigh, color: theme.secondary }}>+</motion.button>
-              <motion.button whileTap={{ scale: 0.85 }} onClick={() => setCp(Math.max(0, cp - 1))}
-                className="w-5 h-5 rounded text-xs font-bold flex items-center justify-center"
-                style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>−</motion.button>
-            </div>
           </div>
 
           {activePackNode}
           {cpEffectsNode && activePhase.id === 'command' && (
             <div className="px-3 pt-2">{cpEffectsNode}</div>
           )}
-          <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} />
+          <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} onUnitClick={setDetailUnit} />
 
           {/* Quick action buttons */}
           <div className="flex gap-2 px-3 py-2">
@@ -2150,27 +2133,24 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
       {/* ── Phase Guide Sheet ── */}
       <AnimatePresence>
         {showGuideSheet && (
-          <motion.div className="fixed inset-0 z-50 flex items-end justify-center"
-            initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
-            animate={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
-            exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
+          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.75)' }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             onClick={() => setShowGuideSheet(false)}>
             <motion.div
-              className="w-full max-w-lg rounded-t-3xl flex flex-col"
+              className="w-full max-w-lg rounded-2xl flex flex-col"
               style={{ background: theme.surface, border: `1px solid ${theme.border}`, maxHeight: '88vh' }}
-              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-              transition={SHEET_SPRING}
+              initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
               onClick={e => e.stopPropagation()}>
-              <div className="px-5 pt-5 pb-1 shrink-0">
-                <div className="w-10 h-1 rounded-full mx-auto mb-3" style={{ background: theme.border }} />
-              </div>
-              <div className="flex-1 overflow-y-auto pb-8">
+              <div className="flex-1 overflow-y-auto pb-4">
                 <PhaseGuideCard activePhase={activePhase} isYourTurn={isYourTurn} theme={theme} cpEffectsNode={cpEffectsNode} />
                 {activePackNode}
                 <DetachmentRulePanel detachment={detachment} activePhase={activePhase} theme={theme}
                   onceBuffAvailable={units.some(u => u.id === 'loganGrimnar')} />
               </div>
-              <div className="px-5 pb-8 pt-3 shrink-0 border-t" style={{ borderColor: theme.border }}>
+              <div className="px-5 pb-5 pt-3 shrink-0 border-t" style={{ borderColor: theme.border }}>
                 <button onClick={() => setShowGuideSheet(false)}
                   className="w-full py-2 text-xs font-medium" style={{ color: theme.textSecondary }}>Close</button>
               </div>
@@ -2182,28 +2162,27 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
       {/* ── Stratagems Sheet ── */}
       <AnimatePresence>
         {showStratsPanel && (
-          <motion.div className="fixed inset-0 z-50 flex items-end justify-center"
-            initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
-            animate={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
-            exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
+          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.75)' }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             onClick={() => setShowStratsPanel(false)}>
             <motion.div
-              className="w-full max-w-lg rounded-t-3xl flex flex-col"
+              className="w-full max-w-lg rounded-2xl flex flex-col"
               style={{ background: theme.surface, border: `1px solid ${theme.border}`, maxHeight: '88vh' }}
-              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-              transition={SHEET_SPRING}
+              initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
               onClick={e => e.stopPropagation()}>
               <div className="px-5 pt-5 pb-3 shrink-0">
-                <div className="w-10 h-1 rounded-full mx-auto mb-4" style={{ background: theme.border }} />
                 <h2 className="font-black text-base" style={{ color: theme.textPrimary }}>
                   Stratagems — {activePhase.label}
                 </h2>
                 {stratagemFilterBar}
               </div>
-              <div className="flex-1 overflow-y-auto pb-8">
+              <div className="flex-1 overflow-y-auto pb-4">
                 {stratagemList}
               </div>
-              <div className="px-5 pb-8 pt-3 shrink-0 border-t" style={{ borderColor: theme.border }}>
+              <div className="px-5 pb-5 pt-3 shrink-0 border-t" style={{ borderColor: theme.border }}>
                 <button onClick={() => setShowStratsPanel(false)}
                   className="w-full py-2 text-xs font-medium" style={{ color: theme.textSecondary }}>Close</button>
               </div>
@@ -2215,23 +2194,22 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
       {/* ── Unit Detail Sheet ── */}
       <AnimatePresence>
         {detailUnit && (
-          <motion.div className="fixed inset-0 z-50 flex items-end justify-center"
-            initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
-            animate={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
-            exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
+          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.75)' }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             onClick={() => setDetailUnit(null)}>
             <motion.div
-              className="w-full max-w-lg rounded-t-3xl flex flex-col"
+              className="w-full max-w-lg rounded-2xl flex flex-col"
               style={{ background: theme.surface, border: `1px solid ${theme.border}`, maxHeight: '88vh' }}
-              initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-              transition={SHEET_SPRING}
+              initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
               onClick={e => e.stopPropagation()}>
               <div className="px-5 pt-5 pb-2 shrink-0">
-                <div className="w-10 h-1 rounded-full mx-auto mb-3" style={{ background: theme.border }} />
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-black text-base" style={{ color: theme.textPrimary }}>{detailUnit.name}</p>
-                    <p className="text-xs" style={{ color: theme.textSecondary }}>{detailUnit.type}</p>
+                    <p className="text-xs" style={{ color: theme.textSecondary }}>{formatCategory(detailUnit.type || detailUnit.category)}</p>
                   </div>
                   <button onClick={() => setDetailUnit(null)}
                     className="w-8 h-8 rounded-xl flex items-center justify-center font-bold"

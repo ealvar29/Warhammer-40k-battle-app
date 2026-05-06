@@ -60,7 +60,22 @@ const FOCUS_LABEL = {
   fight:    '⚔ Fight with these',
 }
 
-export default function PhaseAbilityPanel({ units, activePhase, theme }) {
+function getUnitAttacks(unit, phaseId) {
+  const weapons = unit.weapons || []
+  let relevant = []
+  if (phaseId === 'shooting') relevant = weapons.filter(w => w.type === 'ranged')
+  else if (phaseId === 'fight' || phaseId === 'charge') relevant = weapons.filter(w => w.type === 'melee')
+  if (!relevant.length) return null
+  const bestA = relevant.reduce((best, w) => {
+    const ba = typeof best.A === 'number' ? best.A : 0
+    const ca = typeof w.A === 'number' ? w.A : 0
+    return ca > ba ? w : best
+  }).A
+  if (phaseId === 'charge' && unit.id === 'ragnar' && typeof bestA === 'number') return bestA + 2
+  return bestA
+}
+
+export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitClick }) {
   const [expandedKey, setExpandedKey] = useState(null)
 
   const phaseId = activePhase?.id
@@ -130,13 +145,23 @@ export default function PhaseAbilityPanel({ units, activePhase, theme }) {
                   {FOCUS_LABEL[phaseId]}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {focusUnits.map(u => (
-                    <span key={u.id}
-                      className="text-xs font-bold px-2.5 py-1 rounded-xl"
-                      style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}40` }}>
-                      {u.name}
-                    </span>
-                  ))}
+                  {focusUnits.map(u => {
+                    const atk = getUnitAttacks(u, phaseId)
+                    return (
+                      <button key={u.id}
+                        onClick={() => onUnitClick?.(u)}
+                        className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-xl transition-opacity active:opacity-70"
+                        style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}40` }}>
+                        {u.name}
+                        {atk !== null && (
+                          <span className="font-black text-xs px-1.5 py-0.5 rounded-lg"
+                            style={{ background: accent, color: '#000', fontSize: 9 }}>
+                            {atk}A
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             )}
