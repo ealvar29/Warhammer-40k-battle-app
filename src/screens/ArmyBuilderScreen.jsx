@@ -342,9 +342,9 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                   className="flex-1 py-2.5 text-xs font-black rounded-xl transition-all"
                   style={{
                     background: isActive ? '#2dd4bf' : 'transparent',
-                    color: isActive ? '#000' : 'rgba(255,255,255,0.4)',
+                    color: isActive ? '#000' : 'rgba(255,255,255,0.65)',
                     boxShadow: isActive ? '0 2px 10px rgba(45,212,191,0.35)' : 'none',
-                    border: `1px solid ${isActive ? 'transparent' : 'rgba(255,255,255,0.1)'}`,
+                    border: `1px solid ${isActive ? 'transparent' : 'rgba(255,255,255,0.15)'}`,
                     letterSpacing: isActive ? '0.03em' : '0',
                   }}>
                   {tab.label}
@@ -571,7 +571,7 @@ function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCoun
       onClick={selected ? onContinue : onSelect}
       className="relative rounded-xl overflow-hidden cursor-pointer"
       style={{
-        height: 100,
+        height: 150,
         border: `2px solid ${selected ? f.color : theme.border}`,
         boxShadow: selected ? `0 0 24px ${f.color}50, inset 0 0 0 1px ${f.color}30` : 'none',
         transition: 'border-color 0.2s, box-shadow 0.2s',
@@ -1064,10 +1064,11 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                             {/* Bottom content */}
                             <div className="relative z-10 px-2.5 pb-2.5">
                               {/* Mini stats */}
-                              <div className="flex gap-2 mb-1">
-                                {['M','T','Sv','W'].map(stat => (
-                                  <span key={stat} className="text-[8px] md:text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                                    {stat}{u[stat]}
+                              <div className="flex gap-1 mb-1.5 flex-wrap">
+                                {['M','T','Sv','W'].map(stat => u[stat] != null && (
+                                  <span key={stat} className="text-[9px] md:text-[10px] font-black px-1.5 py-0.5 rounded"
+                                    style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.8)' }}>
+                                    {stat} {u[stat]}
                                   </span>
                                 ))}
                               </div>
