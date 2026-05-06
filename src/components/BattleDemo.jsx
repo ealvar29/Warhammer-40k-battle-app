@@ -37,6 +37,11 @@ function getDetachment(faction, detachmentId) {
 // ── Shared spring config ───────────────────────────────────────────────────────
 const SHEET_SPRING = { type: 'spring', stiffness: 340, damping: 32 }
 
+function formatCategory(cat) {
+  if (!cat) return ''
+  return cat.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).trim()
+}
+
 function getActiveWeapons(unit) {
   if (!unit.weaponLoadouts || !unit.activeLoadout) return unit.weapons || []
   const loadout = unit.weaponLoadouts.find(l => l.id === unit.activeLoadout)
@@ -47,8 +52,7 @@ function getActiveWeapons(unit) {
 // ── Phase relevance — drives contextual hints and suppress dimming ─────────────
 function getPhaseRelevance(unit, phaseId) {
   const weapons = getActiveWeapons(unit)
-  // Pistols don't count as ranged for phase suppression purposes
-  const hasRanged = weapons.some(w => w.type === 'ranged' && !w.keywords?.some(k => /^PISTOL$/i.test(k)))
+  const hasRanged = weapons.some(w => w.type === 'ranged')
   const hasMelee  = weapons.some(w => w.type === 'melee')
   const kws = (unit.keywords || []).map(k => k.toUpperCase())
   const abilities = unit.abilities || []
@@ -171,7 +175,7 @@ function OpponentUnitCard({ unit, theme, onMatchup, motionProps }) {
         <div className="flex-1 min-w-0">
           <p className="font-bold text-sm leading-tight" style={{ color: theme.textPrimary }}>{unit.name}</p>
           <p className="text-xs mt-0.5 font-medium uppercase tracking-wider" style={{ color: theme.textSecondary }}>
-            {unit.type || unit.category}
+            {formatCategory(unit.type || unit.category)}
           </p>
         </div>
         {onMatchup && (
@@ -224,9 +228,9 @@ function AbilityChipRow({ abilities, theme }) {
               onClick={() => setOpenIdx(isOpen ? null : i)}
               className="text-xs px-2 py-1 rounded-full font-bold transition-all"
               style={{
-                background: isOpen ? `${accent}28` : `${accent}12`,
-                color: isOpen ? accent : theme.textSecondary,
-                border: `1px solid ${isOpen ? accent : `${accent}50`}`,
+                background: isOpen ? `${accent}28` : `${accent}14`,
+                color: isOpen ? accent : `${accent}dd`,
+                border: `1px solid ${isOpen ? accent : `${accent}60`}`,
               }}
             >
               {label}{desc ? (isOpen ? ' ▴' : ' ▾') : ''}
@@ -504,7 +508,7 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
 }
 
 // ── Unit Card ─────────────────────────────────────────────────────────────────
-function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, activePickEffect, phaseRelevance, ferocityChoice, onFerocityChoice, theme, motionProps, onMatchup, onCalcWeapon }) {
+function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWound, onHeal, onToggleWarlord, isWarlord, activePhase, activePickEffect, phaseRelevance, ferocityChoice, onFerocityChoice, isDone, onMarkDone, theme, motionProps, onMatchup, onCalcWeapon }) {
   const wounds = unitState?.currentWounds ?? unit.currentWounds ?? unit.maxWounds
   const pct = wounds / unit.maxWounds
   const statusColor = pct > 0.6 ? theme.hpFull : pct > 0.3 ? theme.hpMid : theme.hpLow
@@ -539,22 +543,30 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
   ].filter(Boolean)
 
   const isSuppressed = phaseRelevance?.level === 'suppress'
+  const isRelevant = phaseRelevance?.level === 'relevant' && !isSuppressed && !isDone
 
   return (
     <motion.div
       {...motionProps}
       animate={{
         ...(typeof motionProps?.animate === 'object' ? motionProps.animate : { opacity: 1, y: 0 }),
-        opacity: isSuppressed ? 0.4 : 1,
+        opacity: isSuppressed ? 0.35 : isDone ? 0.55 : 1,
+        boxShadow: isRelevant
+          ? [
+              `0 0 0 1.5px ${theme.secondary}55, 0 2px 8px rgba(0,0,0,0.3)`,
+              `0 0 0 1.5px ${theme.secondary}cc, 0 0 14px ${theme.secondary}33, 0 2px 8px rgba(0,0,0,0.3)`,
+              `0 0 0 1.5px ${theme.secondary}55, 0 2px 8px rgba(0,0,0,0.3)`,
+            ]
+          : isWarlord
+            ? `0 0 0 1px ${theme.secondary}44, 0 0 20px ${theme.secondary}22, 0 2px 8px rgba(0,0,0,0.3)`
+            : '0 2px 8px rgba(0,0,0,0.3)',
       }}
+      transition={isRelevant ? { boxShadow: { duration: 2, repeat: Infinity, ease: 'easeInOut' } } : undefined}
       layout
       className="rounded-2xl border p-4"
       style={{
         background: theme.unitBg,
-        borderColor: isWarlord ? theme.secondary : theme.border,
-        boxShadow: isWarlord
-          ? `0 0 0 1px ${theme.secondary}44, 0 0 20px ${theme.secondary}22, 0 2px 8px rgba(0,0,0,0.3)`
-          : '0 2px 8px rgba(0,0,0,0.3)',
+        borderColor: isDone ? `${theme.border}88` : isWarlord ? theme.secondary : theme.border,
       }}
     >
       {/* Header row */}
@@ -575,9 +587,21 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
                   ★ WARLORD
                 </motion.span>
               )}
+              {isDone && (
+                <motion.span
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                  className="text-xs font-black px-2 py-0.5 rounded-full"
+                  style={{ background: 'rgba(34,197,94,0.18)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.4)', fontSize: 9 }}
+                >
+                  ✓ Done
+                </motion.span>
+              )}
             </AnimatePresence>
           </div>
-          <p className="text-xs mt-0.5 font-medium uppercase tracking-wider" style={{ color: theme.textSecondary }}>{unit.type}</p>
+          <p className="text-xs mt-0.5 font-medium uppercase tracking-wider" style={{ color: theme.textSecondary }}>{formatCategory(unit.type)}</p>
           {unit.abilities?.some(a => a.isEnhancement) && (() => {
             const enh = unit.abilities.find(a => a.isEnhancement)
             return (
@@ -719,6 +743,18 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
           style={{ background: theme.surfaceHigh, color: theme.hpLow, border: `1px solid ${theme.border}` }}>
           − Wound
         </motion.button>
+        {!isSuppressed && onMarkDone && (
+          <motion.button whileTap={{ scale: 0.95 }}
+            onClick={onMarkDone}
+            className="px-3 rounded-xl py-2 text-xs font-bold"
+            style={{
+              background: isDone ? 'rgba(34,197,94,0.2)' : theme.surfaceHigh,
+              color: isDone ? '#4ade80' : theme.textSecondary,
+              border: `1px solid ${isDone ? 'rgba(34,197,94,0.5)' : theme.border}`,
+            }}>
+            {isDone ? '✓' : '○'}
+          </motion.button>
+        )}
         {getActiveWeapons(unit).length > 0 && (
           <motion.button whileTap={{ scale: 0.95 }}
             onClick={() => setShowWeapons(!showWeapons)}
@@ -1009,7 +1045,7 @@ function PhaseContextRow({ units, phaseId, abilityCount, theme }) {
   }
 
   if (phaseId === 'shooting') {
-    const n = units.filter(u => u.weapons?.some(w => w.type === 'ranged' && !w.keywords?.some(k => /^PISTOL$/i.test(k)))).length
+    const n = units.filter(u => u.weapons?.some(w => w.type === 'ranged')).length
     const suppressed = units.filter(u => !u.weapons?.some(w => w.type === 'ranged') && u.weapons?.some(w => w.type === 'melee')).length
     if (n > 0) chips.push({ phase: 'shooting', label: `${n} can shoot`, color: '#60a5fa' })
     if (suppressed > 0) chips.push({ phase: 'fight', label: `${suppressed} melee-only — hold`, color: theme.textSecondary })
@@ -1077,6 +1113,9 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   const [activeStratIds, setActiveStratIds] = useState(new Set())
   // Ferocious Strike sub-choice: per unit, resets when fight phase changes
   const [ferocityChoices, setFerocityChoices] = useState({})
+  // Per-phase done tracking — resets when phase changes
+  const [doneUnitIds, setDoneUnitIds] = useState(new Set())
+  React.useEffect(() => { setDoneUnitIds(new Set()) }, [activePhaseIdx])
   const setFerocityChoice = (unitId, choice) =>
     setFerocityChoices(prev => ({ ...prev, [unitId]: prev[unitId] === choice ? null : choice }))
 
@@ -1376,8 +1415,8 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
           style={{
             background: sourceFilter === opt.id ? theme.surfaceHigh : 'transparent',
-            color: sourceFilter === opt.id ? theme.textPrimary : theme.textSecondary,
-            border: `1px solid ${sourceFilter === opt.id ? theme.border : 'transparent'}`,
+            color: sourceFilter === opt.id ? theme.textPrimary : 'rgba(255,255,255,0.55)',
+            border: `1px solid ${sourceFilter === opt.id ? theme.border : 'rgba(255,255,255,0.14)'}`,
           }}>
           {opt.label}
         </button>
@@ -1425,14 +1464,20 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     </div>
   )
 
+  const sortedUnits = [...units].sort((a, b) => {
+    const sa = getPhaseRelevance(a, activePhase.id).level === 'suppress' ? 1 : 0
+    const sb = getPhaseRelevance(b, activePhase.id).level === 'suppress' ? 1 : 0
+    return sa - sb
+  })
+
   const unitsList = (
     <div className="px-3 mt-2 space-y-2 pb-2">
       <PhaseContextRow units={units} phaseId={activePhase.id} abilityCount={phaseAbilityCount} theme={theme} />
       <FactionEdge theme={theme} />
-      <p className="text-xs font-bold tracking-widest uppercase px-1 pt-1" style={{ color: theme.textSecondary }}>
+      <p className="text-xs font-bold tracking-widest uppercase px-1 pt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
         Your Units
       </p>
-      {units.map((u, i) => (
+      {sortedUnits.map((u, i) => (
         <UnitCard key={u.id} unit={u}
           unitState={unitStates[u.id]}
           attachedLeaderId={unitStates[u.id]?.attachedLeaderId ?? null}
@@ -1447,6 +1492,12 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           phaseRelevance={getPhaseRelevance(u, activePhase.id)}
           ferocityChoice={ferocityChoices[u.id] ?? null}
           onFerocityChoice={(choice) => setFerocityChoice(u.id, choice)}
+          isDone={doneUnitIds.has(u.id)}
+          onMarkDone={() => setDoneUnitIds(prev => {
+            const next = new Set(prev)
+            next.has(u.id) ? next.delete(u.id) : next.add(u.id)
+            return next
+          })}
           theme={theme}
           onMatchup={opponentArmy?.units?.length > 0 ? () => setMatchupUnit(u) : undefined}
           onCalcWeapon={setMathHammerWeapon}

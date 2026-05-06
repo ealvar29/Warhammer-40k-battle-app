@@ -149,7 +149,7 @@ export default function PhaseGuideCard({ activePhase, isYourTurn, theme, cpEffec
             }}
           >
             <span style={{ fontSize: 13 }}>📖</span>
-            <span className="flex-1 text-xs font-bold text-left" style={{ color: theme.textSecondary }}>
+            <span className="flex-1 text-xs font-bold text-left" style={{ color: theme.textPrimary, opacity: 0.75 }}>
               How does this phase work?
             </span>
             <span className="text-xs" style={{ color: `${accent}80` }}>
