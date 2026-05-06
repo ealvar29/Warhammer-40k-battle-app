@@ -22,6 +22,7 @@ import PhaseGuideCard from './PhaseGuideCard'
 import { PHASE_EFFECTS } from '../data/phaseEffects'
 import MathHammerSheet from './MathHammerSheet'
 import KeywordChip, { parseTextWithKeywords } from './KeywordChip'
+import BattleLayoutProto from './BattleLayoutProto'
 
 function getStratagems(faction, detachmentId) {
   const coreStrats = demoStratagems.filter(s => s.source === 'core')
@@ -1138,6 +1139,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   const [currentRound, setCurrentRound] = useState(1)
   const [turnFlash, setTurnFlash] = useState(null) // 'yours' | 'theirs' | null
   const [mathHammerWeapon, setMathHammerWeapon] = useState(null)
+  const [showLayoutProto, setShowLayoutProto] = useState(false)
   const [showCpLog, setShowCpLog] = useState(false)
   const [activeStratIds, setActiveStratIds] = useState(new Set())
   // Ferocious Strike sub-choice: per unit, resets when fight phase changes
@@ -1659,6 +1661,12 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
             🎯
           </motion.button>
           <motion.button whileTap={{ scale: 0.96 }}
+            onClick={() => setShowLayoutProto(true)}
+            className="px-2.5 py-1.5 rounded-xl text-xs font-bold"
+            style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
+            🔬 Layouts
+          </motion.button>
+          <motion.button whileTap={{ scale: 0.96 }}
             onClick={() => setShowDebrief(true)}
             className="px-2.5 py-1.5 rounded-xl text-xs font-bold"
             style={{ background: `${theme.hpLow}18`, color: theme.hpLow, border: `1px solid ${theme.hpLow}44` }}>
@@ -1921,6 +1929,16 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
             theme={theme}
             detachmentBonus={activeAdaptationBonus}
           />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showLayoutProto && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}>
+            <BattleLayoutProto theme={theme} onClose={() => setShowLayoutProto(false)} />
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
