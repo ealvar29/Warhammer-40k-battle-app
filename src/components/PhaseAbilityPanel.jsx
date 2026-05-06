@@ -12,7 +12,7 @@ const PHASE_ACCENT = {
 
 const PHASE_CONTEXT = {
   shooting: 'Only ranged units fire this phase — melee specialists wait for Fight.',
-  charge:   'Push melee units into charge range. Ranged units hang back.',
+  charge:   'You choose which melee units attempt a charge. Each rolls 2D6 — you need to equal or beat the distance to the target. You don\'t have to charge with everyone.',
   fight:    'Melee fighters shine here. Strike with everything in Engagement Range.',
 }
 
@@ -56,7 +56,7 @@ function buildHoldNotice(holdUnits, phaseId) {
 
 const FOCUS_LABEL = {
   shooting: '🎯 Activate now',
-  charge:   '⚡ Charge with these',
+  charge:   '⚡ Eligible to charge',
   fight:    '⚔ Fight with these',
 }
 
@@ -146,7 +146,7 @@ export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitCli
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {focusUnits.map(u => {
-                    const atk = getUnitAttacks(u, phaseId)
+                    const atk = phaseId !== 'charge' ? getUnitAttacks(u, phaseId) : null
                     return (
                       <button key={u.id}
                         onClick={() => onUnitClick?.(u)}
@@ -154,7 +154,7 @@ export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitCli
                         style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}40` }}>
                         {u.name}
                         {atk !== null && (
-                          <span className="font-black text-xs px-1.5 py-0.5 rounded-lg"
+                          <span className="font-black px-1.5 py-0.5 rounded-lg"
                             style={{ background: accent, color: '#000', fontSize: 9 }}>
                             {atk}A
                           </span>

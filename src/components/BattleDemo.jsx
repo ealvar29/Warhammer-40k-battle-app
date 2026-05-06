@@ -106,7 +106,11 @@ function getPhaseRelevance(unit, phaseId) {
       /charge/i.test(a.description || '') &&
       CHARGE_BONUS_PATTERN.test(a.description || '')
     )
-    if (chargeAbility) return { level: 'relevant', hint: `${chargeAbility.name} — charge bonus triggers` }
+    if (chargeAbility) {
+      const m = chargeAbility.description?.match(/add (\d+) to the Attacks/i)
+      const bonusTxt = m ? ` — +${m[1]}A if you charge this unit` : ' — charge bonus active if this unit charges'
+      return { level: 'relevant', hint: `${chargeAbility.name}${bonusTxt}` }
+    }
     return { level: 'relevant', hint: null }
   }
 
@@ -459,41 +463,41 @@ function LeaderPanel({ unit, attachedLeaderId, onAttach, onDetach, activePhase, 
       </AnimatePresence>
 
       {attached ? (
-        <div className="rounded-xl border p-3 flex items-center justify-between"
+        <div className="rounded-xl border p-3"
           style={{ background: theme.surfaceHigh, borderColor: theme.border }}>
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-              style={{ background: theme.secondary, color: theme.bg }}>
-              {attached.name[0]}
-            </div>
-            <div>
-              <p className="text-xs font-bold leading-tight" style={{ color: theme.textPrimary }}>{attached.name}</p>
-              <p className="text-xs" style={{ color: theme.textSecondary }}>{attached.role}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
-            {abilities.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {abilities.slice(0, 3).map(a => (
-                  <span key={a.name} className="text-xs px-2 py-0.5 rounded-full font-medium"
-                    style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}40` }}>
-                    {a.name}
-                  </span>
-                ))}
-                {abilities.length > 3 && (
-                  <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-                    style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                    +{abilities.length - 3}
-                  </span>
-                )}
+          <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+                style={{ background: theme.secondary, color: theme.bg }}>
+                {attached.name[0]}
               </div>
-            )}
+              <div className="min-w-0">
+                <p className="text-xs font-bold leading-tight truncate" style={{ color: theme.textPrimary }}>{attached.name}</p>
+                <p className="text-xs" style={{ color: theme.textSecondary }}>{attached.role}</p>
+              </div>
+            </div>
             <button onClick={() => onDetach(unit.id)}
-              className="text-xs px-2 py-1 rounded-lg font-bold"
+              className="text-xs px-2 py-1 rounded-lg font-bold shrink-0 ml-2"
               style={{ background: theme.stratBg, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
               Remove
             </button>
           </div>
+          {abilities.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {abilities.slice(0, 4).map(a => (
+                <span key={a.name} className="text-xs px-2 py-0.5 rounded-full font-medium"
+                  style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}40` }}>
+                  {a.name}
+                </span>
+              ))}
+              {abilities.length > 4 && (
+                <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                  style={{ background: theme.surfaceHigh, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                  +{abilities.length - 4}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <motion.button whileTap={{ scale: 0.97 }}
@@ -571,12 +575,21 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
     return activePickEffect
   }, [activePickEffect, activePhase, unit])
 
+  const _atkWeps = getActiveWeapons(unit)
+  const _phaseWeps = activePhase === 'shooting'
+    ? _atkWeps.filter(w => w.type === 'ranged')
+    : _atkWeps.filter(w => w.type === 'melee')
+  const _bestAtk = _phaseWeps.length
+    ? _phaseWeps.reduce((b, w) => ((typeof w.A === 'number' ? w.A : 0) > (typeof b.A === 'number' ? b.A : 0) ? w : b)).A
+    : null
+
   const stats = [
     unit.M && { label: 'M', value: unit.M },
     unit.T && { label: 'T', value: unit.T },
     unit.Sv && { label: 'SV', value: unit.Sv },
     unit.OC != null && { label: 'OC', value: unit.OC, mod: unit.modSources?.find(m => m.stat === 'OC') },
     unit.InvSv && { label: 'INV', value: unit.InvSv },
+    _bestAtk !== null && { label: 'ATK', value: _bestAtk },
   ].filter(Boolean)
 
   const isSuppressed = phaseRelevance?.level === 'suppress'
@@ -1957,7 +1970,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
               style={{ background: theme.surface, borderColor: theme.border }}>
               <span className="text-base font-black" style={{ color: '#22c55e' }}>{totalYouVp}</span>
               <span className="flex-1 text-center text-xs font-bold" style={{ color: theme.textSecondary }}>
-                Rd {currentRound}/5
+                Round {currentRound}/5
               </span>
               <span className="text-base font-black" style={{ color: '#ef4444' }}>{totalThemVp}</span>
             </motion.button>
