@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { themes } from './themes/index'
-import { NavIcon, PhaseIcon, FactionIcon } from './components/GameIcon'
+import { PhaseIcon, FactionIcon } from './components/GameIcon'
 import { GiLightningTrio } from 'react-icons/gi'
+import { HouseIcon, SwordsIcon, BookOpenIcon, StarIcon, SearchIcon } from '@animateicons/react/lucide'
 import HomeScreen from './screens/HomeScreen'
 import ArmyBuilderScreen from './screens/ArmyBuilderScreen'
 import BattleDemo from './components/BattleDemo'
@@ -40,11 +41,11 @@ const FACTION_THEME_MAP = {
 }
 
 const NAV_TABS = [
-  { id: 'home',    label: 'Home'    },
-  { id: 'battle',  label: 'Battle'  },
-  { id: 'lists',   label: 'Lists'   },
-  { id: 'crusade', label: 'Crusade' },
-  { id: 'search',  label: 'Search',  isOverlay: true },
+  { id: 'home',    label: 'Home',    Icon: HouseIcon    },
+  { id: 'battle',  label: 'Battle',  Icon: SwordsIcon   },
+  { id: 'lists',   label: 'Lists',   Icon: BookOpenIcon  },
+  { id: 'crusade', label: 'Crusade', Icon: StarIcon      },
+  { id: 'search',  label: 'Search',  Icon: SearchIcon,   isOverlay: true },
 ]
 
 const TAB_ORDER = ['home', 'battle', 'lists', 'crusade', 'armyBuilder', 'missionSetup', 'deploy', 'portraits']
@@ -58,7 +59,8 @@ export default function App() {
   const [screen, setScreen] = useState('home')
   const [prevScreen, setPrevScreen] = useState('home')
   const [pendingImport, setPendingImport] = useState(null)
-  const [showLookup, setShowLookup] = useState(false) // decoded army payload
+  const [showLookup, setShowLookup] = useState(false)
+  const navIconRefs = useRef({})
   const battleActive    = useBattleStore(s => s.battleActive)
   const faction         = useBattleStore(s => s.faction)
   const cp              = useBattleStore(s => s.cp)
@@ -314,6 +316,7 @@ export default function App() {
           {navTabsDesktop.map(tab => {
             const isActive = activeTabId === tab.id
             const hasBadge = tab.id === 'battle' && battleActive
+            const { Icon } = tab
             return (
               <motion.button
                 key={tab.id}
@@ -328,8 +331,7 @@ export default function App() {
                   borderLeft: isActive ? `3px solid ${theme.secondary}` : '3px solid transparent',
                 }}
               >
-                <NavIcon id={tab.id} size={18}
-                  color={isActive ? theme.secondary : theme.textSecondary} />
+                <Icon size={18} color={isActive ? theme.secondary : theme.textSecondary} />
                 <span className="text-sm font-bold" style={{ color: isActive ? theme.textPrimary : theme.textSecondary }}>
                   {tab.label}
                 </span>
@@ -353,7 +355,7 @@ export default function App() {
             whileTap={{ scale: 0.97 }}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl"
             style={{ background: 'transparent', border: `1px solid ${theme.border}` }}>
-            <NavIcon id="search" size={17} color={theme.textSecondary} />
+            <SearchIcon size={17} color={theme.textSecondary} />
             <span className="text-sm font-bold" style={{ color: theme.textSecondary }}>Unit Lookup</span>
           </motion.button>
         </div>
@@ -404,10 +406,12 @@ export default function App() {
             {NAV_TABS.map(tab => {
               const isActive = !tab.isOverlay && activeTabId === tab.id
               const hasBadge = tab.id === 'battle' && battleActive
+              const { Icon } = tab
               return (
                 <motion.button
                   key={tab.id}
                   onClick={() => {
+                    navIconRefs.current[tab.id]?.startAnimation()
                     if (tab.isOverlay) { setShowLookup(true); return }
                     tab.id === 'battle'
                       ? navigate(battleActive ? 'battle' : 'armyBuilder')
@@ -420,17 +424,14 @@ export default function App() {
                     borderTop: isActive ? `2px solid ${theme.secondary}` : '2px solid transparent',
                   }}
                 >
-                  <motion.span
-                    className="leading-none flex items-center justify-center"
-                    animate={isActive ? { scale: [1, 1.2, 1] } : { scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <NavIcon id={tab.id} size={20}
-                      color={isActive ? theme.secondary : theme.textSecondary} />
-                  </motion.span>
+                  <Icon
+                    ref={el => { navIconRefs.current[tab.id] = el }}
+                    size={20}
+                    color={isActive ? theme.secondary : theme.textSecondary}
+                  />
                   <span className="text-xs font-bold tracking-wide"
                     style={{ color: isActive ? theme.textPrimary : theme.textSecondary }}>
-                    {tab.label === 'MathHammer' ? 'Calc' : tab.label}
+                    {tab.label}
                   </span>
                   {hasBadge && (
                     <motion.span
