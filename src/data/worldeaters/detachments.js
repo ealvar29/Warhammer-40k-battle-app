@@ -12,6 +12,18 @@ export const worldEatersDetachments = {
       name: 'Relentless Rage',
       description: 'Each time a WORLD EATERS unit from your army makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic and add 2 to the Strength characteristic of melee weapons equipped by models in that unit.',
     },
+    commandPhaseAction: {
+      type: 'passive',
+      label: 'Relentless Rage',
+      effect: 'Every Charge move gives this unit +1 Attacks and +2 Strength on all melee weapons until end of turn. Charge into combat every turn — stay aggressive.',
+      unitEffects: {
+        phases: ['charge', 'fight'],
+        factionKeywords: ['WORLD EATERS'],
+        badge: '+1A +2S on Charge',
+        badgeColor: '#f87171',
+        why: "Relentless Rage — after charging, melee weapons gain +1 Attacks and +2 Strength until end of turn",
+      },
+    },
     enhancements: [
       {
         name: 'Berzerker Glaive',

@@ -93,6 +93,13 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
             </span>
           )}
 
+          {action?.type === 'passive' && (
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+              style={{ background: `${theme.secondary}15`, color: theme.secondary, border: `1px solid ${theme.secondary}30` }}>
+              ● Always Active
+            </span>
+          )}
+
           {action?.type === 'designate_target' && targetNote && (
             <span className="text-xs font-medium truncate" style={{ color: theme.secondary }}>
               🎯 {targetNote}
@@ -339,10 +346,23 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
               )}
 
               {/* ── PASSIVE ── */}
-              {!action && (
-                <p className="text-xs leading-relaxed pt-0.5" style={{ color: theme.textSecondary }}>
-                  {rule.description}
-                </p>
+              {(!action || action?.type === 'passive') && (
+                <div className="space-y-2">
+                  {action?.type === 'passive' && action.effect && (
+                    <div className="rounded-xl p-2.5"
+                      style={{ background: `${theme.secondary}12`, border: `1px solid ${theme.secondary}30` }}>
+                      <p className="text-xs font-bold mb-1" style={{ color: theme.secondary }}>
+                        {action.label} — Always Active
+                      </p>
+                      <p className="text-xs leading-relaxed" style={{ color: theme.textPrimary }}>
+                        {action.effect}
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
+                    {rule.description}
+                  </p>
+                </div>
               )}
 
             </div>

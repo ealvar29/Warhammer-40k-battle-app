@@ -135,6 +135,18 @@ export const tyranidDetachments = {
       name: 'Stampede',
       description: 'Each time a MONSTER unit from your army ends a Charge move, roll one D6 for each enemy unit within Engagement Range: on a 2+, that unit suffers D3 mortal wounds.',
     },
+    commandPhaseAction: {
+      type: 'passive',
+      label: 'Stampede',
+      effect: 'Each time one of your MONSTER units ends a Charge move, roll D6 for each nearby enemy: on 2+, that enemy suffers D3 mortal wounds. Charge into multiple units to cascade.',
+      unitEffects: {
+        phases: ['charge'],
+        keywordFilter: ['MONSTER'],
+        badge: 'D3 Mortals on Charge',
+        badgeColor: '#f87171',
+        why: 'Stampede — after this Monster charges, roll D6 per enemy in Engagement Range: 2+ inflicts D3 mortal wounds',
+      },
+    },
     enhancements: [
       {
         name: 'Biomorphic Carapace',
@@ -178,6 +190,19 @@ export const tyranidDetachments = {
     detachmentRule: {
       name: 'Predatory Instincts',
       description: "Each TYRANIDS unit from your army (excluding MONSTERS) can be given the Scouts 6\" ability during deployment. In addition, each time a model in a TYRANIDS unit (excluding MONSTERS) makes an attack against a unit that has not yet been selected to shoot or fight this battle round, add 1 to the Wound roll.",
+    },
+    commandPhaseAction: {
+      type: 'passive',
+      label: 'Predatory Instincts',
+      effect: "All TYRANIDS INFANTRY (excl. MONSTERS) have Scouts 6\". When attacking a unit that hasn't activated yet this round: +1 to Wound rolls. Strike first to maximise impact.",
+      unitEffects: {
+        phases: ['shooting', 'fight'],
+        factionKeywords: ['TYRANIDS'],
+        excludeKeywords: ['MONSTER'],
+        badge: '+1 Wound vs Unactivated',
+        badgeColor: '#34d399',
+        why: "Predatory Instincts — +1 to Wound rolls against units that haven't shot or fought yet this round",
+      },
     },
     enhancements: [
       {

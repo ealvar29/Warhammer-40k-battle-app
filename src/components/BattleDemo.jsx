@@ -472,13 +472,19 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
   const woundFlash = wounds < prevWoundsRef.current
   prevWoundsRef.current = wounds
 
-  // Compute active Hunting Pack / detachment pick badge for this unit + phase
+  // Compute detachment pick/passive badge for this unit + phase
   const pickBadge = useMemo(() => {
     if (!activePickEffect) return null
     if (!activePickEffect.phases.includes(activePhase)) return null
+    const allKws = [...(unit.keywords || []), ...(unit.factionKeywords || [])]
     if (activePickEffect.factionKeywords) {
-      const allKws = [...(unit.keywords || []), ...(unit.factionKeywords || [])]
       if (!activePickEffect.factionKeywords.some(kw => allKws.includes(kw))) return null
+    }
+    if (activePickEffect.keywordFilter) {
+      if (!activePickEffect.keywordFilter.some(kw => allKws.includes(kw))) return null
+    }
+    if (activePickEffect.excludeKeywords) {
+      if (activePickEffect.excludeKeywords.some(kw => allKws.includes(kw))) return null
     }
     return activePickEffect
   }, [activePickEffect, activePhase, unit])
@@ -1005,11 +1011,13 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     return { ...opt.mathBonus, label: opt.mathBonusLabel, icon: opt.icon }
   })()
 
-  // Active Hunting Pack / pick_one effect to pass into unit cards
+  // Active pick_one effect OR always-on passive effect to pass into unit cards
   const activePickEffect = useMemo(() => {
-    if (!detachmentState?.activeSelection) return null
     const action = detachment?.commandPhaseAction
-    if (!action || action.type !== 'pick_one') return null
+    if (!action) return null
+    if (action.type === 'passive') return action.unitEffects || null
+    if (action.type !== 'pick_one') return null
+    if (!detachmentState?.activeSelection) return null
     const opt = action.options?.find(o => o.id === detachmentState.activeSelection)
     return opt?.unitEffects || null
   }, [detachment, detachmentState])
