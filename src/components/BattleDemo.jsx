@@ -1108,8 +1108,12 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
       ? [{ name: assignedEnh.name, phase: 'any', description: assignedEnh.description, isEnhancement: true }]
       : []
 
-    if (!leaderExtra.length && !pairExtra.length && !enhExtra.length) return u
-    return { ...u, abilities: [...(u.abilities || []), ...leaderExtra, ...pairExtra, ...enhExtra] }
+    // Pair abilities take precedence — deduplicate by name so same-named abilities don't show twice
+    const pairNames = new Set(pairExtra.map(a => a?.name).filter(Boolean))
+    const uniqueLeaderExtra = leaderExtra.filter(a => !a?.name || !pairNames.has(a.name))
+
+    if (!uniqueLeaderExtra.length && !pairExtra.length && !enhExtra.length) return u
+    return { ...u, abilities: [...(u.abilities || []), ...pairExtra, ...uniqueLeaderExtra, ...enhExtra] }
   })
 
   const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
