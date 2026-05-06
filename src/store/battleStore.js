@@ -28,6 +28,7 @@ export const useBattleStore = create(
       cpLog: [], // [{ id, type:'gain'|'spend', amount, reason, cpBefore, cpAfter, phase, round }]
       cpGainedRounds: [], // array of round numbers where command-phase CP was already claimed
       unitStates: {}, // { [unitId]: { currentWounds, attachedLeaderId } }
+      enhancementAssignments: {}, // { [baseUnitId]: enhancementName }
       battleActive: false,
       crusadeBattle: false,
       vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
@@ -121,9 +122,16 @@ export const useBattleStore = create(
       startBattle: () => set({ battleActive: true, turn: 1, isYourTurn: true, activePhaseIdx: 0 }),
       setCrusadeBattle: (val) => set({ crusadeBattle: val }),
 
+      setEnhancement: (unitId, enhancementName) => set(s => ({
+        enhancementAssignments: enhancementName
+          ? { ...s.enhancementAssignments, [unitId]: enhancementName }
+          : Object.fromEntries(Object.entries(s.enhancementAssignments).filter(([k]) => k !== unitId)),
+      })),
+
       resetBattle: () => set({
         battleActive: false, turn: 1, isYourTurn: true, activePhaseIdx: 0,
         cp: 6, unitStates: {}, selectedUnits: [], faction: null, detachmentId: null,
+        enhancementAssignments: {},
         vpScores: { you: [0,0,0,0,0], them: [0,0,0,0,0] },
         warlordUnitId: null,
         detachmentState: { activeSelection: null, usedSelections: [], targetNote: '', onceBuffUsed: false },
@@ -235,6 +243,7 @@ export const useBattleStore = create(
         activePhaseIdx: state.activePhaseIdx,
         cp: state.cp,
         unitStates: state.unitStates,
+        enhancementAssignments: state.enhancementAssignments,
         battleActive: state.battleActive,
         crusadeBattle: state.crusadeBattle,
         vpScores: state.vpScores,

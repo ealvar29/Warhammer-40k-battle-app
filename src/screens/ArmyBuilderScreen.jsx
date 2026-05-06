@@ -656,6 +656,8 @@ function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCoun
 
 export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const store = useBattleStore()
+  const setEnhancement = useBattleStore(s => s.setEnhancement)
+  const enhancementAssignments = useBattleStore(s => s.enhancementAssignments)
   const setSelectedFaction = useListStore(s => s.setSelectedFaction)
   const portraits = usePortraitStore(s => s.portraits)
   const [step, setStep] = useState('faction') // faction → detachment → units → opponent → ready
@@ -1179,6 +1181,82 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
             ))}
           </div>
         )}
+
+        {/* ── Enhancement Assignments (shown at bottom of units step) ── */}
+        {step === 'units' && (() => {
+          const currentDet = detachments.find(d => d.id === localDetachment)
+          const detEnhancements = currentDet?.enhancements || []
+          if (!detEnhancements.length) return null
+          // Collect all selected CHARACTER units across sections
+          const selectedChars = unitSections.flatMap(s =>
+            Object.values(s.byCategory).flat().filter(u =>
+              unitCount(u.id) > 0 && (u.isLeader || (u.keywords || []).includes('CHARACTER'))
+            )
+          )
+          if (!selectedChars.length) return null
+          return (
+            <div className="mt-2 rounded-2xl p-4 space-y-3"
+              style={{ background: 'rgba(251,191,36,0.05)', border: '1px solid rgba(251,191,36,0.2)' }}>
+              <div className="flex items-center gap-2">
+                <span style={{ fontSize: 13 }}>⭐</span>
+                <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: '#fbbf24' }}>
+                  Enhancement Assignments
+                </p>
+                <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  · 1 per CHARACTER · max 3 per army
+                </p>
+              </div>
+              {selectedChars.map(char => {
+                const assigned = enhancementAssignments[char.id]
+                return (
+                  <div key={char.id} className="rounded-xl overflow-hidden"
+                    style={{ border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.2)' }}>
+                    {/* Character header */}
+                    <div className="px-3 py-2 flex items-center justify-between"
+                      style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                      <p className="text-xs font-black" style={{ color: theme.textPrimary }}>{char.name}</p>
+                      {assigned && (
+                        <button onClick={() => setEnhancement(char.id, null)}
+                          className="text-[10px] px-2 py-0.5 rounded-full"
+                          style={{ color: 'rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.06)' }}>
+                          clear
+                        </button>
+                      )}
+                    </div>
+                    {/* Enhancement options */}
+                    <div className="p-2 space-y-1.5">
+                      {detEnhancements.map(enh => {
+                        const isChosen = assigned === enh.name
+                        return (
+                          <button key={enh.name}
+                            onClick={() => setEnhancement(char.id, isChosen ? null : enh.name)}
+                            className="w-full text-left px-3 py-2 rounded-lg transition-all"
+                            style={{
+                              background: isChosen ? 'rgba(251,191,36,0.14)' : 'rgba(255,255,255,0.03)',
+                              border: `1px solid ${isChosen ? 'rgba(251,191,36,0.4)' : 'rgba(255,255,255,0.07)'}`,
+                            }}>
+                            <div className="flex items-center justify-between mb-0.5">
+                              <p className="text-xs font-bold" style={{ color: isChosen ? '#fbbf24' : 'rgba(255,255,255,0.8)' }}>
+                                {isChosen ? '✦ ' : ''}{enh.name}
+                              </p>
+                              <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full shrink-0 ml-2"
+                                style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24' }}>
+                                {enh.cost}pts
+                              </span>
+                            </div>
+                            <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                              {enh.description?.length > 90 ? enh.description.slice(0, 90) + '…' : enh.description}
+                            </p>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )
+        })()}
 
         {/* ── Step: Opponent ── */}
         {step === 'opponent' && (

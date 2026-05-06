@@ -578,6 +578,15 @@ function UnitCard({ unit, unitState, attachedLeaderId, onAttach, onDetach, onWou
             </AnimatePresence>
           </div>
           <p className="text-xs mt-0.5 font-medium uppercase tracking-wider" style={{ color: theme.textSecondary }}>{unit.type}</p>
+          {unit.abilities?.some(a => a.isEnhancement) && (() => {
+            const enh = unit.abilities.find(a => a.isEnhancement)
+            return (
+              <span className="inline-flex items-center gap-1 mt-1 text-[9px] font-black px-2 py-0.5 rounded-full"
+                style={{ background: 'rgba(251,191,36,0.14)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.35)' }}>
+                ⭐ {enh.name}
+              </span>
+            )
+          })()}
           <AnimatePresence>
             {phaseRelevance?.hint && (
               <motion.span
@@ -1076,14 +1085,27 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
 
   const units = selectedUnits.length > 0 ? selectedUnits : demoUnits
   // Inject leader abilities into unit.abilities so PhaseAbilityPanel surfaces them
+  const enhancementAssignments = useBattleStore(s => s.enhancementAssignments)
+
   const augmentedUnits = units.map(u => {
-    const leaderId = unitStates[u.id]?.attachedLeaderId
-    if (!leaderId) return u
     const baseUnitId = u.unitKey || u.id.replace(/_\d+$/, '')
-    const baseLeaderId = leaderId.replace(/_\d+$/, '')
-    const extra = getLeaderAbilities(baseLeaderId)
-    if (!extra.length) return u
-    return { ...u, abilities: [...(u.abilities || []), ...extra] }
+
+    // Inject leader abilities
+    const leaderId = unitStates[u.id]?.attachedLeaderId
+    const baseLeaderId = leaderId?.replace(/_\d+$/, '')
+    const leaderExtra = baseLeaderId ? getLeaderAbilities(baseLeaderId) : []
+
+    // Inject assigned enhancement as an ability
+    const assignedEnhName = enhancementAssignments?.[baseUnitId]
+    const assignedEnh = assignedEnhName
+      ? detachment?.enhancements?.find(e => e.name === assignedEnhName)
+      : null
+    const enhExtra = assignedEnh
+      ? [{ name: assignedEnh.name, phase: 'any', description: assignedEnh.description, isEnhancement: true }]
+      : []
+
+    if (!leaderExtra.length && !enhExtra.length) return u
+    return { ...u, abilities: [...(u.abilities || []), ...leaderExtra, ...enhExtra] }
   })
 
   const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
