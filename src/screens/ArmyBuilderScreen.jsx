@@ -334,17 +334,17 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
             <p className="text-sm italic mt-0.5 mb-3" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
           )}
           {/* Tab bar */}
-          <div className="flex gap-1.5 mt-3 p-1 rounded-2xl" style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
+          <div className="flex gap-1.5 mt-3 p-1 rounded-2xl" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.1)' }}>
             {tabs.map(tab => {
               const isActive = activeTab === tab.id
               return (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)}
                   className="flex-1 py-2.5 text-xs font-black rounded-xl transition-all"
                   style={{
-                    background: isActive ? '#2dd4bf' : 'transparent',
-                    color: isActive ? '#000' : 'rgba(255,255,255,0.65)',
+                    background: isActive ? '#2dd4bf' : 'rgba(255,255,255,0.07)',
+                    color: isActive ? '#000' : 'rgba(255,255,255,0.85)',
                     boxShadow: isActive ? '0 2px 10px rgba(45,212,191,0.35)' : 'none',
-                    border: `1px solid ${isActive ? 'transparent' : 'rgba(255,255,255,0.15)'}`,
+                    border: `1px solid ${isActive ? 'transparent' : 'rgba(255,255,255,0.12)'}`,
                     letterSpacing: isActive ? '0.03em' : '0',
                   }}>
                   {tab.label}
@@ -426,15 +426,15 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                   {d.stratagems?.length > 0 && (
                     <button onClick={() => setActiveTab('stratagems')}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
-                      style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      <PickOneIcon icon="📜" size={13} color="rgba(255,255,255,0.45)" />
+                      style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                      <PickOneIcon icon="📜" size={13} color="rgba(255,255,255,0.7)" />
                       {d.stratagems.length} stratagems →
                     </button>
                   )}
                   {d.enhancements?.length > 0 && (
                     <button onClick={() => setActiveTab('details')}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
-                      style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.85)', border: '1px solid rgba(255,255,255,0.15)' }}>
                       <PickOneIcon icon="⭐" size={13} color="#fbbf24" />
                       {d.enhancements.length} enhancements →
                     </button>
