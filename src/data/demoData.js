@@ -1,10 +1,4 @@
-export const PHASES = [
-  { id: 'command',  label: 'Command',  icon: '⚜️', short: 'CMD' },
-  { id: 'movement', label: 'Movement', icon: '🏃', short: 'MOV' },
-  { id: 'shooting', label: 'Shooting', icon: '🎯', short: 'SHT' },
-  { id: 'charge',   label: 'Charge',   icon: '⚔️', short: 'CHG' },
-  { id: 'fight',    label: 'Fight',    icon: '💀', short: 'FGT' },
-]
+export { PHASES } from './editionConfig'
 
 // source: 'core' | 'detachment'
 // trigger: 'active' (your turn) | 'reaction' (opponent's turn) | 'both'

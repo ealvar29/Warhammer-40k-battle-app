@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { PhaseIcon, GameIcon } from './GameIcon'
 import { FactionEdge } from './FactionAccent'
 import { GiLightningTrio } from 'react-icons/gi'
-import { PHASES, demoStratagems, demoUnits } from '../data/demoData'
+import { demoStratagems, demoUnits } from '../data/demoData'
+import { PHASES, KEYWORD_PHASE_HINTS, WEAPON_KEYWORD_PHASE_HINTS, CHARGE_BONUS_PATTERN } from '../data/editionConfig'
 import { leaders, unitLeaderMap } from '../data/leaderData'
 import { getLeaderAbilities } from '../data/factionRegistry'
 import { getSuggestions, opponentProfiles } from '../data/suggestions'
@@ -53,7 +54,6 @@ function getPhaseRelevance(unit, phaseId) {
   const abilities = unit.abilities || []
 
   if (phaseId === 'command') {
-    // CP generators get top billing (e.g. Bjorn's Ancient Tactician)
     const cpAbility = abilities.find(a =>
       typeof a === 'object' && a.phase === 'command' && /\bCP\b|command point/i.test(a.description || '')
     )
@@ -64,12 +64,12 @@ function getPhaseRelevance(unit, phaseId) {
   }
 
   if (phaseId === 'movement') {
-    if (kws.includes('DEEP STRIKE'))
-      return { level: 'relevant', hint: 'Deep Strike — deploy from Reserves this phase' }
+    for (const [kw, cfg] of Object.entries(KEYWORD_PHASE_HINTS)) {
+      if (cfg.phase === 'movement' && kws.includes(kw))
+        return { level: 'relevant', hint: cfg.hint }
+    }
     const movAbility = abilities.find(a => typeof a === 'object' && a.phase === 'movement')
     if (movAbility) return { level: 'relevant', hint: `${movAbility.name} — use this phase` }
-    if (kws.includes('SCOUTS'))
-      return { level: 'relevant', hint: 'Scouts — advance move before battle' }
     if (!hasRanged && hasMelee)
       return { level: 'relevant', hint: 'Melee unit — advance toward the enemy' }
     return { level: 'neutral', hint: null }
@@ -78,18 +78,20 @@ function getPhaseRelevance(unit, phaseId) {
   if (phaseId === 'shooting') {
     if (!hasRanged && hasMelee)
       return { level: 'suppress', hint: 'No ranged weapons — save for Fight phase' }
-    const torrent = weapons.find(w => w.type === 'ranged' && w.keywords?.some(k => /^TORRENT$/i.test(k)))
-    if (torrent) return { level: 'relevant', hint: `${torrent.name} auto-hits — great vs blobs` }
+    const shootingHints = WEAPON_KEYWORD_PHASE_HINTS.filter(h => h.phase === 'shooting')
+    for (const h of shootingHints) {
+      const w = weapons.find(w => w.type === 'ranged' && w.keywords?.some(k => h.test.test(k)))
+      if (w) return { level: 'relevant', hint: h.hint(w.keywords.find(k => h.test.test(k)), w.name) }
+    }
     return { level: hasRanged ? 'relevant' : 'neutral', hint: null }
   }
 
   if (phaseId === 'charge') {
     if (!hasMelee) return { level: 'suppress', hint: 'Ranged unit — stay back' }
-    // Charge bonus abilities (covers Ragnar's Battle-lust, War Howl, etc.)
     const chargeAbility = abilities.find(a =>
       typeof a === 'object' &&
       /charge/i.test(a.description || '') &&
-      /add \d|\+\d|bonus|extra attack/i.test(a.description || '')
+      CHARGE_BONUS_PATTERN.test(a.description || '')
     )
     if (chargeAbility) return { level: 'relevant', hint: `${chargeAbility.name} — charge bonus triggers` }
     return { level: 'relevant', hint: null }
@@ -98,16 +100,12 @@ function getPhaseRelevance(unit, phaseId) {
   if (phaseId === 'fight') {
     if (!hasMelee && hasRanged)
       return { level: 'suppress', hint: 'No melee weapons — hold position' }
-    // Fight-phase abilities surface by name (includes injected leader abilities)
     const fightAbility = abilities.find(a => typeof a === 'object' && a.phase === 'fight')
     if (fightAbility) return { level: 'relevant', hint: `${fightAbility.name} — active in melee` }
-    // Highlight powerful melee keywords
-    const bonusMelee = weapons.find(w =>
-      w.type === 'melee' && w.keywords?.some(k => /LETHAL HITS|SUSTAINED HITS/i.test(k))
-    )
-    if (bonusMelee) {
-      const kw = bonusMelee.keywords.find(k => /LETHAL HITS|SUSTAINED HITS/i.test(k))
-      return { level: 'relevant', hint: `${kw} on ${bonusMelee.name}` }
+    const fightHints = WEAPON_KEYWORD_PHASE_HINTS.filter(h => h.phase === 'fight')
+    for (const h of fightHints) {
+      const w = weapons.find(w => w.type === 'melee' && w.keywords?.some(k => h.test.test(k)))
+      if (w) return { level: 'relevant', hint: h.hint(w.keywords.find(k => h.test.test(k)), w.name) }
     }
     return { level: hasMelee ? 'relevant' : 'neutral', hint: null }
   }
@@ -1260,7 +1258,8 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     return null
   })()
 
-  // Active detachment pack callout — shown in Guide tab when a pack is active
+  // Active detachment effect callout — shown in Guide tab
+  // passive = always-on rule; pick_one = player-selected option this battle
   const activePackNode = activePickEffect && (
     <div className="mx-3 mt-2 rounded-2xl overflow-hidden shrink-0"
       style={{ background: theme.surface, border: `1px solid ${activePickEffect.badgeColor}40` }}>
@@ -1268,7 +1267,9 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
         style={{ background: `${activePickEffect.badgeColor}12`, borderBottom: `1px solid ${activePickEffect.badgeColor}25` }}>
         <GiLightningTrio size={11} color={activePickEffect.badgeColor} />
         <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: activePickEffect.badgeColor }}>
-          Active Pack — {activePickEffect.badge}
+          {detachment?.commandPhaseAction?.type === 'passive'
+            ? `Detachment Rule — ${activePickEffect.badge}`
+            : `Active — ${activePickEffect.badge}`}
         </p>
       </div>
       <p className="px-3 py-2 text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
