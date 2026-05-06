@@ -371,8 +371,8 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                 {/* Playstyle */}
                 {d.playstyle && (
                   <div className="px-4 py-3 rounded-2xl"
-                    style={{ background: `${accent}0e`, border: `1px solid ${accent}22` }}>
-                    <p className="text-[10px] font-black tracking-widest uppercase mb-1.5" style={{ color: accent }}>
+                    style={{ background: 'rgba(45,212,191,0.06)', border: '1px solid rgba(45,212,191,0.18)' }}>
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-1.5" style={{ color: '#2dd4bf' }}>
                       How this detachment plays
                     </p>
                     <p className="text-sm leading-relaxed font-medium" style={{ color: theme.textPrimary }}>
@@ -385,26 +385,29 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                 {d.commandPhaseAction?.options?.length > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <PhaseIcon phase="command" size={12} color={accent} />
-                      <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: accent }}>
+                      <PhaseIcon phase="command" size={12} color="#fbbf24" />
+                      <p className="text-[10px] font-black tracking-widest uppercase" style={{ color: '#fbbf24' }}>
                         Each Command Phase — pick one
                       </p>
                     </div>
                     <div className="space-y-1.5">
-                      {d.commandPhaseAction.options.map(opt => (
-                        <div key={opt.id}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
-                          style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
-                          <PickOneIcon icon={opt.icon} size={20} color={accent} className="shrink-0" />
-                          <p className="font-bold text-sm flex-1" style={{ color: theme.textPrimary }}>{opt.label}</p>
-                          {opt.shortEffect && (
-                            <span className="text-[9px] font-black px-2 py-0.5 rounded-full shrink-0"
-                              style={{ background: `${accent}30`, color: accent, border: `1px solid ${accent}66` }}>
-                              {opt.shortEffect}
-                            </span>
-                          )}
-                        </div>
-                      ))}
+                      {d.commandPhaseAction.options.map(opt => {
+                        const optColor = opt.unitEffects?.badgeColor || accent
+                        return (
+                          <div key={opt.id}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+                            style={{ background: theme.surface, border: `1px solid ${theme.border}` }}>
+                            <PickOneIcon icon={opt.icon} size={20} color={optColor} className="shrink-0" />
+                            <p className="font-bold text-sm flex-1" style={{ color: theme.textPrimary }}>{opt.label}</p>
+                            {opt.shortEffect && (
+                              <span className="text-[9px] font-black px-2 py-0.5 rounded-full shrink-0"
+                                style={{ background: `${optColor}30`, color: optColor, border: `1px solid ${optColor}66` }}>
+                                {opt.shortEffect}
+                              </span>
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
                     {d.commandPhaseAction.onceBuff && (
                       <div className="mt-2 px-3 py-2 rounded-xl flex gap-2 items-center"
@@ -432,7 +435,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                     <button onClick={() => setActiveTab('details')}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
                       style={{ background: theme.surface, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                      <span style={{ color: accent }}>⭐</span>
+                      <PickOneIcon icon="⭐" size={13} color="#fbbf24" />
                       {d.enhancements.length} enhancements →
                     </button>
                   )}

@@ -77,6 +77,8 @@ import {
   GiBrokenBone,      // 🦴 — rot, decay
   GiBiohazard,       // ☣️ — corruption, contagion
   GiStarMedal,       // ⭐ — once-per-battle special
+  GiLightningTrio,   // ⚡ — surging / speed
+  GiLightningShield, // 🛡️ — defensive invuln
   // Misc icons
   GiShield,
   GiChestArmor,
@@ -214,6 +216,8 @@ const PICK_ONE_ICON_MAP = {
   '☣️': GiBiohazard,
   '⭐': GiStarMedal,
   '📜': GiScrollUnfurled,
+  '⚡': GiLightningTrio,
+  '🛡️': GiLightningShield,
 }
 
 export function PickOneIcon({ icon, size = 20, color, style, className }) {
