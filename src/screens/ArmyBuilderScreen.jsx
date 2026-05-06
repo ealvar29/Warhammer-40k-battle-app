@@ -654,16 +654,25 @@ function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCoun
   )
 }
 
-// Parse "KEYWORD KEYWORD model only." prefix and check against unit keywords
+// Parse "KEYWORD KEYWORD model only." prefix and check against unit keywords.
+// Greedily consume the restriction phrase by matching multi-word keyword phrases
+// (e.g. "ADEPTUS ASTARTES TERMINATOR CAPTAIN" → matches "ADEPTUS ASTARTES" then "TERMINATOR" then "CAPTAIN").
 function isEnhancementEligible(enh, unit) {
-  const match = (enh.description || '').match(/^([\w\s]+?)\s+model only\./i)
+  const match = (enh.description || '').match(/^([\w\s'-]+?)\s+model only\./i)
   if (!match) return true
-  const required = match[1].trim().toUpperCase().split(/\s+/)
   const unitKws = [
     ...(unit.keywords || []),
     ...(unit.factionKeywords || []),
   ].map(k => k.toUpperCase())
-  return required.every(k => unitKws.includes(k))
+  // Sort longest-first so multi-word keywords are tried before single-word fragments
+  const sortedKws = [...unitKws].sort((a, b) => b.length - a.length)
+  let remaining = match[1].trim().toUpperCase()
+  while (remaining.length > 0) {
+    const found = sortedKws.find(kw => remaining === kw || remaining.startsWith(kw + ' '))
+    if (!found) return false
+    remaining = remaining.slice(found.length).trimStart()
+  }
+  return true
 }
 
 export default function ArmyBuilderScreen({ theme, onNavigate }) {
