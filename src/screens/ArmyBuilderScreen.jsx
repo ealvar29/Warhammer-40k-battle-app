@@ -342,9 +342,9 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                   className="flex-1 py-2.5 text-xs font-black rounded-xl transition-all"
                   style={{
                     background: isActive ? '#2dd4bf' : 'transparent',
-                    color: isActive ? '#000' : theme.textSecondary,
+                    color: isActive ? '#000' : 'rgba(255,255,255,0.4)',
                     boxShadow: isActive ? '0 2px 10px rgba(45,212,191,0.35)' : 'none',
-                    border: `1px solid ${isActive ? 'transparent' : theme.border}`,
+                    border: `1px solid ${isActive ? 'transparent' : 'rgba(255,255,255,0.1)'}`,
                     letterSpacing: isActive ? '0.03em' : '0',
                   }}>
                   {tab.label}
@@ -426,15 +426,15 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                   {d.stratagems?.length > 0 && (
                     <button onClick={() => setActiveTab('stratagems')}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
-                      style={{ background: theme.surface, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
-                      <PickOneIcon icon="📜" size={13} color={accent} />
+                      style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      <PickOneIcon icon="📜" size={13} color="rgba(255,255,255,0.45)" />
                       {d.stratagems.length} stratagems →
                     </button>
                   )}
                   {d.enhancements?.length > 0 && (
                     <button onClick={() => setActiveTab('details')}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold"
-                      style={{ background: theme.surface, color: theme.textSecondary, border: `1px solid ${theme.border}` }}>
+                      style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.1)' }}>
                       <PickOneIcon icon="⭐" size={13} color="#fbbf24" />
                       {d.enhancements.length} enhancements →
                     </button>
