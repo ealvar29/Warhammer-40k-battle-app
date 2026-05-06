@@ -118,7 +118,7 @@ function DetachmentCard({ d, selected, accent, theme, onClick }) {
               {d.name}
             </p>
             {d.subtitle && (
-              <p className="text-xs italic mt-0.5" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
+              <p className="text-xs italic mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{d.subtitle}</p>
             )}
           </div>
           {selected && (
@@ -337,7 +337,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
         <div className="px-5 pt-4 pb-0 shrink-0">
           <p className="font-black text-2xl leading-tight" style={{ color: accent }}>{d.name}</p>
           {d.subtitle && (
-            <p className="text-sm italic mt-0.5 mb-3" style={{ color: theme.textSecondary }}>{d.subtitle}</p>
+            <p className="text-sm italic mt-0.5 mb-3" style={{ color: 'rgba(255,255,255,0.55)' }}>{d.subtitle}</p>
           )}
           {/* Tab bar */}
           <div className="flex gap-1.5 mt-3 p-1 rounded-2xl" style={{ background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.1)' }}>
@@ -857,24 +857,27 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
           <div className="space-y-3">
 
             {/* Allegiance tabs */}
-            <div className="flex rounded-2xl overflow-hidden border" style={{ borderColor: theme.border }}>
-              {ALLEGIANCE_GROUPS.map((g, i) => (
-                <button key={g.id} onClick={() => setAllegianceTab(g.id)}
-                  className="flex-1 py-2.5 flex flex-col items-center gap-0.5 transition-all"
-                  style={{
-                    background: allegianceTab === g.id ? `${theme.secondary}15` : theme.surface,
-                    borderRight: i < ALLEGIANCE_GROUPS.length - 1 ? `1px solid ${theme.border}` : 'none',
-                  }}>
-                  <g.Icon size={22} color={allegianceTab === g.id ? theme.secondary : theme.textSecondary} />
-                  <p className="text-xs font-black tracking-wide"
-                    style={{ color: allegianceTab === g.id ? theme.secondary : theme.textSecondary }}>
-                    {g.label}
-                  </p>
-                  <p style={{ fontSize: 9, color: theme.textSecondary, opacity: 0.7 }}>
-                    {g.factionIds.length} armies
-                  </p>
-                </button>
-              ))}
+            <div className="flex rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(0,0,0,0.2)' }}>
+              {ALLEGIANCE_GROUPS.map((g, i) => {
+                const isActiveTab = allegianceTab === g.id
+                return (
+                  <button key={g.id} onClick={() => setAllegianceTab(g.id)}
+                    className="flex-1 py-2.5 flex flex-col items-center gap-0.5 transition-all"
+                    style={{
+                      background: isActiveTab ? `${theme.secondary}22` : 'transparent',
+                      borderRight: i < ALLEGIANCE_GROUPS.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                    }}>
+                    <g.Icon size={22} color={isActiveTab ? theme.secondary : 'rgba(255,255,255,0.65)'} />
+                    <p className="text-xs font-black tracking-wide"
+                      style={{ color: isActiveTab ? theme.secondary : 'rgba(255,255,255,0.75)' }}>
+                      {g.label}
+                    </p>
+                    <p style={{ fontSize: 9, color: isActiveTab ? theme.secondary : 'rgba(255,255,255,0.4)' }}>
+                      {g.factionIds.length} armies
+                    </p>
+                  </button>
+                )
+              })}
             </div>
 
             {/* Faction roster — landscape band cards */}
