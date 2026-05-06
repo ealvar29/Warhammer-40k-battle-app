@@ -1177,19 +1177,24 @@ function buildPairs(allUnits, unitStates) {
 function BattleUnitCard({
   unit, unitState, phaseId, phaseAccent, phaseRelevance,
   isDone, onDone, onWound, onHeal, onDetail, isLeader, theme, desktop,
-  isCharged, onCharge, isAdvanced, onAdvance
+  isCharged, onCharge, isAdvanced, onAdvance,
+  isBattleShocked, onToggleBattleShocked, inSynapse, onToggleSynapse, hasSynapse
 }) {
-  const wounds   = unitState?.currentWounds ?? unit.maxWounds
-  const maxW     = unit.maxWounds
-  const pct      = wounds / maxW
-  const hpColor  = pct > 0.6 ? '#22c55e' : pct > 0.3 ? '#f59e0b' : '#ef4444'
-  const active   = phaseRelevance?.level !== 'suppress'
-  const relevant = phaseRelevance?.level === 'relevant'
-  const _cSet    = isCharged ? new Set([unit.id]) : new Set()
-  const attacks  = getCardAttacks(unit, phaseId, _cSet)
-  const showAtk  = attacks !== null && active && !isDone &&
+  const wounds      = unitState?.currentWounds ?? unit.maxWounds
+  const maxW        = unit.maxWounds
+  const pct         = wounds / maxW
+  const hpColor     = pct > 0.6 ? '#22c55e' : pct > 0.3 ? '#f59e0b' : '#ef4444'
+  const active      = phaseRelevance?.level !== 'suppress'
+  const relevant    = phaseRelevance?.level === 'relevant'
+  const _cSet       = isCharged ? new Set([unit.id]) : new Set()
+  const attacks     = getCardAttacks(unit, phaseId, _cSet)
+  const showAtk     = attacks !== null && active && !isDone &&
     (phaseId === 'shooting' || phaseId === 'fight' || phaseId === 'charge')
-  const pulseMov = phaseId === 'movement' && active && !isDone
+  const pulseMov    = phaseId === 'movement' && active && !isDone
+  const isSynapse   = (unit.keywords || []).some(k => k === 'SYNAPSE')
+  const ldValue     = unit.Ld ? parseInt(unit.Ld) : null
+  const halfW       = Math.ceil(maxW / 2)
+  const needsLdTest = wounds < halfW && !isSynapse && ldValue !== null
 
   const cardW = isLeader ? (desktop ? 200 : 155) : (desktop ? 230 : 175)
   const fName = desktop ? 15 : 12
@@ -1257,6 +1262,12 @@ function BattleUnitCard({
             <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase"
               style={{ fontSize: 7, background: 'rgba(239,68,68,0.85)', color: '#fff' }}>
               ADV
+            </span>
+          )}
+          {isBattleShocked && (
+            <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase sync-pulse"
+              style={{ fontSize: 7, background: 'rgba(239,68,68,0.95)', color: '#fff' }}>
+              💀 Shocked
             </span>
           )}
         </div>
@@ -1339,8 +1350,49 @@ function BattleUnitCard({
             style={{ width: `${pct * 100}%`, background: hpColor }} />
         </div>
 
+        {/* Ld test / Battle-shocked warning */}
+        {(needsLdTest || isBattleShocked) && (
+          <div className="mt-1.5 rounded-lg px-2 py-1"
+            style={{
+              background: isBattleShocked ? 'rgba(239,68,68,0.22)' : 'rgba(251,191,36,0.15)',
+              border: `1px solid ${isBattleShocked ? 'rgba(239,68,68,0.5)' : 'rgba(251,191,36,0.4)'}`,
+            }}>
+            {isBattleShocked ? (
+              <p style={{ fontSize: fLbl + 1, color: '#f87171', lineHeight: 1.3 }}>
+                💀 Battle-shocked — OC is 0
+              </p>
+            ) : (
+              <>
+                <p style={{ fontSize: fLbl + 1, color: '#fbbf24', lineHeight: 1.3 }}>
+                  ⚠ Ld test — need {ldValue}+ on {inSynapse ? '3D6 drop lowest' : '2D6'}
+                </p>
+                {hasSynapse && (
+                  <button
+                    onClick={e => { e.stopPropagation(); onToggleSynapse?.() }}
+                    style={{ fontSize: fLbl, color: inSynapse ? '#60a5fa' : 'rgba(255,255,255,0.45)', lineHeight: 1.3, background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'block', marginTop: 1 }}>
+                    📡 {inSynapse ? 'In Synapse ✓' : 'In Synapse?'}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
         {/* Action buttons */}
         <div className="flex flex-col gap-1 mt-1.5">
+          {needsLdTest && (
+            <button
+              onClick={e => { e.stopPropagation(); onToggleBattleShocked?.() }}
+              className="w-full rounded-lg font-black flex items-center justify-center"
+              style={{
+                fontSize: fBtn, padding: desktop ? '5px 0' : '4px 0',
+                background: isBattleShocked ? 'rgba(239,68,68,0.35)' : 'rgba(251,191,36,0.15)',
+                color: isBattleShocked ? '#fca5a5' : '#fbbf24',
+                border: `1.5px solid ${isBattleShocked ? 'rgba(239,68,68,0.6)' : 'rgba(251,191,36,0.4)'}`,
+              }}>
+              {isBattleShocked ? '💀 Battle-shocked' : '⚠ Failed Ld test?'}
+            </button>
+          )}
           {phaseId === 'movement' && active && !isDone && (
             <button
               onClick={e => { e.stopPropagation(); onAdvance?.() }}
@@ -1393,7 +1445,7 @@ function BattleUnitCard({
   )
 }
 
-function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseRel, doneUnitIds, toggleDone, onWound, onHeal, onDetail, theme, desktop, chargedUnitIds, toggleCharged, advancedUnitIds, toggleAdvanced }) {
+function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseRel, doneUnitIds, toggleDone, onWound, onHeal, onDetail, theme, desktop, chargedUnitIds, toggleCharged, advancedUnitIds, toggleAdvanced, battleShockedIds, toggleBattleShocked, synapseRangeIds, toggleSynapseRange, hasSynapse }) {
   const { leader, unit } = pair
   const hasBoth = leader && unit
   return (
@@ -1410,6 +1462,9 @@ function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseR
           isLeader={true} theme={theme} desktop={desktop}
           isCharged={chargedUnitIds.has(leader.id)} onCharge={() => toggleCharged(leader.id)}
           isAdvanced={advancedUnitIds.has(leader.id)} onAdvance={() => toggleAdvanced(leader.id)}
+          isBattleShocked={battleShockedIds.has(leader.id)} onToggleBattleShocked={() => toggleBattleShocked(leader.id)}
+          inSynapse={synapseRangeIds.has(leader.id)} onToggleSynapse={() => toggleSynapseRange(leader.id)}
+          hasSynapse={hasSynapse}
         />
       )}
       {hasBoth && (
@@ -1433,6 +1488,9 @@ function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseR
           onDetail={() => onDetail(unit)}
           isCharged={chargedUnitIds.has(unit.id)} onCharge={() => toggleCharged(unit.id)}
           isAdvanced={advancedUnitIds.has(unit.id)} onAdvance={() => toggleAdvanced(unit.id)}
+          isBattleShocked={battleShockedIds.has(unit.id)} onToggleBattleShocked={() => toggleBattleShocked(unit.id)}
+          inSynapse={synapseRangeIds.has(unit.id)} onToggleSynapse={() => toggleSynapseRange(unit.id)}
+          hasSynapse={hasSynapse}
           isLeader={false} theme={theme} desktop={desktop}
         />
       )}
@@ -1488,6 +1546,15 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   // Advanced units — persists from movement → shooting phase, clears on new round
   const [advancedUnitIds, setAdvancedUnitIds] = useState(new Set())
   const toggleAdvanced = id => setAdvancedUnitIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+
+  // Battle-shocked — clears at start of command phase (new round)
+  const [battleShockedIds, setBattleShockedIds] = useState(new Set())
+  const toggleBattleShocked = id => setBattleShockedIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+
+  // Synapse range — which units the player has marked as within a SYNAPSE aura
+  const [synapseRangeIds, setSynapseRangeIds] = useState(new Set())
+  const toggleSynapseRange = id => setSynapseRangeIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+
   const setFerocityChoice = (unitId, choice) =>
     setFerocityChoices(prev => ({ ...prev, [unitId]: prev[unitId] === choice ? null : choice }))
 
@@ -1527,6 +1594,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     return { ...u, abilities: [...(u.abilities || []), ...pairExtra, ...uniqueLeaderExtra, ...enhExtra] }
   })
 
+  const hasSynapse = augmentedUnits.some(u => (u.keywords || []).some(k => k === 'SYNAPSE'))
   const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const activePhase = PHASES[activePhaseIdx]
@@ -2037,7 +2105,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           {cpEffectsNode && activePhase.id === 'command' && (
             <div className="px-3 pt-2">{cpEffectsNode}</div>
           )}
-          <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} onUnitClick={setDetailUnit} chargedUnitIds={chargedUnitIds} />
+          <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} onUnitClick={setDetailUnit} chargedUnitIds={chargedUnitIds} battleShockedIds={battleShockedIds} />
 
           {/* Quick action buttons */}
           <div className="flex gap-2 px-3 py-2">
@@ -2086,6 +2154,11 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                 toggleCharged={toggleCharged}
                 advancedUnitIds={advancedUnitIds}
                 toggleAdvanced={toggleAdvanced}
+                battleShockedIds={battleShockedIds}
+                toggleBattleShocked={toggleBattleShocked}
+                synapseRangeIds={synapseRangeIds}
+                toggleSynapseRange={toggleSynapseRange}
+                hasSynapse={hasSynapse}
               />
             ))}
             <div className="w-3 shrink-0" />
@@ -2107,7 +2180,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
             <motion.button key={phase.id} onClick={() => {
               setActivePhaseIdx(i)
               onPhaseChange?.(i)
-              if (i === 0) { setChargedUnitIds(new Set()); setAdvancedUnitIds(new Set()) }
+              if (i === 0) { setChargedUnitIds(new Set()); setAdvancedUnitIds(new Set()); setBattleShockedIds(new Set()) }
             }}
               whileTap={{ scale: 0.92 }}
               className="flex flex-col items-center justify-center py-3 gap-1 relative"

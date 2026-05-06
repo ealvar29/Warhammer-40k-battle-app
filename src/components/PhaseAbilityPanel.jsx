@@ -75,7 +75,7 @@ function getUnitAttacks(unit, phaseId) {
   return bestA
 }
 
-export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitClick, chargedUnitIds = new Set() }) {
+export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitClick, chargedUnitIds = new Set(), battleShockedIds = new Set() }) {
   const [expandedKey, setExpandedKey] = useState(null)
 
   const phaseId = activePhase?.id
@@ -187,6 +187,19 @@ export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitCli
                 ⬤ {holdNotice}
               </p>
             )}
+
+            {/* Battle-shocked warning */}
+            {battleShockedIds.size > 0 && (() => {
+              const shockedNames = focusUnits
+                .filter(u => battleShockedIds.has(u.id))
+                .map(u => u.name.split(' ').slice(-1)[0])
+              if (!shockedNames.length) return null
+              return (
+                <p className="text-xs mt-2 leading-snug font-bold" style={{ color: '#f87171' }}>
+                  💀 {shockedNames.join(', ')} {shockedNames.length === 1 ? 'is' : 'are'} Battle-shocked — OC 0, no Stratagems
+                </p>
+              )
+            })()}
           </div>
         )}
 
