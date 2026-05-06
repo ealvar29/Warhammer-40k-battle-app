@@ -568,7 +568,7 @@ function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCoun
   const [imgLoaded, setImgLoaded] = useState(false)
   return (
     <motion.div
-      onClick={onSelect}
+      onClick={selected ? onContinue : onSelect}
       className="relative rounded-xl overflow-hidden cursor-pointer"
       style={{
         height: 100,
