@@ -59,7 +59,7 @@ function getActiveWeapons(unit) {
 }
 
 // ── Phase relevance — drives contextual hints and suppress dimming ─────────────
-function getPhaseRelevance(unit, phaseId) {
+function getPhaseRelevance(unit, phaseId, chargedUnitIds = new Set(), advancedUnitIds = new Set()) {
   const weapons = getActiveWeapons(unit)
   const hasRanged = weapons.some(w => w.type === 'ranged')
   const hasMelee  = weapons.some(w => w.type === 'melee')
@@ -89,6 +89,8 @@ function getPhaseRelevance(unit, phaseId) {
   }
 
   if (phaseId === 'shooting') {
+    if (advancedUnitIds.has(unit.id))
+      return { level: 'suppress', hint: 'Advanced this turn — can\'t fire most weapons' }
     if (!hasRanged && hasMelee)
       return { level: 'suppress', hint: 'No ranged weapons — save for Fight phase' }
     const shootingHints = WEAPON_KEYWORD_PHASE_HINTS.filter(h => h.phase === 'shooting')
@@ -117,6 +119,8 @@ function getPhaseRelevance(unit, phaseId) {
   if (phaseId === 'fight') {
     if (!hasMelee && hasRanged)
       return { level: 'suppress', hint: 'No melee weapons — hold position' }
+    if (chargedUnitIds.has(unit.id))
+      return { level: 'relevant', hint: 'Charged — fights first this phase' }
     const fightAbility = abilities.find(a => typeof a === 'object' && a.phase === 'fight')
     if (fightAbility) return { level: 'relevant', hint: `${fightAbility.name} — active in melee` }
     const fightHints = WEAPON_KEYWORD_PHASE_HINTS.filter(h => h.phase === 'fight')
@@ -1132,7 +1136,7 @@ function PhaseContextRow({ units, phaseId, abilityCount, theme }) {
   )
 }
 
-function getCardAttacks(unit, phaseId) {
+function getCardAttacks(unit, phaseId, chargedUnitIds = new Set()) {
   const weapons = getActiveWeapons(unit)
   let relevant = []
   if (phaseId === 'shooting')
@@ -1145,7 +1149,8 @@ function getCardAttacks(unit, phaseId) {
     const ca = typeof w.A === 'number' ? w.A : 0
     return ca > ba ? w : best
   }).A
-  if (phaseId === 'charge' && unit.id === 'ragnar' && typeof bestA === 'number') return bestA + 2
+  // Battle-lust: +2A only when Ragnar has actually charged (tracks through fight phase too)
+  if (unit.id === 'ragnar' && chargedUnitIds.has(unit.id) && typeof bestA === 'number') return bestA + 2
   return bestA
 }
 
@@ -1171,7 +1176,8 @@ function buildPairs(allUnits, unitStates) {
 
 function BattleUnitCard({
   unit, unitState, phaseId, phaseAccent, phaseRelevance,
-  isDone, onDone, onWound, onHeal, onDetail, isLeader, theme, desktop
+  isDone, onDone, onWound, onHeal, onDetail, isLeader, theme, desktop,
+  isCharged, onCharge, isAdvanced, onAdvance
 }) {
   const wounds   = unitState?.currentWounds ?? unit.maxWounds
   const maxW     = unit.maxWounds
@@ -1179,7 +1185,8 @@ function BattleUnitCard({
   const hpColor  = pct > 0.6 ? '#22c55e' : pct > 0.3 ? '#f59e0b' : '#ef4444'
   const active   = phaseRelevance?.level !== 'suppress'
   const relevant = phaseRelevance?.level === 'relevant'
-  const attacks  = getCardAttacks(unit, phaseId)
+  const _cSet    = isCharged ? new Set([unit.id]) : new Set()
+  const attacks  = getCardAttacks(unit, phaseId, _cSet)
   const showAtk  = attacks !== null && active && !isDone &&
     (phaseId === 'shooting' || phaseId === 'fight' || phaseId === 'charge')
   const pulseMov = phaseId === 'movement' && active && !isDone
@@ -1238,6 +1245,18 @@ function BattleUnitCard({
             <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase"
               style={{ fontSize: 7, background: `${phaseAccent}cc`, color: '#000' }}>
               Leader
+            </span>
+          )}
+          {isCharged && phaseId === 'fight' && (
+            <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase sync-pulse"
+              style={{ fontSize: 7, background: `${phaseAccent}dd`, color: '#000' }}>
+              ⚡ 1ST
+            </span>
+          )}
+          {isAdvanced && phaseId === 'shooting' && (
+            <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase"
+              style={{ fontSize: 7, background: 'rgba(239,68,68,0.85)', color: '#fff' }}>
+              ADV
             </span>
           )}
         </div>
@@ -1322,6 +1341,32 @@ function BattleUnitCard({
 
         {/* Action buttons */}
         <div className="flex flex-col gap-1 mt-1.5">
+          {phaseId === 'movement' && active && !isDone && (
+            <button
+              onClick={e => { e.stopPropagation(); onAdvance?.() }}
+              className="w-full rounded-lg font-black flex items-center justify-center"
+              style={{
+                fontSize: fBtn, padding: desktop ? '5px 0' : '4px 0',
+                background: isAdvanced ? 'rgba(96,165,250,0.35)' : 'rgba(96,165,250,0.12)',
+                color: isAdvanced ? '#93c5fd' : 'rgba(96,165,250,0.70)',
+                border: `1.5px solid ${isAdvanced ? 'rgba(96,165,250,0.65)' : 'rgba(96,165,250,0.28)'}`,
+              }}>
+              {isAdvanced ? '→ Advanced ✓' : '→ Did you Advance?'}
+            </button>
+          )}
+          {phaseId === 'charge' && active && !isDone && (
+            <button
+              onClick={e => { e.stopPropagation(); onCharge?.() }}
+              className="w-full rounded-lg font-black flex items-center justify-center"
+              style={{
+                fontSize: fBtn, padding: desktop ? '6px 0' : '5px 0',
+                background: isCharged ? `${phaseAccent}50` : `${phaseAccent}18`,
+                color: isCharged ? '#fff' : phaseAccent,
+                border: `1.5px solid ${isCharged ? phaseAccent : phaseAccent + '55'}`,
+              }}>
+              {isCharged ? '⚡ Charged!' : '⚡ Did you Charge?'}
+            </button>
+          )}
           <button
             onClick={e => { e.stopPropagation(); onWound() }}
             className="w-full rounded-lg font-black flex items-center justify-center gap-1"
@@ -1348,7 +1393,7 @@ function BattleUnitCard({
   )
 }
 
-function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseRel, doneUnitIds, toggleDone, onWound, onHeal, onDetail, theme, desktop }) {
+function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseRel, doneUnitIds, toggleDone, onWound, onHeal, onDetail, theme, desktop, chargedUnitIds, toggleCharged, advancedUnitIds, toggleAdvanced }) {
   const { leader, unit } = pair
   const hasBoth = leader && unit
   return (
@@ -1363,6 +1408,8 @@ function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseR
           onHeal={() => onHeal(leader.id, unitStates[leader.id]?.currentWounds ?? leader.maxWounds)}
           onDetail={() => onDetail(leader)}
           isLeader={true} theme={theme} desktop={desktop}
+          isCharged={chargedUnitIds.has(leader.id)} onCharge={() => toggleCharged(leader.id)}
+          isAdvanced={advancedUnitIds.has(leader.id)} onAdvance={() => toggleAdvanced(leader.id)}
         />
       )}
       {hasBoth && (
@@ -1384,6 +1431,8 @@ function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseR
           onWound={() => onWound(unit.id, unitStates[unit.id]?.currentWounds ?? unit.maxWounds)}
           onHeal={() => onHeal(unit.id, unitStates[unit.id]?.currentWounds ?? unit.maxWounds)}
           onDetail={() => onDetail(unit)}
+          isCharged={chargedUnitIds.has(unit.id)} onCharge={() => toggleCharged(unit.id)}
+          isAdvanced={advancedUnitIds.has(unit.id)} onAdvance={() => toggleAdvanced(unit.id)}
           isLeader={false} theme={theme} desktop={desktop}
         />
       )}
@@ -1431,6 +1480,14 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   // Per-phase done tracking — resets when phase changes
   const [doneUnitIds, setDoneUnitIds] = useState(new Set())
   React.useEffect(() => { setDoneUnitIds(new Set()) }, [activePhaseIdx])
+
+  // Charged units — persists from charge → fight phase, clears on new round (command phase)
+  const [chargedUnitIds, setChargedUnitIds] = useState(new Set())
+  const toggleCharged = id => setChargedUnitIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+
+  // Advanced units — persists from movement → shooting phase, clears on new round
+  const [advancedUnitIds, setAdvancedUnitIds] = useState(new Set())
+  const toggleAdvanced = id => setAdvancedUnitIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
   const setFerocityChoice = (unitId, choice) =>
     setFerocityChoices(prev => ({ ...prev, [unitId]: prev[unitId] === choice ? null : choice }))
 
@@ -1781,8 +1838,8 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   )
 
   const sortedUnits = [...units].sort((a, b) => {
-    const sa = getPhaseRelevance(a, activePhase.id).level === 'suppress' ? 1 : 0
-    const sb = getPhaseRelevance(b, activePhase.id).level === 'suppress' ? 1 : 0
+    const sa = getPhaseRelevance(a, activePhase.id, chargedUnitIds, advancedUnitIds).level === 'suppress' ? 1 : 0
+    const sb = getPhaseRelevance(b, activePhase.id, chargedUnitIds, advancedUnitIds).level === 'suppress' ? 1 : 0
     return sa - sb
   })
 
@@ -1980,7 +2037,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           {cpEffectsNode && activePhase.id === 'command' && (
             <div className="px-3 pt-2">{cpEffectsNode}</div>
           )}
-          <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} onUnitClick={setDetailUnit} />
+          <PhaseAbilityPanel units={augmentedUnits} activePhase={activePhase} theme={theme} onUnitClick={setDetailUnit} chargedUnitIds={chargedUnitIds} />
 
           {/* Quick action buttons */}
           <div className="flex gap-2 px-3 py-2">
@@ -2017,7 +2074,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                 phaseId={activePhase.id}
                 phaseAccent={phaseAccent}
                 unitStates={unitStates}
-                getPhaseRel={u => getPhaseRelevance(u, activePhase.id)}
+                getPhaseRel={u => getPhaseRelevance(u, activePhase.id, chargedUnitIds, advancedUnitIds)}
                 doneUnitIds={doneUnitIds}
                 toggleDone={id => setDoneUnitIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })}
                 onWound={(id, cur) => setWounds(id, cur - 1)}
@@ -2025,6 +2082,10 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
                 onDetail={setDetailUnit}
                 theme={theme}
                 desktop={desktop}
+                chargedUnitIds={chargedUnitIds}
+                toggleCharged={toggleCharged}
+                advancedUnitIds={advancedUnitIds}
+                toggleAdvanced={toggleAdvanced}
               />
             ))}
             <div className="w-3 shrink-0" />
@@ -2043,7 +2104,11 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
           const isDone   = i < activePhaseIdx
           const accent   = PHASE_ACCENT_MAP[phase.id] || theme.secondary
           return (
-            <motion.button key={phase.id} onClick={() => { setActivePhaseIdx(i); onPhaseChange?.(i) }}
+            <motion.button key={phase.id} onClick={() => {
+              setActivePhaseIdx(i)
+              onPhaseChange?.(i)
+              if (i === 0) { setChargedUnitIds(new Set()); setAdvancedUnitIds(new Set()) }
+            }}
               whileTap={{ scale: 0.92 }}
               className="flex flex-col items-center justify-center py-3 gap-1 relative"
               style={{

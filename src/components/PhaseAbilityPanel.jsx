@@ -75,7 +75,7 @@ function getUnitAttacks(unit, phaseId) {
   return bestA
 }
 
-export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitClick }) {
+export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitClick, chargedUnitIds = new Set() }) {
   const [expandedKey, setExpandedKey] = useState(null)
 
   const phaseId = activePhase?.id
@@ -145,23 +145,38 @@ export default function PhaseAbilityPanel({ units, activePhase, theme, onUnitCli
                   {FOCUS_LABEL[phaseId]}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
-                  {focusUnits.map(u => {
-                    const atk = phaseId !== 'charge' ? getUnitAttacks(u, phaseId) : null
-                    return (
-                      <button key={u.id}
-                        onClick={() => onUnitClick?.(u)}
-                        className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-xl transition-opacity active:opacity-70"
-                        style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}40` }}>
-                        {u.name}
-                        {atk !== null && (
-                          <span className="font-black px-1.5 py-0.5 rounded-lg"
-                            style={{ background: accent, color: '#000', fontSize: 9 }}>
-                            {atk}A
-                          </span>
-                        )}
-                      </button>
-                    )
-                  })}
+                  {(() => {
+                    const nameCounts = {}
+                    focusUnits.forEach(u => { nameCounts[u.name] = (nameCounts[u.name] || 0) + 1 })
+                    const nameIdx = {}
+                    return focusUnits.map(u => {
+                      const atk = phaseId !== 'charge' ? getUnitAttacks(u, phaseId) : null
+                      const hasDupe = nameCounts[u.name] > 1
+                      nameIdx[u.name] = (nameIdx[u.name] || 0) + 1
+                      const label = hasDupe ? `${u.name} ${nameIdx[u.name]}` : u.name
+                      const fightsFirst = phaseId === 'fight' && chargedUnitIds.has(u.id)
+                      return (
+                        <button key={u.id}
+                          onClick={() => onUnitClick?.(u)}
+                          className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-xl transition-opacity active:opacity-70"
+                          style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}40` }}>
+                          {label}
+                          {fightsFirst && (
+                            <span className="font-black px-1 py-0.5 rounded"
+                              style={{ background: accent, color: '#000', fontSize: 8 }}>
+                              1st
+                            </span>
+                          )}
+                          {atk !== null && (
+                            <span className="font-black px-1.5 py-0.5 rounded-lg"
+                              style={{ background: accent, color: '#000', fontSize: 9 }}>
+                              {atk}A
+                            </span>
+                          )}
+                        </button>
+                      )
+                    })
+                  })()}
                 </div>
               </div>
             )}
