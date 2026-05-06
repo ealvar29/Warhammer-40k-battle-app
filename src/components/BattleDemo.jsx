@@ -21,7 +21,7 @@ import PhaseGuideCard from './PhaseGuideCard'
 
 import { PHASE_EFFECTS } from '../data/phaseEffects'
 import MathHammerSheet from './MathHammerSheet'
-import KeywordChip from './KeywordChip'
+import KeywordChip, { parseTextWithKeywords } from './KeywordChip'
 
 function getStratagems(faction, detachmentId) {
   const coreStrats = demoStratagems.filter(s => s.source === 'core')
@@ -259,7 +259,7 @@ function AbilityChipRow({ abilities, theme }) {
                   <p className="text-xs font-bold" style={{ color: accent }}>{a.name}</p>
                 </div>
                 <div className="px-3 py-2.5" style={{ background: `${accent}08` }}>
-                  <p className="text-xs leading-relaxed" style={{ color: theme.textPrimary, opacity: 0.9 }}>{a.description}</p>
+                  <p className="text-xs leading-relaxed" style={{ color: theme.textPrimary, opacity: 0.9 }}>{parseTextWithKeywords(a.description, theme)}</p>
                   {a.reminder && (
                     <div className="mt-2 flex items-start gap-1.5 rounded-lg px-2 py-1.5" style={{ background: `${accent}18`, border: `1px solid ${accent}30` }}>
                       <span style={{ color: accent, fontSize: 10, lineHeight: '1.4', flexShrink: 0 }}>↳</span>

@@ -561,12 +561,6 @@ export const leaderAbilities = {
         description: 'While this model is leading a unit, friendly SPACE WOLVES CORE units within 6" of this unit can re-roll Hit rolls.',
         reminder: 'Re-roll all hit rolls for SW CORE units within 6".',
       },
-      {
-        name: 'Saga of the Bear',
-        phase: 'any',
-        description: 'Each time this model would lose a wound, roll one D6: on a 4+, that wound is ignored.',
-        reminder: '4+ to ignore each wound on Logan.',
-      },
     ],
   },
 
@@ -579,12 +573,6 @@ export const leaderAbilities = {
         phase: 'command',
         description: 'While this model is leading a unit, friendly SPACE WOLVES CORE units within 6" of this unit can re-roll Hit rolls.',
         reminder: 'Re-roll all hit rolls for SW CORE units within 6".',
-      },
-      {
-        name: 'Saga of the Bear',
-        phase: 'any',
-        description: 'Each time this model would lose a wound, roll one D6: on a 4+, that wound is ignored.',
-        reminder: '4+ to ignore each wound on Logan.',
       },
     ],
   },

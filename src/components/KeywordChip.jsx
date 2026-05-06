@@ -12,14 +12,20 @@ export default function KeywordChip({ keyword, theme }) {
   const show = () => {
     if (!chipRef.current) return
     const r = chipRef.current.getBoundingClientRect()
-    setPos({ x: r.left, y: r.top })
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 400
+    const showBelow = r.top < 130
+    setPos({
+      x: Math.min(r.left, vw - 250),
+      y: showBelow ? r.bottom : r.top,
+      below: showBelow,
+    })
   }
   const hide = () => setPos(null)
 
-  const onTouchStart = () => { timerRef.current = setTimeout(show, 380) }
+  const onTouchStart = () => { timerRef.current = setTimeout(show, 320) }
   const onTouchEnd = () => {
     clearTimeout(timerRef.current)
-    if (pos) setTimeout(hide, 1800)
+    if (pos) setTimeout(hide, 2200)
   }
 
   return (
@@ -47,8 +53,8 @@ export default function KeywordChip({ keyword, theme }) {
           style={{
             position: 'fixed',
             left: pos.x,
-            top: pos.y - 8,
-            transform: 'translateY(-100%)',
+            top: pos.below ? pos.y + 8 : pos.y - 8,
+            transform: pos.below ? 'none' : 'translateY(-100%)',
             zIndex: 9999,
             background: theme.surface,
             border: `1px solid ${theme.secondary}44`,
@@ -57,7 +63,7 @@ export default function KeywordChip({ keyword, theme }) {
             pointerEvents: 'none',
           }}
         >
-          <span className="block text-xs font-black mb-1" style={{ color: theme.secondary }}>{upper}</span>
+          <span className="block text-[10px] font-black mb-1" style={{ color: theme.secondary }}>{upper}</span>
           <span className="block text-xs leading-relaxed" style={{ color: theme.textPrimary }}>{tip}</span>
         </span>,
         document.body
@@ -66,20 +72,41 @@ export default function KeywordChip({ keyword, theme }) {
   )
 }
 
-// Utility: parse free text and wrap known keywords in KeywordChip
+// Parse ability text and wrap [KEYWORD] brackets + known plain keywords as interactive chips.
+// W40K 10th edition wraps all special keywords in [brackets] in ability text.
 export function parseTextWithKeywords(text, theme) {
   if (!text) return text
-  // Sort longest first to prevent partial matches
-  const sorted = ALL_KNOWN_KEYWORDS.slice().sort((a, b) => b.length - a.length)
-  const escaped = sorted.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-  const pattern = new RegExp(`(${escaped.join('|')})`, 'gi')
-  const parts = text.split(pattern)
-  if (parts.length === 1) return text
-  return parts.map((part, i) => {
-    const upper = part.toUpperCase()
-    if (ALL_KNOWN_KEYWORDS.includes(upper)) {
-      return <KeywordChip key={i} keyword={upper} theme={theme} />
+
+  // Split on [KEYWORD] bracket groups first
+  const parts = text.split(/(\[[^\]]+\])/g)
+
+  const nodes = []
+  parts.forEach((part, i) => {
+    const bracketMatch = part.match(/^\[([^\]]+)\]$/)
+    if (bracketMatch) {
+      const kw = bracketMatch[1]
+      const tip = getKeywordTip(kw)
+      nodes.push(tip
+        ? <KeywordChip key={i} keyword={kw} theme={theme} />
+        : part
+      )
+      return
     }
-    return part
+
+    // For plain-text segments, also match known static keywords (e.g. in reminder fields)
+    const sorted = ALL_KNOWN_KEYWORDS.slice().sort((a, b) => b.length - a.length)
+    const escaped = sorted.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    const kwPattern = new RegExp(`(${escaped.join('|')})`, 'gi')
+    const subParts = part.split(kwPattern)
+    if (subParts.length === 1) { nodes.push(part); return }
+    subParts.forEach((sp, j) =>
+      nodes.push(ALL_KNOWN_KEYWORDS.includes(sp.toUpperCase())
+        ? <KeywordChip key={`${i}-${j}`} keyword={sp.toUpperCase()} theme={theme} />
+        : sp
+      )
+    )
   })
+
+  if (nodes.every(n => typeof n === 'string')) return nodes.join('')
+  return nodes
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
 import { PickOneIcon } from './GameIcon'
+import { parseTextWithKeywords } from './KeywordChip'
 
 export default function DetachmentRulePanel({ detachment, activePhase, theme, onceBuffAvailable = false }) {
   const {
@@ -368,7 +369,7 @@ export default function DetachmentRulePanel({ detachment, activePhase, theme, on
                     </div>
                   )}
                   <p className="text-xs leading-relaxed" style={{ color: theme.textSecondary }}>
-                    {rule.description}
+                    {parseTextWithKeywords(rule.description, theme)}
                   </p>
                 </div>
               )}

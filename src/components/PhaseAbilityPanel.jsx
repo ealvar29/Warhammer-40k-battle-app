@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import KeywordChip from './KeywordChip'
-import { ALL_KNOWN_KEYWORDS } from '../data/keywords'
+import KeywordChip, { parseTextWithKeywords } from './KeywordChip'
 
 const PHASE_ACCENT = {
   command:  '#c9a84c',
@@ -15,21 +14,6 @@ const PHASE_CONTEXT = {
   shooting: 'Only ranged units fire this phase — melee specialists wait for Fight.',
   charge:   'Push melee units into charge range. Ranged units hang back.',
   fight:    'Melee fighters shine here. Strike with everything in Engagement Range.',
-}
-
-function parseTextWithKeywords(text, theme) {
-  if (!text) return text
-  const sorted = ALL_KNOWN_KEYWORDS.slice().sort((a, b) => b.length - a.length)
-  const escaped = sorted.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-  const pattern = new RegExp(`(${escaped.join('|')})`, 'gi')
-  const parts = text.split(pattern)
-  if (parts.length === 1) return text
-  return parts.map((part, i) => {
-    if (ALL_KNOWN_KEYWORDS.includes(part.toUpperCase())) {
-      return <KeywordChip key={i} keyword={part.toUpperCase()} theme={theme} />
-    }
-    return part
-  })
 }
 
 // Determines a unit's combat role based on its weapons (or user override)

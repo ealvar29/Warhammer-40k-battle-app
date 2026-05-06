@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { parseTextWithKeywords } from '../components/KeywordChip'
 import { usePortraitStore } from '../store/portraitStore'
 import { PhaseIcon, FactionIcon, PickOneIcon } from '../components/GameIcon'
 import { FactionEdge, themeClip } from '../components/FactionAccent'
@@ -537,7 +538,7 @@ function DetachmentInfoSheet({ d, theme, accent, onChoose, onClose }) {
                               {enh.cost}pts
                             </span>
                           </div>
-                          <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>{enh.description}</p>
+                          <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.72)' }}>{parseTextWithKeywords(enh.description, theme)}</p>
                         </div>
                       ))}
                     </div>
@@ -1267,7 +1268,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                               </span>
                             </div>
                             <p className="text-[10px] leading-relaxed" style={{ color: '#fbbf24', opacity: 0.85 }}>
-                              {enh.description}
+                              {parseTextWithKeywords(enh.description, theme)}
                             </p>
                           </button>
                         )

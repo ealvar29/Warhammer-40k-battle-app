@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import { parseTextWithKeywords } from '../components/KeywordChip'
 import { PhaseIcon, PickOneIcon } from '../components/GameIcon'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useBattleStore } from '../store/battleStore'
@@ -33,7 +34,7 @@ function AbilityCard({ ability, accent, theme }) {
       </div>
       {(ability.reminder || ability.description) && (
         <p className="text-xs leading-relaxed" style={{ color: theme.textPrimary, opacity: 0.88 }}>
-          {ability.reminder || ability.description}
+          {parseTextWithKeywords(ability.reminder || ability.description, theme)}
         </p>
       )}
     </div>
