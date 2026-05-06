@@ -654,6 +654,18 @@ function FactionArtCard({ f, id, selected, theme, onSelect, onContinue, unitCoun
   )
 }
 
+// Parse "KEYWORD KEYWORD model only." prefix and check against unit keywords
+function isEnhancementEligible(enh, unit) {
+  const match = (enh.description || '').match(/^([\w\s]+?)\s+model only\./i)
+  if (!match) return true
+  const required = match[1].trim().toUpperCase().split(/\s+/)
+  const unitKws = [
+    ...(unit.keywords || []),
+    ...(unit.factionKeywords || []),
+  ].map(k => k.toUpperCase())
+  return required.every(k => unitKws.includes(k))
+}
+
 export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const store = useBattleStore()
   const setEnhancement = useBattleStore(s => s.setEnhancement)
@@ -1209,6 +1221,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               )}
               {hasAny && selectedChars.map(char => {
                 const assigned = enhancementAssignments[char.id]
+                const eligibleEnhs = detEnhancements.filter(e => isEnhancementEligible(e, char))
+                if (!eligibleEnhs.length) return null
                 return (
                   <div key={char.id} className="rounded-xl overflow-hidden"
                     style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)' }}>
@@ -1224,7 +1238,7 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                       )}
                     </div>
                     <div className="p-2 space-y-1.5">
-                      {detEnhancements.map(enh => {
+                      {eligibleEnhs.map(enh => {
                         const isChosen = assigned === enh.name
                         return (
                           <button key={enh.name}
@@ -1243,8 +1257,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                 {enh.cost}pts
                               </span>
                             </div>
-                            <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                              {enh.description?.length > 100 ? enh.description.slice(0, 100) + '…' : enh.description}
+                            <p className="text-[10px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                              {enh.description}
                             </p>
                           </button>
                         )
@@ -1253,14 +1267,6 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                   </div>
                 )
               })}
-              <button onClick={() => setStep('opponent')} className="w-full py-3.5 rounded-2xl font-bold text-sm"
-                style={{ background: '#fbbf24', color: '#000' }}>
-                Continue →
-              </button>
-              <button onClick={() => setStep('opponent')} className="w-full py-2 text-xs font-medium"
-                style={{ color: 'rgba(255,255,255,0.35)' }}>
-                Skip — no enhancements
-              </button>
             </div>
           )
         })()}
@@ -1306,8 +1312,20 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
         )}
       </div>
 
-      {/* Sticky Continue footer — detachment and units steps */}
-      {(step === 'detachment' || step === 'units') && (() => {
+      {/* Sticky Continue footer — detachment, units, and enhancements steps */}
+      {(step === 'detachment' || step === 'units' || step === 'enhancements') && (() => {
+        if (step === 'enhancements') return (
+          <div className="px-4 pb-4 pt-2 shrink-0 border-t space-y-2" style={{ background: theme.surface, borderColor: theme.border }}>
+            <button onClick={() => setStep('opponent')} className="w-full py-3.5 rounded-2xl font-bold text-sm"
+              style={{ background: '#fbbf24', color: '#000' }}>
+              Continue →
+            </button>
+            <button onClick={() => setStep('opponent')} className="w-full py-2 text-xs font-medium"
+              style={{ color: 'rgba(255,255,255,0.35)' }}>
+              Skip — no enhancements
+            </button>
+          </div>
+        )
         const totalPts = Object.entries(unitCounts).reduce((sum, [id, n]) => {
           const u = unitList.find(u => u.id === id)
           return sum + (u?.points || 0) * n
