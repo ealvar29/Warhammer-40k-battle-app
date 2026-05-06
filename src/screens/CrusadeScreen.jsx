@@ -1097,13 +1097,50 @@ function UnitCrusadeCard({ unit, orderId, isSW, onRollHonour, onRollScar, theme 
                           style={{ color: theme.textSecondary, background: theme.surfaceHigh }}>Abandon</button>
                       </div>
                       <div>
-                        <p className="text-xs font-bold mb-1" style={{ color: theme.textSecondary }}>Progress</p>
-                        <textarea value={unit.sagaProgress || ''}
-                          onChange={e => store.updateSagaProgress(orderId, unit.id, e.target.value)}
-                          placeholder={`e.g. 3/10 kills, 1/3 charges survived…`}
-                          rows={2}
-                          className="w-full rounded-xl px-3 py-2 text-xs outline-none resize-none"
-                          style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }} />
+                        <p className="text-xs font-bold mb-1.5" style={{ color: theme.textSecondary }}>Progress</p>
+                        {activeSagaData.target ? (() => {
+                          const sagaColor = SAGA_CATEGORY_COLORS[activeSagaData.category] || theme.secondary
+                          const current = Math.max(0, parseInt(unit.sagaProgress || '0', 10) || 0)
+                          const pct = Math.min(100, Math.round((current / activeSagaData.target) * 100))
+                          return (
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-3">
+                                <button
+                                  onClick={() => store.updateSagaProgress(orderId, unit.id, String(Math.max(0, current - 1)))}
+                                  className="w-9 h-9 rounded-xl font-black text-base flex items-center justify-center shrink-0"
+                                  style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }}>
+                                  −
+                                </button>
+                                <div className="flex-1 text-center">
+                                  <p className="font-black text-2xl leading-none" style={{ color: sagaColor }}>{current}</p>
+                                  <p className="text-[10px] mt-0.5" style={{ color: theme.textSecondary }}>of {activeSagaData.target}</p>
+                                </div>
+                                <button
+                                  onClick={() => store.updateSagaProgress(orderId, unit.id, String(Math.min(activeSagaData.target, current + 1)))}
+                                  className="w-9 h-9 rounded-xl font-black text-base flex items-center justify-center shrink-0"
+                                  style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }}>
+                                  +
+                                </button>
+                              </div>
+                              <div className="w-full rounded-full overflow-hidden h-2" style={{ background: theme.surfaceHigh }}>
+                                <div className="h-full rounded-full transition-all duration-300"
+                                  style={{ width: `${pct}%`, background: pct >= 100 ? theme.hpFull : sagaColor }} />
+                              </div>
+                              {pct >= 100 && (
+                                <p className="text-xs font-bold text-center" style={{ color: theme.hpFull }}>
+                                  ✓ Condition met — mark complete!
+                                </p>
+                              )}
+                            </div>
+                          )
+                        })() : (
+                          <textarea value={unit.sagaProgress || ''}
+                            onChange={e => store.updateSagaProgress(orderId, unit.id, e.target.value)}
+                            placeholder="Track your progress here…"
+                            rows={2}
+                            className="w-full rounded-xl px-3 py-2 text-xs outline-none resize-none"
+                            style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.border}` }} />
+                        )}
                       </div>
                       <div className="rounded-xl p-2.5" style={{ background: theme.surfaceHigh, border: `1px solid ${theme.border}` }}>
                         <p className="text-xs font-bold mb-0.5" style={{ color: theme.textSecondary }}>Reward on completion:</p>

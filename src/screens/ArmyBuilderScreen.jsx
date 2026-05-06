@@ -730,6 +730,8 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
   const [unitLoadouts, setUnitLoadouts] = useState({})
   const [infoSheetDetachment, setInfoSheetDetachment] = useState(null)
   const [showLegends, setShowLegends] = useState(() => localStorage.getItem('w40k-show-legends') === 'true')
+  const [pointLimit, setPointLimit] = useState(2000)
+  const [editingLimit, setEditingLimit] = useState(false)
 
   const toggleShowLegends = () => setShowLegends(prev => {
     const next = !prev
@@ -986,20 +988,59 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
               }, 0)
               return (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xs" style={{ color: theme.textSecondary }}>
-                      Tap to add · use +/− for multiple squads.
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold px-2.5 py-1 rounded-full"
-                        style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
-                        {totalUnits} unit{totalUnits !== 1 ? 's' : ''}
-                      </span>
-                      <span className="text-xs font-black px-2.5 py-1 rounded-full"
-                        style={{ background: `${theme.secondary}18`, color: theme.secondary, border: `1px solid ${theme.secondary}44` }}>
-                        {totalPts} pts
-                      </span>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs" style={{ color: theme.textSecondary }}>
+                        Tap to add · use +/− for multiple squads.
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                          style={{ background: theme.surfaceHigh, color: theme.textSecondary }}>
+                          {totalUnits} unit{totalUnits !== 1 ? 's' : ''}
+                        </span>
+                        <span className="text-xs font-black px-2.5 py-1 rounded-full"
+                          style={{
+                            background: totalPts > pointLimit ? `${theme.hpLow}22` : `${theme.secondary}18`,
+                            color: totalPts > pointLimit ? theme.hpLow : theme.secondary,
+                            border: `1px solid ${totalPts > pointLimit ? theme.hpLow + '55' : theme.secondary + '44'}`,
+                          }}>
+                          {totalPts} pts
+                        </span>
+                      </div>
                     </div>
+                    {/* Points budget bar */}
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 rounded-full overflow-hidden h-1.5" style={{ background: theme.surfaceHigh }}>
+                        <div className="h-full rounded-full transition-all duration-300"
+                          style={{
+                            width: `${Math.min(100, (totalPts / pointLimit) * 100)}%`,
+                            background: totalPts > pointLimit ? theme.hpLow : totalPts > pointLimit * 0.9 ? theme.hpMid : theme.secondary,
+                          }} />
+                      </div>
+                      {editingLimit ? (
+                        <input
+                          autoFocus
+                          type="number"
+                          value={pointLimit}
+                          onChange={e => setPointLimit(Math.max(1, parseInt(e.target.value) || 2000))}
+                          onBlur={() => setEditingLimit(false)}
+                          onKeyDown={e => e.key === 'Enter' && setEditingLimit(false)}
+                          className="w-20 text-xs font-bold text-right outline-none rounded-lg px-2 py-0.5"
+                          style={{ background: theme.surfaceHigh, color: theme.textPrimary, border: `1px solid ${theme.secondary}` }}
+                        />
+                      ) : (
+                        <button onClick={() => setEditingLimit(true)}
+                          className="text-[10px] font-bold shrink-0"
+                          style={{ color: theme.textSecondary }}>
+                          / {pointLimit} pts
+                        </button>
+                      )}
+                    </div>
+                    {totalPts > pointLimit && (
+                      <p className="text-[10px] font-bold" style={{ color: theme.hpLow }}>
+                        ⚠ {totalPts - pointLimit} pts over limit
+                      </p>
+                    )}
                   </div>
                   <div className="flex justify-end">
                     <button
@@ -1160,9 +1201,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                         onClick={() => setUnitRoleOverrides(prev => ({ ...prev, [u.id]: opt.id }))}
                                         className="flex-1 py-0.5 rounded font-bold"
                                         style={{
-                                          background: active ? section.accent : 'rgba(0,0,0,0.6)',
-                                          color: active ? '#000' : 'rgba(255,255,255,0.45)',
-                                          border: `1px solid ${active ? section.accent : 'rgba(255,255,255,0.1)'}`,
+                                          background: active ? section.accent : 'rgba(0,0,0,0.45)',
+                                          color: active ? '#000' : 'rgba(255,255,255,0.75)',
+                                          border: `1px solid ${active ? section.accent : 'rgba(255,255,255,0.28)'}`,
                                           fontSize: 8,
                                         }}>
                                         <opt.Icon size={8} style={{ display: 'inline', verticalAlign: 'middle' }} />
@@ -1183,9 +1224,9 @@ export default function ArmyBuilderScreen({ theme, onNavigate }) {
                                         onClick={() => setUnitLoadouts(prev => ({ ...prev, [u.id]: opt.id }))}
                                         className="flex-1 py-0.5 rounded font-bold"
                                         style={{
-                                          background: active ? section.accent : 'rgba(0,0,0,0.6)',
-                                          color: active ? '#000' : 'rgba(255,255,255,0.45)',
-                                          border: `1px solid ${active ? section.accent : 'rgba(255,255,255,0.1)'}`,
+                                          background: active ? section.accent : 'rgba(0,0,0,0.45)',
+                                          color: active ? '#000' : 'rgba(255,255,255,0.75)',
+                                          border: `1px solid ${active ? section.accent : 'rgba(255,255,255,0.28)'}`,
                                           fontSize: 8,
                                         }}>
                                         {opt.short}
