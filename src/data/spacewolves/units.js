@@ -15,8 +15,8 @@ export const swUnits = {
       { name: 'Frostfang', type: 'melee', A: 8, WS: '2+', S: 6, AP: -3, D: 2, keywords: ['SUSTAINED HITS 1'] },
     ],
     abilities: [
-      { name: 'War Howl', phase: 'charge', description: 'While this model is leading a unit, each time this model\'s unit makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit.' },
-      { name: 'Battle-lust', phase: 'fight', description: 'After this model finishes a Charge move, until the end of the turn, add 2 to the Attacks characteristic of this model\'s Frostfang.' },
+      { name: 'War Howl', phase: 'charge', description: "While this model is leading a BLOOD CLAWS unit, each time a model in that unit makes a melee attack, you can re-roll the Wound roll. While this model is leading a WOLF GUARD HEADTAKERS unit, that unit is eligible to declare a charge in a turn in which it Advanced." },
+      { name: 'Battle-lust', phase: 'charge', description: "Each time this model ends a Charge move, until the end of the turn, add 2 to the Attacks characteristic of this model's Frostfang weapon." },
     ],
     isLeader: true,
     leadsUnits: ['bloodClaws', 'wolfGuardHeadtakers'],

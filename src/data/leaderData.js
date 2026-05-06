@@ -309,8 +309,8 @@ export const leaderAbilities = {
       {
         name: 'War Howl',
         phase: 'fight',
-        description: "While this model is leading a unit, each time this model's unit makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit.",
-        reminder: '+1 Attack on all melee weapons after charging.',
+        description: 'While this model is leading a BLOOD CLAWS unit, each time a model in that unit makes a melee attack, you can re-roll the Wound roll.',
+        reminder: 'Re-roll Wound rolls on all melee attacks.',
       },
     ],
   },
@@ -321,16 +321,8 @@ export const leaderAbilities = {
     abilities: [
       {
         name: 'War Howl',
-        phase: 'fight',
-        description:
-          "While this model is leading this unit, melee weapons equipped by models in that unit have the [SUSTAINED HITS 1] ability. Each time this model's unit makes a Charge move, until the end of the turn, add 1 to the Attacks characteristic of melee weapons equipped by models in that unit.",
-        reminder: 'Sustained Hits 1 on all melee weapons. +1 Attack on melee weapons after charging.',
-      },
-      {
-        name: 'Berserk Charge',
         phase: 'charge',
-        description:
-          'While this model is leading this unit, this unit is eligible to declare a charge in a turn in which it Advanced.',
+        description: 'While this model is leading a WOLF GUARD HEADTAKERS unit, that unit is eligible to declare a charge in a turn in which it Advanced.',
         reminder: 'This unit can charge even after Advancing.',
       },
     ],
