@@ -1868,12 +1868,12 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   const [activeStratIds, setActiveStratIds] = useState(new Set())
   // Ferocious Strike sub-choice: per unit, resets when fight phase changes
   const [ferocityChoices, setFerocityChoices] = useState({})
+  // Focused unit — null defaults to first relevant unit in the sorted list
+  const [focusedUnitId, setFocusedUnitId] = useState(null)
+
   // Per-phase done tracking — resets when phase changes
   const [doneUnitIds, setDoneUnitIds] = useState(new Set())
   React.useEffect(() => { setDoneUnitIds(new Set()); setFocusedUnitId(null) }, [activePhaseIdx])
-
-  // Focused unit — null defaults to first relevant unit in the sorted list
-  const [focusedUnitId, setFocusedUnitId] = useState(null)
 
   // Charged units — persists from charge → fight phase, clears on new round (command phase)
   const [chargedUnitIds, setChargedUnitIds] = useState(new Set())
@@ -1931,8 +1931,11 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   })
 
   const hasSynapse = augmentedUnits.some(u => (u.keywords || []).some(k => k === 'SYNAPSE'))
+  const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
+  const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
+  const activePhase = PHASES[activePhaseIdx]
 
-  // Sorted units for the strip: relevant first → active → suppress → done last
+  // Sorted units: relevant first → active → suppress → done last
   const sortedUnits = React.useMemo(() => {
     const rl = { relevant: 0, active: 1, suppress: 2 }
     return [...augmentedUnits].sort((a, b) => {
@@ -1971,10 +1974,6 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
       if (next) setFocusedUnitId(next.id)
     }
   }
-
-  const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
-  const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
-  const activePhase = PHASES[activePhaseIdx]
 
   const activeUnitIds = new Set(units.map(u => u.id))
   const activePhaseEffects = PHASE_EFFECTS.filter(e => activeUnitIds.has(e.unitId))
