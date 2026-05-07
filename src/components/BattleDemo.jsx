@@ -1504,6 +1504,333 @@ function BattleUnitPairGroup({ pair, phaseId, phaseAccent, unitStates, getPhaseR
   )
 }
 
+// ── Focused unit card (full-width, takes remaining vertical space) ────────────
+function FocusedUnitCard({
+  unit, unitState, phaseId, phaseAccent, phaseRelevance,
+  isDone, onDone, onWound, onHeal, onDetail, isLeader, theme, desktop,
+  isCharged, onCharge, isAdvanced, onAdvance,
+  isBattleShocked, onToggleBattleShocked, inSynapse, onToggleSynapse, hasSynapse,
+  companion,
+}) {
+  const [showDmgPicker, setShowDmgPicker] = useState(false)
+
+  const wounds   = unitState?.currentWounds ?? unit.maxWounds
+  const maxW     = unit.maxWounds
+  const pct      = wounds / maxW
+  const hpColor  = pct > 0.6 ? '#22c55e' : pct > 0.3 ? '#f59e0b' : '#ef4444'
+  const active   = phaseRelevance?.level !== 'suppress'
+  const relevant = phaseRelevance?.level === 'relevant'
+  const _cSet    = isCharged ? new Set([unit.id]) : new Set()
+  const attacks  = getCardAttacks(unit, phaseId, _cSet)
+  const showAtk  = attacks !== null && active && !isDone &&
+    (phaseId === 'shooting' || phaseId === 'fight' || phaseId === 'charge')
+  const pulseMov  = phaseId === 'movement' && active && !isDone
+  const isSynapse = (unit.keywords || []).some(k => k === 'SYNAPSE')
+  const ldValue   = unit.Ld ? parseInt(unit.Ld) : null
+  const halfW     = Math.ceil(maxW / 2)
+  const needsLdTest = wounds < halfW && !isSynapse && ldValue !== null
+
+  const fStat = desktop ? 20 : 17
+  const fLbl  = desktop ? 10 : 9
+  const fBtn  = desktop ? 13 : 12
+
+  const borderCol = isDone       ? `${theme.border}88`
+    : !active    ? theme.border
+    : relevant   ? `${phaseAccent}70`
+    :              `${phaseAccent}35`
+
+  return (
+    <div
+      className="flex-1 min-h-0 flex flex-col rounded-2xl overflow-hidden cursor-pointer"
+      style={{
+        border: `1.5px solid ${borderCol}`,
+        boxShadow: relevant && !isDone
+          ? `0 0 28px ${phaseAccent}30, 0 4px 24px rgba(0,0,0,0.55)`
+          : '0 4px 16px rgba(0,0,0,0.4)',
+        opacity: isDone ? 0.55 : !active ? 0.55 : 1,
+        transition: 'opacity 0.3s, box-shadow 0.3s',
+      }}
+      onClick={onDetail}
+    >
+      {/* ── Portrait (flex-1, takes all spare height) ── */}
+      <div className="flex-1 min-h-0 relative overflow-hidden">
+        {unit.artUrl ? (
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url(${unit.artUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: unit.artPosition || 'center 20%',
+          }} />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center"
+            style={{ background: `linear-gradient(135deg, ${phaseAccent}22, ${phaseAccent}08)` }}>
+            <span className="font-black" style={{ fontSize: 64, color: `${phaseAccent}30` }}>
+              {unit.name[0]}
+            </span>
+          </div>
+        )}
+        <div className="absolute inset-0" style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.08) 35%, rgba(0,0,0,0.65) 72%, rgba(0,0,0,0.96) 100%)',
+        }} />
+
+        {/* Top-left badges */}
+        <div className="absolute top-2 left-2 flex flex-col items-start gap-1 z-10">
+          <span className="font-black px-2 py-0.5 rounded-full"
+            style={{ fontSize: 11, background: 'rgba(0,0,0,0.65)', color: hpColor, border: `1px solid ${hpColor}55`, backdropFilter: 'blur(4px)' }}>
+            {wounds}/{maxW} W
+          </span>
+          {isLeader && (
+            <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase"
+              style={{ fontSize: 7, background: `${phaseAccent}cc`, color: '#000' }}>
+              Leader
+            </span>
+          )}
+          {isCharged && phaseId === 'fight' && (
+            <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase sync-pulse"
+              style={{ fontSize: 7, background: `${phaseAccent}dd`, color: '#000' }}>
+              🥊 Fights First
+            </span>
+          )}
+          {isAdvanced && phaseId === 'shooting' && (
+            <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase"
+              style={{ fontSize: 7, background: 'rgba(239,68,68,0.85)', color: '#fff' }}>
+              ADV
+            </span>
+          )}
+          {isBattleShocked && (
+            <span className="font-black px-1.5 py-0.5 rounded-full tracking-widest uppercase sync-pulse"
+              style={{ fontSize: 7, background: 'rgba(239,68,68,0.95)', color: '#fff' }}>
+              💀 Shocked
+            </span>
+          )}
+        </div>
+
+        {/* Mark Done button top-right */}
+        <motion.button
+          whileTap={{ scale: 0.85 }}
+          onClick={e => { e.stopPropagation(); onDone() }}
+          className="absolute top-2 right-2 font-black rounded-full z-10"
+          style={{
+            fontSize: 11, padding: '5px 10px',
+            background: isDone ? 'rgba(34,197,94,0.45)' : 'rgba(0,0,0,0.60)',
+            color: isDone ? '#4ade80' : 'rgba(255,255,255,0.82)',
+            border: `1.5px solid ${isDone ? 'rgba(34,197,94,0.7)' : 'rgba(255,255,255,0.35)'}`,
+            backdropFilter: 'blur(4px)',
+          }}>
+          {isDone ? '✓ Done' : '○ Mark Done'}
+        </motion.button>
+
+        {/* Name + type at bottom of portrait */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 px-3 pb-2.5">
+          <p className="font-black text-white leading-tight truncate" style={{ fontSize: desktop ? 26 : 22 }}>
+            {unit.name}
+          </p>
+          <p className="font-bold uppercase tracking-wide" style={{ fontSize: desktop ? 11 : 9, color: `${phaseAccent}dd` }}>
+            {unit.type || (unit.isLeader ? 'Character' : 'Unit')}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Bottom info section ── */}
+      <div className="shrink-0 px-3 py-2.5" style={{ background: theme.surface }}>
+
+        {/* Companion chip */}
+        {companion && (
+          <div className="flex items-center gap-1.5 mb-2">
+            <span style={{ fontSize: 11, color: `${phaseAccent}99` }}>⚡</span>
+            <p className="text-xs font-bold" style={{ color: `${phaseAccent}bb` }}>
+              {unit.isLeader ? `Leading ${companion.name}` : `With ${companion.name}`}
+            </p>
+          </div>
+        )}
+
+        {/* Stats + ATK row */}
+        <div className="flex gap-3 mb-2.5 items-end">
+          {[['M', unit.M, pulseMov], ['T', unit.T, false], ['SV', unit.Sv, false]]
+            .filter(([, v]) => v != null)
+            .map(([l, v, pulse]) => (
+              <div key={l} className="flex flex-col items-center">
+                <span className={pulse ? 'sync-pulse font-black leading-none' : 'font-black leading-none'}
+                  style={{ fontSize: fStat, color: pulse ? phaseAccent : 'white' }}>{v}</span>
+                <span style={{ fontSize: fLbl, fontWeight: 800, color: pulse ? `${phaseAccent}cc` : 'rgba(255,255,255,0.5)', letterSpacing: '0.04em' }}>{l}</span>
+              </div>
+            ))}
+          {showAtk && (
+            <div className="flex flex-col items-center sync-pulse ml-2">
+              <span className="font-black leading-none" style={{ fontSize: fStat + 7, color: phaseAccent }}>{attacks}</span>
+              <span style={{ fontSize: fLbl, fontWeight: 900, color: `${phaseAccent}cc`, letterSpacing: '0.06em' }}>ATK</span>
+            </div>
+          )}
+        </div>
+
+        {/* Phase hint */}
+        {phaseRelevance?.hint && (
+          <div className={`mb-2 rounded-lg px-2 py-1 ${relevant && !isDone ? 'sync-pulse' : ''}`}
+            style={{
+              background: phaseRelevance.level === 'suppress' ? 'rgba(239,68,68,0.18)' : `${phaseAccent}28`,
+              border: `1px solid ${phaseRelevance.level === 'suppress' ? 'rgba(239,68,68,0.38)' : phaseAccent + '50'}`,
+            }}>
+            <p style={{ fontSize: 11, color: phaseRelevance.level === 'suppress' ? '#f87171' : phaseAccent, lineHeight: 1.35 }}>
+              {phaseRelevance.level === 'suppress' ? '◆ ' : '⚡ '}{phaseRelevance.hint}
+            </p>
+          </div>
+        )}
+
+        {/* HP bar */}
+        <div className="mb-2 w-full rounded-full overflow-hidden" style={{ height: 5, background: 'rgba(255,255,255,0.15)' }}>
+          <div className="h-full rounded-full transition-all duration-300" style={{ width: `${pct * 100}%`, background: hpColor }} />
+        </div>
+
+        {/* Ld / Battle-shocked */}
+        {(needsLdTest || isBattleShocked) && (
+          <div className="mb-2 rounded-lg px-2 py-1.5"
+            style={{
+              background: isBattleShocked ? 'rgba(239,68,68,0.22)' : 'rgba(251,191,36,0.15)',
+              border: `1px solid ${isBattleShocked ? 'rgba(239,68,68,0.5)' : 'rgba(251,191,36,0.4)'}`,
+            }}>
+            {isBattleShocked ? (
+              <p style={{ fontSize: 11, color: '#f87171', lineHeight: 1.3 }}>💀 Battle-shocked — OC is 0</p>
+            ) : (
+              <>
+                <p style={{ fontSize: 11, color: '#fbbf24', lineHeight: 1.3 }}>
+                  ⚠ Ld test — need {ldValue}+ on {inSynapse ? '3D6 drop lowest' : '2D6'}
+                </p>
+                {hasSynapse && (
+                  <button onClick={e => { e.stopPropagation(); onToggleSynapse?.() }}
+                    style={{ fontSize: 10, color: inSynapse ? '#60a5fa' : 'rgba(255,255,255,0.4)', background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'block', marginTop: 2 }}>
+                    📡 {inSynapse ? 'In Synapse ✓' : 'In Synapse?'}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex flex-col gap-1.5">
+          {needsLdTest && (
+            <button onClick={e => { e.stopPropagation(); onToggleBattleShocked?.() }}
+              className="w-full rounded-xl font-black flex items-center justify-center"
+              style={{ fontSize: fBtn, padding: '8px 0', background: isBattleShocked ? 'rgba(239,68,68,0.35)' : 'rgba(251,191,36,0.15)', color: isBattleShocked ? '#fca5a5' : '#fbbf24', border: `1.5px solid ${isBattleShocked ? 'rgba(239,68,68,0.6)' : 'rgba(251,191,36,0.4)'}` }}>
+              {isBattleShocked ? '💀 Battle-shocked' : '⚠ Failed Ld test?'}
+            </button>
+          )}
+          {phaseId === 'movement' && active && !isDone && (
+            <button onClick={e => { e.stopPropagation(); onAdvance?.() }}
+              className="w-full rounded-xl font-black flex items-center justify-center"
+              style={{ fontSize: fBtn, padding: '8px 0', background: isAdvanced ? 'rgba(96,165,250,0.35)' : 'rgba(96,165,250,0.12)', color: isAdvanced ? '#93c5fd' : 'rgba(96,165,250,0.70)', border: `1.5px solid ${isAdvanced ? 'rgba(96,165,250,0.65)' : 'rgba(96,165,250,0.28)'}` }}>
+              {isAdvanced ? '→ Advanced ✓' : '→ Did you Advance?'}
+            </button>
+          )}
+          {phaseId === 'charge' && active && !isDone && (
+            <button onClick={e => { e.stopPropagation(); onCharge?.() }}
+              className="w-full rounded-xl font-black flex items-center justify-center"
+              style={{ fontSize: fBtn, padding: '8px 0', background: isCharged ? `${phaseAccent}50` : `${phaseAccent}18`, color: isCharged ? '#fff' : phaseAccent, border: `1.5px solid ${isCharged ? phaseAccent : phaseAccent + '55'}` }}>
+              {isCharged ? '⚡ Charged!' : '⚡ Did you Charge?'}
+            </button>
+          )}
+          <div className="flex gap-1.5">
+            {showDmgPicker ? (
+              <div className="flex gap-1 flex-1">
+                {[1, 2, 3, 4, 5, 6].map(n => (
+                  <button key={n}
+                    onClick={e => { e.stopPropagation(); onWound(n); setShowDmgPicker(false) }}
+                    className="flex-1 rounded-xl font-black flex items-center justify-center"
+                    style={{ fontSize: fBtn, padding: '8px 0', background: 'rgba(239,68,68,0.30)', color: '#fca5a5', border: '1.5px solid rgba(239,68,68,0.55)' }}>
+                    -{n}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <button onClick={e => { e.stopPropagation(); setShowDmgPicker(true) }}
+                className="flex-1 rounded-xl font-black flex items-center justify-center gap-1"
+                style={{ fontSize: fBtn, padding: '8px 0', background: 'rgba(239,68,68,0.30)', color: '#fca5a5', border: '1.5px solid rgba(239,68,68,0.55)' }}>
+                ▼ Take Damage
+              </button>
+            )}
+            {!showDmgPicker && (
+              <button onClick={e => { e.stopPropagation(); onHeal() }}
+                className="rounded-xl font-black flex items-center justify-center"
+                style={{ fontSize: fBtn, padding: '8px 14px', background: 'rgba(34,197,94,0.20)', color: '#86efac', border: '1px solid rgba(34,197,94,0.40)' }}>
+                ▲ Heal
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Unit selector strip chip ──────────────────────────────────────────────────
+function UnitStripChip({ unit, unitState, isActive, isDone, phaseRelevance, phaseAccent, theme, onClick }) {
+  const wounds   = unitState?.currentWounds ?? unit.maxWounds
+  const maxW     = unit.maxWounds
+  const pct      = wounds / maxW
+  const hpColor  = pct > 0.6 ? '#22c55e' : pct > 0.3 ? '#f59e0b' : '#ef4444'
+  const suppressed = phaseRelevance?.level === 'suppress'
+  const lastName   = unit.name.split(' ').slice(-1)[0]
+
+  return (
+    <button
+      onClick={onClick}
+      className="flex flex-col items-center shrink-0 rounded-xl overflow-hidden"
+      style={{
+        width: 72,
+        border: `2px solid ${isActive ? phaseAccent : isDone ? 'rgba(34,197,94,0.45)' : suppressed ? 'rgba(255,255,255,0.10)' : `${phaseAccent}28`}`,
+        opacity: suppressed && !isActive ? 0.38 : isDone && !isActive ? 0.52 : 1,
+        background: theme.surface,
+        boxShadow: isActive ? `0 0 14px ${phaseAccent}45` : 'none',
+        transition: 'opacity 0.2s, box-shadow 0.2s',
+        scrollSnapAlign: 'start',
+      }}
+    >
+      {/* Mini portrait */}
+      <div className="w-full relative overflow-hidden" style={{ height: 56 }}>
+        {unit.artUrl ? (
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url(${unit.artUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: unit.artPosition || 'center 15%',
+          }} />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center"
+            style={{ background: isActive ? `${phaseAccent}22` : `${phaseAccent}0d` }}>
+            <span className="font-black" style={{ fontSize: 26, color: isActive ? phaseAccent : `${phaseAccent}55` }}>
+              {unit.name[0]}
+            </span>
+          </div>
+        )}
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.65) 100%)' }} />
+        {isDone && (
+          <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.4)' }}>
+            <span style={{ fontSize: 22, color: '#4ade80' }}>✓</span>
+          </div>
+        )}
+        {unit.isLeader && (
+          <span className="absolute top-0.5 left-0.5 font-black rounded px-1"
+            style={{ fontSize: 6, background: `${phaseAccent}cc`, color: '#000', letterSpacing: '0.04em' }}>
+            LEAD
+          </span>
+        )}
+      </div>
+
+      {/* Name + HP */}
+      <div className="w-full px-1.5 py-1">
+        <p className="font-bold text-center truncate leading-tight"
+          style={{ fontSize: 9, color: isActive ? phaseAccent : theme.textPrimary }}>
+          {lastName}
+        </p>
+        <div className="mt-1 w-full rounded-full overflow-hidden" style={{ height: 3, background: 'rgba(255,255,255,0.14)' }}>
+          <div className="h-full rounded-full" style={{ width: `${pct * 100}%`, background: hpColor }} />
+        </div>
+        <p className="text-center mt-0.5" style={{ fontSize: 8, color: `${hpColor}cc` }}>
+          {wounds}/{maxW}
+        </p>
+      </div>
+    </button>
+  )
+}
+
 // ── Main Battle Screen ────────────────────────────────────────────────────────
 export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratagemUse }) {
   const store = useBattleStore()
@@ -1543,7 +1870,10 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   const [ferocityChoices, setFerocityChoices] = useState({})
   // Per-phase done tracking — resets when phase changes
   const [doneUnitIds, setDoneUnitIds] = useState(new Set())
-  React.useEffect(() => { setDoneUnitIds(new Set()) }, [activePhaseIdx])
+  React.useEffect(() => { setDoneUnitIds(new Set()); setFocusedUnitId(null) }, [activePhaseIdx])
+
+  // Focused unit — null defaults to first relevant unit in the sorted list
+  const [focusedUnitId, setFocusedUnitId] = useState(null)
 
   // Charged units — persists from charge → fight phase, clears on new round (command phase)
   const [chargedUnitIds, setChargedUnitIds] = useState(new Set())
@@ -1601,6 +1931,47 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
   })
 
   const hasSynapse = augmentedUnits.some(u => (u.keywords || []).some(k => k === 'SYNAPSE'))
+
+  // Sorted units for the strip: relevant first → active → suppress → done last
+  const sortedUnits = React.useMemo(() => {
+    const rl = { relevant: 0, active: 1, suppress: 2 }
+    return [...augmentedUnits].sort((a, b) => {
+      const da = doneUnitIds.has(a.id), db = doneUnitIds.has(b.id)
+      if (da !== db) return da ? 1 : -1
+      const ra = getPhaseRelevance(a, activePhase.id, chargedUnitIds, advancedUnitIds)
+      const rb = getPhaseRelevance(b, activePhase.id, chargedUnitIds, advancedUnitIds)
+      return (rl[ra?.level] ?? 1) - (rl[rb?.level] ?? 1)
+    })
+  }, [augmentedUnits, doneUnitIds, activePhase.id, chargedUnitIds, advancedUnitIds])
+
+  const focusedUnit = focusedUnitId
+    ? augmentedUnits.find(u => u.id === focusedUnitId) ?? sortedUnits[0]
+    : sortedUnits[0]
+
+  // Companion: the paired leader or unit travelling with focusedUnit
+  const focusedCompanion = React.useMemo(() => {
+    if (!focusedUnit) return null
+    if (focusedUnit.isLeader) {
+      return augmentedUnits.find(u => !u.isLeader &&
+        unitStates[u.id]?.attachedLeaderId?.replace(/_\d+$/, '') === focusedUnit.id.replace(/_\d+$/, '')) ?? null
+    }
+    const lid = unitStates[focusedUnit.id]?.attachedLeaderId
+    if (!lid) return null
+    const base = lid.replace(/_\d+$/, '')
+    return augmentedUnits.find(l => l.isLeader && (l.id === lid || l.id === base)) ?? null
+  }, [focusedUnit, augmentedUnits, unitStates])
+
+  // Mark done + auto-advance to next relevant unit
+  const handleDone = (id) => {
+    const wasDone = doneUnitIds.has(id)
+    setDoneUnitIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+    if (!wasDone) {
+      const next = sortedUnits.find(u => u.id !== id && !doneUnitIds.has(u.id) &&
+        getPhaseRelevance(u, activePhase.id, chargedUnitIds, advancedUnitIds)?.level !== 'suppress')
+      if (next) setFocusedUnitId(next.id)
+    }
+  }
+
   const allStratagems = getStratagems(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const detachment = getDetachment(faction || 'spacewolves', detachmentId || 'sagaOfTheGreatWolf')
   const activePhase = PHASES[activePhaseIdx]
@@ -1911,7 +2282,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
     </div>
   )
 
-  const sortedUnits = [...units].sort((a, b) => {
+  const sortedUnitsLookup = [...units].sort((a, b) => {
     const sa = getPhaseRelevance(a, activePhase.id, chargedUnitIds, advancedUnitIds).level === 'suppress' ? 1 : 0
     const sb = getPhaseRelevance(b, activePhase.id, chargedUnitIds, advancedUnitIds).level === 'suppress' ? 1 : 0
     return sa - sb
@@ -1924,7 +2295,7 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
       <p className="text-xs font-bold tracking-widest uppercase px-1 pt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
         Your Units
       </p>
-      {sortedUnits.map((u, i) => (
+      {sortedUnitsLookup.map((u, i) => (
         <UnitCard key={u.id} unit={u}
           unitState={unitStates[u.id]}
           attachedLeaderId={unitStates[u.id]?.attachedLeaderId ?? null}
@@ -2145,44 +2516,56 @@ export default function BattleDemo({ theme, onNavigate, onPhaseChange, onStratag
             )}
           </div>
 
-          {/* ── CARD GALLERY ── */}
-          <div className="flex-1 overflow-hidden flex flex-col">
-            <div
-              className="flex-1 flex items-stretch overflow-x-auto overflow-y-hidden px-3 gap-3 py-3"
-              style={{ scrollSnapType: 'x mandatory' }}
-            >
-              {pairs.map(pair => (
-                <BattleUnitPairGroup
-                  key={pair.id}
-                  pair={pair}
-                  phaseId={activePhase.id}
-                  phaseAccent={phaseAccent}
-                  unitStates={unitStates}
-                  getPhaseRel={u => getPhaseRelevance(u, activePhase.id, chargedUnitIds, advancedUnitIds)}
-                  doneUnitIds={doneUnitIds}
-                  toggleDone={id => setDoneUnitIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })}
-                  onWound={(id, cur, amount = 1) => setWounds(id, Math.max(0, cur - amount))}
-                  onHeal={(id, cur) => setWounds(id, cur + 1)}
-                  onDetail={setDetailUnit}
-                  theme={theme}
-                  desktop={desktop}
-                  chargedUnitIds={chargedUnitIds}
-                  toggleCharged={toggleCharged}
-                  advancedUnitIds={advancedUnitIds}
-                  toggleAdvanced={toggleAdvanced}
-                  battleShockedIds={battleShockedIds}
-                  toggleBattleShocked={toggleBattleShocked}
-                  synapseRangeIds={synapseRangeIds}
-                  toggleSynapseRange={toggleSynapseRange}
-                  hasSynapse={hasSynapse}
-                />
-              ))}
-              <div className="w-3 shrink-0" />
-            </div>
-            <p className="text-center shrink-0 pb-1"
-              style={{ fontSize: 9, color: theme.textSecondary, opacity: 0.45 }}>
-              ← scroll to see all units →
-            </p>
+          {/* ── FOCUSED UNIT + STRIP ── */}
+          <div className="flex-1 min-h-0 flex flex-col px-3 pt-2 pb-2 gap-2">
+
+            {/* Big focused card */}
+            {focusedUnit && (
+              <FocusedUnitCard
+                unit={focusedUnit}
+                unitState={unitStates[focusedUnit.id]}
+                phaseId={activePhase.id}
+                phaseAccent={phaseAccent}
+                phaseRelevance={getPhaseRelevance(focusedUnit, activePhase.id, chargedUnitIds, advancedUnitIds)}
+                isDone={doneUnitIds.has(focusedUnit.id)}
+                onDone={() => handleDone(focusedUnit.id)}
+                onWound={amount => setWounds(focusedUnit.id, Math.max(0, (unitStates[focusedUnit.id]?.currentWounds ?? focusedUnit.maxWounds) - amount))}
+                onHeal={() => setWounds(focusedUnit.id, Math.min(focusedUnit.maxWounds, (unitStates[focusedUnit.id]?.currentWounds ?? focusedUnit.maxWounds) + 1))}
+                onDetail={() => setDetailUnit(focusedUnit)}
+                isLeader={!!focusedUnit.isLeader}
+                theme={theme}
+                desktop={desktop}
+                isCharged={chargedUnitIds.has(focusedUnit.id)}
+                onCharge={() => toggleCharged(focusedUnit.id)}
+                isAdvanced={advancedUnitIds.has(focusedUnit.id)}
+                onAdvance={() => toggleAdvanced(focusedUnit.id)}
+                isBattleShocked={battleShockedIds.has(focusedUnit.id)}
+                onToggleBattleShocked={() => toggleBattleShocked(focusedUnit.id)}
+                inSynapse={synapseRangeIds.has(focusedUnit.id)}
+                onToggleSynapse={() => toggleSynapseRange(focusedUnit.id)}
+                hasSynapse={hasSynapse}
+                companion={focusedCompanion}
+              />
+            )}
+
+            {/* Unit selector strip */}
+            {sortedUnits.length > 1 && (
+              <div className="shrink-0 flex gap-2 overflow-x-auto pb-1" style={{ scrollSnapType: 'x mandatory' }}>
+                {sortedUnits.map(u => (
+                  <UnitStripChip
+                    key={u.id}
+                    unit={u}
+                    unitState={unitStates[u.id]}
+                    isActive={focusedUnit?.id === u.id}
+                    isDone={doneUnitIds.has(u.id)}
+                    phaseRelevance={getPhaseRelevance(u, activePhase.id, chargedUnitIds, advancedUnitIds)}
+                    phaseAccent={phaseAccent}
+                    theme={theme}
+                    onClick={() => setFocusedUnitId(u.id)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
